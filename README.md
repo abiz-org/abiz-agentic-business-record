@@ -7,12 +7,12 @@ A business can publish an ABIZ DNS pointer on a domain it controls. The pointer 
 **Version:** **ABIZ 1.0**, published specification and normative JSON Schema. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
 
 - **Independent standards website:** [abizrecord.org](https://abizrecord.org) (planned)
-- **Canonical public repository:** [abiz-org/agentic-business-record](https://github.com/abiz-org/agentic-business-record)
+- **Canonical public repository:** [abiz-org/abiz-agentic-business-record](https://github.com/abiz-org/abiz-agentic-business-record)
 - **Specification:** [SPEC.md](SPEC.md)
 - **Normative business-record schema:** [schemas/abiz-business-record-v1.schema.json](schemas/abiz-business-record-v1.schema.json)
 - **Validation script:** [scripts/validate.py](scripts/validate.py)
 - **Conformance fixtures:** [examples/](examples/)
-- **Feedback:** use [GitHub Issues](https://github.com/abiz-org/agentic-business-record/issues); do not publish individuals' direct contact details.
+- **Feedback:** use [GitHub Issues](https://github.com/abiz-org/abiz-agentic-business-record/issues); do not publish individuals' direct contact details.
 
 ## How ABIZ works
 

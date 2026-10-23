@@ -5,7 +5,7 @@
 **Date:** 2026-10-23  
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
-**Public source:** https://github.com/abiz-org/agentic-business-record  
+**Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
 **Normative schema:** `schemas/abiz-business-record-v1.schema.json`
 
 This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
@@ -157,7 +157,7 @@ A publisher MUST consider personal data and only publish intentionally public fa
 
 The intended globally scoped underscore label is `_abiz`, RR type TXT. Registration has been **requested but is not confirmed**. Publication does not claim completed IANA registration.
 
-The standard is open and provider-independent. To.Co Technologies Limited is the managing organisation. Implementers can comment or propose changes through the [public repository](https://github.com/abiz-org/agentic-business-record). No personal email address is required for participation.
+The standard is open and provider-independent. To.Co Technologies Limited is the managing organisation. Implementers can comment or propose changes through the [public repository](https://github.com/abiz-org/abiz-agentic-business-record). No personal email address is required for participation.
 
 ## 11. References
 
