@@ -1,0 +1,33 @@
+{
+  "record-version": "abiz1",
+  "business-name": "Harbour Bike Repair LLC",
+  "country": "US",
+  "business-key": "us-OR123456",
+  "registration-number": "OR123456",
+  "identity-host": "harbour-bike-repair.or.us.to.co",
+  "domains": [
+    "harbourbikes.example"
+  ],
+  "description": "Bicycle repair and maintenance in Portland.",
+  "website": "https://harbourbikes.example",
+  "services": [
+    {
+      "name": "Bicycle servicing"
+    },
+    {
+      "name": "Wheel repairs"
+    }
+  ],
+  "locations": [
+    {
+      "kind": "trading",
+      "city": "Portland",
+      "region": "Oregon",
+      "country": "US",
+      "public": true
+    }
+  ],
+  "opening-hours": [
+    "Mo-Fr 09:00-17:00"
+  ]
+}

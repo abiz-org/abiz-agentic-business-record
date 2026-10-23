@@ -1,0 +1,22 @@
+{
+  "record-version": "abiz1",
+  "business-name": "Market Stand Repairs",
+  "country": "US",
+  "identity-host": "market-stand-repairs-portland.biz.to.co",
+  "domains": [
+    "marketstand.example"
+  ],
+  "services": [
+    {
+      "name": "Small appliance repairs"
+    }
+  ],
+  "locations": [
+    {
+      "city": "Portland",
+      "region": "Oregon",
+      "country": "US"
+    }
+  ],
+  "website": "https://marketstand.example"
+}
