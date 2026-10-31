@@ -1,0 +1,6 @@
+# ABIZ 1.1 (proposed) sample. Current key only. Retired keys are in the business record.
+# examples/registered-us-retired-key.json carries the previous public key.
+# Both keys are throwaway. No private key is stored in this repository.
+# Illustrative only. This is not a live zone.
+
+v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co;p=CtW5mtOK/a36noCey4n3kQDYbl498nnTnArU5MPs+gs=

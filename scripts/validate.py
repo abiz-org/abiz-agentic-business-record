@@ -4,9 +4,10 @@
 This does not perform DNS lookups, registry checks, or HTTPS fetches.
 
 The optional --check-p-key mode checks the ABIZ 1.1 (proposed) Ed25519
-public key in the DNS p tag. It is off by default, so an ABIZ 1.0 opaque
-p token still passes. Key format uses the standard library. Verifying a
-signature imports the optional cryptography package on demand:
+public key in the DNS p tag, and any retired-keys binding signatures.
+It is off by default, so an ABIZ 1.0 opaque p token still passes.
+Key format uses the standard library. Verifying a signature imports
+the optional cryptography package on demand:
 
     python -m pip install -r requirements-p-key.txt
 """
@@ -30,6 +31,7 @@ HOST = re.compile(r"^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
 P_KEY_RE = re.compile(r"^[A-Za-z0-9+/]{43}=$")
 # 64-byte Ed25519 signature: 86 alphabet chars + "==".
 P_SIG_RE = re.compile(r"^[A-Za-z0-9+/]{86}==$")
+UTC_INSTANT = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 
 def safe_host(value: str) -> bool:
@@ -129,6 +131,62 @@ def verify_ed25519_signature(public_key: bytes, message: bytes, signature: bytes
         raise ValueError("Ed25519 signature did not verify") from exc
 
 
+def retired_key_message(domains: list[str], entry: dict) -> bytes:
+    """UTF-8 binding message for one retired-keys entry. See SPEC section 3.3.6.
+
+    Every line, including the last, ends with LF. The signature is not included.
+    """
+    normalised = sorted({d.lower().rstrip(".") for d in domains})
+    if not normalised or any(d == "" for d in normalised):
+        raise ValueError("retired-key binding needs at least one domain")
+    lines = [
+        "ABIZ-RETIRED-KEY-V1",
+        "domains=" + ",".join(normalised),
+        "public-key=" + entry["public-key"],
+        "valid-from=" + entry.get("valid-from", ""),
+        "retired-at=" + entry["retired-at"],
+        "reason=" + entry.get("reason", ""),
+    ]
+    return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+def compromised_key_rejects_time(entry: dict, signature_time: str) -> bool:
+    """Whether a compromised retired key MUST NOT verify a signature at signature_time.
+
+    Both times are producer-asserted UTC instants, YYYY-MM-DDThh:mm:ssZ.
+    A time equal to retired-at is not later, so it is not rejected by this rule.
+    """
+    if entry.get("reason") != "compromised":
+        return False
+    retired_at = entry.get("retired-at", "")
+    if not UTC_INSTANT.fullmatch(retired_at) or not UTC_INSTANT.fullmatch(signature_time):
+        raise ValueError("compromised-key time check needs UTC timestamps YYYY-MM-DDThh:mm:ssZ")
+    return signature_time > retired_at
+
+
+def check_retired_keys(record: dict, current_public: bytes, current_p: str) -> list[str]:
+    """Verify retired-keys binding signatures against the current DNS p key."""
+    errors = []
+    seen = set()
+    for index, entry in enumerate(record.get("retired-keys", [])):
+        label = f"retired-keys/{index}"
+        try:
+            if entry["public-key"] == current_p:
+                raise ValueError("retired public-key repeats the current DNS p key")
+            if entry["public-key"] in seen:
+                raise ValueError("duplicate retired public-key")
+            seen.add(entry["public-key"])
+            decode_ed25519_public_key(entry["public-key"])
+            verify_ed25519_signature(
+                current_public,
+                retired_key_message(record["domains"], entry),
+                decode_ed25519_signature(entry["binding-signature"]),
+            )
+        except (ValueError, RuntimeError, KeyError) as exc:
+            errors.append(f"{label}: {exc}")
+    return errors
+
+
 def check_p_key(tags: dict[str, str], message: bytes | None = None, signature: str | None = None) -> bytes:
     """Opt-in ABIZ 1.1 key check. Absent or malformed p is an error in this mode."""
     if (message is None) != (signature is None):
@@ -192,7 +250,8 @@ def validate_record(
             if "business-key" not in record and "k" in tags:
                 errors.append("DNS k is present for record without a business-key")
             if check_p_key_mode:
-                check_p_key(tags, p_message, p_signature)
+                current = check_p_key(tags, p_message, p_signature)
+                errors.extend(check_retired_keys(record, current, tags["p"]))
         except (ValueError, RuntimeError) as exc:
             errors.append(str(exc))
     elif check_p_key_mode:

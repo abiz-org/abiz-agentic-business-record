@@ -7,6 +7,8 @@ Proposed redefinition of the optional DNS `p` tag. The published specification r
 - `p`, when a producer opts in, is an Ed25519 public key: 32 bytes, standard base64, 44 characters, one trailing `=` (RFC 8463 and RFC 4648 section 4).
 - Ordinary validation still accepts an opaque 1.0 `p` token. `--check-p-key` opts into the key check. Signature checks need the optional `cryptography` package.
 - Schema description corrected to ABIZ 1.0. `p` stays DNS-only, so the JSON schema has no new property.
+- Hosted mode is a supported way to deploy the key. A provider may generate it, publish `p`, and sign for the business. The private key remains the business's property and MUST be exportable.
+- Retired keys are carried in the business record under the provisional property `retired-keys`, with a binding signature from the current key. DNS carries only the current `p`. Producers must not publish retired keys in DNS.
 
 ## 1.0 — 2026-10-23
 

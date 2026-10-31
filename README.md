@@ -57,6 +57,8 @@ python scripts/validate.py examples/registered-us.json \
   --check-p-key
 ```
 
+`--check-p-key` also checks `retired-keys` binding signatures when that provisional property is present. See `examples/registered-us-retired-key.json`.
+
 ## Standards governance
 
 Anyone may implement the specification without membership or a per-use standards fee. Proposed changes should be discussed publicly. The `_abiz` IANA request is not confirmed. The managing organisation is To.Co Technologies Limited (UK).

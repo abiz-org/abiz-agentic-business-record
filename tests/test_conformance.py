@@ -8,7 +8,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from validate import decode_ed25519_public_key, dns_tags, validate_record
+from validate import (
+    compromised_key_rejects_time,
+    decode_ed25519_public_key,
+    dns_tags,
+    retired_key_message,
+    validate_record,
+)
 
 SCHEMA = json.loads((ROOT / "schemas" / "abiz-business-record-v1.schema.json").read_text())
 REG = json.loads((ROOT / "examples" / "registered-us.json").read_text())
@@ -181,6 +187,52 @@ class ABIZConformanceTests(unittest.TestCase):
         still_ok = subprocess.run(
             base[:-1] + [opaque], capture_output=True, text=True, check=False)
         self.assertEqual(still_ok.returncode, 0, still_ok.stderr)
+
+    def _retired_record(self):
+        return json.loads((ROOT / "examples" / "registered-us-retired-key.json").read_text(encoding="utf-8"))
+
+    def _retired_dns(self):
+        for line in (ROOT / "examples" / "dns-retired-keys.txt").read_text(encoding="utf-8").splitlines():
+            if line.startswith("v=abiz1;"):
+                return line.strip()
+        raise AssertionError("examples/dns-retired-keys.txt has no assertion")
+
+    def test_retired_key_entry_verifies(self):
+        record = self._retired_record()
+        dns = self._retired_dns()
+        self.assertEqual(validate_record(record, SCHEMA), [])
+        self.assertEqual(validate_record(
+            record, SCHEMA, "harbourbikes.example", dns, check_p_key_mode=True), [])
+        entry = record["retired-keys"][0]
+        message = retired_key_message(record["domains"], entry)
+        self.assertTrue(message.endswith(b"\n"))
+        self.assertIn(b"domains=harbourbikes.example\n", message)
+        self.assertNotIn(b"binding-signature", message)
+
+    def test_retired_key_bad_signature_fails_key_check_only(self):
+        record = self._retired_record()
+        dns = self._retired_dns()
+        record["retired-keys"][0]["binding-signature"] = P_SIGNATURE
+        self.assertEqual(validate_record(record, SCHEMA), [])
+        errors = validate_record(
+            record, SCHEMA, "harbourbikes.example", dns, check_p_key_mode=True)
+        self.assertTrue(any("did not verify" in error for error in errors), errors)
+
+    def test_retired_key_malformed_public_key_fails_schema(self):
+        record = self._retired_record()
+        record["retired-keys"][0]["public-key"] = "not-a-key"
+        self.assertTrue(validate_record(record, SCHEMA))
+        record = self._retired_record()
+        record["retired-keys"][0]["public-key"] = base64.b64encode(b"\x11" * 31).decode("ascii")
+        self.assertTrue(validate_record(record, SCHEMA))
+
+    def test_compromised_retired_key_time_rule(self):
+        entry = {"reason": "compromised", "retired-at": "2026-10-01T00:00:00Z"}
+        self.assertFalse(compromised_key_rejects_time(entry, "2026-10-01T00:00:00Z"))
+        self.assertFalse(compromised_key_rejects_time(entry, "2026-09-30T23:59:59Z"))
+        self.assertTrue(compromised_key_rejects_time(entry, "2026-10-01T00:00:01Z"))
+        rotated = {"reason": "rotated", "retired-at": "2026-10-01T00:00:00Z"}
+        self.assertFalse(compromised_key_rejects_time(rotated, "2027-01-01T00:00:00Z"))
 
 
 if __name__ == "__main__":
