@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — ABIZ 1.1 (proposed)
+
+Proposed redefinition of the optional DNS `p` tag. The published specification remains ABIZ 1.0, and the wire tag remains `v=abiz1`.
+
+- `p`, when a producer opts in, is an Ed25519 public key: 32 bytes, standard base64, 44 characters, one trailing `=` (RFC 8463 and RFC 4648 section 4).
+- Ordinary validation still accepts an opaque 1.0 `p` token. `--check-p-key` opts into the key check. Signature checks need the optional `cryptography` package.
+- Schema description corrected to ABIZ 1.0. `p` stays DNS-only, so the JSON schema has no new property.
+
 ## 1.0 — 2026-10-23
 
 ABIZ 1.0 published specification, retaining the DNS wire tag `v=abiz1`.

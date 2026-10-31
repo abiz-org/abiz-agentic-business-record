@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://abizrecord.org/schema/abiz-business-record-v1.schema.json",
   "title": "ABIZ Business Record (protocol family abiz1)",
-  "description": "Normative structural schema for the ABIZ 1.1 public-review draft; independent DNS and registry checks are required for full conformance.",
+  "description": "Normative structural schema for the published ABIZ 1.0 specification. Independent DNS and registry checks are required for full conformance. The DNS-only p tag is not a property of this schema.",
   "type": "object",
   "required": [
     "record-version",
@@ -15,7 +15,7 @@
   "properties": {
     "record-version": {
       "const": "abiz1",
-      "description": "Wire protocol family; the specification document may have a later draft revision."
+      "description": "Wire protocol family abiz1. Document revisions, including a proposed 1.1, may advance without changing this value."
     },
     "business-name": {
       "type": "string",

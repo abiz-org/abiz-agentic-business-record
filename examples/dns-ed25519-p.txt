@@ -1,0 +1,6 @@
+# ABIZ 1.1 (proposed) sample DNS assertion.
+# p is standard base64 (RFC 4648 section 4) of a throwaway 32-byte Ed25519 public key.
+# The private key was discarded and is not in this repository.
+# Illustrative only. This is not a live zone.
+
+v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ=

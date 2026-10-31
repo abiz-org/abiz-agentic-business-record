@@ -4,7 +4,7 @@
 
 A business can publish an ABIZ DNS pointer on a domain it controls. The pointer leads to a public business record over HTTPS. The business record must meet the published JSON Schema to be conformant. ABIZ proves neither legal identity nor inclusion in an AI service.
 
-**Version:** **ABIZ 1.0**, published specification and normative JSON Schema. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
+**Version:** **ABIZ 1.0**, published specification and normative JSON Schema. A proposed 1.1 redefinition of the optional DNS `p` tag is in the specification. It is not the published baseline. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
 
 - **Independent standards website:** [abizrecord.org](https://abizrecord.org) (planned)
 - **Canonical public repository:** [abiz-org/abiz-agentic-business-record](https://github.com/abiz-org/abiz-agentic-business-record)
@@ -44,6 +44,18 @@ python -m unittest discover -s tests -v
 ```
 
 Passing the local schema establishes **record conformance only**. Passing the DNS checks additionally establishes a valid domain-to-record assertion; it is not an independent government-register confirmation.
+
+## Check a proposed 1.1 `p` key
+
+By default, `p` is not interpreted. An existing opaque token still passes. `--check-p-key` checks that `p` is a 44-character standard-base64 Ed25519 public key (32 bytes). Add `--p-message` and `--p-signature` to verify a detached signature. Signature verification needs the optional `cryptography` package:
+
+```sh
+python -m pip install -r requirements-p-key.txt
+python scripts/validate.py examples/registered-us.json \
+  --domain harbourbikes.example \
+  --dns-value "$(sed -n '/^v=abiz1/p' examples/dns-ed25519-p.txt)" \
+  --check-p-key
+```
 
 ## Standards governance
 
