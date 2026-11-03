@@ -120,7 +120,7 @@ class ABIZConformanceTests(unittest.TestCase):
         bad["made_up_field"] = "value"
         self.assertTrue(validate_record(bad, SCHEMA))
 
-    def test_schema_description_matches_published_1_0(self):
+    def test_schema_descriptions_identify_each_published_revision(self):
         published = json.loads((ROOT / "schemas" / "abiz-business-record-v1.schema.json").read_text())
         description = published["description"]
         self.assertIn("published ABIZ 1.0", description)

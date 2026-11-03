@@ -50,7 +50,24 @@ FORBIDDEN = (
     re.compile(r"omita `p`", re.I),
     re.compile(r"leave `p` out", re.I),
     re.compile(r"to revoke,\s*remove `p`", re.I),
+    re.compile(r"lassen Sie `p` weg", re.I),
+    re.compile(r"`p`\s+weglassen", re.I),
+    re.compile(r"(?:or|and) omit `p`", re.I),
+    re.compile(r"(?:or|and) leave out `p`", re.I),
+    re.compile(r"ou omettez `p`", re.I),
+    re.compile(r"o omita `p`", re.I),
+    re.compile(r"ou omita `p`", re.I),
+    re.compile(r"o omettete `p`", re.I),
+    re.compile(r"of laat `p` weg", re.I),
+    re.compile(r"revogar,\s*retire\s+`p`", re.I),
+    re.compile(r"révoquer,\s*retirez\s+`p`", re.I),
+    re.compile(r"revocar,\s*(?:quite|elimine)\s+`p`", re.I),
 )
+
+# Each country guide must say that withdrawing an ABIZ 1.1 assertion means removing the
+# whole DNS or well-known declaration, not only p: a line naming ABIZ 1.1, `p`, `public_key`
+# and the declaration (the term "well-known" or "declaration" is kept in every language).
+WITHDRAWAL_MARK = re.compile(r"well-known|declara|Erklärung|complete declaration", re.I)
 
 # Each country guide must say, in its language, that p is required.
 REQUIRED_MARK = re.compile(
@@ -88,6 +105,15 @@ class SigningKeyDocumentationTests(unittest.TestCase):
                         hits.append(f"{path.relative_to(ROOT)}:{number}: {line.strip()}")
                         break
         self.assertEqual(hits, [], "\n".join(hits))
+
+    def test_every_country_guide_explains_rotation_and_withdrawal(self):
+        missing = []
+        for path in country_guides():
+            lines = path.read_text(encoding="utf-8").splitlines()
+            if not any("public_key" in line and "`p`" in line and re.search(r"ABIZ[ -]1\.1", line)
+                       and WITHDRAWAL_MARK.search(line) for line in lines):
+                missing.append(str(path.relative_to(ROOT)))
+        self.assertEqual(missing, [])
 
     def test_every_country_guide_requires_p(self):
         missing = []
