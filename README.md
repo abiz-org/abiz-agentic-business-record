@@ -4,7 +4,7 @@
 
 A business can publish an ABIZ DNS pointer on a domain it controls. The pointer leads to a public business record over HTTPS. The business record must meet the published JSON Schema to be conformant. ABIZ proves neither legal identity nor inclusion in an AI service.
 
-**Version:** **ABIZ 1.0**, published specification and normative JSON Schema. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
+**Version:** **ABIZ 1.0**, published specification and normative JSON Schema. A proposed 1.1 revision is in the specification: a relaxed DNS tag-list syntax (optional spaces around `;` and `=`, as in DKIM and DMARC) and an Ed25519 key in the optional DNS `p` tag. It is not the published baseline. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
 
 - **Independent standards website:** [abizrecord.org](https://abizrecord.org) (planned)
 - **Canonical public repository:** [abiz-org/abiz-agentic-business-record](https://github.com/abiz-org/abiz-agentic-business-record)
@@ -20,13 +20,13 @@ A business can publish an ABIZ DNS pointer on a domain it controls. The pointer 
 2. Point a DNS TXT record at it from a domain you control: `_abiz.yourdomain.example`.
 3. Compatible software reads the pointer, fetches JSON, **validates the JSON Schema**, then checks the DNS / document relationship.
 
-For a **registered business**, the DNS assertion can include a canonical registration key:
+A DNS assertion MAY include a business key, `k`, in the form `country[-subdivision]-registration-number` (SPEC section 4.2). `k` is optional for every business. A subdivision is required only for the United States, Canada (provincial corporations) and the United Arab Emirates:
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co"
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"
 ```
 
-For an **unregistered business**, registration fields and the `k` tag are not mandatory:
+Without a key, for example for an unregistered business:
 
 ```dns
 _abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.biz.to.co"
@@ -39,11 +39,26 @@ _abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.b
 ```sh
 python -m pip install -r requirements-dev.txt
 python scripts/validate.py examples/registered-us.json
-python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --dns-value 'v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co'
+python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --dns-value 'v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co'
 python -m unittest discover -s tests -v
 ```
 
 Passing the local schema establishes **record conformance only**. Passing the DNS checks additionally establishes a valid domain-to-record assertion; it is not an independent government-register confirmation.
+
+## The proposed 1.1 `p` key
+
+`p` is optional. When the DNS assertion contains `p`, the validator always checks that it is a 44-character standard-base64 Ed25519 public key (32 bytes, one trailing `=`). Any other value fails, including an ABIZ 1.0 hexadecimal token and base64url. See SPEC section 3.3.7 for migrating existing values. The format check needs no extra package. To verify a detached signature, add `--p-message` and `--p-signature`; that needs the optional `cryptography` package:
+
+```sh
+python -m pip install -r requirements-p-key.txt
+python scripts/validate.py examples/registered-us.json \
+  --domain harbourbikes.example \
+  --dns-value "$(sed -n '/^v=abiz1/p' examples/dns-ed25519-p.txt)" \
+  --p-message "abiz1.1 p-key test" \
+  --p-signature "K8z1ImVMyYZF7tGBnyaL4fhI3WAnCTo1EKHS77J+uLCet14Sbg629QmXc1e6rIjn3KtZdXgKNtuakuTLmruKAg=="
+```
+
+A business record cannot carry retired keys. The schema reserves their shape only as the nested definition `$defs/retired-key`.
 
 ## Standards governance
 

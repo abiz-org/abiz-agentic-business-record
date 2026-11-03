@@ -2,13 +2,25 @@
 """Offline ABIZ schema + optional DNS/document consistency validator.
 
 This does not perform DNS lookups, registry checks, or HTTPS fetches.
+
+ABIZ 1.1 (proposed): a DNS p tag, when present, must be an Ed25519 public
+key in standard base64 (44 characters, one "="). Any other p value,
+including an ABIZ 1.0 hex token or base64url, makes the assertion invalid.
+The key format check uses the standard library. Verifying an optional
+detached signature (--p-message / --p-signature) imports the optional
+cryptography package on demand:
+
+    python -m pip install -r requirements-p-key.txt
 """
 from __future__ import annotations
 import argparse
+import base64
+import binascii
 import ipaddress
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -16,7 +28,21 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "schemas" / "abiz-business-record-v1.schema.json"
+ISO3166 = json.loads((ROOT / "data" / "iso3166.json").read_text(encoding="utf-8"))
+COUNTRIES = frozenset(ISO3166["countries"])
+SUBDIVISIONS = {c: frozenset(v) for c, v in ISO3166["subdivisions"].items()}
+# SPEC.md section 4.2.2: countries whose key includes a subdivision.
+# "required": always; "provincial": required except for a federal (Corporations Canada) key.
+SUBDIVISION_RULE = {"us": "required", "ae": "required", "ca": "provincial"}
+REG_NUMBER_RE = re.compile(r"^[A-Za-z0-9]+$")
+BUSINESS_KEY_MAX = 128
+# Removed by producer normalisation after NFKC (section 4.2.3).
+_REG_SEPARATORS = dict.fromkeys(map(ord, "-./\u2010\u2011\u2012\u2013\u2014\u2015\u2212"))
 HOST = re.compile(r"^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
+# 32 raw bytes, standard base64 (RFC 4648 section 4): 43 alphabet chars + one "=".
+P_KEY_RE = re.compile(r"^[A-Za-z0-9+/]{43}=$")
+# 64-byte Ed25519 signature: 86 alphabet chars + "==".
+P_SIG_RE = re.compile(r"^[A-Za-z0-9+/]{86}==$")
 
 
 def safe_host(value: str) -> bool:
@@ -56,25 +82,169 @@ def identity_parts(value: str):
     return p.hostname.lower().rstrip(".") + (p.path or "")
 
 
+def check_country(code: str) -> str:
+    """Return the canonical (lowercase) country code, or raise if it is not assigned."""
+    if not re.fullmatch(r"[A-Za-z]{2}", code or "") or code.lower() not in COUNTRIES:
+        raise ValueError(f"country {code!r} is not an assigned ISO 3166-1 alpha-2 code")
+    return code.lower()
+
+
+def parse_business_key(value: str) -> tuple[str, str | None, str]:
+    """Split a business key (SPEC section 4.2.1) into canonical (country, subdivision, number).
+
+    Raises ValueError for bad grammar, unassigned codes, or a subdivision that
+    section 4.2.2 requires but is missing, or forbids but is present.
+    """
+    if not isinstance(value, str) or len(value) > BUSINESS_KEY_MAX:
+        raise ValueError(f"business key must be at most {BUSINESS_KEY_MAX} characters")
+    parts = value.split("-")
+    if len(parts) == 2:
+        country, subdivision, number = parts[0], None, parts[1]
+    elif len(parts) == 3:
+        country, subdivision, number = parts
+    else:
+        raise ValueError("business key must be country-number or country-subdivision-number")
+    country = check_country(country)
+    if not REG_NUMBER_RE.fullmatch(number):
+        raise ValueError("business key registration number must be ASCII letters and digits only")
+    rule = SUBDIVISION_RULE.get(country)
+    if subdivision is None:
+        if rule == "required":
+            raise ValueError(f"business key for {country} requires a subdivision code")
+    else:
+        if not re.fullmatch(r"[A-Za-z0-9]{1,3}", subdivision):
+            raise ValueError("business key subdivision must be 1 to 3 ASCII letters or digits")
+        if rule is None:
+            raise ValueError(f"business key for {country} must not include a subdivision")
+        subdivision = subdivision.lower()
+        if subdivision not in SUBDIVISIONS[country]:
+            raise ValueError(f"{country}-{subdivision} is not a permitted ISO 3166-2 subdivision for a business key")
+    return country, subdivision, number.upper()
+
+
+def canonical_business_key(value: str) -> str:
+    country, subdivision, number = parse_business_key(value)
+    return "-".join(x for x in (country, subdivision, number) if x)
+
+
+def normalise_registration_number(raw: str) -> str:
+    """Producer normalisation (SPEC section 4.2.3): NFKC, strip separators, uppercase."""
+    text = unicodedata.normalize("NFKC", raw)
+    text = "".join(ch for ch in text if not ch.isspace()).translate(_REG_SEPARATORS).upper()
+    if not REG_NUMBER_RE.fullmatch(text) or not text.isascii():
+        raise ValueError("registration number cannot be expressed in ASCII letters and digits")
+    return text
+
+
+# ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1. Optional SP or HTAB may
+# surround ";" and "=", and may lead or trail the value; one trailing ";" is allowed.
+# Tag names and values contain no whitespace. Every valid ABIZ 1.0 value still parses.
+WSP = " \t"
+RECOGNISED_TAGS = frozenset({"v", "h", "k", "p"})
+ASSERTION_START = re.compile(r"^[ \t]*v[ \t]*=[ \t]*abiz1[ \t]*(?:;|$)")
+
+
+def is_abiz_assertion(value: str) -> bool:
+    """True when a TXT value's first tag is v=abiz1 (section 3.1). Used to select the RRset."""
+    return bool(ASSERTION_START.match(value))
+
+
 def dns_tags(value: str) -> dict[str, str]:
-    if any(c.isspace() for c in value) or not value.startswith("v=abiz1;"):
-        raise ValueError("DNS assertion must start with v=abiz1; and contain no whitespace")
-    tags = {}
-    for pair in value.split(";"):
+    if any(c.isspace() and c not in WSP for c in value):
+        raise ValueError("DNS assertion may contain only SP or HTAB as whitespace")
+    body = value.strip(WSP)
+    if body.endswith(";"):
+        body = body[:-1]  # one optional trailing ";"
+    tags: dict[str, str] = {}
+    for index, raw in enumerate(body.split(";")):
+        pair = raw.strip(WSP)
         if "=" not in pair:
-            raise ValueError("Every DNS tag must contain '='")
+            raise ValueError("Every DNS tag must contain '=' (an empty tag or ';;' is invalid)")
+        # Split on the first "=" only. A 1.1 p value ends with base64 padding.
         k, v = pair.split("=", 1)
-        if not k or not v or k in tags:
-            raise ValueError("Empty or duplicate DNS tag")
+        k, v = k.rstrip(WSP), v.lstrip(WSP)
+        if not k or not v:
+            raise ValueError("Empty DNS tag name or value")
+        if any(c.isspace() for c in k) or any(c.isspace() for c in v):
+            raise ValueError("DNS tag names and values must not contain whitespace")
+        if index == 0 and (k, v) != ("v", "abiz1"):
+            raise ValueError("DNS assertion must start with v=abiz1")
+        if k in tags:
+            if k in RECOGNISED_TAGS:
+                raise ValueError(f"Duplicate DNS tag {k}=")
+            continue  # unknown tags are ignored, including repeats
         tags[k] = v
     if not tags.get("h"):
         raise ValueError("Missing h= DNS tag")
     if identity_parts(tags["h"]) is None:
         raise ValueError("Invalid DNS h= host/path")
+    if "k" in tags:
+        parse_business_key(tags["k"])  # SPEC section 4.2.1
+    if "p" in tags:
+        # ABIZ 1.1: p is optional, but when present it MUST be a key (SPEC 3.3.2, 3.3.7).
+        decode_ed25519_public_key(tags["p"])
     return tags
 
 
-def validate_record(record: dict, schema: dict, domain=None, dns_value=None) -> list[str]:
+def _decode_standard_base64(value: str, pattern: re.Pattern[str], purpose: str, size: int) -> bytes:
+    if not pattern.fullmatch(value):
+        raise ValueError(
+            f"{purpose} must be canonical standard base64 (RFC 4648 section 4) "
+            f"of exactly {size} bytes"
+        )
+    try:
+        raw = base64.b64decode(value, validate=True)
+    except (binascii.Error, ValueError) as exc:
+        raise ValueError(f"{purpose} is not canonical standard base64") from exc
+    if len(raw) != size or base64.b64encode(raw).decode("ascii") != value:
+        raise ValueError(f"{purpose} must decode to exactly {size} bytes")
+    return raw
+
+
+def decode_ed25519_public_key(value: str) -> bytes:
+    """Decode an ABIZ 1.1 (proposed) p value to 32 raw public-key bytes; reject anything else."""
+    return _decode_standard_base64(value, P_KEY_RE, "p (Ed25519 public key)", 32)
+
+
+def decode_ed25519_signature(value: str) -> bytes:
+    """Decode a detached PureEd25519 signature from standard base64."""
+    return _decode_standard_base64(value, P_SIG_RE, "Ed25519 signature", 64)
+
+
+def verify_ed25519_signature(public_key: bytes, message: bytes, signature: bytes) -> None:
+    """Verify a PureEd25519 signature. Imports cryptography only when called."""
+    try:
+        from cryptography.exceptions import InvalidSignature
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+    except ImportError as exc:
+        raise RuntimeError(
+            "Ed25519 signature verification requires the optional cryptography package "
+            "(python -m pip install -r requirements-p-key.txt)"
+        ) from exc
+    try:
+        Ed25519PublicKey.from_public_bytes(public_key).verify(signature, message)
+    except InvalidSignature as exc:
+        raise ValueError("Ed25519 signature did not verify") from exc
+
+
+def check_p_signature(tags: dict[str, str], message: bytes, signature: str) -> bytes:
+    """Verify a detached PureEd25519 signature against the DNS p key."""
+    if "p" not in tags:
+        raise ValueError("DNS assertion has no p= tag to verify a signature against")
+    key = decode_ed25519_public_key(tags["p"])
+    verify_ed25519_signature(key, message, decode_ed25519_signature(signature))
+    return key
+
+
+def validate_record(
+    record: dict,
+    schema: dict,
+    domain=None,
+    dns_value=None,
+    *,
+    p_message: bytes | None = None,
+    p_signature: str | None = None,
+) -> list[str]:
     errors = [f"{'/'.join(map(str, e.path)) or '$'}: {e.message}" for e in
               Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(record)]
     if errors:
@@ -92,29 +262,50 @@ def validate_record(record: dict, schema: dict, domain=None, dns_value=None) -> 
         for item in record.get(collection, []):
             if "url" in item and not check_https(item["url"]):
                 errors.append(f"{collection}.url must be a safe HTTPS URL")
+    try:
+        check_country(record["country"])
+    except ValueError as exc:
+        errors.append(str(exc))
+    for location in record.get("locations", []):
+        try:
+            check_country(location["country"])
+        except ValueError as exc:
+            errors.append(f"locations: {exc}")
     if "business-key" in record:
-        prefix = record["country"].lower() + "-"
-        if not record["business-key"].startswith(prefix):
-            errors.append("business-key country does not match country")
-        if record["business-key"] != prefix + record["registration-number"]:
-            errors.append("business-key does not match registration-number")
+        try:
+            country, _, number = parse_business_key(record["business-key"])
+            if country != record["country"].lower():
+                errors.append("business-key country does not match country")
+            if number != record["registration-number"].upper():
+                errors.append("business-key does not match registration-number")
+        except ValueError as exc:
+            errors.append(str(exc))
     if domain:
         d = domain.lower().rstrip(".")
         if not safe_host(d):
             errors.append("invalid queried domain")
         elif d not in {x.lower().rstrip(".") for x in record["domains"]}:
             errors.append("DNS owner domain is missing from record.domains")
+    if (p_message is None) != (p_signature is None):
+        errors.append("p signature verification needs both a message and a signature")
     if dns_value:
         try:
             tags = dns_tags(dns_value)
             if identity_parts(tags["h"]) != identity_parts(record["identity-host"]):
                 errors.append("DNS h and identity-host do not match")
-            if "business-key" in record and tags.get("k") != record["business-key"]:
-                errors.append("registered business requires matching DNS k")
-            if "business-key" not in record and "k" in tags:
-                errors.append("DNS k is present for record without a business-key")
-        except ValueError as exc:
+            # k is optional (SPEC section 3.2). When present it must equal business-key,
+            # compared case-insensitively (section 4.2.4).
+            if "k" in tags:
+                if "business-key" not in record:
+                    errors.append("DNS k is present for record without a business-key")
+                elif tags["k"].lower() != record["business-key"].lower():
+                    errors.append("DNS k does not match business-key")
+            if p_message is not None and p_signature is not None:
+                check_p_signature(tags, p_message, p_signature)
+        except (ValueError, RuntimeError) as exc:
             errors.append(str(exc))
+    elif p_signature is not None:
+        errors.append("p signature verification requires a DNS assertion")
     return errors
 
 
@@ -123,14 +314,33 @@ def main():
     ap.add_argument("json_file", type=Path)
     ap.add_argument("--domain", help="Domain under which _abiz TXT record is published")
     ap.add_argument("--dns-value", help="Value inside ABIZ TXT record, not the full DNS zone line")
+    ap.add_argument(
+        "--p-message",
+        help="UTF-8 message for an optional PureEd25519 check (requires --dns-value and --p-signature)",
+    )
+    ap.add_argument(
+        "--p-signature",
+        help="Standard base64 of the 64-byte Ed25519 signature (requires --dns-value and --p-message)",
+    )
     args = ap.parse_args()
     if bool(args.domain) != bool(args.dns_value):
         ap.error("--domain and --dns-value must be supplied together for DNS assertion checks")
+    if (args.p_message is None) != (args.p_signature is None):
+        ap.error("--p-message and --p-signature must be supplied together")
+    if args.p_signature is not None and not args.dns_value:
+        ap.error("--p-message and --p-signature require --domain and --dns-value")
     try:
         schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
         record = json.loads(args.json_file.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
-        errors = validate_record(record, schema, args.domain, args.dns_value)
+        errors = validate_record(
+            record,
+            schema,
+            args.domain,
+            args.dns_value,
+            p_message=None if args.p_message is None else args.p_message.encode("utf-8"),
+            p_signature=args.p_signature,
+        )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"Invalid: {exc}", file=sys.stderr)
         return 1
@@ -138,7 +348,9 @@ def main():
         for error in errors:
             print("ERROR:", error, file=sys.stderr)
         return 1
-    if args.dns_value:
+    if args.p_signature is not None:
+        print("PASS: schema + offline DNS/document consistency; Ed25519 signature matches p")
+    elif args.dns_value:
         print("PASS: schema + offline DNS/document consistency (not a live DNS or registry check)")
     else:
         print("PASS: ABIZ record schema and local semantics (DNS not checked)")

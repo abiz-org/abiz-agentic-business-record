@@ -1,9 +1,9 @@
 {
   "record-version": "abiz1",
   "business-name": "Harbour Bike Repair LLC",
-  "country": "US",
-  "business-key": "us-OR123456",
-  "registration-number": "OR123456",
+  "country": "us",
+  "business-key": "us-or-123456",
+  "registration-number": "123456",
   "identity-host": "harbour-bike-repair.or.us.to.co",
   "domains": [
     "harbourbikes.example"
@@ -23,7 +23,7 @@
       "kind": "trading",
       "city": "Portland",
       "region": "Oregon",
-      "country": "US",
+      "country": "us",
       "public": true
     }
   ],
