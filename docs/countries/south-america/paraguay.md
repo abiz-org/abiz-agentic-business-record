@@ -16,30 +16,30 @@ En Paraguay, una sociedad inscrita en el Registro Público de Comercio puede añ
 
 | Campo | Qué poner | Ejemplo |
 | --- | --- | --- |
-| `record-version` | Siempre `abiz1` | `abiz1` |
-| `business-name` | El nombre público del negocio | `Yerba Mate Guaraní S.A.` |
+| `record_version` | Siempre `abiz1` | `abiz1` |
+| `business_name` | El nombre público del negocio | `Yerba Mate Guaraní S.A.` |
 | `country` | El código de país ISO 3166-1 alfa-2, en minúsculas | `py` |
-| `identity-host` | El host, con ruta opcional, donde se sirve el registro; debe coincidir con `h` en el DNS | `yerbamateguarani.py.to.co` |
+| `identity_host` | El host, con ruta opcional, donde se sirve el registro; debe coincidir con `h` en el DNS | `yerbamateguarani.py.to.co` |
 | `domains` | Los dominios que usted controla y que el registro reclama | `["yerbamateguarani.example"]` |
 
 ### La clave de empresa opcional `k`
 
-`k` es opcional para cualquier negocio. Si la publica, debe seguir la sección 4.2 de la especificación y ser igual al `business-key` del registro. Las claves se comparan sin distinguir mayúsculas de minúsculas, pero la forma canónica lleva el código de país en minúsculas y el número de registro en mayúsculas.
+`k` es opcional para cualquier negocio. Si la publica, debe seguir la sección 4.2 de la especificación y ser igual al `business_key` del registro. Las claves se comparan sin distinguir mayúsculas de minúsculas, pero la forma canónica lleva el código de país en minúsculas y el número de registro en mayúsculas.
 
 Formato: `py-` seguido del número de inscripción en el Registro Público de Comercio, que lleva la Dirección General de los Registros Públicos y es nacional. La sección 4.2.2 de la especificación no menciona Paraguay, así que la clave no lleva código de subdivisión. No use el RUC: la especificación solo admite un número fiscal donde lo nombra expresamente, como México y Brasil. El formato que se muestra es ilustrativo: no hemos podido confirmar el formato exacto del número. Use el número tal como figura en su inscripción. Si después de la normalización contiene caracteres que no sean letras y cifras ASCII, o si no identifica a la empresa de forma única en todo el país, omita `k`.
 
-**Normalización del número (sección 4.2.3).** Parta del número tal como lo emite el registro. Aplique la normalización Unicode NFKC; quite espacios, guiones, puntos y barras; pase las letras a mayúsculas; conserve los ceros a la izquierda y los prefijos de letras. Si queda cualquier otro carácter, como paréntesis, `&`, `Ñ` o una letra acentuada, el número no puede expresarse y no puede publicar una clave de empresa: omita `k`, `business-key` y `registration-number`.
+**Normalización del número (sección 4.2.3).** Parta del número tal como lo emite el registro. Aplique la normalización Unicode NFKC; quite espacios, guiones, puntos y barras; pase las letras a mayúsculas; conserve los ceros a la izquierda y los prefijos de letras. Si queda cualquier otro carácter, como paréntesis, `&`, `Ñ` o una letra acentuada, el número no puede expresarse y no puede publicar una clave de empresa: omita `k`, `business_key` y `registration_number`.
 
 **Ejemplo (ficticio):** el número de inscripción `12345` da la clave `py-12345`.
 
-Si incluye `business-key` y `registration-number` en el registro, incluya los dos, y haga que la parte numérica de la clave coincida con `registration-number`. Incluirlos no le obliga a publicar `k` en el DNS. Si publica `k`, el registro debe contener el `business-key` correspondiente.
+Si incluye `business_key` y `registration_number` en el registro, incluya los dos, y haga que la parte numérica de la clave coincida con `registration_number`. Incluirlos no le obliga a publicar `k` en el DNS. Si publica `k`, el registro debe contener el `business_key` correspondiente.
 
 ### El registro DNS TXT
 
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co"
+_abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=85tgtlWAs65zm7Uv1ZpH9Nj4ikgAHaH50RnhdmTohE8="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -54,15 +54,16 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Yerba Mate Guaraní S.A.",
+  "record_version": "abiz1",
+  "business_name": "Yerba Mate Guaraní S.A.",
   "country": "py",
-  "business-key": "py-12345",
-  "registration-number": "12345",
-  "identity-host": "yerbamateguarani.py.to.co",
+  "business_key": "py-12345",
+  "registration_number": "12345",
+  "identity_host": "yerbamateguarani.py.to.co",
   "domains": [
     "yerbamateguarani.example"
   ],
+  "public_key": "85tgtlWAs65zm7Uv1ZpH9Nj4ikgAHaH50RnhdmTohE8=",
   "description": "Yerba mate y productos regionales.",
   "website": "https://yerbamateguarani.example",
   "locations": [
@@ -73,29 +74,30 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "opening-hours": [
+  "opening_hours": [
     "Mo-Fr 08:00-17:00"
-  ]
+  ],
+  "signature": "iDva/roMyzSveUsRdhRHkGzq9mt+0JF1FWHb9i+ZUzETYY5rbqc1mqFnwy2jGMENTe3wqgwHB4CS7HV/QUxxBA=="
 }
 ```
 
 ### Dónde se aloja el registro
 
-Puede servir el registro usted mismo desde cualquier URL HTTPS que devuelva el documento JSON, por ejemplo `h=www.yerbamateguarani.example/abiz.json`, o usar cualquier proveedor compatible. ABIZ no exige un proveedor ni un esquema de nombres concreto. Elija lo que elija, el `identity-host` del registro debe coincidir con `h`, y `domains` debe incluir el dominio donde publica el registro TXT.
+Puede servir el registro usted mismo desde cualquier URL HTTPS que devuelva el documento JSON, por ejemplo `h=www.yerbamateguarani.example/abiz.json`, o usar cualquier proveedor compatible. ABIZ no exige un proveedor ni un esquema de nombres concreto. Elija lo que elija, el `identity_host` del registro debe coincidir con `h`, y `domains` debe incluir el dominio donde publica el registro TXT.
 
 Antes de publicar, compruebe el registro y el valor DNS con el validador de referencia:
 
 ```sh
 python scripts/validate.py record.json \
   --domain yerbamateguarani.example \
-  --dns-value 'v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co'
+  --dns-value 'v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=85tgtlWAs65zm7Uv1ZpH9Nj4ikgAHaH50RnhdmTohE8='
 ```
 
 ## 3. Proveedores y MCP
 
-El Model Context Protocol (MCP) es un protocolo abierto que permite a los asistentes de IA usar herramientas y leer datos de servicios externos de forma estándar. Un registro ABIZ puede incluir un `mcp-server-url` opcional: la dirección HTTPS de un servidor MCP que responda preguntas sobre el negocio, como horarios, servicios o disponibilidad. ABIZ no exige un servidor MCP, y que figure en el registro no lo avala: el software compatible no debe llamarlo automáticamente solo porque aparezca en un registro, y debe aplicar sus propios controles de acceso.
+El Model Context Protocol (MCP) es un protocolo abierto que permite a los asistentes de IA usar herramientas y leer datos de servicios externos de forma estándar. Un registro ABIZ puede incluir un `mcp_server_url` opcional: la dirección HTTPS de un servidor MCP que responda preguntas sobre el negocio, como horarios, servicios o disponibilidad. ABIZ no exige un servidor MCP, y que figure en el registro no lo avala: el software compatible no debe llamarlo automáticamente solo porque aparezca en un registro, y debe aplicar sus propios controles de acceso.
 
-Por ejemplo, un proveedor puede alojar el registro de Yerba Mate Guaraní en `yerbamateguarani.py.to.co`, publicar el registro DNS TXT mediante su propio proceso de configuración e indicar su servidor MCP en `mcp-server-url`. Puede cambiar de proveedor, o pasar a alojarlo usted mismo, cambiando `h` y el `identity-host` del registro.
+Por ejemplo, un proveedor puede alojar el registro de Yerba Mate Guaraní en `yerbamateguarani.py.to.co`, publicar el registro DNS TXT mediante su propio proceso de configuración e indicar su servidor MCP en `mcp_server_url`. Puede cambiar de proveedor, o pasar a alojarlo usted mismo, cambiando `h` y el `identity_host` del registro.
 
 ## 4. Claves y firmas (ABIZ 1.1)
 
@@ -103,12 +105,12 @@ Por ejemplo, un proveedor puede alojar el registro de Yerba Mate Guaraní en `ye
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=ieYyrGmaQsEl/HqWJ33/69NaiDx800lISofqZpKf5bg="
+  _abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=85tgtlWAs65zm7Uv1ZpH9Nj4ikgAHaH50RnhdmTohE8="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).
 - **Firmas.** El software puede comprobar una firma Ed25519 separada con la clave publicada. ABIZ 1.1 todavía no define qué bytes de un registro cubre una firma, así que una comprobación de firma solo tiene sentido para un mensaje que ambas partes hayan acordado.
-- **Rotación y claves retiradas.** Para rotar, publique la nueva clave en `p`; la anterior deja de ser la vigente cuando vence el TTL del registro TXT. ABIZ 1.1 no publica claves retiradas: ni en el DNS ni en el registro (se rechaza una propiedad `retired-keys`).
+- **Rotación y claves retiradas.** Para rotar, publique la nueva clave en `p`; la anterior deja de ser la vigente cuando vence el TTL del registro TXT. ABIZ 1.1 no publica claves retiradas: ni en el DNS ni en el registro (se rechaza una propiedad `retired_keys`).
 - **Qué demuestra una clave.** Muestra qué clave publicó quien controla el dominio. No firma por sí misma el registro TXT ni demuestra la identidad legal. Use DNSSEC si su proveedor de DNS lo admite.
 
 ## 5. Qué verán las herramientas de IA
