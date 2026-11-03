@@ -1,0 +1,262 @@
+{
+  "record_version": "abiz1",
+  "business_name": "Clifton Cycles Ltd",
+  "country": "gb",
+  "business_key": "gb-11223344",
+  "registration_number": "11223344",
+  "identity_host": "cliftoncycles.uk.to.co",
+  "domains": [
+    "cliftoncycles.example"
+  ],
+  "public_key": "k8+wEsNG3W+nCRZQ4xF4AZJHxzOeax1AUijG7Uk0qJ0=",
+  "website": "https://cliftoncycles.example",
+  "email": "hello@cliftoncycles.example",
+  "phone": "+441179460000",
+  "locations": [
+    {
+      "location_id": "registered-office",
+      "kind": "registered-office",
+      "address": {
+        "street_lines": [
+          "Suite 2, Example House",
+          "5 Example Road"
+        ],
+        "locality": "Bristol",
+        "postal_code": "BS8 1XX",
+        "region": {
+          "code": "GB-ENG",
+          "name": "England"
+        },
+        "country": {
+          "code": "GB",
+          "name": "United Kingdom"
+        }
+      },
+      "public": false
+    },
+    {
+      "location_id": "bristol-clifton",
+      "kind": "trading",
+      "name": "Clifton Shop",
+      "description": "Bicycle servicing and repairs",
+      "address": {
+        "street_lines": [
+          "14 Example Street"
+        ],
+        "locality": "Bristol",
+        "postal_code": "BS8 2XX",
+        "region": {
+          "code": "GB-ENG",
+          "name": "England"
+        },
+        "country": {
+          "code": "GB",
+          "name": "United Kingdom"
+        }
+      },
+      "geo": {
+        "latitude": 51.455,
+        "longitude": -2.6175
+      },
+      "website": "https://cliftoncycles.example/clifton",
+      "email": "clifton@cliftoncycles.example",
+      "phone": "+441179460001",
+      "opening_hours": {
+        "time_zone": "Europe/London",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:30"
+              },
+              {
+                "opens": "13:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:30"
+              },
+              {
+                "opens": "13:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:30"
+              },
+              {
+                "opens": "13:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:30"
+              },
+              {
+                "opens": "13:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:30"
+              },
+              {
+                "opens": "13:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ],
+        "exceptions": [
+          {
+            "date": "2026-12-24",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "13:00"
+              }
+            ]
+          },
+          {
+            "date": "2026-12-25",
+            "periods": []
+          },
+          {
+            "date": "2026-12-26",
+            "periods": []
+          }
+        ]
+      },
+      "operational_status": "open",
+      "public": true
+    },
+    {
+      "location_id": "cardiff-bay",
+      "kind": "trading",
+      "name": "Siop Bae Caerdydd / Cardiff Bay Shop",
+      "address": {
+        "street_lines": [
+          "3 Example Quay"
+        ],
+        "locality": "Caerdydd / Cardiff",
+        "postal_code": "CF10 4XX",
+        "region": {
+          "code": "GB-WLS",
+          "name": "Cymru / Wales"
+        },
+        "country": {
+          "code": "GB"
+        }
+      },
+      "phone": "+442920000000",
+      "social_profiles": {
+        "instagram": "https://www.instagram.com/cliftoncycles.cardiff"
+      },
+      "opening_hours": {
+        "time_zone": "Europe/London",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": []
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              },
+              {
+                "opens": "19:00",
+                "closes": "01:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          }
+        ]
+      },
+      "public": true
+    }
+  ],
+  "last_updated": "2026-11-03T09:00:00Z",
+  "media": [
+    {
+      "id": "shop",
+      "kind": "image",
+      "url": "https://cliftoncycles.example/shop.jpg",
+      "content_type": "image/jpeg"
+    }
+  ],
+  "signature": "H3dzmr4SEh08GunVn7b/tOhbKrcy3oiYuN6xXtC/miDHMmaW4E7B81vdqydfFehI2XWZ8F0XS4nFusyYpcXWAA=="
+}

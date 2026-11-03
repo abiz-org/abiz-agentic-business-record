@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.moselleconseil.example. 300 IN TXT "v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=O1BIfPm22zpAw4zxM68gSURlRHdFi6gicxl7qa51mwA="
+_abiz.moselleconseil.example. 300 IN TXT "v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=FYW5a+Z8meiCqr3w/usJyWi4BNnoKCPpytCTywIh05c="
 ```
 
 - `v=abiz1` doit venir en premier. `h` est obligatoire ; `k` et `p` sont facultatifs.
@@ -65,25 +65,29 @@ La fiche servie à l'adresse `https://moselleconseil.lu.to.co`, au format `appli
   "domains": [
     "moselleconseil.example"
   ],
-  "public_key": "O1BIfPm22zpAw4zxM68gSURlRHdFi6gicxl7qa51mwA=",
+  "public_key": "FYW5a+Z8meiCqr3w/usJyWi4BNnoKCPpytCTywIh05c=",
   "description": "Cabinet de conseil à Luxembourg.",
   "website": "https://moselleconseil.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Luxembourg",
-      "country": "lu",
+      "address": {
+        "locality": "Luxembourg",
+        "country": {
+          "code": "LU"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "l6ZYUMxHgfOFE2EN+RgFNCJ8FOdOvB4Qa3iAoLUWEqoZxecvGzhZ8dxU1q2BCelRNjXt9LZucoveD+eDxSqlBw=="
+  "signature": "S5q2P+AZPKGNbu6mMNXPolb5Fi8F3M5Rab47er4iVr2mcrplwrFaY/xLOztRChz3KOQuoOPuu68u188ggN5xCA=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain moselleconseil.example --dns-value 'v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=O1BIfPm22zpAw4zxM68gSURlRHdFi6gicxl7qa51mwA='
+python scripts/validate.py record.json --domain moselleconseil.example --dns-value 'v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=FYW5a+Z8meiCqr3w/usJyWi4BNnoKCPpytCTywIh05c='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur

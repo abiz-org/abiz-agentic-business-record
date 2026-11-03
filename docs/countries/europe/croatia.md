@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.jadranskaribarnica.example. 300 IN TXT "v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=OmiSfQ1hODg9010pyd2aGm4E0gomy0Q7dB5kfFbWGs0="
+_abiz.jadranskaribarnica.example. 300 IN TXT "v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=SK7XK9qcGo0IvRSoLaau7hkLswsXx5Pn8aE3QQoMcUU="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://jadranskaribarnica.hr.to.co`, as `application/json
   "domains": [
     "jadranskaribarnica.example"
   ],
-  "public_key": "OmiSfQ1hODg9010pyd2aGm4E0gomy0Q7dB5kfFbWGs0=",
+  "public_key": "SK7XK9qcGo0IvRSoLaau7hkLswsXx5Pn8aE3QQoMcUU=",
   "description": "Fishmonger in Split.",
   "website": "https://jadranskaribarnica.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Split",
-      "country": "hr",
+      "address": {
+        "locality": "Split",
+        "country": {
+          "code": "HR"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "YpnjrkocEadvjzzEVJ9LwLSbD5xnZIVUOZ+FUkeJF66wT8iHnthCxOZuBhyKksS1p7CG4ijpQmnHXENM8qooCA=="
+  "signature": "zxf2MmUw/o0bYW2jp4iJHcqV6kRs3KQ5lkJyfCm4/xmvUHzhesvwgBe4w2F9sYxNz026VQeSFgo+Og73m8uGBg=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain jadranskaribarnica.example --dns-value 'v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=OmiSfQ1hODg9010pyd2aGm4E0gomy0Q7dB5kfFbWGs0='
+python scripts/validate.py record.json --domain jadranskaribarnica.example --dns-value 'v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=SK7XK9qcGo0IvRSoLaau7hkLswsXx5Pn8aE3QQoMcUU='
 ```
 
 ### Self-hosted or through a provider

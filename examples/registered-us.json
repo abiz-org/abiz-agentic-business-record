@@ -8,7 +8,7 @@
   "domains": [
     "harbourbikes.example"
   ],
-  "public_key": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=",
+  "public_key": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=",
   "description": "Bicycle repair and maintenance in Portland.",
   "website": "https://harbourbikes.example",
   "services": [
@@ -22,15 +22,77 @@
   "locations": [
     {
       "kind": "trading",
-      "city": "Portland",
-      "region": "Oregon",
-      "country": "us",
+      "address": {
+        "locality": "Portland",
+        "region": {
+          "code": "US-OR",
+          "name": "Oregon"
+        },
+        "country": {
+          "code": "US"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Los_Angeles",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": []
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 09:00-17:00"
-  ],
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "tp0XN8oWyi/OoJhVyHhCfHqJk7PHgfO1K6ZkMYaPSEuL8m+BauS6ZSwCFygRyQrwsCX1qoy3l/zin16LkriPBg=="
+  "signature": "tcf4loWK5IQq4wt9MFXswxUBHXHfPhkHf4puoHC1VeliwTLNHWQd75kf5CnCFvEui546QU/t7QWIRHEoX7etAA=="
 }

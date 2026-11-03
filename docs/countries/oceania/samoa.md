@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=LGWnxi/r58qwB5tR5Iyz9+Aie2Gu72B7AJ58f608bUw="
+_abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -63,21 +63,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "apiaharbourcafe.example"
   ],
-  "public_key": "LGWnxi/r58qwB5tR5Iyz9+Aie2Gu72B7AJ58f608bUw=",
+  "public_key": "ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs=",
   "description": "Coffee and Samoan breakfasts on the waterfront.",
   "website": "https://apiaharbourcafe.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Apia",
-      "country": "ws",
+      "address": {
+        "locality": "Apia",
+        "country": {
+          "code": "WS"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Pacific/Apia",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 07:00-16:00"
-  ],
-  "signature": "VhiTw5N4NqY3vvh2GZiC4G3f0+0SvTNiKS2IezmilNtuqhnu1WsOZ5LVvdZKLOq0D7KNe+YEId+LkdhZ+Z6wBw=="
+  "signature": "pAbWvI2GLSZL4XzyvCm4zS1ihS95a7nmC17oFpr/6V8iL9Oe0K0fvQphaLlColYpWZXnlGkjRdMCFi0JLVoyCw=="
 }
 ```
 
@@ -90,7 +154,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain apiaharbourcafe.example \
-  --dns-value 'v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=LGWnxi/r58qwB5tR5Iyz9+Aie2Gu72B7AJ58f608bUw='
+  --dns-value 'v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs='
 ```
 
 ## 3. Using a provider and MCP
@@ -105,7 +169,7 @@ For example, a provider might host the record for Apia Harbour Café at `apiahar
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=LGWnxi/r58qwB5tR5Iyz9+Aie2Gu72B7AJ58f608bUw="
+  _abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

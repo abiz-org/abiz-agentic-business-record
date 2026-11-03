@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.bledmed.example. 300 IN TXT "v=abiz1;k=si-1234567000;h=bledmed.si.to.co;p=mTXOUENnG6WPAzcbr+ifosL56CBd/Me9ZqC4E2bB+6U="
+_abiz.bledmed.example. 300 IN TXT "v=abiz1;k=si-1234567000;h=bledmed.si.to.co;p=dyxZI/X50wV21s38Gaf2IW9KL/OwWII9ctpSIGbk9FU="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://bledmed.si.to.co`, as `application/json`:
   "domains": [
     "bledmed.example"
   ],
-  "public_key": "mTXOUENnG6WPAzcbr+ifosL56CBd/Me9ZqC4E2bB+6U=",
+  "public_key": "dyxZI/X50wV21s38Gaf2IW9KL/OwWII9ctpSIGbk9FU=",
   "description": "Beekeepers near Bled.",
   "website": "https://bledmed.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Bled",
-      "country": "si",
+      "address": {
+        "locality": "Bled",
+        "country": {
+          "code": "SI"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "2ztwdqg2LTwMhHwzbxVEEMY77R6SGPfBifZ3r+F+SYmupvj1gXAGWtefuevGc0vpdmaQ+gFdInyh3b9RMbq3Dg=="
+  "signature": "oATPKkEzCd6PUj3rDbGn6rC5/59b6tAlkzeS3pQ2O8+lrARvRhziDgKbhB/eWo8KqEA3ZOQ0N0nZNR8QyAacBA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain bledmed.example --dns-value 'v=abiz1;k=si-1234567000;h=bledmed.si.to.co;p=mTXOUENnG6WPAzcbr+ifosL56CBd/Me9ZqC4E2bB+6U='
+python scripts/validate.py record.json --domain bledmed.example --dns-value 'v=abiz1;k=si-1234567000;h=bledmed.si.to.co;p=dyxZI/X50wV21s38Gaf2IW9KL/OwWII9ctpSIGbk9FU='
 ```
 
 ### Self-hosted or through a provider

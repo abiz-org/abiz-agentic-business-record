@@ -37,7 +37,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=zUaLmMNP6fgBY03ptZIDSFGI22aQ64JWXyYjhAHXjCo="
+_abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA="
 ```
 
 ### Example record (JSON)
@@ -53,21 +53,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "majurolagooncharters.example"
   ],
-  "public_key": "zUaLmMNP6fgBY03ptZIDSFGI22aQ64JWXyYjhAHXjCo=",
+  "public_key": "CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA=",
   "description": "Fishing and lagoon charters from Majuro.",
   "website": "https://majurolagooncharters.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Majuro",
-      "country": "mh",
+      "address": {
+        "locality": "Majuro",
+        "country": {
+          "code": "MH"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Pacific/Majuro",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 07:00-17:00"
-  ],
-  "signature": "2dy6vyi45G7wi3RvM4S0TI1zBQIVEg3enRG4AWAaq10bNDUX1iapf4VYgzRr2OsJsftIy37stonYTFemOf1NBw=="
+  "signature": "h87hrz8VMhsJDkfANi0/lqiKYauBatFFqHDzLM5nf/dsZxZhTYmHIG25ENYNMy0epgkut2GE5l0ymU362cOIAQ=="
 }
 ```
 
@@ -80,7 +144,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain majurolagooncharters.example \
-  --dns-value 'v=abiz1;h=majurolagooncharters.mh.to.co;p=zUaLmMNP6fgBY03ptZIDSFGI22aQ64JWXyYjhAHXjCo='
+  --dns-value 'v=abiz1;h=majurolagooncharters.mh.to.co;p=CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA='
 ```
 
 ## 3. Using a provider and MCP
@@ -95,7 +159,7 @@ For example, a provider might host the record for Majuro Lagoon Charters at `maj
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=zUaLmMNP6fgBY03ptZIDSFGI22aQ64JWXyYjhAHXjCo="
+  _abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

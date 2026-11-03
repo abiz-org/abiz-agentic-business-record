@@ -4,7 +4,7 @@
 
 A business can publish an ABIZ DNS pointer on a domain it controls. The pointer leads to a public business record over HTTPS. The business record must meet the published JSON Schema to be conformant. ABIZ proves neither legal identity nor inclusion in an AI service.
 
-**Version:** **ABIZ 1.0**, published specification and normative JSON Schema. A proposed 1.1 revision is in the specification: a relaxed DNS tag-list syntax (optional spaces around `;` and `=`, as in DKIM and DMARC), a required Ed25519 key in the DNS `p` tag, a well-known file (`/.well-known/abiz.json`) as an alternative to DNS, snake_case member names and a REQUIRED `public_key` and `signature` in every business record (an Ed25519 signature over the RFC 8785 canonical record, verified against `p`), a `format` parameter (`html`, `markdown`, `json`) at the record host, business-key rules, and business units on path-based record hosts. It is not the published baseline. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
+**Version:** **ABIZ 1.0**, published specification and normative JSON Schema. A proposed 1.1 revision is in the specification: a relaxed DNS tag-list syntax (optional spaces around `;` and `=`, as in DKIM and DMARC), a required Ed25519 key in the DNS `p` tag, a well-known file (`/.well-known/abiz.json`) as an alternative to DNS, snake_case member names and a REQUIRED `public_key` and `signature` in every business record (an Ed25519 signature over the RFC 8785 canonical record, verified against `p`), a `format` parameter (`html`, `markdown`, `json`) at the record host, business-key rules, business units on path-based record hosts, and structured location, contact, hours and listing facts (SPEC section 4.7: `email` and `phone` in place of `contact_email` and `contact_phone`, nested addresses, structured opening hours per location, tax registrations, social profiles, categories, media, review summaries and external listings). It is not the published baseline. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
 
 - **Independent standards website:** [abizrecord.org](https://abizrecord.org) (planned)
 - **Canonical public repository:** [abiz-org/abiz-agentic-business-record](https://github.com/abiz-org/abiz-agentic-business-record)
@@ -39,19 +39,19 @@ Choose your region to find instructions for your country:
 Every DNS assertion MUST include `p`, the business's Ed25519 public key (SPEC section 3.3). It MAY include a business key, `k`, in the form `country[-subdivision]-registration-number` (SPEC section 4.2). `k` is optional for every business. A subdivision is required only for the United States, Canada (provincial corporations) and the United Arab Emirates:
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
 ```
 
 Without a key, for example for an unregistered business:
 
 ```dns
-_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.biz.to.co;p=HKmFn2cg/6EXCYZ75lHdr7S7vfq1GUfodvTyb6pl5Uc="
+_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.biz.to.co;p=zc6S6bKXaZXO7NCI+fjtgMWLdbdEeavjVvydQsoQCJ0="
 ```
 
 The same values as a well-known file, `https://harbourbikes.example/.well-known/abiz.json` (see `examples/well-known-registered-us.json`):
 
 ```json
-{ "v": "abiz1", "k": "us-or-123456", "h": "harbour-bike-repair.or.us.to.co", "p": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=" }
+{ "v": "abiz1", "k": "us-or-123456", "h": "harbour-bike-repair.or.us.to.co", "p": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=" }
 ```
 
 **These are different fictional businesses, not two simultaneous ABIZ records at the same DNS owner name.** Each `p` is a throwaway key. Hostnames ending in `.or.us.to.co` and `.biz.to.co` illustrate one particular provider. ABIZ itself does not require to.co.
@@ -69,23 +69,51 @@ Every business record carries `public_key` (the same value as `p`) and `signatur
   "registration_number": "123456",
   "identity_host": "harbour-bike-repair.or.us.to.co",
   "domains": ["harbourbikes.example"],
-  "public_key": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=",
+  "public_key": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=",
   …
-  "signature": "tp0XN8oW…riPBg=="
+  "signature": "tcf4loWK…7etAA=="
 }
 ```
 
 A record whose signature does not verify is not verified. A record whose `public_key` differs from the domain's `p` has its identity claim rejected. Producers can sign with `sign_record()` in `scripts/validate.py`; [`examples/registered-us.signing-input.txt`](examples/registered-us.signing-input.txt) is a canonicalisation test vector.
+
+## Locations, contact details, hours and listings
+
+The 2026-11-03 amendment to the 1.1 proposal (SPEC section 4.7) gives each location its own address, coordinates, contact details, opening hours, service areas and listing links, and adds business-level `blog_url`, `rss_url`, `tax_registrations`, `social_profiles`, `categories`, `media` (at most 10 items), `review_summaries` and `operational_status`. Nothing is inherited between the business and its locations. A record must not contain `recent_posts`.
+
+It is breaking: `contact_email` and `contact_phone` become `email` and `phone`, root `opening_hours` is replaced by `locations[].opening_hours`, and `street`, `city`, `region`, `postal_code` and `country` of a location move into `address`. `record_version` stays `abiz1`, and the schema file, DNS tags and signing rules do not change; migrated records must be re-signed. See [CHANGELOG.md](CHANGELOG.md) for the migration notes.
+
+[`examples/locations-and-listings/`](examples/locations-and-listings/) has signed examples of each case, with their DNS assertions in `dns-assertions.txt`, and records that break one rule each in `invalid/`. A location, shortened:
+
+```text
+{
+  "location_id": "bristol-clifton",
+  "kind": "trading",
+  "address": {
+    "street_lines": ["14 Example Street"],
+    "locality": "Bristol",
+    "region": { "code": "GB-ENG", "name": "England" },
+    "country": { "code": "GB" }
+  },
+  "geo": { "latitude": 51.455, "longitude": -2.6175 },
+  "opening_hours": {
+    "time_zone": "Europe/London",
+    "weekly": [{ "day": "monday", "periods": [{ "opens": "08:00", "closes": "12:30" }, { "opens": "13:30", "closes": "18:00" }] }],
+    "exceptions": [{ "date": "2026-12-25", "periods": [] }]
+  }
+}
+```
 
 ## Validate a record
 
 ```sh
 python -m pip install -r requirements-dev.txt
 python scripts/validate.py examples/registered-us.json
-python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --dns-value 'v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo='
+python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --dns-value 'v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk='
 python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --well-known examples/well-known-registered-us.json
 python scripts/validate.py examples/well-known-registered-us.json
-python scripts/validate.py examples/registered-us.json --p 'bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo='
+python scripts/validate.py examples/registered-us.json --p '6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk='
+python scripts/validate.py examples/locations-and-listings/multi-location-gb.json --p "$(sed -n 's/^multi-location-gb.json .*;p=//p' examples/locations-and-listings/dns-assertions.txt)"
 python -m unittest discover -s tests -v
 ```
 
@@ -103,7 +131,7 @@ python scripts/validate.py examples/registered-us.json \
   --domain harbourbikes.example \
   --dns-value "$(sed -n '/^v=abiz1/p' examples/dns-ed25519-p.txt)" \
   --p-message "abiz1.1 p-key test" \
-  --p-signature "qyKerWm4IqgOEeKqK67muf7CDIoU9PxzGz2KCTjSgg/XBtg43YiQHo/QzX/avaSMTc/G0UxL5kV8uc3VA6OABg=="
+  --p-signature "IaZr5HsbImiYvB92BzVDbwsCmCnq59qwga3YPWghNoHNJ+Z9fhMwFGV3VD+c5kVOsdcvgFZIa+iillIxV21kBA=="
 ```
 
 A business record cannot carry retired keys. The schema reserves their shape only as the nested definition `$defs/retired_key`.

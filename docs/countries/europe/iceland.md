@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.heklaferdir.example. 300 IN TXT "v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=zR6hhMdJwDjWUMio+TpC7OKIvsluv6q/nfJ+PwdoRyA="
+_abiz.heklaferdir.example. 300 IN TXT "v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=FvSlKFKqCYry6WFu2xPYuCq/0V0ySKMqrI/hdjUd3Tg="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://heklaferdir.is.to.co`, as `application/json`:
   "domains": [
     "heklaferdir.example"
   ],
-  "public_key": "zR6hhMdJwDjWUMio+TpC7OKIvsluv6q/nfJ+PwdoRyA=",
+  "public_key": "FvSlKFKqCYry6WFu2xPYuCq/0V0ySKMqrI/hdjUd3Tg=",
   "description": "Tour operator in Reykjavík.",
   "website": "https://heklaferdir.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Reykjavík",
-      "country": "is",
+      "address": {
+        "locality": "Reykjavík",
+        "country": {
+          "code": "IS"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "u8r8Tl41Tlh6D0WIj8iCUfts12ujkgRkPjL/dz4AD0AnITYmx7WCiHaPuu73DyNhmzhu8adWQJiXECA0vuQ4Dg=="
+  "signature": "XwDhmaWndc9W52+uzlorZZkmx715HkHC3JiaowlqH8KxvNXeEypltc7II6DGqc1WiLZnErIn9hmraQuOqWAGDw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain heklaferdir.example --dns-value 'v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=zR6hhMdJwDjWUMio+TpC7OKIvsluv6q/nfJ+PwdoRyA='
+python scripts/validate.py record.json --domain heklaferdir.example --dns-value 'v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=FvSlKFKqCYry6WFu2xPYuCq/0V0ySKMqrI/hdjUd3Tg='
 ```
 
 ### Self-hosted or through a provider

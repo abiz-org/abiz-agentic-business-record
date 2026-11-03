@@ -37,7 +37,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.brimstonehilltours.example. 300 IN TXT "v=abiz1;h=brimstonehilltours.kn.to.co;p=FoKPS10zNIX2RMqk9bZJyQDM7NhdxA4uvh4juO1p0u4="
+_abiz.brimstonehilltours.example. 300 IN TXT "v=abiz1;h=brimstonehilltours.kn.to.co;p=8CkqEEi4g4R/t4LpLxNsCHSva4uqKVAAN/eavWYFkMA="
 ```
 
 ### Example record (JSON)
@@ -53,21 +53,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "brimstonehilltours.example"
   ],
-  "public_key": "FoKPS10zNIX2RMqk9bZJyQDM7NhdxA4uvh4juO1p0u4=",
+  "public_key": "8CkqEEi4g4R/t4LpLxNsCHSva4uqKVAAN/eavWYFkMA=",
   "description": "Island tours of St Kitts, including Brimstone Hill Fortress.",
   "website": "https://brimstonehilltours.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Basseterre",
-      "country": "kn",
+      "address": {
+        "locality": "Basseterre",
+        "country": {
+          "code": "KN"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/St_Kitts",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 08:00-17:00"
-  ],
-  "signature": "qCYz2MaYKWn2rfS7e11AK7NFwW3xCK0KbKFL5ippQq6Huze0s+ZOTm1ynykamSnXclYDXTUMsTDQvvPdyCzvDg=="
+  "signature": "uagmNnNE28uONBwKASsqRmDuOX8CsZot+AKIUU3waVQEHBdVT3paLbNq1bXLBn9nhIx5f3W6XtLG19trATZBAQ=="
 }
 ```
 
@@ -80,7 +144,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain brimstonehilltours.example \
-  --dns-value 'v=abiz1;h=brimstonehilltours.kn.to.co;p=FoKPS10zNIX2RMqk9bZJyQDM7NhdxA4uvh4juO1p0u4='
+  --dns-value 'v=abiz1;h=brimstonehilltours.kn.to.co;p=8CkqEEi4g4R/t4LpLxNsCHSva4uqKVAAN/eavWYFkMA='
 ```
 
 ## 3. Using a provider and MCP
@@ -95,7 +159,7 @@ For example, a provider might host the record for Brimstone Hill Tours at `brims
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.brimstonehilltours.example. 300 IN TXT "v=abiz1;h=brimstonehilltours.kn.to.co;p=FoKPS10zNIX2RMqk9bZJyQDM7NhdxA4uvh4juO1p0u4="
+  _abiz.brimstonehilltours.example. 300 IN TXT "v=abiz1;h=brimstonehilltours.kn.to.co;p=8CkqEEi4g4R/t4LpLxNsCHSva4uqKVAAN/eavWYFkMA="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

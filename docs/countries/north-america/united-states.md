@@ -44,7 +44,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=+GzVRTUb6mgojtQjoTtXWyg58cTAqrYfBN4heG6lSjg="
+_abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -68,23 +68,89 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "pinehollowwoodworks.example"
   ],
-  "public_key": "+GzVRTUb6mgojtQjoTtXWyg58cTAqrYfBN4heG6lSjg=",
+  "public_key": "3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw=",
   "description": "Handmade furniture and custom cabinetry.",
   "website": "https://pinehollowwoodworks.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Burlington",
-      "region": "VT",
-      "country": "us",
+      "address": {
+        "locality": "Burlington",
+        "region": {
+          "code": "US-VT",
+          "name": "Vermont"
+        },
+        "country": {
+          "code": "US"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/New_York",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "14:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 09:00-17:00",
-    "Sa 10:00-14:00"
-  ],
-  "signature": "xpUH6QF2vZopu115q2vvf2uj0U6sdVhDl05otRzT8Ish0k1Ry4iT8EWmHiRS6JdRt4age0dZx9TfOh7RA6hkDw=="
+  "signature": "VRy4P2T9iorHSt9hqdwIsBWvWwgVK63yLkX9N/u2JnL50IXEW6XJnY8BlGQN0teEFwJV3nfsLcAao/rxy7MZDQ=="
 }
 ```
 
@@ -97,7 +163,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain pinehollowwoodworks.example \
-  --dns-value 'v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=+GzVRTUb6mgojtQjoTtXWyg58cTAqrYfBN4heG6lSjg='
+  --dns-value 'v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw='
 ```
 
 ## 3. Using a provider and MCP
@@ -114,7 +180,7 @@ To see how one provider describes this for US businesses, see [ABIZ records on t
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=+GzVRTUb6mgojtQjoTtXWyg58cTAqrYfBN4heG6lSjg="
+  _abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

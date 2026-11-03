@@ -42,7 +42,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=2lF3Ep/HQ8IVbAEKSN0zybBZqcRnudQFF2oL4PZqRD4="
+_abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -66,22 +66,89 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "ferreteriaelfaro.example"
   ],
-  "public_key": "2lF3Ep/HQ8IVbAEKSN0zybBZqcRnudQFF2oL4PZqRD4=",
+  "public_key": "f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY=",
   "description": "Ferretería y materiales para construcción.",
   "website": "https://ferreteriaelfaro.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Guadalajara",
-      "region": "JAL",
-      "country": "mx",
+      "address": {
+        "locality": "Guadalajara",
+        "region": {
+          "code": "MX-JAL",
+          "name": "Jalisco"
+        },
+        "country": {
+          "code": "MX"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Mexico_City",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 08:00-19:00"
-  ],
-  "signature": "h0bEVng0xwPqBu2a9rndjwUTPf36fjqwTulSa6b01eDKXENw+X91IZ/r7Arz1LjZrr1q8F1Pp57ReWrio0ynDg=="
+  "signature": "VeTPt8QYCLj0u7oZq8rx63wn56Ap9syKgVFbqtChbGLPYbV8fdYRMjO6HgpJd/7xPLz9OGU+K3pw/pShjwQQCw=="
 }
 ```
 
@@ -94,7 +161,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain ferreteriaelfaro.example \
-  --dns-value 'v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=2lF3Ep/HQ8IVbAEKSN0zybBZqcRnudQFF2oL4PZqRD4='
+  --dns-value 'v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY='
 ```
 
 ## 3. Proveedores y MCP
@@ -109,7 +176,7 @@ Por ejemplo, un proveedor puede alojar el registro de Ferretería El Faro en `fe
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=2lF3Ep/HQ8IVbAEKSN0zybBZqcRnudQFF2oL4PZqRD4="
+  _abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

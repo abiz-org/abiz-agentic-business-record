@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=v0eoWj2m4G1iKOTtj78i7F88Q6g1n3Nd8OY4b/cjqvI="
+_abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -63,21 +63,80 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "chocolatesmitad.example"
   ],
-  "public_key": "v0eoWj2m4G1iKOTtj78i7F88Q6g1n3Nd8OY4b/cjqvI=",
+  "public_key": "3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug=",
   "description": "Chocolate de cacao fino de aroma.",
   "website": "https://chocolatesmitad.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Quito",
-      "country": "ec",
+      "address": {
+        "locality": "Quito",
+        "country": {
+          "code": "EC"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Guayaquil",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": []
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 09:00-18:00"
-  ],
-  "signature": "yUqmPIA/gfwXneBZ+V3EY8755AhOg3kcP++oUoQh2DOjgPs5abZjidyeIo59xFS8Cc+gnwCwf2YsAdw45zCVBw=="
+  "signature": "q3kW7jqdq2oLiWFEp9KxjPgTSO8A27sWeB/8+lJOF/Q/Yiznx3ZmbdAHLS9RavbMBJj8Ls7eEC3cCGDLC4iPCg=="
 }
 ```
 
@@ -90,7 +149,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain chocolatesmitad.example \
-  --dns-value 'v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=v0eoWj2m4G1iKOTtj78i7F88Q6g1n3Nd8OY4b/cjqvI='
+  --dns-value 'v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug='
 ```
 
 ## 3. Proveedores y MCP
@@ -105,7 +164,7 @@ Por ejemplo, un proveedor puede alojar el registro de Chocolates Mitad del Mundo
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=v0eoWj2m4G1iKOTtj78i7F88Q6g1n3Nd8OY4b/cjqvI="
+  _abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

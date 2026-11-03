@@ -41,7 +41,7 @@ Klíče se porovnávají bez ohledu na velikost písmen, ale zveřejňujte kanon
 Na své doméně zveřejněte pod `_abiz` právě jeden záznam TXT ABIZ, v kompaktním tvaru bez mezer:
 
 ```dns
-_abiz.pekarnanovak.example. 300 IN TXT "v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=5nP0+J+3PSyN29YIlhWjgA3SRj7A+BOblNCPtDqAKyo="
+_abiz.pekarnanovak.example. 300 IN TXT "v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=VKJZd2Cpbs7FmfKMlbOvh2lDfkkkQ1txfD/G5O70ASo="
 ```
 
 - `v=abiz1` musí být první. `h` je povinné; `k` a `p` jsou nepovinné.
@@ -65,25 +65,29 @@ Záznam poskytovaný na `https://pekarnanovak.cz.to.co` jako `application/json`:
   "domains": [
     "pekarnanovak.example"
   ],
-  "public_key": "5nP0+J+3PSyN29YIlhWjgA3SRj7A+BOblNCPtDqAKyo=",
+  "public_key": "VKJZd2Cpbs7FmfKMlbOvh2lDfkkkQ1txfD/G5O70ASo=",
   "description": "Řemeslná pekárna v Brně.",
   "website": "https://pekarnanovak.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Brno",
-      "country": "cz",
+      "address": {
+        "locality": "Brno",
+        "country": {
+          "code": "CZ"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "K07Bz3yVkR2iz/jDtmXmDizwYHMJEJXll0CxKjOFq5Wm4A5MSeGyjHv2Pe+h/YB4aSTZOd5I6ZCFFN3FLBCHAQ=="
+  "signature": "HxSd7EUbC8V5IAtl3w5niFrfBkfhcB7yahS29Syi5Wndnnkfp+ClltXgG2MhJkaX2VyCu+DEwZAkuENI5nGsBw=="
 }
 ```
 
 Referenčním validátorem můžete záznam a hodnotu DNS ověřit lokálně:
 
 ```sh
-python scripts/validate.py record.json --domain pekarnanovak.example --dns-value 'v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=5nP0+J+3PSyN29YIlhWjgA3SRj7A+BOblNCPtDqAKyo='
+python scripts/validate.py record.json --domain pekarnanovak.example --dns-value 'v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=VKJZd2Cpbs7FmfKMlbOvh2lDfkkkQ1txfD/G5O70ASo='
 ```
 
 ### Vlastní hosting, nebo poskytovatel

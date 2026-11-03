@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=fPLihURgxHO1fnl96n9okZ8CdMrLdb1M12H95RLvviU="
+_abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -63,22 +63,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "nutmegspicetraders.example"
   ],
-  "public_key": "fPLihURgxHO1fnl96n9okZ8CdMrLdb1M12H95RLvviU=",
+  "public_key": "d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js=",
   "description": "Nutmeg, mace and local spice blends.",
   "website": "https://nutmegspicetraders.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "St George's",
-      "country": "gd",
+      "address": {
+        "locality": "St George's",
+        "country": {
+          "code": "GD"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Grenada",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 08:00-16:00",
-    "Sa 08:00-12:00"
-  ],
-  "signature": "ttWAy43aUeCoJ2NVa0BMM1BHyKXCvcowpA0eg8U36BbKpFv2sLtp4ctVRlXl3/4wX9RpBDYIMccLEzb6pc84Dw=="
+  "signature": "bAnSVffkkDz/miuE872qZrePF0utQ/J8mnJk3IcOC1KQy3T7w512PR5q6cFrrZw50VMUXkWLsdR3NMVCrUZMCQ=="
 }
 ```
 
@@ -91,7 +154,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain nutmegspicetraders.example \
-  --dns-value 'v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=fPLihURgxHO1fnl96n9okZ8CdMrLdb1M12H95RLvviU='
+  --dns-value 'v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js='
 ```
 
 ## 3. Using a provider and MCP
@@ -106,7 +169,7 @@ For example, a provider might host the record for Nutmeg Spice Traders at `nutme
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=fPLihURgxHO1fnl96n9okZ8CdMrLdb1M12H95RLvviU="
+  _abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

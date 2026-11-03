@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.honiarahardware.example. 300 IN TXT "v=abiz1;k=sb-12345;h=honiarahardware.sb.to.co;p=hppSkjqXXUU0yIYA1txtdikoIWx3B55JkuVVVsUW1HQ="
+_abiz.honiarahardware.example. 300 IN TXT "v=abiz1;k=sb-12345;h=honiarahardware.sb.to.co;p=Q7cdN7S82e5rzF6cgbwmhrAcShJaXjBZzflTyhmD/sY="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -63,22 +63,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "honiarahardware.example"
   ],
-  "public_key": "hppSkjqXXUU0yIYA1txtdikoIWx3B55JkuVVVsUW1HQ=",
+  "public_key": "Q7cdN7S82e5rzF6cgbwmhrAcShJaXjBZzflTyhmD/sY=",
   "description": "Building supplies and tools.",
   "website": "https://honiarahardware.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Honiara",
-      "country": "sb",
+      "address": {
+        "locality": "Honiara",
+        "country": {
+          "code": "SB"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Pacific/Guadalcanal",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 08:00-17:00",
-    "Sa 08:00-12:00"
-  ],
-  "signature": "6s7ra55rtv1xCWuDnaKun7OgpZ/xvf2Yhu6c0qBhA8Wfc1SAElbDz/DjHUwpeN2cRRsqMk56fpkFvutVKv1KDQ=="
+  "signature": "uZZvcgm43KzcUmmZVtrEV7n+BjZTfeAqT+lSh6cH9umU+uVIXWukF8Z8+hv5GPw5d8kX9iMns9SutnJntjMtBw=="
 }
 ```
 
@@ -91,7 +154,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain honiarahardware.example \
-  --dns-value 'v=abiz1;k=sb-12345;h=honiarahardware.sb.to.co;p=hppSkjqXXUU0yIYA1txtdikoIWx3B55JkuVVVsUW1HQ='
+  --dns-value 'v=abiz1;k=sb-12345;h=honiarahardware.sb.to.co;p=Q7cdN7S82e5rzF6cgbwmhrAcShJaXjBZzflTyhmD/sY='
 ```
 
 ## 3. Using a provider and MCP
@@ -106,7 +169,7 @@ For example, a provider might host the record for Honiara Hardware at `honiaraha
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.honiarahardware.example. 300 IN TXT "v=abiz1;k=sb-12345;h=honiarahardware.sb.to.co;p=hppSkjqXXUU0yIYA1txtdikoIWx3B55JkuVVVsUW1HQ="
+  _abiz.honiarahardware.example. 300 IN TXT "v=abiz1;k=sb-12345;h=honiarahardware.sb.to.co;p=Q7cdN7S82e5rzF6cgbwmhrAcShJaXjBZzflTyhmD/sY="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

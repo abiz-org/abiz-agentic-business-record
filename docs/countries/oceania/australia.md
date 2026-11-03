@@ -42,7 +42,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=Y06f66e3yXqdpeT3VDpbJ5iApPFpcHJlB1qPOLFPB4M="
+_abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -66,23 +66,89 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "harboursidebikerepairs.example"
   ],
-  "public_key": "Y06f66e3yXqdpeT3VDpbJ5iApPFpcHJlB1qPOLFPB4M=",
+  "public_key": "tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk=",
   "description": "Bicycle servicing and repairs near Circular Quay.",
   "website": "https://harboursidebikerepairs.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Sydney",
-      "region": "NSW",
-      "country": "au",
+      "address": {
+        "locality": "Sydney",
+        "region": {
+          "code": "AU-NSW",
+          "name": "New South Wales"
+        },
+        "country": {
+          "code": "AU"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Australia/Sydney",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "14:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 07:30-18:00",
-    "Sa 08:00-14:00"
-  ],
-  "signature": "tUewoMUAOQDBprBaP95Z9E+BpI/KEbeEgkPCQ8nBIH7HxVi8ToVm7tbzqA9ryoYggyFhHV8uy6jqUvfpvW99DA=="
+  "signature": "el9PEhUj2HILUiND8nE8JW40VWQI/8eGWrQJZPYgkUP+/jLxykwEbcT0TME2bu4+uEf8tJWkgHZS8luQm4k2CQ=="
 }
 ```
 
@@ -95,7 +161,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain harboursidebikerepairs.example \
-  --dns-value 'v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=Y06f66e3yXqdpeT3VDpbJ5iApPFpcHJlB1qPOLFPB4M='
+  --dns-value 'v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk='
 ```
 
 ## 3. Using a provider and MCP
@@ -112,7 +178,7 @@ To see how one provider describes this for Australian businesses, see [ABIZ reco
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=Y06f66e3yXqdpeT3VDpbJ5iApPFpcHJlB1qPOLFPB4M="
+  _abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

@@ -45,7 +45,7 @@ Si vous ajoutez `business_key` et `registration_number` à la fiche, ajoutez les
 Publiez un seul enregistrement TXT commençant par `v=abiz1` à `_abiz.` suivi de votre domaine. Utilisez la forme compacte, sans espaces (section 3.1.1), avec un TTL de 300 secondes :
 
 ```dns
-_abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=ihpSmzT9bF6bPOVrmrGYlJXz8Cd+9fGXAongPRRPbfc="
+_abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM="
 ```
 
 Une entreprise sans numéro d’immatriculation, ou qui préfère ne pas le publier, omet simplement `k` :
@@ -69,22 +69,89 @@ Cet exemple est fictif. Il passe le validateur de référence.
   "domains": [
     "boulangerieduvieuxport.example"
   ],
-  "public_key": "ihpSmzT9bF6bPOVrmrGYlJXz8Cd+9fGXAongPRRPbfc=",
+  "public_key": "yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM=",
   "description": "Boulangerie artisanale et viennoiseries dans le Vieux-Port.",
   "website": "https://boulangerieduvieuxport.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Québec",
-      "region": "QC",
-      "country": "ca",
+      "address": {
+        "locality": "Québec",
+        "region": {
+          "code": "CA-QC",
+          "name": "Québec"
+        },
+        "country": {
+          "code": "CA"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Toronto",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": []
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Tu-Su 07:00-18:00"
-  ],
-  "signature": "YwiLW1OKMyc89+Ym3h0psG/UfcaM0w/2WZrA7QmJKVJjdTTcTehU7irwOmA3xzDl2sEqav+qzFmRbQzxjtBNDA=="
+  "signature": "VJ2vK0jiVqA71QuwK+rY+RHDWRmAeI9H6zkIqHvxa42Z6XgWQVEnvWKInXdCanIUfJ2AxZNtyn9r7+iGGnHTDQ=="
 }
 ```
 
@@ -97,7 +164,7 @@ Avant de publier, vérifiez la fiche et la valeur DNS avec le validateur de réf
 ```sh
 python scripts/validate.py record.json \
   --domain boulangerieduvieuxport.example \
-  --dns-value 'v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=ihpSmzT9bF6bPOVrmrGYlJXz8Cd+9fGXAongPRRPbfc='
+  --dns-value 'v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM='
 ```
 
 ## 3. Fournisseurs et MCP
@@ -112,7 +179,7 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie du Vieux-P
 - **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé ou omettez `p`.
 
   ```dns
-  _abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=ihpSmzT9bF6bPOVrmrGYlJXz8Cd+9fGXAongPRRPbfc="
+  _abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM="
   ```
 
 - **La clé privée appartient à l’entreprise.** Elle ne doit jamais figurer dans le DNS, dans la fiche ni dans un dépôt public. Un fournisseur peut la générer et la conserver pour vous (mode hébergé), mais il doit vous permettre de l’exporter à tout moment, par exemple au format PKCS#8, et supprimer sa copie à votre demande (section 3.3.4).

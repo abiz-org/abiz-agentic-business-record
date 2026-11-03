@@ -8,7 +8,7 @@
   "domains": [
     "events.harbourbikes.example"
   ],
-  "public_key": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=",
+  "public_key": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=",
   "description": "Bike maintenance classes and group rides run by Harbour Bike Repair in Portland.",
   "website": "https://events.harbourbikes.example",
   "services": [
@@ -22,5 +22,5 @@
       "url": "https://harbour-bike-repair.or.us.to.co"
     }
   ],
-  "signature": "E+I5e5AkA602m6Aw5qsRp9vbHwvXnnU43mGLcMbMPwc7tQCEZOogrFOBBLqCGqFNiWBEb15jKL9zf8UNCvmEBw=="
+  "signature": "awotg0KZmvtTPHI7c2A2hkhfVZrpLlQoQbUOGXNCL074PshHLK3kqMN/FjYTqjmW/+arSWM1qK0eNltjAmtyAg=="
 }

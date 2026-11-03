@@ -41,7 +41,7 @@ Cheile se compară fără a ține cont de majuscule, dar publicați forma canoni
 Publicați exact o înregistrare TXT ABIZ la `_abiz` pe domeniul dumneavoastră, în forma compactă, fără spații:
 
 ```dns
-_abiz.codruvin.example. 300 IN TXT "v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=vd/UPz8vt2sx7C4hi2YQEIeHYIOsvx9FZN/2S/FfO9Y="
+_abiz.codruvin.example. 300 IN TXT "v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=6k1pJUgnF6IiBcYWtRXawfW0QYRop5RvFxVxToHKMqs="
 ```
 
 - `v=abiz1` trebuie să fie primul. `h` este obligatoriu; `k` și `p` sunt opționale.
@@ -65,25 +65,29 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
   "domains": [
     "codruvin.example"
   ],
-  "public_key": "vd/UPz8vt2sx7C4hi2YQEIeHYIOsvx9FZN/2S/FfO9Y=",
+  "public_key": "6k1pJUgnF6IiBcYWtRXawfW0QYRop5RvFxVxToHKMqs=",
   "description": "Cramă din Chișinău.",
   "website": "https://codruvin.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Chișinău",
-      "country": "md",
+      "address": {
+        "locality": "Chișinău",
+        "country": {
+          "code": "MD"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "BUrEeVSnwxx327PkX7i5Uv60IcAL/eegzCxuIn9kCuB2N5UJJ2P0XTCTx/DstvjOp7fh+I4ddIomCjlQ3s+lCA=="
+  "signature": "ClygB5+TbQd5IkcgQJQf4WGTxm8sZidp9/qHtysfgykwvv6Aep4L6w6ewLNzuPYBF+Kh8uJCzWlHurS80ftqBw=="
 }
 ```
 
 Cu validatorul de referință puteți verifica local înregistrarea și valoarea DNS:
 
 ```sh
-python scripts/validate.py record.json --domain codruvin.example --dns-value 'v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=vd/UPz8vt2sx7C4hi2YQEIeHYIOsvx9FZN/2S/FfO9Y='
+python scripts/validate.py record.json --domain codruvin.example --dns-value 'v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=6k1pJUgnF6IiBcYWtRXawfW0QYRop5RvFxVxToHKMqs='
 ```
 
 ### Găzduire proprie sau printr-un furnizor

@@ -1,0 +1,108 @@
+{
+  "record_version": "abiz1",
+  "business_name": "Dépanneur Saint-Roch inc.",
+  "country": "ca",
+  "business_key": "ca-qc-1234567890",
+  "registration_number": "1234567890",
+  "identity_host": "depanneursaintroch.qc.ca.to.co",
+  "domains": [
+    "depanneursaintroch.example"
+  ],
+  "public_key": "xC86Ltz5i573qn9qHiY8QOrJmGVAqBGSGmrDG36Pojo=",
+  "locations": [
+    {
+      "location_id": "saint-roch",
+      "kind": "trading",
+      "name": "Dépanneur Saint-Roch",
+      "address": {
+        "street_lines": [
+          "250, rue Exemple"
+        ],
+        "locality": "Québec",
+        "postal_code": "G1K 0X0",
+        "region": {
+          "code": "CA-QC",
+          "name": "Québec"
+        },
+        "country": {
+          "code": "CA",
+          "name": "Canada"
+        }
+      },
+      "geo": {
+        "latitude": 46.8139,
+        "longitude": -71.2245
+      },
+      "opening_hours": {
+        "time_zone": "America/Toronto",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "00:00",
+                "closes": "24:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "00:00",
+                "closes": "24:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "00:00",
+                "closes": "24:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "00:00",
+                "closes": "24:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "00:00",
+                "closes": "24:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "00:00",
+                "closes": "24:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": [
+              {
+                "opens": "00:00",
+                "closes": "24:00"
+              }
+            ]
+          }
+        ]
+      },
+      "public": true
+    }
+  ],
+  "signature": "FwQRa2FenC65ZONwgc4JeGekP7yszvqGyA31MfoWYaVKA3nmh7EbBqh/+S8KtTURy/9n/byR1VGxl4t1hXYBDg=="
+}

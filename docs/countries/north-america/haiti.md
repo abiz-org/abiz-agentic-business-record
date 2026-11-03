@@ -39,7 +39,7 @@ Si vous ajoutez `business_key` et `registration_number` à la fiche, ajoutez les
 Publiez un seul enregistrement TXT commençant par `v=abiz1` à `_abiz.` suivi de votre domaine. Utilisez la forme compacte, sans espaces (section 3.1.1), avec un TTL de 300 secondes :
 
 ```dns
-_abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU="
+_abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0="
 ```
 
 Une entreprise sans numéro d’immatriculation, ou qui préfère ne pas le publier, omet simplement `k` :
@@ -63,21 +63,85 @@ Cet exemple est fictif. Il passe le validateur de référence.
   "domains": [
     "boulangeriesoleil.example"
   ],
-  "public_key": "RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU=",
+  "public_key": "e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0=",
   "description": "Pain, pâtés et pain patate.",
   "website": "https://boulangeriesoleil.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Port-au-Prince",
-      "country": "ht",
+      "address": {
+        "locality": "Port-au-Prince",
+        "country": {
+          "code": "HT"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Port-au-Prince",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 06:00-18:00"
-  ],
-  "signature": "lVdSk53i/eCpVDV+wcaUsikMbFWtUdh+j4kP1VO4yPBlly/MFpITpnZZETe0nq8DQST8RB7R7xS3OyQDUX6SCg=="
+  "signature": "EkfItcQaoWdfchPq/qYd+6SwC/POKBzZPbDGhQ1mKjb05T+4nzEaz2EZnlRuzyGF+vKMAJcsZ5viPL4ol9UCCA=="
 }
 ```
 
@@ -90,7 +154,7 @@ Avant de publier, vérifiez la fiche et la valeur DNS avec le validateur de réf
 ```sh
 python scripts/validate.py record.json \
   --domain boulangeriesoleil.example \
-  --dns-value 'v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU='
+  --dns-value 'v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0='
 ```
 
 ## 3. Fournisseurs et MCP
@@ -105,7 +169,7 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie Soleil à 
 - **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé ou omettez `p`.
 
   ```dns
-  _abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU="
+  _abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0="
   ```
 
 - **La clé privée appartient à l’entreprise.** Elle ne doit jamais figurer dans le DNS, dans la fiche ni dans un dépôt public. Un fournisseur peut la générer et la conserver pour vous (mode hébergé), mais il doit vous permettre de l’exporter à tout moment, par exemple au format PKCS#8, et supprimer sa copie à votre demande (section 3.3.4).

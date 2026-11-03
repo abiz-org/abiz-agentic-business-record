@@ -39,8 +39,8 @@ UNREG = json.loads((ROOT / "examples" / "unregistered-us.json").read_text())
 # Throwaway public key from examples/dns-ed25519-p.txt. The private key was not committed.
 P_MESSAGE = b"abiz1.1 p-key test"
 P_SIGNATURE = (
-    "qyKerWm4IqgOEeKqK67muf7CDIoU9PxzGz2KCTjSgg/XBtg43YiQHo/QzX/avaSMTc/G"
-    "0UxL5kV8uc3VA6OABg=="
+    "IaZr5HsbImiYvB92BzVDbwsCmCnq59qwga3YPWghNoHNJ+Z9fhMwFGV3VD+c5kVOsdcv"
+    "gFZIa+iillIxV21kBA=="
 )
 # Shape of $defs/retired_key. Not a record property; the signature is a placeholder.
 RETIRED_KEY_ENTRY = {
@@ -317,7 +317,7 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
                          f"v=abiz1; k=us-or-123456; h={self.HOST}; p={P};"), [])
 
     def test_p_padding_survives_spaces_around_equals(self):
-        key = "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
+        key = "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
         tags = dns_tags(f"v=abiz1; h={self.HOST}; p = {key} ;")
         self.assertEqual(tags["p"], key)
         self.assertEqual(len(decode_ed25519_public_key(tags["p"])), 32)
@@ -369,7 +369,8 @@ class ABIZBusinessKeyTests(unittest.TestCase):
     def record(self, key, number, country="us"):
         r = copy.deepcopy(REG)
         r["country"], r["business_key"], r["registration_number"] = country, key, number
-        r["locations"][0]["country"] = country
+        r["locations"][0]["address"] = {"country": {"code": country.upper()}}
+        r["locations"][0].pop("opening_hours")
         return resign(r)
 
     def test_valid_keys_per_country(self):
@@ -391,8 +392,10 @@ class ABIZBusinessKeyTests(unittest.TestCase):
         bad["business_key"], bad["registration_number"] = "uk-123456", "123456"
         self.assertTrue(validate_record(bad, SCHEMA))
         bad = copy.deepcopy(UNREG)
-        bad["locations"][0]["country"] = "ZZ"
-        self.assertTrue(validate_record(bad, SCHEMA))
+        bad["locations"][0]["address"]["country"]["code"] = "ZZ"
+        self.assertTrue(validate_record(resign(bad), SCHEMA))
+        bad["locations"][0]["address"]["country"]["code"] = "us"
+        self.assertTrue(validate_record(resign(bad), SCHEMA))
 
     def test_invalid_subdivision_for_country(self):
         for key in ("us-zz-123456", "us-on-123456", "ca-or-123", "ae-du1-1", "us-pr-123456", "us-um-1"):
@@ -616,7 +619,8 @@ class ABIZUnitAndCountryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "not supported"):
             parse_business_key("kp-123456")
         located = copy.deepcopy(REG)
-        located["locations"][0]["country"] = "kp"
+        located["locations"][0]["address"] = {"country": {"code": "KP"}}
+        located["locations"][0].pop("opening_hours")
         self.assertTrue(any("not supported" in e for e in validate_record(resign(located), SCHEMA)))
         # South Korea is unaffected.
         parse_business_key("kr-1234567890")
@@ -704,7 +708,8 @@ class ABIZRecordSigningTests(unittest.TestCase):
 
     def test_bad_signature_encoding_fails(self):
         sig = REG["signature"]
-        for bad in (sig[:-2], sig.replace("+", "-").replace("/", "_"), "A" * 88, sig[:-3] + "A=="):
+        for bad in (sig[:-2], sig[:10] + "-" + sig[11:], sig[:20] + "_" + sig[21:], "A" * 88,
+                    sig[:-3] + ("B==" if sig.endswith("A==") else "A==")):
             with self.subTest(bad=bad):
                 self.assertTrue(validate_record({**REG, "signature": bad}, SCHEMA))
 

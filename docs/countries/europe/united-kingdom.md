@@ -24,7 +24,7 @@ All field names in the JSON record use snake_case, such as `business_name` and `
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=9qb9yCmLPLK6afOLw2opb+3lz7Rm1SQugvNM9lWSgM4="
+_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY="
 ```
 
 | Tag | Required | What it holds |
@@ -87,7 +87,7 @@ HTTP/2 200
 content-type: application/json
 vary: Accept
 
-{"record_version":"abiz1","business_name":"Hartley’s Bakery","country":"gb","identity_host":"www.hartleysbakery.example", … ,"public_key":"9qb9yCmLPLK6afOLw2opb+3lz7Rm1SQugvNM9lWSgM4=", … ,"signature":"7uM857rD…bv2Ag=="}
+{"record_version":"abiz1","business_name":"Hartley’s Bakery","country":"gb","identity_host":"www.hartleysbakery.example", … ,"public_key":"GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY=", … ,"signature":"ELgFQM1z…MrVAA=="}
 ```
 
 The same address in a browser, with `?format=html`, or with no `format` at all:
@@ -143,7 +143,7 @@ https://hartleysbakery.example/.well-known/abiz.json
 {
   "v": "abiz1",
   "h": "www.hartleysbakery.example",
-  "p": "9qb9yCmLPLK6afOLw2opb+3lz7Rm1SQugvNM9lWSgM4="
+  "p": "GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY="
 }
 ```
 
@@ -160,7 +160,7 @@ The file shows that you control the website at your domain, which is weaker than
 Each example below has been checked with the reference validator, which verifies the record's `signature` and checks that `public_key` equals the `p` in the DNS value:
 
 ```sh
-python scripts/validate.py record.json --domain hartleysbakery.example --dns-value 'v=abiz1;h=www.hartleysbakery.example;p=9qb9yCmLPLK6afOLw2opb+3lz7Rm1SQugvNM9lWSgM4='
+python scripts/validate.py record.json --domain hartleysbakery.example --dns-value 'v=abiz1;h=www.hartleysbakery.example;p=GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY='
 ```
 
 or, for a well-known file saved locally as `abiz.json`:
@@ -182,7 +182,7 @@ Hartley’s Bakery is run by two partners. An ordinary partnership is not on the
 DNS:
 
 ```dns
-_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=9qb9yCmLPLK6afOLw2opb+3lz7Rm1SQugvNM9lWSgM4="
+_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY="
 ```
 
 JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accept: application/json`):
@@ -196,11 +196,11 @@ JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accep
   "domains": [
     "hartleysbakery.example"
   ],
-  "public_key": "9qb9yCmLPLK6afOLw2opb+3lz7Rm1SQugvNM9lWSgM4=",
+  "public_key": "GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY=",
   "description": "Sourdough, rye and seasonal bakes, made by hand every morning in Bristol. Order a loaf for collection, or ask us about a celebration cake.",
   "website": "https://www.hartleysbakery.example",
-  "contact_email": "hello@hartleysbakery.example",
-  "contact_phone": "+44 117 496 0142",
+  "email": "hello@hartleysbakery.example",
+  "phone": "+44 117 496 0142",
   "logo_url": "https://www.hartleysbakery.example/logo.png",
   "last_updated": "2026-11-03T09:00:00Z",
   "services": [
@@ -221,30 +221,166 @@ JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accep
   ],
   "locations": [
     {
+      "location_id": "bristol-shop",
       "kind": "trading",
       "name": "Hartley’s Bakery, Bristol",
-      "street": "1 Example Street",
-      "city": "Bristol",
-      "region": "England",
-      "postal_code": "BS1 4XX",
-      "country": "gb",
+      "address": {
+        "street_lines": [
+          "1 Example Street"
+        ],
+        "locality": "Bristol",
+        "postal_code": "BS1 4XX",
+        "region": {
+          "code": "GB-ENG",
+          "name": "England"
+        },
+        "country": {
+          "code": "GB"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Europe/London",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ],
+        "exceptions": [
+          {
+            "date": "2026-12-25",
+            "periods": []
+          },
+          {
+            "date": "2026-12-26",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     },
     {
+      "location_id": "bristol-market-stall",
       "kind": "trading",
       "name": "Saturday market stall",
-      "street": "Example Market, Stall 14",
-      "city": "Bristol",
-      "region": "England",
-      "postal_code": "BS5 0XX",
-      "country": "gb",
+      "address": {
+        "street_lines": [
+          "Example Market, Stall 14"
+        ],
+        "locality": "Bristol",
+        "postal_code": "BS5 0XX",
+        "region": {
+          "code": "GB-ENG",
+          "name": "England"
+        },
+        "country": {
+          "code": "GB"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Europe/London",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": []
+          },
+          {
+            "day": "tuesday",
+            "periods": []
+          },
+          {
+            "day": "wednesday",
+            "periods": []
+          },
+          {
+            "day": "thursday",
+            "periods": []
+          },
+          {
+            "day": "friday",
+            "periods": []
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:30",
+                "closes": "13:30"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ],
+        "exceptions": [
+          {
+            "date": "2026-12-25",
+            "periods": []
+          },
+          {
+            "date": "2026-12-26",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
-  ],
-  "opening_hours": [
-    "Shop: Mo-Sa 07:30-15:00",
-    "Market stall: Sa 08:30-13:30",
-    "Closed 25 and 26 December"
   ],
   "links": [
     {
@@ -256,15 +392,16 @@ JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accep
       "url": "https://www.hartleysbakery.example/order"
     }
   ],
-  "signature": "7uM857rDHehWucIDtpSObjEb/eSHyf6mZ+xqjd6IF7ojPFhL6vDFVM1J0Chd6a79T5W3IqT/1sefoxei9bv2Ag=="
+  "signature": "ELgFQM1z9/4xgBhnGFRshOMTBT1LKWFGmonffndCAGfwxGxlSeZu2uJSSqRBr0KCeK5e8PF3JFSxnaIArMrVAA=="
 }
 ```
 
 Notes:
 
 - No partner is named and no home address appears. The shop and the market stall are trading premises, so their addresses are public (`"public": true`). A sole trader who works from home would list only the town, or leave `locations` out: the specification requires private personal addresses to be omitted, not marked as private.
-- `contact_email` is a role address, not a partner's personal one.
-- `opening_hours` is a list of short text lines. The schema does not fix a format; a familiar notation such as `Mo-Sa 07:30-15:00` is easy for people and software to read.
+- `email` is a role address, not a partner's personal one.
+- Opening hours belong to each location (`locations[].opening_hours`), in local time with an IANA time zone (`Europe/London`). Monday to Saturday each have one period; Sunday has an empty list, which means closed. A day left out would mean the hours are not known, not that the shop is closed. The two Christmas closures are dated `exceptions`. Times are local, so the change to and from British Summer Time needs no edit.
+- `location_id` is a short public name for each location that stays the same when other details change. It is not a database key.
 - If the partners preferred a provider to host the record, only `h` and `identity_host` would change, for example to `hartleysbakery-bristol.biz.to.co`.
 - `public_key` is the same value as `p` in DNS, and `signature` is the record's Ed25519 signature (section 9). Both are required. `last_updated` is covered by the signature, so update it whenever you re-sign.
 - The `p` value, and the signature made with it, come from a throwaway example key whose private key has been discarded. Never copy them: publish your own key and sign your own record (section 9).
@@ -276,7 +413,7 @@ The partners incorporate Hartley’s Bakery Ltd at Companies House, which issues
 DNS:
 
 ```dns
-_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery.uk.to.co;p=pRefpOaEPXy40c3SKc4NZge42h38/Su7nyD1aU0o1+8="
+_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery.uk.to.co;p=F7MfjdYBDDn8lUetBGyYZ6Z4Ak4AxKrucFOV6YXaEPE="
 ```
 
 JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: application/json`):
@@ -292,11 +429,11 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
   "domains": [
     "hartleysbakery.example"
   ],
-  "public_key": "pRefpOaEPXy40c3SKc4NZge42h38/Su7nyD1aU0o1+8=",
+  "public_key": "F7MfjdYBDDn8lUetBGyYZ6Z4Ak4AxKrucFOV6YXaEPE=",
   "description": "Sourdough, rye and seasonal bakes, made by hand every morning in Bristol. Order a loaf for collection, or ask us about a celebration cake.",
   "website": "https://www.hartleysbakery.example",
-  "contact_email": "hello@hartleysbakery.example",
-  "contact_phone": "+44 117 496 0142",
+  "email": "hello@hartleysbakery.example",
+  "phone": "+44 117 496 0142",
   "logo_url": "https://www.hartleysbakery.example/logo.png",
   "last_updated": "2026-11-03T09:00:00Z",
   "mcp_server_url": "https://agents.hartleysbakery.example/mcp",
@@ -323,40 +460,186 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
   ],
   "locations": [
     {
+      "location_id": "registered-office",
       "kind": "registered-office",
       "name": "Registered office",
-      "street": "Unit 3, Example Trading Estate",
-      "city": "Bristol",
-      "region": "England",
-      "postal_code": "BS2 0XX",
-      "country": "gb",
+      "address": {
+        "street_lines": [
+          "Unit 3, Example Trading Estate"
+        ],
+        "locality": "Bristol",
+        "postal_code": "BS2 0XX",
+        "region": {
+          "code": "GB-ENG",
+          "name": "England"
+        },
+        "country": {
+          "code": "GB"
+        }
+      },
       "public": true
     },
     {
+      "location_id": "bristol-shop",
       "kind": "trading",
       "name": "Hartley’s Bakery, Bristol",
-      "street": "1 Example Street",
-      "city": "Bristol",
-      "region": "England",
-      "postal_code": "BS1 4XX",
-      "country": "gb",
+      "address": {
+        "street_lines": [
+          "1 Example Street"
+        ],
+        "locality": "Bristol",
+        "postal_code": "BS1 4XX",
+        "region": {
+          "code": "GB-ENG",
+          "name": "England"
+        },
+        "country": {
+          "code": "GB"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Europe/London",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "15:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ],
+        "exceptions": [
+          {
+            "date": "2026-12-25",
+            "periods": []
+          },
+          {
+            "date": "2026-12-26",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     },
     {
+      "location_id": "bristol-market-stall",
       "kind": "other",
       "name": "Saturday market stall",
-      "street": "Example Market, Stall 14",
-      "city": "Bristol",
-      "region": "England",
-      "postal_code": "BS5 0XX",
-      "country": "gb",
+      "address": {
+        "street_lines": [
+          "Example Market, Stall 14"
+        ],
+        "locality": "Bristol",
+        "postal_code": "BS5 0XX",
+        "region": {
+          "code": "GB-ENG",
+          "name": "England"
+        },
+        "country": {
+          "code": "GB"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Europe/London",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": []
+          },
+          {
+            "day": "tuesday",
+            "periods": []
+          },
+          {
+            "day": "wednesday",
+            "periods": []
+          },
+          {
+            "day": "thursday",
+            "periods": []
+          },
+          {
+            "day": "friday",
+            "periods": []
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:30",
+                "closes": "13:30"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ],
+        "exceptions": [
+          {
+            "date": "2026-12-25",
+            "periods": []
+          },
+          {
+            "date": "2026-12-26",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
-  ],
-  "opening_hours": [
-    "Shop: Mo-Sa 07:30-15:00",
-    "Market stall: Sa 08:30-13:30",
-    "Closed 25 and 26 December"
   ],
   "links": [
     {
@@ -377,7 +660,7 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
       "food_hygiene_rating_url": "https://www.hartleysbakery.example/hygiene"
     }
   },
-  "signature": "oDkZktkx2z2sTzuHg5nnCqAfLvuJTs/mw9WxOPwaAaaLPiAwre8IMAKwyX+faVBf6Udfvp1ILSJ7G446n/4BCw=="
+  "signature": "zfsMX8hnrqoa9I78xYwJxMYeUynchhOXC+blqYIWfTj5FpJf9DTH6hOwjf0U8E53CACDEI8j7Ti9jl5HV/9wBg=="
 }
 ```
 
@@ -412,42 +695,58 @@ The table is generated from the schema file. Types, constraints and required fla
 | `country` | string (pattern `^[A-Za-z]{2}$`) | Yes | Assigned ISO 3166-1 alpha-2 country code. Case-insensitive; canonical form is lowercase. The validator checks it against data/iso3166.json. | `"gb"` |
 | `identity_host` | string (pattern `^[A-Za-z0-9][A-Za-z0-9.-]*(?:/[^\s?#]*)?$`; length 4–512) | Yes | DNS h value: lowercase DNS hostname with optional path; never includes https:// | `"hartleysbakery.uk.to.co"` |
 | `domains` | array of strings (at least 1; unique; each format `hostname`, length 4–253) | Yes | Business-controlled domain names this record claims. DNS cross-check must confirm control. | `["hartleysbakery.example"]` |
-| `public_key` | string (pattern `^[A-Za-z0-9+/]{43}=$`, 44 characters) | Yes | Ed25519 public key, standard base64 of the 32-byte key (SPEC 3.3.2). MUST equal p in the DNS assertion or well-known file; consumers reject the identity claim if it differs (SPEC 4.6). | `"pRefpOaEPXy40c3SKc4NZge42h38/Su7nyD1aU0o1+8="` |
-| `signature` | string (pattern `^[A-Za-z0-9+/]{86}==$`, 88 characters) | Yes | Ed25519 signature, standard base64 of the 64 bytes, over the UTF-8 RFC 8785 (JCS) canonical form of the record without signature, verified with public_key (SPEC 4.6). | `"oDkZktkx…"` (88 characters) |
+| `public_key` | string (pattern `^[A-Za-z0-9+/]{43}=$`, 44 characters) | Yes | Ed25519 public key, standard base64 of the 32-byte key (SPEC 3.3.2). MUST equal p in the DNS assertion or well-known file; consumers reject the identity claim if it differs (SPEC 4.6). | `"F7MfjdYBDDn8lUetBGyYZ6Z4Ak4AxKrucFOV6YXaEPE="` |
+| `signature` | string (pattern `^[A-Za-z0-9+/]{86}==$`, 88 characters) | Yes | Ed25519 signature, standard base64 of the 64 bytes, over the UTF-8 RFC 8785 (JCS) canonical form of the record without signature, verified with public_key (SPEC 4.6). | `"zfsMX8hn…"` (88 characters) |
 | `business_key` | string (pattern `^[A-Za-z]{2}-(?:[A-Za-z0-9]{1,3}-)?[A-Za-z0-9]+$`; up to 128 characters) | If `registration_number` present | country[-subdivision]-registration-number (SPEC section 4.2.1). Case-insensitive; canonical form has lowercase country and subdivision and an uppercase number. Assigned codes and the subdivision rule (section 4.2.2) are checked by the validator. | `"gb-01234567"` |
 | `registration_number` | string (pattern `^[A-Za-z0-9]+$`; length 1–96) | If `business_key` present | Normalised registration number: ASCII letters and digits only (SPEC section 4.2.3). Case-insensitive; canonical form is uppercase. | `"01234567"` |
 | `mcp_server_url` | string (format `uri`; pattern `^https://`; up to 2048 characters) | No | Optional. No conformance requirement to operate an MCP server. | `"https://agents.hartleysbakery.example/mcp"` |
 | `description` | string (length 1–4000) | No | Short public description of the business (SPEC 4.3) | `"Sourdough, rye and seasonal bakes, made by hand every mo…` |
 | `website` | string (format `uri`; pattern `^https://`; up to 2048 characters) | No | Main public website (SPEC 4.3) | `"https://www.hartleysbakery.example"` |
-| `contact_email` | string (format `email`; up to 320 characters) | No | Public contact email address; use a role address (SPEC 4.3, 9) | `"hello@hartleysbakery.example"` |
-| `contact_phone` | string (up to 64 characters) | No | Public contact telephone number (SPEC 4.3) | `"+44 117 496 0142"` |
+| `email` | string (format `email`; length 3–320) | No | Public customer-facing email address of the business (SPEC 4.7.2). Replaces contact_email. | `"hello@hartleysbakery.example"` |
+| `phone` | string (length 1–64) | No | Primary public customer-facing telephone number of the business (SPEC 4.7.2). Replaces contact_phone. | `"+44 117 496 0142"` |
 | `logo_url` | string (format `uri`; pattern `^https://`; up to 2048 characters) | No | Public logo image (SPEC 4.3) | `"https://www.hartleysbakery.example/logo.png"` |
+| `blog_url` | string (HTTPS URL; up to 2048 characters) | No | Canonical public index of the business's published articles or news (SPEC section 4.7.3). | Not used |
+| `rss_url` | string (HTTPS URL; up to 2048 characters) | No | Canonical public RSS 2.0 feed (SPEC section 4.7.3). Feed items are never copied into the record. | Not used |
 | `last_updated` | string (format `date-time`) | No | When the record was last updated (SPEC 4.3) | `"2026-11-03T09:00:00Z"` |
 | `services` | array of objects (up to 200 items) | No | Services the business offers (SPEC 4.3) | See below |
 | `services[].name` | string (length 1–180) | Yes | Service name | `"Sourdough and rye loaves"` |
 | `services[].description` | string (up to 2000 characters) | No | Service description | `"Baked every morning from 7:30. Order by 4pm for collecti…` |
-| `services[].url` | string (format `uri`; pattern `^https://`) | No | Page for the service | `"https://www.hartleysbakery.example/order"` |
-| `locations` | array of objects (up to 100 items) | No | Public places of business; omit private personal addresses (SPEC 4.3) | See below |
+| `services[].url` | string (HTTPS URL; up to 2048 characters) | No | Page for the service | `"https://www.hartleysbakery.example/order"` |
+| `locations` | array of objects (up to 100 items) | No | Places of business (SPEC section 4.7.6). Each location's values are its own and are not inherited from the business level. | See below |
+| `locations[].location_id` | string (lowercase slug, length 1–100) | No | Stable public identifier, unique within locations. Not an internal database key. | `"bristol-shop"` |
 | `locations[].kind` | string (one of `registered-office`, `trading`, `other`) | No | Type of location | `"trading"` |
-| `locations[].name` | string (up to 180 characters) | No | Location name | `"Hartley’s Bakery, Bristol"` |
-| `locations[].city` | string (at least 1 character) | Yes | Town or city | `"Bristol"` |
-| `locations[].region` | string | No | Region | `"England"` |
-| `locations[].country` | string (pattern `^[A-Za-z]{2}$`) | Yes | Assigned ISO 3166-1 alpha-2 country code, case-insensitive. | `"gb"` |
-| `locations[].street` | string | No | Street address | `"1 Example Street"` |
-| `locations[].postal_code` | string | No | Postcode | `"BS1 4XX"` |
-| `locations[].public` | boolean | No | Whether the location is public | `true` |
-| `opening_hours` | array of strings (up to 50 items; each length 1–160) | No | Opening hours as short text lines (SPEC 4.3) | `["Shop: Mo-Sa 07:30-15:00", "Market stall: Sa 08:30-13:30…` |
+| `locations[].name` | string (length 1–180) | No | Location name | `"Hartley’s Bakery, Bristol"` |
+| `locations[].description` | string (length 1–2000) | No | Location-specific description | Not used |
+| `locations[].address` | object | No | Public postal address; omit every part that is not to be published (SPEC 4.7.6.2) | See below |
+| `locations[].address.street_lines` | array of strings (1–3 lines) | No | Street lines; needs `locality` | `["1 Example Street"]` |
+| `locations[].address.locality` | string (length 1–180) | If `street_lines` present | Town or city | `"Bristol"` |
+| `locations[].address.postal_code` | string (length 1–32) | No | Postcode | `"BS1 4XX"` |
+| `locations[].address.region` | object (`code`, `name`) | No | ISO 3166-2 code and/or name | `{"code": "GB-ENG", "name": "England"}` |
+| `locations[].address.country` | object (`code` pattern `^[A-Z]{2}$`, optional `name`) | Yes, in an address | Assigned ISO 3166-1 alpha-2 code, uppercase | `{"code": "GB"}` |
+| `locations[].geo` | object (`latitude`, `longitude`, both required) | No | WGS 84 coordinates; only with a published street address | Not used |
+| `locations[].website`, `email`, `phone`, `logo_url` | as at the top level | No | The location's own values (SPEC 4.7.6.3) | Not used |
+| `locations[].opening_hours` | object (`time_zone`, `weekly`, `exceptions`, `appointment_only`) | No | Structured hours in local time (SPEC 4.7.6.4) | See example 5b |
+| `locations[].service_areas` | array (up to 50) | No | Coded areas, postcodes or circles served (SPEC 4.7.7) | Not used |
+| `locations[].social_profiles`, `categories`, `external_listings`, `review_summaries`, `operational_status` | as at the top level | No | The location's own values (SPEC 4.7) | Not used |
+| `locations[].public` | boolean | No | true: customers or visitors can go there. Not consent to publish any detail. | `true` |
+| `tax_registrations` | array of objects (up to 20 items) | No | Verified, current tax registrations the business consented to publish (SPEC 4.7.4) | Not used |
+| `social_profiles` | object (keys `linkedin`, `x`, `instagram`, `facebook`, `youtube`, `tiktok`, `pinterest`, `vimeo`, `snapchat`, `clubhouse`) | No | Business-wide public social media profiles (SPEC 4.7.5) | Not used |
+| `categories` | object (`primary`, `additional`) | No | Categories from an identified taxonomy (SPEC 4.7.5) | Not used |
+| `media` | array of objects (up to 10 items) | No | Curated public media, business-level only (SPEC 4.7.9) | Not used |
+| `review_summaries` | array of objects (up to 20 items) | No | Per-platform review summaries (SPEC 4.7.10) | Not used |
+| `operational_status` | string (one of `open`, `temporarily_closed`, `permanently_closed`, `unknown`) | No | Whether the business as a whole is operating (SPEC 4.7.8) | Not used |
 | `links` | array of objects (up to 100 items) | No | Other public links (SPEC 4.3) | See below |
 | `links[].label` | string (length 1–140) | Yes | Link text | `"Menu"` |
-| `links[].url` | string (format `uri`; pattern `^https://`) | Yes | Link target | `"https://www.hartleysbakery.example/menu"` |
+| `links[].url` | string (HTTPS URL; up to 2048 characters) | Yes | Link target | `"https://www.hartleysbakery.example/menu"` |
 | `extensions` | object (keys match `^[a-z0-9-]+(?:\.[a-z0-9-]+)+$`) | No | Vendor-namespaced extensions; consumers may ignore unfamiliar extensions. | `{"example.hartleysbakery": {"food_hygiene_rating_url": "h…` |
 
 Notes on the table:
 
 - `business_key` and `registration_number` are optional, but if one is present the other must be too.
-- In `locations`, each entry needs `city` and `country`, and accepts no other fields than those listed.
-- `locations[].region` for the United Kingdom can be `England`, `Scotland`, `Wales` or `Northern Ireland`, or a county; the schema does not restrict it.
-- `contact_phone` is free text. International format (`+44 117 496 0142`) is the clearest for software.
+- A `locations` entry accepts no fields other than those listed. An address needs `country`; `street_lines` needs `locality`; `geo` needs a published street address.
+- `locations[].address.region.code` for the United Kingdom is `GB-ENG`, `GB-SCT`, `GB-WLS` or `GB-NIR`, or another ISO 3166-2 code for a county or council area; `name` can be any label, such as `England` or a county.
+- `phone` is free text. International (E.164) format (`+441174960142`, or `+44 117 496 0142` as written) is the clearest for software.
+- A record must not contain `recent_posts` or copies of blog posts; give `blog_url` or `rss_url` instead (SPEC 4.7.12).
 - `public_key` and `signature` are required in every record. Any change to any field, including `extensions` and `last_updated`, needs a new signature.
 - Names inside `extensions` are chosen by the extension's owner; snake_case is recommended, as in `food_hygiene_rating_url`.
 
@@ -581,7 +880,7 @@ _abiz.severnsideevents.example. 300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsi
 **The subsidiary: its own record and its own company number.**
 
 ```dns
-_abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsidecycles.example;p=SSSaqOjwr73oB8dBUbWhehK88c9Cb9xp8AxhkixF3aU="
+_abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsidecycles.example;p=+IlIJUKqnyTNgifodVr3S0umTKSWU9rRNe+xp/wEWlo="
 ```
 
 ```json
@@ -595,17 +894,26 @@ _abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsi
   "domains": [
     "severnsidecycles.example"
   ],
-  "public_key": "SSSaqOjwr73oB8dBUbWhehK88c9Cb9xp8AxhkixF3aU=",
+  "public_key": "+IlIJUKqnyTNgifodVr3S0umTKSWU9rRNe+xp/wEWlo=",
   "description": "Cycle hire and repairs in Edinburgh. A subsidiary of Severnside Leisure Group plc.",
   "website": "https://www.severnsidecycles.example",
   "locations": [
     {
       "kind": "registered-office",
-      "street": "2 Example Lane",
-      "city": "Edinburgh",
-      "region": "Scotland",
-      "postal_code": "EH1 9XX",
-      "country": "gb",
+      "address": {
+        "street_lines": [
+          "2 Example Lane"
+        ],
+        "locality": "Edinburgh",
+        "postal_code": "EH1 9XX",
+        "region": {
+          "code": "GB-SCT",
+          "name": "Scotland"
+        },
+        "country": {
+          "code": "GB"
+        }
+      },
       "public": true
     }
   ],
@@ -621,7 +929,7 @@ _abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsi
       "relationship": "subsidiary"
     }
   },
-  "signature": "8X5o2K9bbnf9B15kxvqEi9hcWQ5qMCN96PkIyfMwjRh6dhmWXY1iIEUOMWNiAKNA8e0WkucO53rzuTF4VFKVBw=="
+  "signature": "h9q5BYLXpH6WsAqQ0GUUfFg03GAkg6QV3/wr5PqX94ZRt4JdJJ+UF80QBo7xPdP2BYU6A9blzzShdhHHdvhOCg=="
 }
 ```
 

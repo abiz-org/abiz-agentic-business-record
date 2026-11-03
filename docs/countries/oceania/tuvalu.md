@@ -37,7 +37,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ="
+_abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14="
 ```
 
 ### Example record (JSON)
@@ -53,21 +53,80 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "funafutimarinesupplies.example"
   ],
-  "public_key": "3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ=",
+  "public_key": "lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14=",
   "description": "Marine supplies and outboard repairs.",
   "website": "https://funafutimarinesupplies.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Funafuti",
-      "country": "tv",
+      "address": {
+        "locality": "Funafuti",
+        "country": {
+          "code": "TV"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Pacific/Funafuti",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:30"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:30"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:30"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:30"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "16:30"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": []
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 08:00-16:30"
-  ],
-  "signature": "4PKwR0du8Gf6TwZ5ycYlFT6/WJQFPxKS64A6pPgBrnOqwBDdQU5WSayW3AN4yFWcYKsgN3tsvZJR48XqJ/9NBQ=="
+  "signature": "9e4Rrjx4Efn6/GUuqKJsqH/HmPaTdvXJ8iY6MX2wkj4cb9oVxGRVtrvxzH/O0VJg+syVm7uGwCr7igEDmnoMBg=="
 }
 ```
 
@@ -80,7 +139,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain funafutimarinesupplies.example \
-  --dns-value 'v=abiz1;h=funafutimarinesupplies.tv.to.co;p=3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ='
+  --dns-value 'v=abiz1;h=funafutimarinesupplies.tv.to.co;p=lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14='
 ```
 
 ## 3. Using a provider and MCP
@@ -95,7 +154,7 @@ For example, a provider might host the record for Funafuti Marine Supplies at `f
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ="
+  _abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

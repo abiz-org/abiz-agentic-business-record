@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.burrencrafts.example. 300 IN TXT "v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=CCA2upaCIgtb5daV7vmeYqVojZBqXnY+ckRcNO4I8Yw="
+_abiz.burrencrafts.example. 300 IN TXT "v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=ihDQTMdOxZF7VwJIoxjRXzws0bjAKIVlBlKOwuQBOlI="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://burrencrafts.ie.to.co`, as `application/json`:
   "domains": [
     "burrencrafts.example"
   ],
-  "public_key": "CCA2upaCIgtb5daV7vmeYqVojZBqXnY+ckRcNO4I8Yw=",
+  "public_key": "ihDQTMdOxZF7VwJIoxjRXzws0bjAKIVlBlKOwuQBOlI=",
   "description": "Handmade crafts from County Clare and Galway.",
   "website": "https://burrencrafts.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Galway",
-      "country": "ie",
+      "address": {
+        "locality": "Galway",
+        "country": {
+          "code": "IE"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "P8yu/cHJHD5SPhqhP6dlmJawPbhfN1LEZ7qDYH++eFauzP+zoCCjkreuTRXqxrK0PgmUNQ8jv9sAE5qmsXwmBw=="
+  "signature": "juUSYPQWF9MbkmeJvaHOu1XNfvORF/qIKGq8cdC+AIDDOH5QoyXmq0Ywu+sGgKjRAUoazZBZoCiXLsO54TXyDA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain burrencrafts.example --dns-value 'v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=CCA2upaCIgtb5daV7vmeYqVojZBqXnY+ckRcNO4I8Yw='
+python scripts/validate.py record.json --domain burrencrafts.example --dns-value 'v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=ihDQTMdOxZF7VwJIoxjRXzws0bjAKIVlBlKOwuQBOlI='
 ```
 
 ### Self-hosted or through a provider

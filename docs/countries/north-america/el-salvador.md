@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=QBvGqVEWABvVxPddsbJiiiX+g6G1mFnLlWpNtHcgQ8E="
+_abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -63,21 +63,85 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "cafelasbrumas.example"
   ],
-  "public_key": "QBvGqVEWABvVxPddsbJiiiX+g6G1mFnLlWpNtHcgQ8E=",
+  "public_key": "I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0=",
   "description": "Café de la Ruta de las Flores.",
   "website": "https://cafelasbrumas.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Santa Ana",
-      "country": "sv",
+      "address": {
+        "locality": "Santa Ana",
+        "country": {
+          "code": "SV"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/El_Salvador",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 08:00-17:00"
-  ],
-  "signature": "TbjYRCKyFa1VRpCbcd6X8ZlkFPFylc3kCK3y5Xh3v9kgbx5RYkp9zmqY3Mix1Gbk43fT3/dsLDjoif8+ftF0Bw=="
+  "signature": "t4WfszWlFRba9UE5/xkbb/zl8xP5weXb9OnFoODDFNHZ7ZrUiUjBDw34fodhWBaRs3BoCD2F69FQK7zIJSFbDA=="
 }
 ```
 
@@ -90,7 +154,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain cafelasbrumas.example \
-  --dns-value 'v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=QBvGqVEWABvVxPddsbJiiiX+g6G1mFnLlWpNtHcgQ8E='
+  --dns-value 'v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0='
 ```
 
 ## 3. Proveedores y MCP
@@ -105,7 +169,7 @@ Por ejemplo, un proveedor puede alojar el registro de Café Las Brumas en `cafel
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=QBvGqVEWABvVxPddsbJiiiX+g6G1mFnLlWpNtHcgQ8E="
+  _abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

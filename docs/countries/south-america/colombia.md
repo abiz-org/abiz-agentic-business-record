@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.cafelamontana.example. 300 IN TXT "v=abiz1;h=cafelamontana.co.to.co;p=S+oha44RT2ksuv91foxZfC8f79nhpYA8QjFf37ELC5s="
+_abiz.cafelamontana.example. 300 IN TXT "v=abiz1;h=cafelamontana.co.to.co;p=0kR5UaMsbqpHz7Oka/lEA+HLCf5Ub6RiStgqXF7hCdM="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -53,22 +53,85 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "cafelamontana.example"
   ],
-  "public_key": "S+oha44RT2ksuv91foxZfC8f79nhpYA8QjFf37ELC5s=",
+  "public_key": "0kR5UaMsbqpHz7Oka/lEA+HLCf5Ub6RiStgqXF7hCdM=",
   "description": "Tostadores de café de origen antioqueño.",
   "website": "https://cafelamontana.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Medellín",
-      "country": "co",
+      "address": {
+        "locality": "Medellín",
+        "country": {
+          "code": "CO"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Bogota",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "14:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 08:00-18:00",
-    "Sa 09:00-14:00"
-  ],
-  "signature": "U/frqgwddf5e6Cs/rGsF2g8bATHInkfZzG5ECtrjez4hzEDmxExU+91kZ7n126FFjcOdZ5R/9gwbenZ7EDszDw=="
+  "signature": "OUJKrQ+yDIpulbi2mO6yuRu0FK419PtTI1G/Uy/zXsgv69bnstFMtO6eCeDDlC9TERxP0L69QeWef4RyLBBZAw=="
 }
 ```
 
@@ -81,7 +144,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain cafelamontana.example \
-  --dns-value 'v=abiz1;h=cafelamontana.co.to.co;p=S+oha44RT2ksuv91foxZfC8f79nhpYA8QjFf37ELC5s='
+  --dns-value 'v=abiz1;h=cafelamontana.co.to.co;p=0kR5UaMsbqpHz7Oka/lEA+HLCf5Ub6RiStgqXF7hCdM='
 ```
 
 ## 3. Proveedores y MCP
@@ -96,7 +159,7 @@ Por ejemplo, un proveedor puede alojar el registro de Café La Montaña en `cafe
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.cafelamontana.example. 300 IN TXT "v=abiz1;h=cafelamontana.co.to.co;p=S+oha44RT2ksuv91foxZfC8f79nhpYA8QjFf37ELC5s="
+  _abiz.cafelamontana.example. 300 IN TXT "v=abiz1;h=cafelamontana.co.to.co;p=0kR5UaMsbqpHz7Oka/lEA+HLCf5Ub6RiStgqXF7hCdM="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.fornpirineu.example. 300 IN TXT "v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=vYsFkqFdV9AGia7wpPIsKWCrJuzSY3hmBu2BZpChj2U="
+_abiz.fornpirineu.example. 300 IN TXT "v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=/ANl6yxf1NMqjxGP9HQqPDCzKD1Bt0uH4iUkC9clVlA="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://fornpirineu.ad.to.co`, as `application/json`:
   "domains": [
     "fornpirineu.example"
   ],
-  "public_key": "vYsFkqFdV9AGia7wpPIsKWCrJuzSY3hmBu2BZpChj2U=",
+  "public_key": "/ANl6yxf1NMqjxGP9HQqPDCzKD1Bt0uH4iUkC9clVlA=",
   "description": "Bakery in Andorra la Vella.",
   "website": "https://fornpirineu.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Andorra la Vella",
-      "country": "ad",
+      "address": {
+        "locality": "Andorra la Vella",
+        "country": {
+          "code": "AD"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "ygrpj1BQcQksW3X93mmgBT/+WnFOJIXKAEh1qYrbWJzcfpibK/TteKBVhL5QwOwXA+2xivzSblC82smeXygrDg=="
+  "signature": "ZiuSOz5KZvzbHlAsNO6Za6lMk+6RCckZuIIflMLSt+DYqyHUZ51XCTCD/102IKCHjPvPN9cuBhKPy8Uor9hrBw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain fornpirineu.example --dns-value 'v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=vYsFkqFdV9AGia7wpPIsKWCrJuzSY3hmBu2BZpChj2U='
+python scripts/validate.py record.json --domain fornpirineu.example --dns-value 'v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=/ANl6yxf1NMqjxGP9HQqPDCzKD1Bt0uH4iUkC9clVlA='
 ```
 
 ### Self-hosted or through a provider

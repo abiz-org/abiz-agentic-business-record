@@ -1,0 +1,13 @@
+{
+  "record_version": "abiz1",
+  "business_name": "Kōwhai Valley Honey",
+  "country": "nz",
+  "identity_host": "kowhaivalleyhoney.biz.to.co",
+  "domains": [
+    "kowhaihoney.example"
+  ],
+  "public_key": "5UBhNVTenp4bF3sd/VKqL3BATH2ZsGDWa8XRPfrdmTc=",
+  "blog_url": "https://kowhaihoney.example/news",
+  "rss_url": "https://kowhaihoney.example/news/rss.xml",
+  "signature": "yDUY5aGaJ4tW7iLXEnq6uihWKYIy8afMb5/4l3w4SJk9znEvR/xpIRc7GzCfA+MpOpk5NnUL2mbgM9+180BtCw=="
+}

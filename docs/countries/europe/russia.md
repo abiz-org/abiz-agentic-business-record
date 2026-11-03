@@ -41,7 +41,7 @@
 Опубликуйте на своём домене под `_abiz` ровно одну запись TXT ABIZ, в компактной форме без пробелов:
 
 ```dns
-_abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example/abiz.json;p=w9RQHfAN5N9nkvE4G1NnJ/bPrpmePqWHvPGVI2gYykc="
+_abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example/abiz.json;p=mTFfwbEuAYQOtgRlMwApxqKhXcBMMpd96Rdn+K/UvFk="
 ```
 
 - `v=abiz1` должен стоять первым. `h` обязателен; `k` и `p` необязательны.
@@ -65,25 +65,29 @@ _abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyh
   "domains": [
     "severnyhleb.example"
   ],
-  "public_key": "w9RQHfAN5N9nkvE4G1NnJ/bPrpmePqWHvPGVI2gYykc=",
+  "public_key": "mTFfwbEuAYQOtgRlMwApxqKhXcBMMpd96Rdn+K/UvFk=",
   "description": "Пекарня в Твери.",
   "website": "https://severnyhleb.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Тверь",
-      "country": "ru",
+      "address": {
+        "locality": "Тверь",
+        "country": {
+          "code": "RU"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "q3lP1jClmM2jawTOy+nO619nWOLOmQTmQYXRnB9fprvTRcKz3VKur81yL3Y6dtYunnzvKSQe5DrRupgK5jd7CA=="
+  "signature": "Q6R7QXpATqDqLt8jkb1JcJkpxNLFtlmNq2Z7uvIfl2WR+8Vt/MOfB73WWlXfJyxltfI4382wMrCtWD17yDndAg=="
 }
 ```
 
 Эталонным валидатором можно проверить запись и значение DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain severnyhleb.example --dns-value 'v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example/abiz.json;p=w9RQHfAN5N9nkvE4G1NnJ/bPrpmePqWHvPGVI2gYykc='
+python scripts/validate.py record.json --domain severnyhleb.example --dns-value 'v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example/abiz.json;p=mTFfwbEuAYQOtgRlMwApxqKhXcBMMpd96Rdn+K/UvFk='
 ```
 
 ### Самостоятельно или через поставщика

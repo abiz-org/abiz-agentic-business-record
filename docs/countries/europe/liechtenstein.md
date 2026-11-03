@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.rheintaltreuhand.example. 300 IN TXT "v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=eHum0cwX/MjyN58du34hBQrub3S/ebJjJ7yQbD/8gVs="
+_abiz.rheintaltreuhand.example. 300 IN TXT "v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=XSZO65X4GwFZb2rKeVznpwV4bfNRkS2Q4lJ4FykcKAQ="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -65,25 +65,29 @@ Der Eintrag, der unter `https://rheintaltreuhand.li.to.co` als `application/json
   "domains": [
     "rheintaltreuhand.example"
   ],
-  "public_key": "eHum0cwX/MjyN58du34hBQrub3S/ebJjJ7yQbD/8gVs=",
+  "public_key": "XSZO65X4GwFZb2rKeVznpwV4bfNRkS2Q4lJ4FykcKAQ=",
   "description": "Treuhandbüro in Vaduz.",
   "website": "https://rheintaltreuhand.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Vaduz",
-      "country": "li",
+      "address": {
+        "locality": "Vaduz",
+        "country": {
+          "code": "LI"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "OUm5Ig1EOAAFkMSFNQjUSM4LbG38LcE0rXn9nb78IRfATbBcf6sEGtkCJw/EvcsLS3ayzUfTKKaxVpGUCoBRAQ=="
+  "signature": "xkFgNdLPZNIRF+mXla9nPJuvN5chLwwDar3bHPoMKLedM9zggxKL5cKGPlt4mAIhW17GdF+oGAd+r6EW1mSdBQ=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain rheintaltreuhand.example --dns-value 'v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=eHum0cwX/MjyN58du34hBQrub3S/ebJjJ7yQbD/8gVs='
+python scripts/validate.py record.json --domain rheintaltreuhand.example --dns-value 'v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=XSZO65X4GwFZb2rKeVznpwV4bfNRkS2Q4lJ4FykcKAQ='
 ```
 
 ### Selbst hosten oder über einen Anbieter

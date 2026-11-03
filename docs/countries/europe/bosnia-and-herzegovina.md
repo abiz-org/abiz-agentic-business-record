@@ -33,7 +33,7 @@ A business in Bosnia and Herzegovina cannot publish a business key under ABIZ 1.
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.mostarskikamen.example. 300 IN TXT "v=abiz1;h=mostarskikamen.ba.to.co;p=Dm8FiSEq1PEecnhd3qOgAU+nd2ExPaSjfrTz0dnai7M="
+_abiz.mostarskikamen.example. 300 IN TXT "v=abiz1;h=mostarskikamen.ba.to.co;p=qvGtk4oGb6uVXWRgatc7Fq5bxcsUFPfQN6IvFn5g7lI="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -55,25 +55,29 @@ The record served at `https://mostarskikamen.ba.to.co`, as `application/json`:
   "domains": [
     "mostarskikamen.example"
   ],
-  "public_key": "Dm8FiSEq1PEecnhd3qOgAU+nd2ExPaSjfrTz0dnai7M=",
+  "public_key": "qvGtk4oGb6uVXWRgatc7Fq5bxcsUFPfQN6IvFn5g7lI=",
   "description": "Stonemasons in Mostar.",
   "website": "https://mostarskikamen.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Mostar",
-      "country": "ba",
+      "address": {
+        "locality": "Mostar",
+        "country": {
+          "code": "BA"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "/76u72dMpAssHXFTR0RtFbqOwYZn4Bg4HNs5Tp/V9t0UxKGwQKaX/3dmQzjQzzg/ifjeFSVTfv9eNWNKiNlRBw=="
+  "signature": "s8GWnN75m1aTI7wTkQeGnKBRB0D7tf8DsqKvZr+q3dfwOI6qehWHJdWgrPpXq4GQADKku4BMc9XK56IaddR5DQ=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain mostarskikamen.example --dns-value 'v=abiz1;h=mostarskikamen.ba.to.co;p=Dm8FiSEq1PEecnhd3qOgAU+nd2ExPaSjfrTz0dnai7M='
+python scripts/validate.py record.json --domain mostarskikamen.example --dns-value 'v=abiz1;h=mostarskikamen.ba.to.co;p=qvGtk4oGb6uVXWRgatc7Fq5bxcsUFPfQN6IvFn5g7lI='
 ```
 
 ### Self-hosted or through a provider

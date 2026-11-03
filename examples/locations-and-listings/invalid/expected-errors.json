@@ -1,0 +1,20 @@
+{
+  "bad-signature.json": "signature",
+  "duplicate-location-id.json": "is not unique",
+  "geo-one-coordinate.json": "'longitude' is a required property",
+  "geo-without-street.json": "'street_lines' is a required property",
+  "http-url.json": "does not match",
+  "image-without-alt-text.json": "'alt_text' is a required property",
+  "legacy-contact-email.json": "'contact_email' was unexpected",
+  "legacy-flat-location.json": "'city', 'country' were unexpected",
+  "legacy-root-opening-hours.json": "'opening_hours' was unexpected",
+  "media-over-cap.json": "is too long",
+  "overlapping-hours.json": "periods overlap",
+  "overnight-overlaps-next-day.json": "overnight period overlaps",
+  "rating-above-scale.json": "exceeds rating_scale",
+  "recent-posts.json": "recent_posts",
+  "region-wrong-country.json": "does not belong to country",
+  "tax-missing-source.json": "'verification_source' is a required property",
+  "unknown-time-zone.json": "not an IANA time zone",
+  "video-with-caption.json": "was unexpected"
+}

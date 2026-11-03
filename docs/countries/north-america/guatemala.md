@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=n1LPWmeIhZ/oNcK+LDVZac2ryYf+KR39101h3jTGpn8="
+_abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -63,21 +63,85 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "textilesquetzal.example"
   ],
-  "public_key": "n1LPWmeIhZ/oNcK+LDVZac2ryYf+KR39101h3jTGpn8=",
+  "public_key": "2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA=",
   "description": "Tejidos mayas hechos en telar de cintura.",
   "website": "https://textilesquetzal.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Antigua Guatemala",
-      "country": "gt",
+      "address": {
+        "locality": "Antigua Guatemala",
+        "country": {
+          "code": "GT"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Guatemala",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 09:00-18:00"
-  ],
-  "signature": "pOt26/aolzVqwM/67HZ8aZ44JUOzNwJmuBy0KYKXwkRvlcWd9M56/rqrF49RACjoTFYPpZZCER791YVIVPOoCw=="
+  "signature": "0k911InWZpDJkWZxrv2lFDvcLmoo9T39YhZXisxBdNOCH3Gk83tlt+49RytOd1mBWxd9rXFMSV66ULp/LKFgBQ=="
 }
 ```
 
@@ -90,7 +154,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain textilesquetzal.example \
-  --dns-value 'v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=n1LPWmeIhZ/oNcK+LDVZac2ryYf+KR39101h3jTGpn8='
+  --dns-value 'v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA='
 ```
 
 ## 3. Proveedores y MCP
@@ -105,7 +169,7 @@ Por ejemplo, un proveedor puede alojar el registro de Textiles Quetzal en `texti
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=n1LPWmeIhZ/oNcK+LDVZac2ryYf+KR39101h3jTGpn8="
+  _abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

@@ -41,7 +41,7 @@
 Опубликуйте на своём домене под `_abiz` ровно одну запись TXT ABIZ, в компактной форме без пробелов:
 
 ```dns
-_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=jaPnKD2iYvITR2PuJ3aRIPpzNEAQ3VXjqXorblhzY1s="
+_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=npyxoNcQBGiI76qC7wdk4J1IXI+2X49ktjYIs1Ahuh4="
 ```
 
 - `v=abiz1` должен стоять первым. `h` обязателен; `k` и `p` необязательны.
@@ -65,25 +65,29 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
   "domains": [
     "lesnayayagoda.example"
   ],
-  "public_key": "jaPnKD2iYvITR2PuJ3aRIPpzNEAQ3VXjqXorblhzY1s=",
+  "public_key": "npyxoNcQBGiI76qC7wdk4J1IXI+2X49ktjYIs1Ahuh4=",
   "description": "Производитель ягодных продуктов в Минске.",
   "website": "https://lesnayayagoda.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Минск",
-      "country": "by",
+      "address": {
+        "locality": "Минск",
+        "country": {
+          "code": "BY"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "HF1xssDKA3z2YNJnUuVLXPViCG6rkEcsoHVObW2OoKNqeK4hlkC32whIfdNiP4pdJAW2wYwiD2vscytgZOGBDg=="
+  "signature": "nwOvwceK++sRxtfOusQVhqt5kIzGPAhdncj8Z79RqAoTXUipI3QAPQOZsJvKwqTyRXhdYw6I7aF8xI7kEmr6DA=="
 }
 ```
 
 Эталонным валидатором можно проверить запись и значение DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=jaPnKD2iYvITR2PuJ3aRIPpzNEAQ3VXjqXorblhzY1s='
+python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=npyxoNcQBGiI76qC7wdk4J1IXI+2X49ktjYIs1Ahuh4='
 ```
 
 ### Самостоятельно или через поставщика

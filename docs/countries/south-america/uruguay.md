@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=xT1RhdcV2KwNgqGpLrkSY+ImNwVfJFHqYHnlo3QCZjg="
+_abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -53,21 +53,80 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "bodegadelsur.example"
   ],
-  "public_key": "xT1RhdcV2KwNgqGpLrkSY+ImNwVfJFHqYHnlo3QCZjg=",
+  "public_key": "Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4=",
   "description": "Vinos de Canelones y visitas guiadas.",
   "website": "https://bodegadelsur.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Montevideo",
-      "country": "uy",
+      "address": {
+        "locality": "Montevideo",
+        "country": {
+          "code": "UY"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Montevideo",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": []
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Tu-Sa 10:00-18:00"
-  ],
-  "signature": "qSQamXp9C7MC38eTm3DF1Jha8M/9xk2Jih4lCAXh0KF3RNY3okLQgeETce33ewnnYRgZT0lq5NPS8wbJV4vpCA=="
+  "signature": "9PKm/2u97oh2/4ezsqKdwL8hMerrLNn7hKBomxKe5JlDdD1d57ixFIkBNn+lPdouPkyzWmAZehbGWZh14dQJAA=="
 }
 ```
 
@@ -80,7 +139,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain bodegadelsur.example \
-  --dns-value 'v=abiz1;h=bodegadelsur.uy.to.co;p=xT1RhdcV2KwNgqGpLrkSY+ImNwVfJFHqYHnlo3QCZjg='
+  --dns-value 'v=abiz1;h=bodegadelsur.uy.to.co;p=Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4='
 ```
 
 ## 3. Proveedores y MCP
@@ -95,7 +154,7 @@ Por ejemplo, un proveedor puede alojar el registro de Bodega del Sur en `bodegad
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=xT1RhdcV2KwNgqGpLrkSY+ImNwVfJFHqYHnlo3QCZjg="
+  _abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

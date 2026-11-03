@@ -41,7 +41,7 @@ Avaimia verrataan kirjainkoosta riippumatta, mutta julkaiskaa kanoninen muoto: m
 Julkaiskaa verkkotunnukseenne nimen `_abiz` alle täsmälleen yksi ABIZ TXT -tietue tiiviissä muodossa ilman välilyöntejä:
 
 ```dns
-_abiz.koivudesign.example. 300 IN TXT "v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=WLEcMnRLL8EZvmWmHI3VIOKCAvQUGvIPHgQMklB1oHw="
+_abiz.koivudesign.example. 300 IN TXT "v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=LgZsmQI559TbbeVhaW9QGnjQrmFZ2S6pHnwj9OKqw00="
 ```
 
 - `v=abiz1` on oltava ensimmäisenä. `h` on pakollinen; `k` ja `p` ovat vapaaehtoisia.
@@ -65,25 +65,29 @@ Tietue, joka tarjoillaan osoitteessa `https://koivudesign.fi.to.co` muodossa `ap
   "domains": [
     "koivudesign.example"
   ],
-  "public_key": "WLEcMnRLL8EZvmWmHI3VIOKCAvQUGvIPHgQMklB1oHw=",
+  "public_key": "LgZsmQI559TbbeVhaW9QGnjQrmFZ2S6pHnwj9OKqw00=",
   "description": "Muotoilutoimisto Tampereella.",
   "website": "https://koivudesign.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Tampere",
-      "country": "fi",
+      "address": {
+        "locality": "Tampere",
+        "country": {
+          "code": "FI"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "5NwMsv53S0wLO+KnmuB/iUC20D4TVS6WYzvpYePQNj5qmGob6KqG/u49uXZYZ2pZexd5TJwOus8So+zoxyLaAg=="
+  "signature": "O9R955c2CY7CNN1oEkkszgPwsaIHlDdKkvSjmStPG8kHHabff64xix8eh6lNz1723cJ2r8TN9jp2q7yVjdATCg=="
 }
 ```
 
 Viitevalidaattorilla voitte tarkistaa tietueen ja DNS-arvon paikallisesti:
 
 ```sh
-python scripts/validate.py record.json --domain koivudesign.example --dns-value 'v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=WLEcMnRLL8EZvmWmHI3VIOKCAvQUGvIPHgQMklB1oHw='
+python scripts/validate.py record.json --domain koivudesign.example --dns-value 'v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=LgZsmQI559TbbeVhaW9QGnjQrmFZ2S6pHnwj9OKqw00='
 ```
 
 ### Itse tai palveluntarjoajan kautta
