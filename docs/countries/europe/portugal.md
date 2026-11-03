@@ -106,7 +106,7 @@ O ABIZ 1.1 exige uma chave pública Ed25519 na etiqueta DNS `p`. `v` e `h` são 
 
 A chave privada correspondente pertence à empresa e nunca é publicada. Se um fornecedor a guardar por si, tem de lhe permitir exportá-la. Um software pode verificar uma assinatura feita com a chave privada usando a chave publicada no DNS. A assinatura do registo abrange a forma canónica RFC 8785 do registo sem o membro `signature`, e verifica-se com `public_key`, que tem de ser igual a `p` (SPEC secção 4.6).
 
-Para mudar de chave, publique uma nova em `p`; para a revogar, retire `p`. No ABIZ 1.1 as chaves retiradas não são publicadas, nem no DNS nem no registo. A chave mostra que chave publicou quem controla o domínio; não prova a identidade jurídica.
+Para mudar de chave, gere um novo par de chaves Ed25519, publique a nova chave pública em `p` na asserção DNS ou well-known, volte a assinar o registo com a nova chave privada e faça com que `public_key` seja esse mesmo `p`. Tenha em conta a cache e a propagação do DNS. Retirar apenas `p` não é uma revogação válida enquanto a asserção ABIZ 1.1 se mantiver: para a retirar, elimine a declaração DNS ou well-known completa. No ABIZ 1.1 as chaves retiradas não são publicadas, nem no DNS nem no registo. A chave mostra que chave publicou quem controla o domínio; não prova a identidade jurídica.
 
 ## 5. O que as ferramentas de IA veem
 

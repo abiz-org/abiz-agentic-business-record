@@ -17,7 +17,7 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record_version` | `abiz1` |
 | `business_name` | the public name customers know, for example `Nile Bank Traders` |
 | `country` | `ss`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity_host` | `www.nilebanktraders.example/abiz.json`, which must match `h` in DNS exactly |
+| `identity_host` | `www.nilebanktraders.example`, which must match `h` in DNS exactly |
 | `domains` | `["nilebanktraders.example"]`, which must include the domain that carries `_abiz` |
 
 ### Optional business key `k`
@@ -45,7 +45,7 @@ South Sudan uses no subdivision: do not add a region, province or city code. SPE
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.nilebanktraders.example. 300 IN TXT "v=abiz1;k=ss-123456;h=www.nilebanktraders.example/abiz.json;p=flYmwWJvsLqTykAh4c8Wepa0pWpDWwRJ5YFu9JEua6A="
+_abiz.nilebanktraders.example. 300 IN TXT "v=abiz1;k=ss-123456;h=www.nilebanktraders.example;p=jejeY2+86PVA5X6okl6KZZk9s9NYtCbUKwm+jG40IEE="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,10 +53,10 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.nilebanktraders.example. 300 IN TXT "v=abiz1;h=www.nilebanktraders.example/abiz.json;p=flYmwWJvsLqTykAh4c8Wepa0pWpDWwRJ5YFu9JEua6A="
+_abiz.nilebanktraders.example. 300 IN TXT "v=abiz1;h=www.nilebanktraders.example;p=jejeY2+86PVA5X6okl6KZZk9s9NYtCbUKwm+jG40IEE="
 ```
 
-The business record served as `application/json` at `https://www.nilebanktraders.example/abiz.json`:
+The business record served as `application/json` at `https://www.nilebanktraders.example/?format=json`:
 
 ```json
 {
@@ -65,19 +65,19 @@ The business record served as `application/json` at `https://www.nilebanktraders
   "country": "ss",
   "business_key": "ss-123456",
   "registration_number": "123456",
-  "identity_host": "www.nilebanktraders.example/abiz.json",
+  "identity_host": "www.nilebanktraders.example",
   "domains": [
     "nilebanktraders.example"
   ],
-  "public_key": "flYmwWJvsLqTykAh4c8Wepa0pWpDWwRJ5YFu9JEua6A=",
-  "signature": "GWFqBs5qkvi7+dS94F4NNyJoTNFjNHf3+X/VQFKVXlWM6EW1sksZKv2B8sIWcWveh4kg0kZ6pY5Vgz1iUURNAA=="
+  "public_key": "jejeY2+86PVA5X6okl6KZZk9s9NYtCbUKwm+jG40IEE=",
+  "signature": "lD3vaITWiefospEJqleuNMXXsTwMJY8phWk3dVlZKm5tSRm9Fv/MjsiQ43i7969fRcoR5dgwGZB6zCFr3gidCA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain nilebanktraders.example --dns-value 'v=abiz1;k=ss-123456;h=www.nilebanktraders.example/abiz.json;p=flYmwWJvsLqTykAh4c8Wepa0pWpDWwRJ5YFu9JEua6A='
+python scripts/validate.py record.json --domain nilebanktraders.example --dns-value 'v=abiz1;k=ss-123456;h=www.nilebanktraders.example;p=jejeY2+86PVA5X6okl6KZZk9s9NYtCbUKwm+jG40IEE='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.

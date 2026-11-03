@@ -132,7 +132,7 @@ This example is fictional. It passes the reference validator.
 
 ### Where the record lives
 
-You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.funafutimarinesupplies.example/abiz.json`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity_host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
+You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.funafutimarinesupplies.example`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity_host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
 
 Before you publish, check the record and the DNS value with the reference validator:
 

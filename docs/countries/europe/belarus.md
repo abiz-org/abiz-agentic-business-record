@@ -19,7 +19,7 @@
 | `record_version` | `abiz1` | Всегда это значение |
 | `business_name` | `ООО «Лесная Ягода»` | Публичное название, обычно как в реестре, с организационно-правовой формой, если вы её используете |
 | `country` | `by` | Код страны по ISO 3166-1 alpha-2; каноническая форма — строчными буквами |
-| `identity_host` | `www.lesnayayagoda.example/abiz.json` | Ровно значение DNS `h`: имя хоста с необязательным путём, без `https://` |
+| `identity_host` | `www.lesnayayagoda.example` | Ровно значение DNS `h`: имя хоста с необязательным путём, без `https://` |
 | `domains` | `["lesnayayagoda.example"]` | Домены, к которым относится запись, включая домен с `_abiz` |
 
 ### Необязательный ключ компании `k`
@@ -41,7 +41,7 @@
 Опубликуйте на своём домене под `_abiz` ровно одну запись TXT ABIZ, в компактной форме без пробелов:
 
 ```dns
-_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=npyxoNcQBGiI76qC7wdk4J1IXI+2X49ktjYIs1Ahuh4="
+_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example;p=SYPsKPE6CqInwxYPJUEOyizixxiXZXGAvapHUQPP9PM="
 ```
 
 - `v=abiz1` должен стоять первым. `h` и `p` обязательны; `k` необязателен.
@@ -52,7 +52,7 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
 
 ### Запись компании (JSON)
 
-Запись, которая отдаётся по адресу `https://www.lesnayayagoda.example/abiz.json` как `application/json`:
+Запись, которая отдаётся по адресу `https://www.lesnayayagoda.example/?format=json` как `application/json`:
 
 ```json
 {
@@ -61,11 +61,11 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
   "country": "by",
   "business_key": "by-123456789",
   "registration_number": "123456789",
-  "identity_host": "www.lesnayayagoda.example/abiz.json",
+  "identity_host": "www.lesnayayagoda.example",
   "domains": [
     "lesnayayagoda.example"
   ],
-  "public_key": "npyxoNcQBGiI76qC7wdk4J1IXI+2X49ktjYIs1Ahuh4=",
+  "public_key": "SYPsKPE6CqInwxYPJUEOyizixxiXZXGAvapHUQPP9PM=",
   "description": "Производитель ягодных продуктов в Минске.",
   "website": "https://lesnayayagoda.example",
   "locations": [
@@ -80,14 +80,14 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
       "public": true
     }
   ],
-  "signature": "nwOvwceK++sRxtfOusQVhqt5kIzGPAhdncj8Z79RqAoTXUipI3QAPQOZsJvKwqTyRXhdYw6I7aF8xI7kEmr6DA=="
+  "signature": "q4p1lsh6dSQrep6ByiWTkThIRozgD8pNcHYFosD21vOHqdSudY9102/njzKJxMzxDrHiChIUfKrFr7jYBHecCA=="
 }
 ```
 
 Эталонным валидатором можно проверить запись и значение DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=npyxoNcQBGiI76qC7wdk4J1IXI+2X49ktjYIs1Ahuh4='
+python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example;p=SYPsKPE6CqInwxYPJUEOyizixxiXZXGAvapHUQPP9PM='
 ```
 
 ### Самостоятельно или через поставщика
@@ -98,7 +98,7 @@ python scripts/validate.py record.json --domain lesnayayagoda.example --dns-valu
 
 MCP (Model Context Protocol) — открытый протокол, с помощью которого ИИ-ассистенты вызывают инструменты и читают данные с внешних серверов. Поставщик может держать сервер MCP, через который ассистент получает вашу публичную запись напрямую. Его можно указать в необязательном поле `mcp_server_url`. ABIZ не требует сервера MCP, и инструмент не должен вызывать его автоматически только потому, что он указан в записи.
 
-Пример: если вы сами публикуете запись по адресу `www.lesnayayagoda.example/abiz.json`, любой совместимый инструмент или сервер MCP прочитает её так же, как запись, размещённую у поставщика. Для ABIZ поставщик не нужен: достаточно собственного домена и HTTPS-хостинга.
+Пример: если вы сами публикуете запись по адресу `www.lesnayayagoda.example`, любой совместимый инструмент или сервер MCP прочитает её так же, как запись, размещённую у поставщика. Для ABIZ поставщик не нужен: достаточно собственного домена и HTTPS-хостинга.
 
 ## 4. Ключи и подписи (ABIZ 1.1)
 

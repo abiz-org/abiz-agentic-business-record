@@ -19,7 +19,7 @@ La scheda dell'impresa è un documento JSON che deve rispettare lo [schema norma
 | `record_version` | `abiz1` | Sempre questo valore |
 | `business_name` | `Libreria del Borgo` | Il nome pubblico, di solito come risulta dal registro, con la forma giuridica se la usate |
 | `country` | `va` | Codice paese ISO 3166-1 alpha-2; la forma canonica è in minuscolo |
-| `identity_host` | `www.libreriadelborgo.example/abiz.json` | Esattamente il valore DNS `h`: un nome host con percorso facoltativo, senza `https://` |
+| `identity_host` | `www.libreriadelborgo.example` | Esattamente il valore DNS `h`: un nome host con percorso facoltativo, senza `https://` |
 | `domains` | `["libreriadelborgo.example"]` | I domini rivendicati dalla scheda, compreso quello che contiene `_abiz` |
 
 ### Chiave d'impresa `k` (facoltativa)
@@ -33,7 +33,7 @@ Nella Città del Vaticano non esiste un registro pubblico nazionale delle impres
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.libreriadelborgo.example. 300 IN TXT "v=abiz1;h=www.libreriadelborgo.example/abiz.json;p=MrwcHkVFm/CET4gGNBY+rz9bpRGUQrpGYQzQf7zcu+o="
+_abiz.libreriadelborgo.example. 300 IN TXT "v=abiz1;h=www.libreriadelborgo.example;p=7zwkuonubhUZtYD49RTXMKuWZCViv8si2EUuK1D6fZI="
 ```
 
 - `v=abiz1` deve venire per primo. `h` e `p` sono obbligatori; `k` è facoltativo.
@@ -44,18 +44,18 @@ Il valore `p` qui sopra è una chiave d'esempio usa e getta. Non copiatelo mai: 
 
 ### Scheda dell'impresa (JSON)
 
-La scheda servita all'indirizzo `https://www.libreriadelborgo.example/abiz.json` come `application/json`:
+La scheda servita all'indirizzo `https://www.libreriadelborgo.example/?format=json` come `application/json`:
 
 ```json
 {
   "record_version": "abiz1",
   "business_name": "Libreria del Borgo",
   "country": "va",
-  "identity_host": "www.libreriadelborgo.example/abiz.json",
+  "identity_host": "www.libreriadelborgo.example",
   "domains": [
     "libreriadelborgo.example"
   ],
-  "public_key": "MrwcHkVFm/CET4gGNBY+rz9bpRGUQrpGYQzQf7zcu+o=",
+  "public_key": "7zwkuonubhUZtYD49RTXMKuWZCViv8si2EUuK1D6fZI=",
   "description": "Libreria nella Città del Vaticano.",
   "website": "https://libreriadelborgo.example",
   "locations": [
@@ -70,14 +70,14 @@ La scheda servita all'indirizzo `https://www.libreriadelborgo.example/abiz.json`
       "public": true
     }
   ],
-  "signature": "Djo3OE7peBFn+O+jG6jO1FasDPKJSGrE2E7Idvv6XGMInWlWFkqAlqx6q8yEESg1p5c0g9xB+NdElIocgwHFBw=="
+  "signature": "lYy/bO11We5ASiIVhog9/txOYtVIOSi4EEEhf6Bqdz4vbOko5d7z0bM1Y95vSXoqlkC9zdAUrPGhjLKq+zYfDg=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain libreriadelborgo.example --dns-value 'v=abiz1;h=www.libreriadelborgo.example/abiz.json;p=MrwcHkVFm/CET4gGNBY+rz9bpRGUQrpGYQzQf7zcu+o='
+python scripts/validate.py record.json --domain libreriadelborgo.example --dns-value 'v=abiz1;h=www.libreriadelborgo.example;p=7zwkuonubhUZtYD49RTXMKuWZCViv8si2EUuK1D6fZI='
 ```
 
 ### In proprio o tramite un fornitore
@@ -88,7 +88,7 @@ Potete pubblicare la scheda voi stessi su qualsiasi host HTTPS che controllate, 
 
 MCP (Model Context Protocol) è un protocollo aperto con cui gli assistenti di IA richiamano strumenti e leggono dati da server esterni. Un fornitore può gestire un server MCP tramite il quale un assistente ottiene direttamente la vostra scheda pubblica. Potete indicarlo nel campo facoltativo `mcp_server_url`. ABIZ non richiede un server MCP, e uno strumento non dovrebbe richiamarlo automaticamente solo perché compare in una scheda.
 
-Per esempio, se pubblicate voi stessi la scheda all'indirizzo `www.libreriadelborgo.example/abiz.json`, qualsiasi strumento o server MCP compatibile può leggerla come una scheda ospitata da un fornitore.
+Per esempio, se pubblicate voi stessi la scheda all'indirizzo `www.libreriadelborgo.example`, qualsiasi strumento o server MCP compatibile può leggerla come una scheda ospitata da un fornitore.
 
 ## 4. Chiavi e firme (ABIZ 1.1)
 

@@ -45,7 +45,7 @@ _abiz.tarawafishingsupplies.example. 300 IN TXT "v=abiz1;k=ki-12345;h=tarawafish
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
 
 ```dns
-_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=marketstand.biz.to.co"
+_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=marketstand.biz.to.co;p=3pGEhnc9irnUeEsk7j/TkUWVy9JdckVNm2meA8WjK9M="
 ```
 
 ### Example record (JSON)
@@ -142,7 +142,7 @@ This example is fictional. It passes the reference validator.
 
 ### Where the record lives
 
-You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.tarawafishingsupplies.example/abiz.json`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity_host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
+You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.tarawafishingsupplies.example`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity_host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
 
 Before you publish, check the record and the DNS value with the reference validator:
 

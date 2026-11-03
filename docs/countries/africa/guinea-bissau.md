@@ -93,7 +93,7 @@ Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo,
 O ABIZ 1.1 exige uma chave de assinatura. A etiqueta DNS `p` contém uma chave pública Ed25519: 32 bytes em bruto, base64 padrão, 44 caracteres, um único `=` final (secção 3.3.2 da SPEC). Base64url não é aceite. A empresa, ou um fornecedor em seu nome, guarda a chave privada correspondente e assina a ficha com ela. A chave privada pertence sempre à empresa, e um fornecedor de alojamento tem de permitir que a exporte.
 
 - `v` e `h` são obrigatórios. `p` é obrigatória. `k` é opcional. `p` tem de ser uma chave válida: qualquer outro valor, como um antigo token hexadecimal do ABIZ 1.0 ou uma chave em base64url, torna toda a asserção inválida.
-- Só se publica a chave atual. Para a substituir, publique a nova chave em `p`; para a revogar, retire `p`. As chaves retiradas não são publicadas no ABIZ 1.1, nem no DNS, nem na ficha.
+- Só se publica a chave atual. Para a substituir, gere um novo par de chaves Ed25519, publique a nova chave pública em `p` na asserção DNS ou well-known, volte a assinar a ficha com a nova chave privada e faça com que `public_key` seja esse mesmo `p`. Tenha em conta a cache e a propagação do DNS. Retirar apenas `p` não é uma revogação válida enquanto a asserção ABIZ 1.1 se mantiver: para a retirar, elimine a declaração DNS ou well-known completa. As chaves retiradas não são publicadas no ABIZ 1.1, nem no DNS, nem na ficha.
 - Uma chave mostra quem controla o DNS do domínio. Não prova a identidade jurídica.
 
 ## 5. O que as ferramentas de IA vão ver

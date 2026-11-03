@@ -19,7 +19,7 @@
 | `record_version` | `abiz1` | Всегда это значение |
 | `business_name` | `ООО «Северный Хлеб»` | Публичное название, обычно как в реестре, с организационно-правовой формой, если вы её используете |
 | `country` | `ru` | Код страны по ISO 3166-1 alpha-2; каноническая форма — строчными буквами |
-| `identity_host` | `www.severnyhleb.example/abiz.json` | Ровно значение DNS `h`: имя хоста с необязательным путём, без `https://` |
+| `identity_host` | `www.severnyhleb.example` | Ровно значение DNS `h`: имя хоста с необязательным путём, без `https://` |
 | `domains` | `["severnyhleb.example"]` | Домены, к которым относится запись, включая домен с `_abiz` |
 
 ### Необязательный ключ компании `k`
@@ -41,7 +41,7 @@
 Опубликуйте на своём домене под `_abiz` ровно одну запись TXT ABIZ, в компактной форме без пробелов:
 
 ```dns
-_abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example/abiz.json;p=mTFfwbEuAYQOtgRlMwApxqKhXcBMMpd96Rdn+K/UvFk="
+_abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example;p=L9kcaNPdmptjPUyneyEt3nbl4J+4mHis3FZLDvl4LWE="
 ```
 
 - `v=abiz1` должен стоять первым. `h` и `p` обязательны; `k` необязателен.
@@ -52,7 +52,7 @@ _abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyh
 
 ### Запись компании (JSON)
 
-Запись, которая отдаётся по адресу `https://www.severnyhleb.example/abiz.json` как `application/json`:
+Запись, которая отдаётся по адресу `https://www.severnyhleb.example/?format=json` как `application/json`:
 
 ```json
 {
@@ -61,11 +61,11 @@ _abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyh
   "country": "ru",
   "business_key": "ru-1027700123456",
   "registration_number": "1027700123456",
-  "identity_host": "www.severnyhleb.example/abiz.json",
+  "identity_host": "www.severnyhleb.example",
   "domains": [
     "severnyhleb.example"
   ],
-  "public_key": "mTFfwbEuAYQOtgRlMwApxqKhXcBMMpd96Rdn+K/UvFk=",
+  "public_key": "L9kcaNPdmptjPUyneyEt3nbl4J+4mHis3FZLDvl4LWE=",
   "description": "Пекарня в Твери.",
   "website": "https://severnyhleb.example",
   "locations": [
@@ -80,14 +80,14 @@ _abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyh
       "public": true
     }
   ],
-  "signature": "Q6R7QXpATqDqLt8jkb1JcJkpxNLFtlmNq2Z7uvIfl2WR+8Vt/MOfB73WWlXfJyxltfI4382wMrCtWD17yDndAg=="
+  "signature": "5lj/Mkj6WH69fmGIib1StP4d8n0VqxRI/FQ6hjAwbqeFuDDD4O3NP5nz2FKL7qgoIMRguRfS1xuZDNGQwp5VBg=="
 }
 ```
 
 Эталонным валидатором можно проверить запись и значение DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain severnyhleb.example --dns-value 'v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example/abiz.json;p=mTFfwbEuAYQOtgRlMwApxqKhXcBMMpd96Rdn+K/UvFk='
+python scripts/validate.py record.json --domain severnyhleb.example --dns-value 'v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example;p=L9kcaNPdmptjPUyneyEt3nbl4J+4mHis3FZLDvl4LWE='
 ```
 
 ### Самостоятельно или через поставщика
@@ -98,7 +98,7 @@ python scripts/validate.py record.json --domain severnyhleb.example --dns-value 
 
 MCP (Model Context Protocol) — открытый протокол, с помощью которого ИИ-ассистенты вызывают инструменты и читают данные с внешних серверов. Поставщик может держать сервер MCP, через который ассистент получает вашу публичную запись напрямую. Его можно указать в необязательном поле `mcp_server_url`. ABIZ не требует сервера MCP, и инструмент не должен вызывать его автоматически только потому, что он указан в записи.
 
-Пример: если вы сами публикуете запись по адресу `www.severnyhleb.example/abiz.json`, любой совместимый инструмент или сервер MCP прочитает её так же, как запись, размещённую у поставщика. Для ABIZ поставщик не нужен: достаточно собственного домена и HTTPS-хостинга.
+Пример: если вы сами публикуете запись по адресу `www.severnyhleb.example`, любой совместимый инструмент или сервер MCP прочитает её так же, как запись, размещённую у поставщика. Для ABIZ поставщик не нужен: достаточно собственного домена и HTTPS-хостинга.
 
 ## 4. Ключи и подписи (ABIZ 1.1)
 

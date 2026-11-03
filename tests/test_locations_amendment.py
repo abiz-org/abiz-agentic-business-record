@@ -491,7 +491,7 @@ class CountryGuideTests(unittest.TestCase):
         count = 0
         for path in paths:
             text = path.read_text(encoding="utf-8")
-            keys = set()
+            keys = {}
             for block in re.findall(r"```json\n(.*?)```", text, re.S):
                 try:
                     record = json.loads(block)
@@ -500,11 +500,14 @@ class CountryGuideTests(unittest.TestCase):
                 if not (isinstance(record, dict) and record.get("record_version") == "abiz1"):
                     continue
                 count += 1
-                keys.add(record["public_key"])
+                keys.setdefault(record["identity_host"], set()).add(record["public_key"])
                 with self.subTest(path=str(path.relative_to(ROOT)), record=record.get("identity_host")):
                     self.assertEqual(validate_record(record, SCHEMA), [])
             if keys and path.parent.parent.name == "countries":
-                for p in re.findall(r"\bp=([A-Za-z0-9+/]{43}=)", text):
-                    with self.subTest(path=path.name, p=p):
-                        self.assertIn(p, keys)
+                # A guide's DNS p for a record host must be that record's public_key.
+                # Other hosts (for example a business shown without k) have no record to match.
+                for h, p in re.findall(r"\bh=([^;\s\"']+);p=([A-Za-z0-9+/]{43}=)", text):
+                    if h in keys:
+                        with self.subTest(path=path.name, h=h, p=p):
+                            self.assertIn(p, keys[h])
         self.assertGreater(count, 190)

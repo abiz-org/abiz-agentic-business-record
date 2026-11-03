@@ -45,7 +45,7 @@ _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparam
 Een bedrijf zonder inschrijvingsnummer, of dat het liever niet publiceert, laat `k` gewoon weg:
 
 ```dns
-_abiz.marktkraam.example. 300 IN TXT "v=abiz1;h=marktkraam.biz.to.co"
+_abiz.marktkraam.example. 300 IN TXT "v=abiz1;h=marktkraam.biz.to.co;p=Q2rO0Sv8OykxFAPGtdVBjF3COBG3aGUGBcK7cnKrDTg="
 ```
 
 ### Voorbeeldrecord (JSON)
@@ -147,7 +147,7 @@ Dit voorbeeld is fictief. Het slaagt voor de referentievalidator.
 
 ### Waar het record staat
 
-U kunt het record zelf aanbieden vanaf elke HTTPS-URL die het JSON-document teruggeeft, bijvoorbeeld `h=www.bakkerijparamaribo.example/abiz.json`, of elke compatibele aanbieder gebruiken. ABIZ schrijft geen bepaalde aanbieder of naamgeving voor. Wat u ook kiest: `identity_host` in het record moet gelijk zijn aan `h`, en `domains` moet het domein bevatten waarop u het TXT-record publiceert.
+U kunt het record zelf aanbieden vanaf elke HTTPS-URL die het JSON-document teruggeeft, bijvoorbeeld `h=www.bakkerijparamaribo.example`, of elke compatibele aanbieder gebruiken. ABIZ schrijft geen bepaalde aanbieder of naamgeving voor. Wat u ook kiest: `identity_host` in het record moet gelijk zijn aan `h`, en `domains` moet het domein bevatten waarop u het TXT-record publiceert.
 
 Controleer het record en de DNS-waarde vóór publicatie met de referentievalidator:
 

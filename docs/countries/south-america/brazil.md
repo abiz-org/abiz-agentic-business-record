@@ -45,7 +45,7 @@ _abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padaria
 Uma empresa sem número de registro, ou que prefira não publicá-lo, simplesmente omite `k`:
 
 ```dns
-_abiz.bancadafeira.example. 300 IN TXT "v=abiz1;h=bancadafeira.biz.to.co"
+_abiz.bancadafeira.example. 300 IN TXT "v=abiz1;h=bancadafeira.biz.to.co;p=DGW/Hr40OgvHZjbNGRBys0xw2bngKEsikiwjDc86BRg="
 ```
 
 ### Exemplo de registro (JSON)
@@ -156,7 +156,7 @@ Este exemplo é fictício. Ele passa no validador de referência.
 
 ### Onde o registro fica hospedado
 
-Você pode servir o registro por conta própria a partir de qualquer URL HTTPS que retorne o documento JSON, por exemplo `h=www.padariapaodemel.example/abiz.json`, ou usar qualquer provedor compatível. A ABIZ não exige um provedor nem um padrão de nomes específico. Seja qual for a escolha, o `identity_host` do registro deve coincidir com `h`, e `domains` deve incluir o domínio onde você publica o registro TXT.
+Você pode servir o registro por conta própria a partir de qualquer URL HTTPS que retorne o documento JSON, por exemplo `h=www.padariapaodemel.example`, ou usar qualquer provedor compatível. A ABIZ não exige um provedor nem um padrão de nomes específico. Seja qual for a escolha, o `identity_host` do registro deve coincidir com `h`, e `domains` deve incluir o domínio onde você publica o registro TXT.
 
 Antes de publicar, verifique o registro e o valor DNS com o validador de referência:
 
@@ -183,7 +183,7 @@ Por exemplo, um provedor pode hospedar o registro da Padaria Pão de Mel em `pad
 
 - **A chave privada pertence à empresa.** Ela nunca deve aparecer no DNS, no registro nem num repositório público. Um provedor pode gerá-la e guardá-la por você (modo hospedado), mas deve permitir que você a exporte a qualquer momento, por exemplo em PKCS#8, e apagar a cópia dele quando você pedir (seção 3.3.4).
 - **Assinaturas.** Um software pode verificar uma assinatura Ed25519 destacada com a chave publicada. A assinatura do registro cobre a forma canônica RFC 8785 do registro sem o membro `signature` e é verificada com `public_key`, que deve ser igual a `p` (SPEC seção 4.6). Uma assinatura sobre outra mensagem só faz sentido se as duas partes tiverem combinado essa mensagem.
-- **Rotação e chaves aposentadas.** Para trocar de chave, publique a nova em `p`; a antiga deixa de ser a vigente depois que o TTL do registro TXT expira. A ABIZ 1.1 não publica chaves aposentadas: nem no DNS, nem no registro (uma propriedade `retired_keys` é rejeitada).
+- **Rotação, revogação e chaves aposentadas.** Para trocar de chave, gere um novo par Ed25519, publique a nova chave pública em `p` na asserção DNS ou well-known, assine o registro novamente com a nova chave privada e faça com que `public_key` seja esse mesmo `p`; a antiga deixa de ser a vigente depois que o TTL do registro TXT expira. Remover apenas `p` não é uma revogação válida enquanto a asserção ABIZ 1.1 continuar publicada: para retirá-la, remova a declaração DNS ou well-known completa. A ABIZ 1.1 não publica chaves aposentadas: nem no DNS, nem no registro (uma propriedade `retired_keys` é rejeitada).
 - **O que uma chave prova.** Ela mostra qual chave quem controla o domínio publicou. Ela não assina, por si só, o registro TXT e não prova identidade jurídica. Use DNSSEC se o seu provedor de DNS oferecer.
 
 ## 5. O que as ferramentas de IA vão ver

@@ -48,7 +48,7 @@ _abiz.rheintaltreuhand.example. 300 IN TXT "v=abiz1;k=li-FL00021234567;h=rheinta
 - Tag-Namen werden kleingeschrieben und unterscheiden Groß- und Kleinschreibung. Kein Tag darf doppelt vorkommen.
 - Empfohlen wird eine TTL von 300 Sekunden.
 
-Der `p`-Wert oben ist ein Wegwerf-Beispielschlüssel. Übernehmen Sie ihn nie: Veröffentlichen Sie Ihren eigenen Schlüssel oder lassen Sie `p` weg.
+Der `p`-Wert oben ist ein Wegwerf-Beispielschlüssel. Übernehmen Sie ihn nie: Veröffentlichen Sie Ihren eigenen Schlüssel. Eine ABIZ-1.1-Assertion muss `p` enthalten.
 
 ### Unternehmenseintrag (JSON)
 

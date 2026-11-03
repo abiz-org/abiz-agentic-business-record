@@ -17,7 +17,7 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record_version` | `abiz1` |
 | `business_name` | the public name customers know, for example `Isfahan Tile Workshop` |
 | `country` | `ir`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity_host` | `www.isfahantile.example/abiz.json`, which must match `h` in DNS exactly |
+| `identity_host` | `www.isfahantile.example`, which must match `h` in DNS exactly |
 | `domains` | `["isfahantile.example"]`, which must include the domain that carries `_abiz` |
 
 ### Optional business key `k`
@@ -47,7 +47,7 @@ Iran uses no subdivision: do not add a region, province or city code. SPEC secti
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.isfahantile.example. 300 IN TXT "v=abiz1;k=ir-10101234567;h=www.isfahantile.example/abiz.json;p=FoGvnzNjVtro+mKx9iVVwtZtdKphFIqwrwYmKlD8NTI="
+_abiz.isfahantile.example. 300 IN TXT "v=abiz1;k=ir-10101234567;h=www.isfahantile.example;p=2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,10 +55,10 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.isfahantile.example. 300 IN TXT "v=abiz1;h=www.isfahantile.example/abiz.json;p=FoGvnzNjVtro+mKx9iVVwtZtdKphFIqwrwYmKlD8NTI="
+_abiz.isfahantile.example. 300 IN TXT "v=abiz1;h=www.isfahantile.example;p=2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4="
 ```
 
-The business record served as `application/json` at `https://www.isfahantile.example/abiz.json`:
+The business record served as `application/json` at `https://www.isfahantile.example/?format=json`:
 
 ```json
 {
@@ -67,19 +67,19 @@ The business record served as `application/json` at `https://www.isfahantile.exa
   "country": "ir",
   "business_key": "ir-10101234567",
   "registration_number": "10101234567",
-  "identity_host": "www.isfahantile.example/abiz.json",
+  "identity_host": "www.isfahantile.example",
   "domains": [
     "isfahantile.example"
   ],
-  "public_key": "FoGvnzNjVtro+mKx9iVVwtZtdKphFIqwrwYmKlD8NTI=",
-  "signature": "5OfrO/+nFCUgdceMitq9/ZWVKkhPTUVs21+TWw0KKvvVy9f+jckpCcxG7LdqhQUF53PUiL4CQCGJLsQdUNqUDw=="
+  "public_key": "2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4=",
+  "signature": "u50LdIaMHRVm3OhI1n5KTZcKl6SvypkXGD8Z3wXTvbp7iIC9+VBB0gulccqmKFNdnLvNluvG7y6L/CaeaAYdDA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain isfahantile.example --dns-value 'v=abiz1;k=ir-10101234567;h=www.isfahantile.example/abiz.json;p=FoGvnzNjVtro+mKx9iVVwtZtdKphFIqwrwYmKlD8NTI='
+python scripts/validate.py record.json --domain isfahantile.example --dns-value 'v=abiz1;k=ir-10101234567;h=www.isfahantile.example;p=2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.

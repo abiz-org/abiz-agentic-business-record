@@ -681,7 +681,7 @@ The normative schema is [`schemas/abiz-business-record-v1.1.schema.json`](../../
 https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json
 ```
 
-Cite that `$id` and the SPEC revision when you claim conformance (SPEC section 7). The `$id` address serves the same file as the repository copy. The published ABIZ 1.0 schema remains [`schemas/abiz-business-record-v1.schema.json`](../../../schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). This guide demonstrates the published 1.1 records. `record_version` is `abiz1` in both revisions; the `$id` selects the schema. The well-known file of section 4 has its own schema, [`schemas/abiz-well-known-v1.1.schema.json`](../../../schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`).
+Cite that `$id` and the SPEC revision when you claim conformance (SPEC section 7). The repository copy is the normative text; check that the copy served at the `$id` address matches it. The published ABIZ 1.0 schema remains [`schemas/abiz-business-record-v1.schema.json`](../../../schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). This guide demonstrates the published 1.1 records. `record_version` is `abiz1` in both revisions; the `$id` selects the schema. The well-known file of section 4 has its own schema, [`schemas/abiz-well-known-v1.1.schema.json`](../../../schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`).
 
 The schema rejects any top-level field not listed below. Beyond the schema, `scripts/validate.py` checks that `country` and the key's country are assigned codes, that `business_key` matches `country` and `registration_number`, that URLs use HTTPS, that `country` is not `kp` (North Korea is not supported, SPEC section 4.2.7), that `signature` verifies with `public_key` over the record (SPEC section 4.6), and, with `--domain` and `--dns-value` or `--well-known` (or just `--p`), that the record and the assertion agree, including that `p` is present and valid and that `public_key` equals it.
 
@@ -985,7 +985,7 @@ To rotate:
 
 Until the TXT TTL runs out (300 seconds is recommended), some software may still see the old `p` and report a mismatch. It should look again once the TTL has passed.
 
-Because `p` is required, you can't revoke a key by removing it. Rotate to a new key instead, or remove the whole ABIZ record to withdraw from ABIZ. Records signed with an old key stop verifying as soon as `p` changes. ABIZ 1.1 doesn't publish retired keys, either in DNS or in the business record.
+Because `p` is required, you can't revoke a key by removing it. Rotate to a new key instead (re-sign the record and set `public_key` to the new `p`), or remove the whole `_abiz` TXT record and any well-known file to withdraw from ABIZ. Records signed with an old key stop verifying as soon as `p` changes. ABIZ 1.1 doesn't publish retired keys, either in DNS or in the business record.
 
 ### What a signature does and does not show
 

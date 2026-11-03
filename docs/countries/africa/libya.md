@@ -17,7 +17,7 @@
 | `record_version` | `abiz1` |
 | `business_name` | الاسم العام الذي يعرفه العملاء، مثل `ورشة الواحة` |
 | `country` | `ly`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity_host` | `www.alwahaworkshop.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `www.alwahaworkshop.example`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["alwahaworkshop.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
@@ -47,7 +47,7 @@ ly-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;k=ly-12345;h=www.alwahaworkshop.example/abiz.json;p=cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64="
+_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;k=ly-12345;h=www.alwahaworkshop.example;p=5S7Kr9Cb87uuvyrkrvlRPUSr8WAcUhqJsdncP5q7bKA="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,10 +55,10 @@ _abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;k=ly-12345;h=www.alwahaworksho
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;h=www.alwahaworkshop.example/abiz.json;p=cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64="
+_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;h=www.alwahaworkshop.example;p=5S7Kr9Cb87uuvyrkrvlRPUSr8WAcUhqJsdncP5q7bKA="
 ```
 
-سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.alwahaworkshop.example/abiz.json`:
+سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.alwahaworkshop.example/?format=json`:
 
 ```json
 {
@@ -67,19 +67,19 @@ _abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;h=www.alwahaworkshop.example/a
   "country": "ly",
   "business_key": "ly-12345",
   "registration_number": "12345",
-  "identity_host": "www.alwahaworkshop.example/abiz.json",
+  "identity_host": "www.alwahaworkshop.example",
   "domains": [
     "alwahaworkshop.example"
   ],
-  "public_key": "cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64=",
-  "signature": "DrJbHGCcWYIehjjtjeznYOOl2CozVRw2crKuFIv9QqMZJSLvQ8PbKmEvuNvlBSNRT+4HCIBBgqxxAJlyBR5mAg=="
+  "public_key": "5S7Kr9Cb87uuvyrkrvlRPUSr8WAcUhqJsdncP5q7bKA=",
+  "signature": "y8xeJB+gv+17HBNPzcaXR0EzYQ+gpPwzY2DvS13ck1OmkupYMLEnDSijqj8dki488nPB9ZDC6aL3gcAUiHg6Aw=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain alwahaworkshop.example --dns-value 'v=abiz1;k=ly-12345;h=www.alwahaworkshop.example/abiz.json;p=cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64='
+python scripts/validate.py record.json --domain alwahaworkshop.example --dns-value 'v=abiz1;k=ly-12345;h=www.alwahaworkshop.example;p=5S7Kr9Cb87uuvyrkrvlRPUSr8WAcUhqJsdncP5q7bKA='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.

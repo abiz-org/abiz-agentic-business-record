@@ -21,8 +21,10 @@ which is in requirements-dev.txt:
 
 ABIZ 1.1, 2026-11-03 location, contact, hours and listing amendment (SPEC
 section 4.7): after the schema passes, the validator also checks what JSON
-Schema cannot express: every URL is a safe HTTPS URL; address, region,
-service-area and tax jurisdiction codes are assigned and consistent; time
+Schema cannot express: every URL is a safe HTTPS URL on a public DNS name;
+country, service-area and tax jurisdiction codes are assigned, and region codes
+match their country (ISO 3166-2 coverage is partial: assigned subdivision codes
+are confirmed only for US, CA and AE, see data/README.md); time
 zones are IANA identifiers; opening periods do not overlap (overnight periods
 included); location_id, media id and position, tax registrations and review
 platforms are unique; a rating is within its scale; and no recent_posts member
@@ -110,6 +112,21 @@ def known_time_zones() -> frozenset[str]:
     return _TIME_ZONES
 
 
+# Special-use and private-use names (RFC 6761, RFC 6762, RFC 7686, RFC 8375, RFC 9476,
+# and the ICANN-reserved .internal). They are never public DNS host names, so a
+# published ABIZ 1.1 URL or record host on them fails SPEC sections 3.2 and 4.7.1.
+# .example, .test and the other documentation names stay accepted for examples.
+NON_PUBLIC_SUFFIXES = ("localhost", "local", "internal", "home.arpa", "onion", "invalid", "alt")
+
+
+def public_dns_host(value: str) -> bool:
+    """True for a safe_host() name that is not a special-use or private-use name."""
+    if not safe_host(value):
+        return False
+    name = value.lower().rstrip(".")
+    return not any(name == suffix or name.endswith("." + suffix) for suffix in NON_PUBLIC_SUFFIXES)
+
+
 def safe_host(value: str) -> bool:
     value = value.lower().rstrip(".")
     if not HOST.fullmatch(value) or ".." in value or len(value) > 253:
@@ -137,15 +154,36 @@ def check_https(value: str) -> bool:
 
 
 def check_url(value: str) -> bool:
-    """SPEC section 4.7.1: HTTPS, public DNS host, no credentials, at most 2048 characters."""
-    return isinstance(value, str) and len(value) <= URL_MAX and check_https(value)
+    """SPEC section 4.7.1: HTTPS, public DNS host, no credentials, at most 2048 characters.
+
+    This is an offline check of the URL text. It cannot tell whether a public name
+    resolves to a private address; a consumer that fetches the URL still needs the
+    SSRF safeguards of SPEC section 9.
+    """
+    if not (isinstance(value, str) and len(value) <= URL_MAX and check_https(value)):
+        return False
+    return public_dns_host(urlsplit(value).hostname or "")
 
 
-def identity_parts(value: str):
+def identity_parts(value: str, revision: str = "1.1"):
+    """Normalise a record host (DNS h, identity_host): host lower-cased, path kept as is.
+
+    Published ABIZ 1.1 (SPEC section 3.2): no scheme, query, fragment, port or user
+    information, and a public DNS host name. The published 1.0 reference validator
+    accepted an explicit :443, so revision "1.0" keeps that behaviour.
+    """
     if "://" in value or "?" in value or "#" in value or "@" in value:
         return None
     p = urlsplit("https://" + value)
-    if not p.hostname or not safe_host(p.hostname) or p.port not in (None, 443):
+    if revision != "1.0" and ":" in p.netloc:
+        return None  # SPEC 3.2: h carries no port, not even :443
+    try:
+        port = p.port
+    except ValueError:
+        return None
+    if not p.hostname or not safe_host(p.hostname) or port not in (None, 443):
+        return None
+    if revision != "1.0" and not public_dns_host(p.hostname):
         return None
     if p.path and any(seg in (".", "..") for seg in p.path.split("/")):
         return None
@@ -433,11 +471,46 @@ def _reject_duplicate_members(pairs):
     return out
 
 
+def _reject_lone_surrogates(value: object) -> None:
+    if isinstance(value, str):
+        if any(0xD800 <= ord(c) <= 0xDFFF for c in value):
+            raise ValueError("not I-JSON: lone surrogate in a string (SPEC section 4.6.2)")
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            _reject_lone_surrogates(key)
+            _reject_lone_surrogates(item)
+    elif isinstance(value, list):
+        for item in value:
+            _reject_lone_surrogates(item)
+
+
+def _i_json_float(text: str) -> float:
+    number = float(text)
+    if math.isinf(number):
+        raise ValueError(f"not I-JSON: number {text[:40]} does not fit an IEEE 754 double (SPEC section 4.6.2)")
+    return number
+
+
+def _i_json_int(text: str) -> int:
+    number = int(text)
+    if abs(number) > 2**53:
+        raise ValueError(f"not I-JSON: integer {text[:40]} is outside the exact IEEE 754 double range (SPEC section 4.6.2)")
+    return number
+
+
 def load_json_strict(text: str) -> object:
-    """Parse JSON as SPEC section 4.6.2 requires: I-JSON, no duplicate member names."""
+    """Parse JSON as SPEC section 4.6.2 requires: I-JSON, no duplicate member names.
+
+    Rejects duplicate members, NaN and Infinity, numbers that overflow a double,
+    integers beyond 2**53 and lone surrogates, so a malformed record is reported
+    as malformed before any signature check, never as a bad signature.
+    """
     def bad_constant(name):
         raise ValueError(f"{name} is not valid JSON")
-    return json.loads(text, object_pairs_hook=_reject_duplicate_members, parse_constant=bad_constant)
+    document = json.loads(text, object_pairs_hook=_reject_duplicate_members, parse_constant=bad_constant,
+                          parse_float=_i_json_float, parse_int=_i_json_int)
+    _reject_lone_surrogates(document)
+    return document
 
 
 def well_known_tags(document: object) -> dict[str, str]:
@@ -808,7 +881,7 @@ def dns_tags_v1_0(value: str) -> dict[str, str]:
         tags[key] = item
     if not tags.get("h"):
         raise ValueError("Missing h= DNS tag")
-    if identity_parts(tags["h"]) is None:
+    if identity_parts(tags["h"], "1.0") is None:
         raise ValueError("Invalid DNS h= host/path")
     return tags
 
@@ -820,7 +893,7 @@ def validate_record_v1_0(record: dict, schema: dict, domain=None, dns_value=None
     if errors:
         return sorted(errors)
 
-    if identity_parts(record["identity-host"]) is None:
+    if identity_parts(record["identity-host"], "1.0") is None:
         errors.append("identity-host is not a valid DNS host / optional path")
     for item in record["domains"]:
         if not safe_host(item):
@@ -847,7 +920,7 @@ def validate_record_v1_0(record: dict, schema: dict, domain=None, dns_value=None
     if dns_value:
         try:
             tags = dns_tags_v1_0(dns_value)
-            if identity_parts(tags["h"]) != identity_parts(record["identity-host"]):
+            if identity_parts(tags["h"], "1.0") != identity_parts(record["identity-host"], "1.0"):
                 errors.append("DNS h and identity-host do not match")
             if "business-key" in record and tags.get("k") != record["business-key"]:
                 errors.append("registered business requires matching DNS k")

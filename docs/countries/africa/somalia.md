@@ -17,7 +17,7 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record_version` | `abiz1` |
 | `business_name` | the public name customers know, for example `Hodan Trading` |
 | `country` | `so`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity_host` | `www.hodantrading.example/abiz.json`, which must match `h` in DNS exactly |
+| `identity_host` | `www.hodantrading.example`, which must match `h` in DNS exactly |
 | `domains` | `["hodantrading.example"]`, which must include the domain that carries `_abiz` |
 
 ### Optional business key `k`
@@ -41,7 +41,7 @@ Somalia uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json;p=q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc="
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example;p=H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -49,29 +49,29 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json;p=q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc="
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example;p=H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw="
 ```
 
-The business record served as `application/json` at `https://www.hodantrading.example/abiz.json`:
+The business record served as `application/json` at `https://www.hodantrading.example/?format=json`:
 
 ```json
 {
   "record_version": "abiz1",
   "business_name": "Hodan Trading",
   "country": "so",
-  "identity_host": "www.hodantrading.example/abiz.json",
+  "identity_host": "www.hodantrading.example",
   "domains": [
     "hodantrading.example"
   ],
-  "public_key": "q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc=",
-  "signature": "vb+zfF9gzEtHQJ0t7g0t9x54/GjvCvYuO7drRaCDZKIsWkqc+8W6nXcTr7qgbSHpqTj8enJ7j0s6bp/zw8qLDQ=="
+  "public_key": "H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw=",
+  "signature": "71tC2/1G388BKTfGQUsu5hh2CZf48UUOc/YUFtjfPYHTgCjYr6OeW2yj4eT3R0guPliXtePGSEAIQ2P2WJO1DQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain hodantrading.example --dns-value 'v=abiz1;h=www.hodantrading.example/abiz.json;p=q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc='
+python scripts/validate.py record.json --domain hodantrading.example --dns-value 'v=abiz1;h=www.hodantrading.example;p=H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.

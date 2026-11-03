@@ -4,6 +4,14 @@
 
 ABIZ 1.1 is the published specification and the normative JSON Schema. ABIZ 1.0 remains the earlier published contract. The wire tag remains `v=abiz1`.
 
+### Release-readiness corrections
+
+- Country guides: every DNS example now carries `p`, and the business's main record uses a bare host in `h` (a path is only for a business unit, SPEC section 8). Records whose host changed were re-signed with new example keys; in each guide the TXT `p`, the `--dns-value` and the record's `public_key` agree. Four German guides no longer say that `p` can be left out, and the Portuguese and two French guides now say that removing only `p` is not revocation.
+- New documentation tests: every TXT and `--dns-value` example in README.md, SPEC.md and `docs/` parses as an ABIZ 1.1 assertion, a path `h` appears only beside its parent's bare host, every guide explains rotation and withdrawal of the whole declaration, the signing-key lint covers more languages, and nothing describes ABIZ 1.1 as proposed.
+- Reference validator (published ABIZ 1.1): a port in `h` or `identity_host` is rejected, even `:443` (SPEC section 3.2; `--revision 1.0` keeps the 1.0 behaviour); a malformed port no longer raises an unhandled error; special-use and private-use host names (`localhost`, `.local`, `.internal`, `.home.arpa`, `.onion`, `.invalid`, `.alt`) are rejected in URLs and record hosts; numbers that overflow a double, integers beyond 2^53 and lone surrogates are reported as malformed I-JSON before any signature check.
+- SPEC: section 4.6.2 says to report non-I-JSON input as malformed and explains the 2^53 limit; section 4.7.1 lists the special-use names and notes that URL checks are textual; section 4.7.6 and `data/README.md` state that ISO 3166-2 coverage is partial (assigned codes are confirmed for `US`, `CA` and `AE` only); section 4.7.9 adds a security note for SVG media.
+- The `cryptography` package is required to run the validator and tests (`requirements-dev.txt`); earlier notes that call it optional are historical.
+
 ### Schema identity correction
 
 The published ABIZ 1.0 business-record schema is restored as an immutable contract at `schemas/abiz-business-record-v1.schema.json` (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). The constraints are those of the 1.0 publication (`3bbaa7b`). The description in that publication called the file a 1.1 public-review draft; that label was wrong. Title and description are the only changes to that contract.
