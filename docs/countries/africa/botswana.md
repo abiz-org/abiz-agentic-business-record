@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Botswana
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language and the language of registration; Setswana is the national language.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language and the language of registration; Setswana is the national language.
 
 ## 1. What this means for a business in Botswana
 

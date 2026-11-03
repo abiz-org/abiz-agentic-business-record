@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Jamaica
 
-*A guide to ABIZ 1.1 (proposed). [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.*
+*A guide to published ABIZ 1.1. [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.*
 
 ## 1. What this means for a business in Jamaica
 

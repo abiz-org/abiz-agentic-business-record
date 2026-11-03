@@ -1,4 +1,4 @@
-"""Schema identity: published ABIZ 1.0 and proposed ABIZ 1.1 are selected separately."""
+"""Schema identity: published ABIZ 1.0 and published ABIZ 1.1 are selected separately."""
 import json
 import subprocess
 import sys
@@ -112,7 +112,7 @@ class SchemaIdentityTests(unittest.TestCase):
         )
         self.assertEqual(well_known.returncode, 1)
         self.assertIn("not an invalid signature", well_known.stderr)
-        self.assertIn("1.1 proposal", well_known.stderr)
+        self.assertIn("published ABIZ 1.1", well_known.stderr)
 
         tampered = json.loads((ROOT / "examples" / "registered-us.json").read_text())
         tampered["signature"] = "A" * 86 + "=="

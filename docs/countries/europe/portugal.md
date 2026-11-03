@@ -1,6 +1,6 @@
 # Tornar-se uma empresa agêntica com o ABIZ em Portugal
 
-*Guia do ABIZ 1.1 (proposta). O texto de referência é a [especificação (SPEC.md, em inglês)](../../../SPEC.md): se este guia e a especificação divergirem, prevalece a especificação.*
+*Guia da especificação publicada ABIZ 1.1. O texto de referência é a [especificação (SPEC.md, em inglês)](../../../SPEC.md): se este guia e a especificação divergirem, prevalece a especificação.*
 
 ## 1. O que isto significa para uma empresa em Portugal
 

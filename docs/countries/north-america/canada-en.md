@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Canada
 
-*A guide to ABIZ 1.1 (proposed). [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* This page uses Canadian spelling. A [French version](canada-fr.md) is also available.
+*A guide to published ABIZ 1.1. [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* This page uses Canadian spelling. A [French version](canada-fr.md) is also available.
 
 ## 1. What this means for a business in Canada
 

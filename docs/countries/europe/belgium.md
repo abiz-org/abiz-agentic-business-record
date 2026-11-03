@@ -1,6 +1,6 @@
 # Een agentisch bedrijf worden met ABIZ in België
 
-*Een handleiding bij ABIZ 1.1 (voorstel). De [specificatie (SPEC.md, Engelstalig)](../../../SPEC.md) is leidend: als deze handleiding en de specificatie verschillen, geldt de specificatie.* België heeft drie officiële talen; deze handleiding is in het Nederlands, de meest gebruikte taal. Versies in het Frans en het Duits zijn er nog niet.
+*Een handleiding bij de gepubliceerde specificatie ABIZ 1.1. De [specificatie (SPEC.md, Engelstalig)](../../../SPEC.md) is leidend: als deze handleiding en de specificatie verschillen, geldt de specificatie.* België heeft drie officiële talen; deze handleiding is in het Nederlands, de meest gebruikte taal. Versies in het Frans en het Duits zijn er nog niet.
 
 ## 1. Wat dit betekent voor een bedrijf in België
 

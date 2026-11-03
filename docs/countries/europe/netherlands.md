@@ -1,6 +1,6 @@
 # Een agentisch bedrijf worden met ABIZ in Nederland
 
-*Een handleiding bij ABIZ 1.1 (voorstel). De [specificatie (SPEC.md, Engelstalig)](../../../SPEC.md) is leidend: als deze handleiding en de specificatie verschillen, geldt de specificatie.*
+*Een handleiding bij de gepubliceerde specificatie ABIZ 1.1. De [specificatie (SPEC.md, Engelstalig)](../../../SPEC.md) is leidend: als deze handleiding en de specificatie verschillen, geldt de specificatie.*
 
 ## 1. Wat dit betekent voor een bedrijf in Nederland
 

@@ -1,6 +1,6 @@
 # Menjadi Perniagaan Agentik dengan ABIZ di Malaysia
 
-*Panduan untuk ABIZ 1.1 (cadangan). [Spesifikasi (SPEC.md, bahasa Inggeris)](../../../SPEC.md) ialah teks yang berwibawa: jika panduan ini dan spesifikasi berbeza, spesifikasi yang terpakai.* Bahasa Melayu ialah bahasa kebangsaan; bahasa Inggeris digunakan secara meluas dalam perniagaan.
+*Panduan untuk ABIZ 1.1 (spesifikasi yang diterbitkan). [Spesifikasi (SPEC.md, bahasa Inggeris)](../../../SPEC.md) ialah teks yang berwibawa: jika panduan ini dan spesifikasi berbeza, spesifikasi yang terpakai.* Bahasa Melayu ialah bahasa kebangsaan; bahasa Inggeris digunakan secara meluas dalam perniagaan.
 
 ## 1. Maksudnya bagi perniagaan di Malaysia
 

@@ -1,6 +1,6 @@
 # Jak zostać firmą agentową dzięki ABIZ w Polsce
 
-*Przewodnik po ABIZ 1.1 (propozycja). Wiążąca jest [specyfikacja (SPEC.md, po angielsku)](../../../SPEC.md): jeśli ten przewodnik różni się od specyfikacji, obowiązuje specyfikacja.*
+*Przewodnik po ABIZ 1.1 (opublikowana specyfikacja). Wiążąca jest [specyfikacja (SPEC.md, po angielsku)](../../../SPEC.md): jeśli ten przewodnik różni się od specyfikacji, obowiązuje specyfikacja.*
 
 ## 1. Co to oznacza dla firmy w Polsce
 

@@ -29,7 +29,7 @@ platforms are unique; a rating is within its scale; and no recent_posts member
 appears anywhere, extensions included.
 
 Schema revisions are selected with --revision. 1.0 is the published contract
-(schemas/abiz-business-record-v1.schema.json). 1.1 is the proposal
+(schemas/abiz-business-record-v1.schema.json). 1.1 is the latest published specification
 (schemas/abiz-business-record-v1.1.schema.json) and is the default. record_version
 and the DNS tag v stay abiz1 in both revisions and do not select the schema.
 An unsupported revision is reported as unsupported. It is not an invalid signature.
@@ -61,7 +61,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_REVISION_1_0 = ROOT / "schemas" / "abiz-business-record-v1.schema.json"
 SCHEMA_REVISION_1_1 = ROOT / "schemas" / "abiz-business-record-v1.1.schema.json"
 WELL_KNOWN_SCHEMA = ROOT / "schemas" / "abiz-well-known-v1.1.schema.json"
-# Default path used by the 1.1 proposal checks. The published 1.0 contract is separate.
+# Default path used by the published 1.1 checks. The earlier 1.0 contract is separate.
 SCHEMA = SCHEMA_REVISION_1_1
 SUPPORTED_REVISIONS = ("1.0", "1.1")
 # SPEC.md section 3.4: the well-known file and its limits.
@@ -208,7 +208,7 @@ def normalise_registration_number(raw: str) -> str:
     return text
 
 
-# ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1. Optional SP or HTAB may
+# published ABIZ 1.1 tag-list grammar, SPEC.md section 3.1.1. Optional SP or HTAB may
 # surround ";" and "=", and may lead or trail the value; one trailing ";" is allowed.
 # Tag names and values contain no whitespace. Every valid ABIZ 1.0 value still parses.
 WSP = " \t"
@@ -276,7 +276,7 @@ def _decode_standard_base64(value: str, pattern: re.Pattern[str], purpose: str, 
 
 
 def decode_ed25519_public_key(value: str) -> bytes:
-    """Decode an ABIZ 1.1 (proposed) p value to 32 raw public-key bytes; reject anything else."""
+    """Decode a published ABIZ 1.1 p value to 32 raw public-key bytes; reject anything else."""
     return _decode_standard_base64(value, P_KEY_RE, "p (Ed25519 public key)", 32)
 
 
@@ -965,7 +965,7 @@ def main():
     )
     ap.add_argument(
         "--revision",
-        help="Business-record schema revision: 1.0 (published) or 1.1 (proposed). "
+        help="Business-record schema revision: 1.0 (published) or 1.1 (published). "
         "Default: the nearest REVISION file, otherwise 1.1. record_version and v=abiz1 do not select it. "
         "An unsupported value is not an invalid signature.",
     )
@@ -987,7 +987,7 @@ def main():
         ap.error("--p-message and --p-signature require --domain and --dns-value or --well-known")
     if revision == "1.0" and (args.well_known is not None or args.p_value is not None or args.p_signature is not None):
         print(
-            "Invalid: --well-known, --p and detached p signatures belong to the ABIZ 1.1 proposal, "
+            "Invalid: --well-known, --p and detached p signatures belong to published ABIZ 1.1, "
             "not the published 1.0 contract. This is not an invalid signature.",
             file=sys.stderr,
         )
@@ -1008,7 +1008,7 @@ def main():
         if revision == "1.0":
             if is_well_known_document(record):
                 print(
-                    "Invalid: the well-known file is an ABIZ 1.1 proposal and is not part of the "
+                    "Invalid: the well-known file is part of published ABIZ 1.1 and is not part of the "
                     "published 1.0 contract. This is not an invalid signature.",
                     file=sys.stderr,
                 )

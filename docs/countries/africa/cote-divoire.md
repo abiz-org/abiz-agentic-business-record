@@ -1,6 +1,6 @@
 # Devenir une entreprise agentique avec ABIZ en Côte d’Ivoire
 
-*Guide pour ABIZ 1.1 (proposition). La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle et la langue des affaires.
+*Guide pour la spécification publiée ABIZ 1.1. La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle et la langue des affaires.
 
 ## 1. Ce que cela signifie pour une entreprise en Côte d’Ivoire
 

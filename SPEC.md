@@ -1,17 +1,18 @@
 # ABIZ — Agentic Business Record Specification
 
-**Published version:** ABIZ 1.0  
+**Published version:** ABIZ 1.1  
+**Earlier published version:** ABIZ 1.0 (2026-10-23)  
 **DNS wire version:** `v=abiz1` (unchanged)  
-**Date:** 2026-10-23  
-**1.1 proposal:** 2026-10-31, revised 2026-11-03, amended 2026-11-03 three times (not the published version; see sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6, 4.7 and 8)  
+**Date:** 2026-11-03  
+**1.1 history:** first drafted 2026-10-31, revised 2026-11-03, amended 2026-11-03 three times (sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6, 4.7 and 8). Those sections are part of this published version.  
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
 **Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
-**Normative schemas:** the published ABIZ 1.0 business record is [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). The proposed ABIZ 1.1 business record is [`schemas/abiz-business-record-v1.1.schema.json`](schemas/abiz-business-record-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`). The well-known file, which is part of the 1.1 proposal and did not exist in 1.0, is [`schemas/abiz-well-known-v1.1.schema.json`](schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`). `record_version` and the DNS tag `v` stay `abiz1` in both revisions and do not select the schema.
+**Normative schemas:** the published ABIZ 1.1 business record is [`schemas/abiz-business-record-v1.1.schema.json`](schemas/abiz-business-record-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`). This is the latest normative schema. The earlier published ABIZ 1.0 business record is [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). The well-known file, which is part of published ABIZ 1.1 and did not exist in 1.0, is [`schemas/abiz-well-known-v1.1.schema.json`](schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`). `record_version` and the DNS tag `v` stay `abiz1` in both revisions and do not select the schema.
 
-This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
+This is the **ABIZ 1.1 published specification**. ABIZ 1.0 remains the earlier published contract. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
 
-Sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6, 4.7 and 8 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace; a REQUIRED Ed25519 key in the DNS `p` tag; snake_case member names throughout the business record; REQUIRED `public_key` and `signature` members that sign the business record with the `p` key (section 4.6); a well-known file, `https://<domain>/.well-known/abiz.json`, as an alternative to the DNS record; a `format` query parameter (`html`, `markdown`, `json`) at the record host; a defined business-key grammar with country, subdivision and registration-number rules, with `k` optional for every business; record hosts given as bare hostnames, with paths reserved for business units and divisions; no support for North Korea (`kp`); and structured location, contact, hours and listing facts (section 4.7). They are not part of the ABIZ 1.0 conformance baseline. The whitespace change, the well-known file, the `format` parameter and optional `k` are backwards-compatible for consumers. The `p`, business-key, snake_case and record-signature changes are deliberately not: an assertion without `p`, or with a non-key `p`, is invalid (section 3.3.7), existing keys must be re-expressed (section 4.2.5), and every business record must be republished with snake_case member names, `public_key` and a valid `signature` (section 4.6.7). The section 4.7 amendment is breaking too: `email` and `phone` replace `contact_email` and `contact_phone`, root `opening_hours` is replaced by structured hours in each location, and a location's address is nested (section 4.7.14). The wire version stays `v=abiz1`.
+Sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6, 4.7 and 8 are **published ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace; a REQUIRED Ed25519 key in the DNS `p` tag; snake_case member names throughout the business record; REQUIRED `public_key` and `signature` members that sign the business record with the `p` key (section 4.6); a well-known file, `https://<domain>/.well-known/abiz.json`, as an alternative to the DNS record; a `format` query parameter (`html`, `markdown`, `json`) at the record host; a defined business-key grammar with country, subdivision and registration-number rules, with `k` optional for every business; record hosts given as bare hostnames, with paths reserved for business units and divisions; no support for North Korea (`kp`); and structured location, contact, hours and listing facts (section 4.7). They are not part of the ABIZ 1.0 conformance baseline. The whitespace change, the well-known file, the `format` parameter and optional `k` are backwards-compatible for consumers. The `p`, business-key, snake_case and record-signature changes are deliberately not: an assertion without `p`, or with a non-key `p`, is invalid (section 3.3.7), existing keys must be re-expressed (section 4.2.5), and every business record must be republished with snake_case member names, `public_key` and a valid `signature` (section 4.6.7). The section 4.7 amendment is breaking too: `email` and `phone` replace `contact_email` and `contact_phone`, root `opening_hours` is replaced by structured hours in each location, and a location's address is nested (section 4.7.14). The wire version stays `v=abiz1`.
 
 ## 1. Scope and purpose
 
@@ -45,9 +46,9 @@ A TXT record made of several character-strings (RFC 1035) is read as their conca
 
 The TTL SHOULD be 300 seconds. Section 3.4 defines a well-known file that a producer MAY publish instead of, or as well as, this TXT record. Tag names and values are case-sensitive, except that `k` is compared case-insensitively (section 4.2.4). A consumer MUST ignore unknown additional tags and MUST reject an assertion in which a recognised tag (`v`, `h`, `k`, `p`) appears more than once.
 
-#### 3.1.1 Tag-list syntax (ABIZ 1.1, proposed)
+#### 3.1.1 Tag-list syntax (published ABIZ 1.1)
 
-ABIZ 1.0 allowed no whitespace anywhere in the assertion. ABIZ 1.1 proposes the tag-list syntax used by other DNS TXT policy records: optional whitespace around `;` and `=`, leading and trailing whitespace, and one trailing `;`. This follows DKIM (RFC 6376 section 3.2, `tag-list`), DMARC (RFC 7489 section 6.4, `dmarc-sep = *WSP %x3b *WSP`, with a final optional separator), MTA-STS (RFC 8461 section 3.1, `sts-field-delim = *WSP ";" *WSP`) and SMTP TLS Reporting (RFC 8460 section 3, `field-delim = *WSP ";" *WSP`). SPF (RFC 7208 section 4.6.1 and section 12) likewise separates terms with one or more spaces and allows trailing spaces. Every value that was valid under ABIZ 1.0 parses under this syntax, with the same tags. (Section 3.3.7 separately makes an assertion without `p`, or with a non-key `p`, invalid.)
+ABIZ 1.0 allowed no whitespace anywhere in the assertion. ABIZ 1.1 uses the tag-list syntax used by other DNS TXT policy records: optional whitespace around `;` and `=`, leading and trailing whitespace, and one trailing `;`. This follows DKIM (RFC 6376 section 3.2, `tag-list`), DMARC (RFC 7489 section 6.4, `dmarc-sep = *WSP %x3b *WSP`, with a final optional separator), MTA-STS (RFC 8461 section 3.1, `sts-field-delim = *WSP ";" *WSP`) and SMTP TLS Reporting (RFC 8460 section 3, `field-delim = *WSP ";" *WSP`). SPF (RFC 7208 section 4.6.1 and section 12) likewise separates terms with one or more spaces and allows trailing spaces. Every value that was valid under ABIZ 1.0 parses under this syntax, with the same tags. (Section 3.3.7 separately makes an assertion without `p`, or with a non-key `p`, invalid.)
 
 The assertion, after character-string assembly, MUST match `abiz-record` (ABNF, RFC 5234; `%s` is case-sensitive, RFC 7405):
 
@@ -78,7 +79,7 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 | `v=abiz1` | MUST | Wire protocol family; always first |
 | `h=<record-host>` | MUST | HTTPS hostname of the public business record, without URL scheme. A bare hostname SHOULD be used; a path is for a business unit or division only (section 8). No query, fragment, port or user information |
 | `k=<business-key>` | MAY | Optional for every business, registered or not. When present, MUST follow section 4.2.1 and MUST equal the record's `business_key`, compared case-insensitively (section 4.2.4). Registration fields in the record do not require `k` |
-| `p=<public-key>` | MUST | REQUIRED in ABIZ 1.1 (proposed). MUST be an Ed25519 public key in standard base64, 44 characters (section 3.3.2). An assertion without `p`, or with any other value, is invalid. ABIZ 1.0 made `p` optional and allowed an opaque provider token. Not a password and not proof of legal identity |
+| `p=<public-key>` | MUST | REQUIRED in published ABIZ 1.1. MUST be an Ed25519 public key in standard base64, 44 characters (section 3.3.2). An assertion without `p`, or with any other value, is invalid. ABIZ 1.0 made `p` optional and allowed an opaque provider token. Not a password and not proof of legal identity |
 
 `h` MAY refer to a record hosted by an independent service. A producer need not own the host serving the record; it MUST control the queried DNS domain and have permission for the published record.
 
@@ -106,9 +107,9 @@ _abiz.harbourbikes.example. 300 IN TXT "v=abiz1;h=harbour-bike-repair.or.us.to.c
 
 `k` is optional; `h` and `p` are not. See `examples/dns-ed25519-p.txt` and section 3.3. An assertion such as `v=abiz1;h=harbour-bike-repair.or.us.to.co`, valid under ABIZ 1.0, is invalid under ABIZ 1.1 because it has no `p`.
 
-### 3.3 The `p` tag (ABIZ 1.1, proposed)
+### 3.3 The `p` tag (published ABIZ 1.1)
 
-This section is a proposal. It changes the meaning of `p` on purpose: from ABIZ 1.1, `p` is REQUIRED and MUST be a valid Ed25519 public key. An assertion without `p`, or with any other value, is invalid. Section 3.3.7 covers migrating existing values.
+This section is part of published ABIZ 1.1. It changes the meaning of `p` on purpose: from ABIZ 1.1, `p` is REQUIRED and MUST be a valid Ed25519 public key. An assertion without `p`, or with any other value, is invalid. Section 3.3.7 covers migrating existing values.
 
 #### 3.3.1 Role
 
@@ -194,7 +195,7 @@ When the business changes provider, it MAY publish the same `p` through the new 
 
 ABIZ 1.1 defines one such message: the business-record signature of section 4.6, whose message is the RFC 8785 canonical form of the record without its `signature` member. Any other detached signature is meaningful only for a message both sides already agreed. The reference validator can check such a pair with `--p-message` (UTF-8 text) and `--p-signature` (the 88-character standard base64 signature). Signature verification needs the `cryptography` package (in `requirements-dev.txt`); without it, the `p` format check still runs, and every signature check, including the record signature, fails with an error that names the missing dependency.
 
-**Wire version.** This proposal does not change `v=abiz1`. A strict ABIZ 1.0 consumer that treats `p` as opaque still accepts a 1.1 key, because a key is a valid 1.0 token, so every valid 1.1 assertion is a valid 1.0 assertion. The reverse does not hold: a 1.1 consumer rejects a missing or non-key `p` (section 3.3.7).
+**Wire version.** Published ABIZ 1.1 does not change `v=abiz1`. A strict ABIZ 1.0 consumer that treats `p` as opaque still accepts a 1.1 key, because a key is a valid 1.0 token, so every valid 1.1 assertion is a valid 1.0 assertion. The reverse does not hold: a 1.1 consumer rejects a missing or non-key `p` (section 3.3.7).
 
 #### 3.3.6 Rotation and revocation
 
@@ -219,13 +220,13 @@ This is a deliberate breaking change for assertions without a key. The others ar
 
 #### 3.3.8 Unresolved points
 
-This proposal does not decide the following. They are recorded so implementers do not treat silence as a decision:
+Published ABIZ 1.1 does not decide the following. They are recorded so implementers do not treat silence as a decision:
 
 - whether, and where, a later revision publishes retired keys using `$defs/retired_key`, and how long entries would be kept;
 
 Decided in this revision: `p` uses standard base64 (RFC 4648 section 4, RFC 8463), not base64url; from ABIZ 1.1 `p` is REQUIRED for every assertion, registered or not; a missing or non-key `p` is invalid; the business record carries a copy of the key as `public_key`; and a record signature covers the RFC 8785 canonical form of the record without `signature` (section 4.6).
 
-### 3.4 Well-known file (ABIZ 1.1, proposed)
+### 3.4 Well-known file (published ABIZ 1.1)
 
 A producer that cannot publish a DNS TXT record, or prefers not to, MAY publish the same assertion as a JSON file on the web server of the domain. A producer MAY also publish both.
 
@@ -294,11 +295,11 @@ The well-known file shows control of the HTTPS origin at `<domain>`, which is no
 
 ## 4. Published business record and normative schema
 
-The `h` target is the URL `https://<h>`. A consumer fetches the business record from it with `?format=json` (section 4.5) and the header `Accept: application/json`. The JSON representation MUST be a JSON object that validates against the schema for the revision being claimed, in **JSON Schema Draft 2020-12**. A published ABIZ 1.0 record validates against [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.schema.json)). A proposed ABIZ 1.1 record validates against [`schemas/abiz-business-record-v1.1.schema.json`](schemas/abiz-business-record-v1.1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json)). `record_version` is `abiz1` in both, and `v=abiz1` is the same wire tag. Neither value selects the schema. The reference validator selects one with `--revision` (`1.0` or `1.1`); when that flag is omitted it reads the nearest `REVISION` file and otherwise uses `1.1`. An unsupported revision is not an invalid signature. A record that fails only because it belongs to the other revision is a schema mismatch, not an invalid signature. Record conformance is a REQUIRED step for ABIZ conformance; a document that merely parses as JSON does not qualify.
+The `h` target is the URL `https://<h>`. A consumer fetches the business record from it with `?format=json` (section 4.5) and the header `Accept: application/json`. The JSON representation MUST be a JSON object that validates against the schema for the revision being claimed, in **JSON Schema Draft 2020-12**. A published ABIZ 1.0 record validates against [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.schema.json)). A published ABIZ 1.1 record validates against [`schemas/abiz-business-record-v1.1.schema.json`](schemas/abiz-business-record-v1.1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json)). `record_version` is `abiz1` in both, and `v=abiz1` is the same wire tag. Neither value selects the schema. The reference validator selects one with `--revision` (`1.0` or `1.1`); when that flag is omitted it reads the nearest `REVISION` file and otherwise uses `1.1`. An unsupported revision is not an invalid signature. A record that fails only because it belongs to the other revision is a schema mismatch, not an invalid signature. Record conformance is a REQUIRED step for ABIZ conformance; a document that merely parses as JSON does not qualify.
 
 The authoritative current key is `p` in the DNS assertion or the well-known file (section 3.4). The record repeats it as `public_key` and carries a `signature` made with the matching private key (section 4.6). The encoding is normative in section 3.3.2: standard base64 of the raw 32-byte Ed25519 public key, the same `p=` encoding DKIM specifies for Ed25519 in RFC 8463 (RFC 4648 section 4, with padding).
 
-ABIZ 1.1 (proposed) renames every record member to snake_case (`record_version`, `business_name`, `identity_host`, `business_key`, `registration_number`, `mcp_server_url`, `logo_url`, `last_updated`) and adds two REQUIRED members, `public_key` and `signature` (section 4.6). The section 4.7 amendment then renames `contact_email` and `contact_phone` to `email` and `phone`, removes root `opening_hours`, nests a location's address and adds the members listed in section 4.3. Hyphenated member names are unknown top-level properties and are rejected. The proposed 1.1 business-record schema has its own file and `$id`, `schemas/abiz-business-record-v1.1.schema.json`. The published 1.0 schema stays at `schemas/abiz-business-record-v1.schema.json` with its original `$id`. The 1.1 schema's `$defs` holds the shared definitions of section 4.7 (such as `address`, `opening_hours` and `media_item`) and one more nested definition, `retired_key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
+published ABIZ 1.1 renames every record member to snake_case (`record_version`, `business_name`, `identity_host`, `business_key`, `registration_number`, `mcp_server_url`, `logo_url`, `last_updated`) and adds two REQUIRED members, `public_key` and `signature` (section 4.6). The section 4.7 amendment then renames `contact_email` and `contact_phone` to `email` and `phone`, removes root `opening_hours`, nests a location's address and adds the members listed in section 4.3. Hyphenated member names are unknown top-level properties and are rejected. The proposed 1.1 business-record schema has its own file and `$id`, `schemas/abiz-business-record-v1.1.schema.json`. The published 1.0 schema stays at `schemas/abiz-business-record-v1.schema.json` with its original `$id`. The 1.1 schema's `$defs` holds the shared definitions of section 4.7 (such as `address`, `opening_hours` and `media_item`) and one more nested definition, `retired_key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
 
 ### 4.1 Required properties
 
@@ -314,7 +315,7 @@ ABIZ 1.1 (proposed) renames every record member to snake_case (`record_version`,
 
 `business_key` and `registration_number` are OPTIONAL, for registered and unregistered businesses alike. If either is present, both MUST be present. The country part of `business_key` MUST equal the record's `country`, and its registration-number part MUST equal `registration_number`, both compared case-insensitively. Including these fields in the record does not require `k` in DNS. If the DNS assertion contains `k`, `k` MUST equal `business_key` (section 4.2.4).
 
-#### 4.2.1 Business key grammar (ABIZ 1.1, proposed)
+#### 4.2.1 Business key grammar (published ABIZ 1.1)
 
 The business key, used as DNS `k` and record `business_key`, has this ABNF (RFC 5234; quoted strings are case-insensitive, and `ALPHA` covers both cases):
 
@@ -388,7 +389,7 @@ This is a breaking change for keys. ABIZ 1.0 allowed `.`, `_` and `-` inside the
 
 `mcp_server_url` is OPTIONAL. If present it MUST be a valid HTTPS URL, but ABIZ does not assert that the endpoint is open, safe, available or authenticated. Consumers MUST apply appropriate access controls before using any linked agent endpoint.
 
-#### 4.2.7 Unsupported country: North Korea (ABIZ 1.1, proposed)
+#### 4.2.7 Unsupported country: North Korea (published ABIZ 1.1)
 
 ABIZ does not support businesses in North Korea (the Democratic People's Republic of Korea, ISO 3166-1 `kp`). A business record whose `country`, any `locations[].address.country.code`, service-area code or tax `jurisdiction` is `kp` (in any case) is invalid, and so is a business key whose country is `kp`. Producers MUST NOT publish such a record or key, and consumers MUST reject it. South Korea (`kr`) is unaffected.
 
@@ -415,7 +416,7 @@ Schema validation does **not** check the following. The reference validator chec
 
 These checks are performed separately, with clear results. The supplied offline reference validator implements schema and local DNS/document checks; it does not query registries or fetch untrusted URLs.
 
-### 4.5 Representations and the `format` parameter (ABIZ 1.1, proposed)
+### 4.5 Representations and the `format` parameter (published ABIZ 1.1)
 
 The record host serves one business in three representations at the same URL. A record host MUST support the `format` query parameter:
 
@@ -436,7 +437,7 @@ Rules:
 
 A consumer MUST request JSON with `Accept: application/json` and SHOULD also add `format=json`. It MUST check that the response media type is `application/json` before parsing.
 
-### 4.6 Record signing: `public_key` and `signature` (ABIZ 1.1, proposed)
+### 4.6 Record signing: `public_key` and `signature` (published ABIZ 1.1)
 
 Every business record MUST carry the business's public key and a signature over the record. Together with `p`, they let a consumer check that the record served at `https://<h>` was published by the holder of the key that the domain names, and that it has not been changed since it was signed.
 
@@ -630,9 +631,9 @@ The section 4.7 amendment is a further breaking change of the same kind. A recor
 }
 ```
 
-### 4.7 Location, contact, hours and listing facts (ABIZ 1.1, proposed)
+### 4.7 Location, contact, hours and listing facts (published ABIZ 1.1)
 
-This section is the 2026-11-03 amendment to the ABIZ 1.1 proposal. It belongs to ABIZ 1.1 and does not make a new version. It renames the contact members, replaces the flat location members and the free-text root `opening_hours` with structured members, and adds optional members for listings, tax registrations, media and reviews. The wire version and `record_version` stay `abiz1`. The DNS and well-known tags and the signing rules of section 4.6 do not change. This amendment is part of the proposed 1.1 schema identified in section 4. It does not create a third schema, and it does not replace the published 1.0 schema. Section 4.7.14 lists the breaking changes.
+This section is the 2026-11-03 amendment to published ABIZ 1.1. It belongs to ABIZ 1.1 and does not make a new version. It renames the contact members, replaces the flat location members and the free-text root `opening_hours` with structured members, and adds optional members for listings, tax registrations, media and reviews. The wire version and `record_version` stay `abiz1`. The DNS and well-known tags and the signing rules of section 4.6 do not change. This amendment is part of the published 1.1 schema identified in section 4. It does not create a third schema, and it does not replace the published 1.0 schema. Section 4.7.14 lists the breaking changes.
 
 #### 4.7.1 General rules
 
@@ -799,9 +800,9 @@ JSON Schema cannot express every rule in this section. A conforming consumer, an
 
 #### 4.7.14 Versioning and migration
 
-This amendment keeps the `abiz1` family: `record_version` stays `abiz1` and `v=abiz1` is unchanged. The amended members belong to the proposed 1.1 schema (`schemas/abiz-business-record-v1.1.schema.json`), which is identified separately from the published 1.0 schema. Several changes are breaking, and the 1.1 schema stays strict (`additionalProperties: false`), so:
+This amendment keeps the `abiz1` family: `record_version` stays `abiz1` and `v=abiz1` is unchanged. The amended members belong to the published 1.1 schema (`schemas/abiz-business-record-v1.1.schema.json`), which is identified separately from the published 1.0 schema. Several changes are breaking, and the 1.1 schema stays strict (`additionalProperties: false`), so:
 
-- a validator built for the ABIZ 1.1 proposal **before** this amendment rejects an amended record that uses any new member, and the amended schema rejects a record that uses a removed one;
+- a validator built for published ABIZ 1.1 **before** this amendment rejects an amended record that uses any new member, and the amended schema rejects a record that uses a removed one;
 - a consumer MUST identify the schema revision it validates against when it claims conformance (section 7), and SHOULD report a record that fails only because of a member from a different revision as such, not as a forged record;
 - a producer MUST NOT serve amended records to consumers that it knows validate against the earlier revision, and SHOULD move to the amended form once and in one step, rather than publish a mixture;
 - a producer MUST re-sign every record it migrates. The signing rules (section 4.6) are unchanged, so a migrated record signed with the current key verifies against the same `p`; the DNS assertion and well-known file need no change.
@@ -895,7 +896,7 @@ A consumer MAY check registration details against authoritative registries; if i
 | **ABIZ consumer conformant** | Required DNS parsing, safe fetch, schema, semantic and clear status handling | Global adoption or recommendations |
 | **Registry-confirmed** | Independent authoritative register check, separately labelled | Endorsement by ABIZ |
 
-Conformance MUST identify the schema `$id` and document revision. Use `https://abizrecord.org/schema/abiz-business-record-v1.schema.json` for the published ABIZ 1.0 contract and `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json` for the proposed ABIZ 1.1 contract. `v=abiz1` and `record_version` do not choose between them. An unsupported revision is not an invalid signature, and a schema mismatch is not an invalid signature. Do not claim `v=abiz1` alone proves that a business is registered or verified. Do not describe ABIZ 1.1 as formally published.
+Conformance MUST identify the schema `$id` and document revision. Use `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json` for the published ABIZ 1.1 contract and `https://abizrecord.org/schema/abiz-business-record-v1.schema.json` for the earlier published ABIZ 1.0 contract. `v=abiz1` and `record_version` do not choose between them. An unsupported revision is not an invalid signature, and a schema mismatch is not an invalid signature. Do not claim `v=abiz1` alone proves that a business is registered or verified.
 
 ## 8. Business units and divisions
 
@@ -905,7 +906,7 @@ A business's main record SHOULD use a bare hostname as its record host, with no 
 _abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery.uk.to.co;p=iM9LF3A1EpHDmHn17+eaaq787N6LsWFk8LhBo7sjOAk="
 ```
 
-A business unit or division (a branch, a brand, a department, an events arm) MAY have its own business record. Its record host MAY then be a path on the parent's host (ABIZ 1.1, proposed):
+A business unit or division (a branch, a brand, a department, an events arm) MAY have its own business record. Its record host MAY then be a path on the parent's host (published ABIZ 1.1):
 
 ```dns
 _abiz.events.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
@@ -959,7 +960,7 @@ The standard is open and provider-independent. To.Co Technologies Limited is the
 
 ## 12. Interoperability
 
-ABIZ 1.1 (proposed) encodes the DNS `p` tag as standard base64 with padding, matching the Ed25519 public key in DKIM (RFC 8463). That is a 44-character encoding of 32 bytes. ABIZ shares that public-key encoding only. Signature checks use PureEd25519 over the RFC 8785 canonical record (section 4.6) or another agreed message (section 3.3.5). See section 3.3.2.
+published ABIZ 1.1 encodes the DNS `p` tag as standard base64 with padding, matching the Ed25519 public key in DKIM (RFC 8463). That is a 44-character encoding of 32 bytes. ABIZ shares that public-key encoding only. Signature checks use PureEd25519 over the RFC 8785 canonical record (section 4.6) or another agreed message (section 3.3.5). See section 3.3.2.
 
 [draft-morrison-mcp-dns-discovery](https://datatracker.ietf.org/doc/draft-morrison-mcp-dns-discovery/) also puts Ed25519 public keys in DNS TXT records. The current draft name is unchanged. Revision 09 (21 October 2026) is the revision consulted for this text; the datatracker link above tracks later revisions. In that draft, `_mcp` and `_alter` carry the key as `pk=ed25519:` followed by unpadded base64url (RFC 4648 section 5). A 32-byte key is then 43 characters, not 44. ABIZ MUST NOT be read as using that encoding. A consumer MUST NOT treat an ABIZ `p` value as that draft's `pk` value, or the reverse, without decoding and encoding again.
 

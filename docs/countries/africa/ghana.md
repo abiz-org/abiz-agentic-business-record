@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Ghana
 
-*A guide to ABIZ 1.1, the latest published specification. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language and the language of registration.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language and the language of registration.
 
 ## 1. What this means for a business in Ghana
 

@@ -1,6 +1,6 @@
 # Convertirse en una empresa agéntica con ABIZ en Guinea Ecuatorial
 
-*Guía para ABIZ 1.1 (propuesta). La [especificación (SPEC.md, en inglés)](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.* El español es la lengua principal de la administración; el francés y el portugués también son oficiales.
+*Guía de la especificación publicada ABIZ 1.1. La [especificación (SPEC.md, en inglés)](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.* El español es la lengua principal de la administración; el francés y el portugués también son oficiales.
 
 ## 1. Qué significa para una empresa en Guinea Ecuatorial
 

@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Papua New Guinea
 
-*A guide to ABIZ 1.1 (proposed). [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* Papua New Guinea's official languages include English, Tok Pisin and Hiri Motu; this guide is in English, the main language of company registration.
+*A guide to published ABIZ 1.1. [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* Papua New Guinea's official languages include English, Tok Pisin and Hiri Motu; this guide is in English, the main language of company registration.
 
 ## 1. What this means for a business in Papua New Guinea
 

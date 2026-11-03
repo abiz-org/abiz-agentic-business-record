@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Ethiopia
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Amharic is the federal working language, and several regions use other languages. This guide is in English, which is widely used in business.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Amharic is the federal working language, and several regions use other languages. This guide is in English, which is widely used in business.
 
 ## 1. What this means for a business in Ethiopia
 

@@ -1,6 +1,6 @@
 # Tornar-se uma empresa agêntica com ABIZ no Brasil
 
-*Guia da ABIZ 1.1 (proposta). O [SPEC.md](../../../SPEC.md) é o texto de referência: se este guia e a especificação divergirem, vale a especificação.*
+*Guia da especificação publicada ABIZ 1.1. O [SPEC.md](../../../SPEC.md) é o texto de referência: se este guia e a especificação divergirem, vale a especificação.*
 
 ## 1. O que isso significa para uma empresa no Brasil
 
