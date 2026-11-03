@@ -1,0 +1,135 @@
+# Cum deveniți o afacere agentică cu ABIZ în România
+
+*Ghid pentru ABIZ 1.1 (propunere). Textul de referință este [specificația (SPEC.md, în engleză)](../../../SPEC.md): dacă acest ghid și specificația diferă, prevalează specificația.*
+
+## 1. Ce înseamnă pentru o firmă în România
+
+Tot mai mulți oameni întreabă asistenții AI despre firme: cine sunt, ce oferă, unde le găsesc. Cu ABIZ (Agentic Business Record), o firmă publică o singură înregistrare publică, ușor de citit de mașini, cu propriile date, precum denumire, țară, site, servicii și program, iar pe propriul domeniu o înregistrare DNS care trimite la ea.
+
+Doar firma, sau cine acționează în numele ei, poate modifica DNS-ul domeniului. Astfel, un software compatibil poate găsi înregistrarea pornind de la domeniu și poate verifica dacă domeniul și înregistrarea trimit unul la celălalt, în loc să adune date de pe pagini web disparate. ABIZ este deschis și independent de furnizori: nu cere calitate de membru, taxe sau un anumit furnizor.
+
+## 2. Cum publicați o înregistrare ABIZ
+
+### Câmpuri obligatorii
+
+Înregistrarea firmei este un document JSON care trebuie să respecte [schema normativă](../../../schemas/abiz-business-record-v1.schema.json). Există cinci câmpuri obligatorii:
+
+| Câmp | Exemplu | Observații |
+| --- | --- | --- |
+| `record-version` | `abiz1` | Întotdeauna această valoare |
+| `business-name` | `Carpați Mobila SRL` | Denumirea publică, de obicei ca în registru, cu forma juridică dacă o folosiți |
+| `country` | `ro` | Codul țării ISO 3166-1 alpha-2; forma canonică este cu litere mici |
+| `identity-host` | `carpatimobila.ro.to.co` | Exact valoarea DNS `h`: un nume de gazdă cu cale opțională, fără `https://` |
+| `domains` | `["carpatimobila.example"]` | Domeniile revendicate de înregistrare, inclusiv cel care conține `_abiz` |
+
+### Cheia opțională a firmei `k`
+
+`k` este opțional pentru orice firmă, înregistrată sau nu. Dacă îl publicați, înregistrarea trebuie să conțină și `business-key` și `registration-number`, iar `k` trebuie să fie egal cu `business-key`.
+
+În România cheia este `ro-` urmat de numărul de înregistrare, fără subdiviziune teritorială: o cheie cu o parte intermediară, cum ar fi `ro-xx-…`, este invalidă.
+
+- **Registru:** registrul comerțului, ținut de [Oficiul Național al Registrului Comerțului (ONRC)](https://www.onrc.ro/)
+- **Ce număr folosiți:** codul unic de înregistrare (CUI), fără prefixul `RO` folosit pentru TVA. Nu numărul de ordine `J…`, care conține codul județului
+- **Cum îl scrieți:** porniți de la numărul așa cum îl atribuie registrul, aplicați normalizarea Unicode NFKC, eliminați spațiile, `-`, `.`, `/` și alte liniuțe, apoi scrieți literele cu majuscule. Zerourile de la început și prefixele din litere se păstrează. Rezultatul poate conține doar litere și cifre ASCII.
+
+Exemplu (număr inventat): `12345678` este deja în formă canonică. Înregistrarea conține atunci `"registration-number": "12345678"` și `"business-key": "ro-12345678"`, iar în DNS apare `k=ro-12345678`.
+
+Cheile se compară fără a ține cont de majuscule, dar publicați forma canonică: codul țării cu litere mici, numărul cu majuscule.
+
+### Înregistrarea DNS TXT
+
+Publicați exact o înregistrare TXT ABIZ la `_abiz` pe domeniul dumneavoastră, în forma compactă, fără spații:
+
+```dns
+_abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1F+iYRQX9lkKNYv+EGkBzjqQd4JgwlFoR4jCyZxRInE="
+```
+
+- `v=abiz1` trebuie să fie primul. `h` este obligatoriu; `k` și `p` sunt opționale.
+- Numele etichetelor se scriu cu litere mici și țin cont de majuscule. Nicio etichetă nu se poate repeta.
+- Se recomandă un TTL de 300 de secunde.
+
+Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o copiați niciodată: publicați propria cheie sau omiteți `p`.
+
+### Înregistrarea firmei (JSON)
+
+Înregistrarea servită la `https://carpatimobila.ro.to.co` ca `application/json`:
+
+```json
+{
+  "record-version": "abiz1",
+  "business-name": "Carpați Mobila SRL",
+  "country": "ro",
+  "business-key": "ro-12345678",
+  "registration-number": "12345678",
+  "identity-host": "carpatimobila.ro.to.co",
+  "domains": [
+    "carpatimobila.example"
+  ],
+  "description": "Atelier de mobilă din Cluj-Napoca.",
+  "website": "https://carpatimobila.example",
+  "locations": [
+    {
+      "kind": "trading",
+      "city": "Cluj-Napoca",
+      "country": "ro",
+      "public": true
+    }
+  ]
+}
+```
+
+Cu validatorul de referință puteți verifica local înregistrarea și valoarea DNS:
+
+```sh
+python scripts/validate.py record.json --domain carpatimobila.example --dns-value 'v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1F+iYRQX9lkKNYv+EGkBzjqQd4JgwlFoR4jCyZxRInE='
+```
+
+### Găzduire proprie sau printr-un furnizor
+
+Puteți servi înregistrarea chiar dumneavoastră, de pe orice gazdă HTTPS pe care o controlați, sau puteți folosi orice furnizor compatibil. ABIZ nu impune un furnizor și nici o schemă pentru numele de gazdă. În orice caz, înregistrarea trebuie servită prin HTTPS, iar domeniul care conține `_abiz` trebuie să fie sub controlul dumneavoastră.
+
+## 3. Furnizori și MCP
+
+MCP (Model Context Protocol) este un protocol deschis prin care asistenții AI apelează instrumente și citesc date de pe servere externe. Un furnizor poate opera un server MCP prin care un asistent obține direct înregistrarea dumneavoastră publică. Îl puteți indica în câmpul opțional `mcp-server-url`. ABIZ nu cere un server MCP, iar un instrument nu ar trebui să-l apeleze automat doar pentru că apare într-o înregistrare.
+
+De exemplu, un furnizor vă publică înregistrarea la `carpatimobila.ro.to.co` și operează un server MCP. Un asistent conectat la acel server poate întreba apoi de programul sau serviciile Carpați Mobila SRL și primește datele din înregistrarea dumneavoastră, în loc să ghicească.
+
+## 4. Chei și semnături (ABIZ 1.1)
+
+ABIZ 1.1 permite publicarea unei chei publice Ed25519 în eticheta DNS `p`. `p` este opțională. Dacă există, valoarea trebuie să fie codificarea base64 standard a cheii de 32 de octeți: 44 de caractere care se termină cu exact un `=`, într-un singur șir DNS. Orice altă valoare, de exemplu un token hexazecimal din ABIZ 1.0 sau o cheie base64url, invalidează întreaga înregistrare.
+
+Cheia privată corespunzătoare aparține firmei și nu se publică niciodată. Dacă un furnizor o păstrează pentru dumneavoastră, trebuie să vă permită să o exportați. Un software poate verifica o semnătură făcută cu cheia privată folosind cheia publicată în DNS. ABIZ 1.1 nu definește încă ce octeți acoperă o semnătură a înregistrării firmei.
+
+Pentru a schimba cheia, publicați una nouă în `p`; pentru a o revoca, eliminați `p`. În ABIZ 1.1 cheile retrase nu se publică, nici în DNS, nici în înregistrare. Cheia arată ce cheie a publicat cel care controlează domeniul; nu dovedește identitatea juridică.
+
+## 5. Ce văd instrumentele AI
+
+Cu o înregistrare validă, un asistent compatibil poate răspunde la întrebări precum:
+
+- „Este Carpați Mobila SRL o firmă din Cluj-Napoca?”
+- „Ce oferă Carpați Mobila SRL și care este programul?”
+- „Este carpatimobila.example site-ul oficial al Carpați Mobila SRL?”
+- „Ce număr de înregistrare declară Carpați Mobila SRL?”
+
+Limitele contează. ABIZ arată că un domeniu și o înregistrare trimit unul la celălalt. Nu dovedește că firma este înregistrată legal, că un număr de înregistrare este autentic sau că cineva o recomandă. Un instrument care nu a verificat el însuși registrul comerțului nu ar trebui să prezinte firma ca verificată. ABIZ nu garantează că vreun serviciu AI va găsi, clasa sau recomanda o firmă.
+
+## 6. Note practice
+
+### Unde găsiți numărul
+
+CUI-ul apare pe certificatul de înregistrare, pe facturi și pe site-ul firmei. Datele firmelor pot fi consultate prin [ONRC](https://www.onrc.ro/).
+
+### Adăugarea înregistrării TXT
+
+Adăugați înregistrarea acolo unde se administrează DNS-ul domeniului, de obicei la registrar sau la furnizorul de găzduire. Registrul domeniilor `.ro` este [RoTLD](https://www.rotld.ro/), dar înregistrarea TXT se adaugă la registrarul sau furnizorul DNS; merge orice furnizor care acceptă înregistrări TXT. Creați o înregistrare de tip TXT cu numele `_abiz` (unele panouri cer numele complet, `_abiz.carpatimobila.example`), cu valoarea exact ca mai sus și TTL 300. Nu adăugați spații în valoare și ștergeți înregistrările ABIZ mai vechi, astfel încât să rămână una singură.
+
+### Datele personale
+
+GDPR se aplică datelor personale din înregistrare, de exemplu numelui unui titular de PFA sau al unei persoane de contact. Autoritatea de supraveghere este ANSPDCP; [Comitetul European pentru Protecția Datelor](https://www.edpb.europa.eu/) trimite la autoritățile naționale. Tot ce se află într-o înregistrare ABIZ este public; publicați doar date care pot fi publice. O persoană fizică ce lucrează pe cont propriu nu ar trebui să-și publice adresa de domiciliu: specificația cere ca adresele private să fie omise, nu marcate ca private. O adresă generală precum `contact@` este mai bună decât un e-mail personal.
+
+## 7. Mai multe informații
+
+- [Specificația ABIZ (SPEC.md, în engleză)](../../../SPEC.md): sintaxa DNS (secțiunea 3.1.1), cheia `p` (secțiunea 3.3), cheile firmelor (secțiunea 4.2)
+- [Schema JSON normativă](../../../schemas/abiz-business-record-v1.schema.json)
+- [Validatorul de referință, scripts/validate.py](../../../scripts/validate.py)
+- [Toate ghidurile pentru Europa](index.md)
