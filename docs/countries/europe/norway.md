@@ -12,7 +12,7 @@ Bare virksomheten, eller noen som handler på dens vegne, kan endre DNS for dome
 
 ### Obligatoriske felt
 
-Virksomhetsposten er et JSON-dokument som må følge det [normative skjemaet](../../../schemas/abiz-business-record-v1.schema.json). Fem felt er obligatoriske:
+Virksomhetsposten er et JSON-dokument som må følge det [normative skjemaet](../../../schemas/abiz-business-record-v1.1.schema.json). Fem felt er obligatoriske:
 
 | Felt | Eksempel | Merknad |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Publiser nøyaktig én ABIZ TXT-post under `_abiz` på domenet deres, i kompakt 
 _abiz.nordlysfisk.example. 300 IN TXT "v=abiz1;k=no-123456789;h=nordlysfisk.no.to.co;p=Kg9CppHmag96YAPGVhabCCEg7ChoBBJmuqjr+NYSLAM="
 ```
 
-- `v=abiz1` må stå først. `h` er obligatorisk; `k` og `p` er valgfrie.
+- `v=abiz1` må stå først. `h` og `p` er obligatoriske; `k` er valgfri.
 - Tagnavn skrives med små bokstaver og skiller mellom store og små bokstaver. Ingen tagg kan forekomme to ganger.
 - En TTL på 300 sekunder anbefales.
 
-`p`-verdien ovenfor er en engangsnøkkel for eksempelet. Kopier den aldri: publiser deres egen nøkkel, eller utelat `p`.
+`p`-verdien ovenfor er en engangsnøkkel for eksempelet. Kopier den aldri: publiser deres egen nøkkel. En ABIZ 1.1-påstand må inneholde `p`.
 
 ### Virksomhetspost (JSON)
 
@@ -102,11 +102,11 @@ Et eksempel: en leverandør publiserer posten deres på `nordlysfisk.no.to.co` o
 
 ## 4. Nøkler og signaturer (ABIZ 1.1)
 
-Med ABIZ 1.1 kan en virksomhet publisere en offentlig Ed25519-nøkkel i DNS-taggen `p`. `p` er valgfri. Hvis taggen finnes, må verdien være standard base64 av nøkkelen på 32 byte: 44 tegn som slutter med nøyaktig ett `=`, i én DNS-streng. Alle andre verdier, for eksempel et heksadesimalt ABIZ 1.0-token eller en base64url-nøkkel, gjør hele posten ugyldig.
+ABIZ 1.1 krever en offentlig Ed25519-nøkkel i DNS-taggen `p`. `v` og `h` er obligatoriske. `p` er obligatorisk. `k` er valgfri. `p` må være 32 råbyte i standard base64: 44 tegn som slutter med nøyaktig ett `=`, i én DNS-streng. Base64url godtas ikke. Alle andre verdier, for eksempel et heksadesimalt ABIZ 1.0-token, gjør hele posten ugyldig.
 
-Den tilhørende private nøkkelen tilhører virksomheten og publiseres aldri. Hvis en leverandør oppbevarer den for dere, må dere kunne eksportere den. Programvare kan kontrollere en signatur laget med den private nøkkelen mot nøkkelen i DNS. Hvilke byte en signatur over virksomhetsposten dekker, er ennå ikke fastsatt i ABIZ 1.1.
+Den tilhørende private nøkkelen tilhører virksomheten og publiseres aldri. Hvis en leverandør oppbevarer den for dere, må dere kunne eksportere den. Programvare kan kontrollere en signatur laget med den private nøkkelen mot nøkkelen i DNS. Signaturen dekker den RFC 8785-kanoniske formen av posten uten medlemmet `signature` og kontrolleres med `public_key`, som må være lik `p` (SPEC avsnitt 4.6).
 
-For å bytte nøkkel publiserer dere en ny i `p`; for å tilbakekalle den fjerner dere `p`. Utfasede nøkler publiseres ikke i ABIZ 1.1, verken i DNS eller i posten. Nøkkelen viser hvilken nøkkel domeneinnehaveren har publisert; den beviser ikke juridisk identitet.
+For å bytte nøkkel lager dere et nytt Ed25519-nøkkelpar, publiserer den nye offentlige nøkkelen i DNS- eller well-known-påstanden, signerer posten på nytt med den nye private nøkkelen og setter `public_key` til samme `p`. Ta hensyn til DNS-hurtiglager. Å fjerne bare `p` er ikke gyldig tilbakekalling så lenge ABIZ 1.1-påstanden står: for å trekke den tilbake fjerner dere hele erklæringen. Utfasede nøkler publiseres ikke i ABIZ 1.1, verken i DNS eller i posten. Nøkkelen viser hvilken nøkkel domeneinnehaveren har publisert; den beviser ikke juridisk identitet.
 
 ## 5. Hva KI-verktøy ser
 
@@ -136,6 +136,6 @@ Personvernforordningen (GDPR) gjelder i Norge gjennom EØS-avtalen og omfatter p
 ## 7. Les mer
 
 - [ABIZ-spesifikasjonen (SPEC.md, på engelsk)](../../../SPEC.md): DNS-syntaks (avsnitt 3.1.1), nøkkelen `p` (avsnitt 3.3), virksomhetsnøkler (avsnitt 4.2)
-- [Normativt JSON-skjema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normativt JSON-skjema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Referansevalidator, scripts/validate.py](../../../scripts/validate.py)
 - [Alle veiledninger for Europa](index.md)

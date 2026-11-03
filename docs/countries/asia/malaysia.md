@@ -46,9 +46,9 @@ Terbitkan tepat satu rekod TXT bernama `_abiz` di bawah domain anda, dalam bentu
 _abiz.batikmelaka.example. 300 IN TXT "v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc="
 ```
 
-Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. Jangan sekali-kali menyalinnya: terbitkan kunci anda sendiri atau tinggalkan `p`. Semua nama, nombor dan domain di halaman ini adalah rekaan.
+Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. Jangan sekali-kali menyalinnya: terbitkan kunci anda sendiri. Pengisytiharan ABIZ 1.1 mesti mengandungi `p`. Semua nama, nombor dan domain di halaman ini adalah rekaan.
 
-Tanpa tag pilihan `k` dan `p`, rekod ini juga sah:
+Tanpa tag pilihan `k`, rekod ini juga sah:
 
 ```dns
 _abiz.batikmelaka.example. 300 IN TXT "v=abiz1;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc="
@@ -88,10 +88,10 @@ Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. C
 
 ## 4. Kunci dan tandatangan (ABIZ 1.1)
 
-ABIZ 1.1 menambah kunci tandatangan pilihan. Tag DNS `p` boleh membawa kunci awam Ed25519: 44 aksara base64 standard yang berakhir dengan satu `=` (SPEC bahagian 3.3.2). Perniagaan, atau penyedia yang bertindak bagi pihaknya, menyimpan kunci peribadi yang sepadan dan boleh menandatangani kandungan yang disahkan oleh pihak lain dengan kunci yang diterbitkan. Kunci peribadi sentiasa milik perniagaan, dan penyedia hos mesti membenarkan perniagaan mengeksportnya.
+ABIZ 1.1 mewajibkan kunci tandatangan. Tag DNS `p` membawa kunci awam Ed25519: 32 bait mentah, base64 standard, 44 aksara, satu `=` di hujung (SPEC bahagian 3.3.2). Base64url tidak diterima. Perniagaan, atau penyedia yang bertindak bagi pihaknya, menyimpan kunci peribadi yang sepadan dan menandatangani rekod perniagaan dengannya. Kunci peribadi sentiasa milik perniagaan, dan penyedia hos mesti membenarkan perniagaan mengeksportnya.
 
-- `p` adalah pilihan. Jika ada, nilainya mesti kunci yang sah: nilai lain, seperti token heksadesimal lama ABIZ 1.0 atau kunci base64url, menjadikan keseluruhan pengisytiharan tidak sah.
-- Hanya kunci semasa diterbitkan. Untuk menukar, terbitkan kunci baharu dalam `p`; untuk membatalkan, buang `p`. Dalam ABIZ 1.1, kunci yang telah dipersarakan tidak diterbitkan, sama ada dalam DNS atau dalam rekod perniagaan.
+- `v` dan `h` wajib. `p` adalah wajib. `k` adalah pilihan. `p` mesti kunci yang sah: nilai lain, seperti token heksadesimal lama ABIZ 1.0 atau kunci base64url, menjadikan keseluruhan pengisytiharan tidak sah.
+- Hanya kunci semasa diterbitkan. Untuk memutar, jana pasangan kunci Ed25519 baharu, terbitkan kunci awam baharu dalam pengisytiharan DNS atau well-known, tandatangani semula rekod dengan kunci peribadi baharu, dan tetapkan `public_key` kepada `p` yang sama. Benarkan cache DNS. Membuang `p` sahaja bukan pembatalan yang sah selagi pengisytiharan ABIZ 1.1 kekal: untuk menariknya, buang keseluruhan pengisytiharan DNS atau well-known. Dalam ABIZ 1.1, kunci yang telah dipersarakan tidak diterbitkan, sama ada dalam DNS atau dalam rekod perniagaan.
 - Kunci menunjukkan siapa yang mengawal DNS domain. Kunci tidak membuktikan identiti undang-undang.
 
 ## 5. Apa yang akan dilihat oleh alat AI
@@ -114,6 +114,6 @@ Alat serasi yang membaca rekod anda boleh menjawab soalan seperti:
 ## 7. Bacaan lanjut
 
 - [Spesifikasi ABIZ (SPEC.md, bahasa Inggeris)](../../../SPEC.md)
-- [Skema JSON rekod perniagaan](../../../schemas/abiz-business-record-v1.schema.json)
+- [Skema JSON rekod perniagaan](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Pengesah rujukan](../../../scripts/validate.py)
 - [Panduan ABIZ mengikut negara: Asia](index.md)

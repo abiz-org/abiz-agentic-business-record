@@ -4,13 +4,14 @@
 
 A business can publish an ABIZ DNS pointer on a domain it controls. The pointer leads to a public business record over HTTPS. The business record must meet the published JSON Schema to be conformant. ABIZ proves neither legal identity nor inclusion in an AI service.
 
-**Version:** **ABIZ 1.0**, published specification and normative JSON Schema. A proposed 1.1 revision is in the specification: a relaxed DNS tag-list syntax (optional spaces around `;` and `=`, as in DKIM and DMARC), a required Ed25519 key in the DNS `p` tag, a well-known file (`/.well-known/abiz.json`) as an alternative to DNS, snake_case member names and a REQUIRED `public_key` and `signature` in every business record (an Ed25519 signature over the RFC 8785 canonical record, verified against `p`), a `format` parameter (`html`, `markdown`, `json`) at the record host, business-key rules, business units on path-based record hosts, and structured location, contact, hours and listing facts (SPEC section 4.7: `email` and `phone` in place of `contact_email` and `contact_phone`, nested addresses, structured opening hours per location, tax registrations, social profiles, categories, media, review summaries and external listings). It is not the published baseline. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
+**Version:** **ABIZ 1.1** is the latest published specification and the normative JSON Schema. It is not a proposal. It includes a relaxed DNS tag-list syntax (optional spaces around `;` and `=`, as in DKIM and DMARC), a required Ed25519 key in the DNS `p` tag, a well-known file (`/.well-known/abiz.json`) as an alternative to DNS, snake_case member names and a REQUIRED `public_key` and `signature` in every business record (an Ed25519 signature over the RFC 8785 canonical record, verified against `p`), a `format` parameter (`html`, `markdown`, `json`) at the record host, business-key rules, business units on path-based record hosts, and structured location, contact, hours and listing facts (SPEC section 4.7: `email` and `phone` in place of `contact_email` and `contact_phone`, nested addresses, structured opening hours per location, tax registrations, social profiles, categories, media, review summaries and external listings). ABIZ 1.0 remains the earlier published contract. **IANA registration for `_abiz` remains pending**; publication does not mean IANA approval.
 
 - **Independent standards website:** [abizrecord.org](https://abizrecord.org) (planned)
 - **Canonical public repository:** [abiz-org/abiz-agentic-business-record](https://github.com/abiz-org/abiz-agentic-business-record)
 - **Specification:** [SPEC.md](SPEC.md)
-- **Normative business-record schema:** [schemas/abiz-business-record-v1.schema.json](schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`)
-- **Well-known file schema:** [schemas/abiz-well-known-v1.schema.json](schemas/abiz-well-known-v1.schema.json)
+- **Normative ABIZ 1.1 business-record schema:** [schemas/abiz-business-record-v1.1.schema.json](schemas/abiz-business-record-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`). This is the latest published schema.
+- **Earlier ABIZ 1.0 business-record schema:** [schemas/abiz-business-record-v1.schema.json](schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`)
+- **Well-known file schema (ABIZ 1.1):** [schemas/abiz-well-known-v1.1.schema.json](schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`)
 - **Validation script:** [scripts/validate.py](scripts/validate.py)
 - **Conformance fixtures:** [examples/](examples/)
 - **Feedback:** use [GitHub Issues](https://github.com/abiz-org/abiz-agentic-business-record/issues); do not publish individuals' direct contact details.
@@ -79,9 +80,9 @@ A record whose signature does not verify is not verified. A record whose `public
 
 ## Locations, contact details, hours and listings
 
-The 2026-11-03 amendment to the 1.1 proposal (SPEC section 4.7) gives each location its own address, coordinates, contact details, opening hours, service areas and listing links, and adds business-level `blog_url`, `rss_url`, `tax_registrations`, `social_profiles`, `categories`, `media` (at most 10 items), `review_summaries` and `operational_status`. Nothing is inherited between the business and its locations. A record must not contain `recent_posts`.
+The 2026-11-03 amendment in published ABIZ 1.1 (SPEC section 4.7) gives each location its own address, coordinates, contact details, opening hours, service areas and listing links, and adds business-level `blog_url`, `rss_url`, `tax_registrations`, `social_profiles`, `categories`, `media` (at most 10 items), `review_summaries` and `operational_status`. Nothing is inherited between the business and its locations. A record must not contain `recent_posts`.
 
-It is breaking: `contact_email` and `contact_phone` become `email` and `phone`, root `opening_hours` is replaced by `locations[].opening_hours`, and `street`, `city`, `region`, `postal_code` and `country` of a location move into `address`. `record_version` stays `abiz1`, and the schema file, DNS tags and signing rules do not change; migrated records must be re-signed. See [CHANGELOG.md](CHANGELOG.md) for the migration notes.
+It is breaking: `contact_email` and `contact_phone` become `email` and `phone`, root `opening_hours` is replaced by `locations[].opening_hours`, and `street`, `city`, `region`, `postal_code` and `country` of a location move into `address`. `record_version` stays `abiz1`. DNS tags and signing rules do not change. The published 1.1 schema is identified separately from the earlier 1.0 schema. Migrated records must be re-signed. See [CHANGELOG.md](CHANGELOG.md) for the migration notes.
 
 [`examples/locations-and-listings/`](examples/locations-and-listings/) has signed examples of each case, with their DNS assertions in `dns-assertions.txt`, and records that break one rule each in `invalid/`. A location, shortened:
 
@@ -109,6 +110,7 @@ It is breaking: `contact_email` and `contact_phone` become `email` and `phone`, 
 ```sh
 python -m pip install -r requirements-dev.txt
 python scripts/validate.py examples/registered-us.json
+python scripts/validate.py examples/abiz-1.0/registered-us.json --revision 1.0
 python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --dns-value 'v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk='
 python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --well-known examples/well-known-registered-us.json
 python scripts/validate.py examples/well-known-registered-us.json
@@ -117,11 +119,11 @@ python scripts/validate.py examples/locations-and-listings/multi-location-gb.jso
 python -m unittest discover -s tests -v
 ```
 
-The validator always verifies the record signature. With `--dns-value`, `--well-known` or `--p` it also checks `public_key` against `p`; without them it reports the identity claim as unconfirmed. Passing the local checks establishes **record conformance only**. Passing the DNS checks additionally establishes a valid domain-to-record assertion; it is not an independent government-register confirmation.
+The validator always verifies the record signature of a 1.1 record. With `--dns-value`, `--well-known` or `--p` it also checks `public_key` against `p`; without them it reports the identity claim as unconfirmed. `--revision 1.1` checks the latest published specification and normative JSON Schema, and is the default. `--revision 1.0` checks the earlier published contract, which has no record signature. When `--revision` is omitted, the nearest `REVISION` file is used (`examples/REVISION` is `1.1`; `examples/abiz-1.0/REVISION` is `1.0`). An unsupported revision is reported as unsupported and is not an invalid signature. Passing the local checks establishes **record conformance only**. Passing the DNS checks additionally establishes a valid domain-to-record assertion; it is not an independent government-register confirmation.
 
 With both `--dns-value` and `--well-known`, the validator applies the precedence rule (SPEC section 3.4.4): the DNS assertion is used, and a disagreeing file is reported as a warning.
 
-## The proposed 1.1 `p` key
+## The ABIZ 1.1 `p` key
 
 `p` is required. The validator rejects an assertion (or well-known file) without `p`, and always checks that `p` is a 44-character standard-base64 Ed25519 public key (32 bytes, one trailing `=`). Any other value fails, including an ABIZ 1.0 hexadecimal token and base64url. See SPEC section 3.3.7 for migrating existing values. The format check needs no extra package. To verify a separate detached signature over an agreed message, add `--p-message` and `--p-signature`. Signature checks use the `cryptography` package, which is in `requirements-dev.txt`:
 

@@ -2,6 +2,20 @@
 
 ## Unreleased — ABIZ 1.1 (proposed)
 
+### Schema identity correction
+
+The published ABIZ 1.0 business-record schema is restored as an immutable contract at `schemas/abiz-business-record-v1.schema.json` (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). The constraints are those of the 1.0 publication (`3bbaa7b`). The description in that publication called the file a 1.1 public-review draft; that label was wrong. Title and description are the only changes to that contract.
+
+The proposed ABIZ 1.1 business-record schema, including the 2026-11-03 location amendment, is `schemas/abiz-business-record-v1.1.schema.json` (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`). It is not a formal publication. The well-known file did not exist in ABIZ 1.0. Its schema is `schemas/abiz-well-known-v1.1.schema.json` (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`).
+
+`record_version` and the DNS tag `v` stay `abiz1` for both revisions. They do not select the schema. A consumer selects the strict schema by `$id`, or with the reference validator's `--revision` (`1.0` or `1.1`). The nearest `REVISION` file selects the revision when `--revision` is omitted (`examples/REVISION` is `1.1`; `examples/abiz-1.0/REVISION` is `1.0`). An unsupported revision is reported as unsupported and is not an invalid signature. A schema mismatch is not an invalid signature.
+
+Published 1.0 examples are in `examples/abiz-1.0/`. They use hyphenated member names and have no `public_key` or `signature`. Migration to the 1.1 proposal republishes the record with snake_case names, the section 4.7 structure, `public_key` and `signature`, and republishes `p` as an Ed25519 key. It does not change `record_version` or `v=abiz1`.
+
+Country guides state that `p` is required, give the Ed25519 key format, and state that removing only `p` is not revocation of an ABIZ 1.1 assertion. To withdraw the assertion, remove the complete DNS or well-known declaration.
+
+Earlier notes in this changelog that say the 1.1 schema kept the 1.0 file name and `$id`, that a record with no `p` was still valid, or that revocation was removing `p`, describe the text of that amendment. They are historical.
+
 Proposed changes: a relaxed DNS tag-list syntax, a redefinition of the DNS `p` tag (now required), and defined business-key rules with `k` optional for everyone. The published specification remains ABIZ 1.0, and the wire tag remains `v=abiz1`. The whitespace change and optional `k` are backwards-compatible. The `p` and business-key changes are deliberately breaking: for any `p` value that is not a valid key, and for existing `k` and `business_key` values, which must be re-expressed.
 
 - Tag-list whitespace (section 3.1.1, with ABNF). Optional SP or HTAB is allowed around `;` and `=`, before the first tag and after the last, and one trailing `;` is allowed, as in DKIM (RFC 6376 section 3.2), DMARC (RFC 7489 section 6.4), MTA-STS (RFC 8461 section 3.1) and TLS-RPT (RFC 8460 section 3). Still invalid: whitespace inside a value, CR/LF or other whitespace, a repeated recognised tag, `V=ABIZ1` or any case change, `v=abiz1` not first, `;;`, and a tag without `=`. Unknown tags stay ignored, now including repeated ones. Producers should still publish the compact form, which strict 1.0 consumers require.

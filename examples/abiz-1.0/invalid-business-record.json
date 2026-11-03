@@ -1,0 +1,8 @@
+{
+  "record-version": "abiz1",
+  "business-name": "",
+  "country": "United States",
+  "identity-host": "https://wrong.example",
+  "domains": [],
+  "mcp-server-url": "http://insecure.example/mcp"
+}

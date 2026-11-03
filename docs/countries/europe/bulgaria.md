@@ -12,7 +12,7 @@ Only the business, or someone it authorises, can change the DNS of its domain. S
 
 ### Required fields
 
-The business record is a JSON document that must validate against the [normative schema](../../../schemas/abiz-business-record-v1.schema.json). Five fields are required:
+The business record is a JSON document that must validate against the [normative schema](../../../schemas/abiz-business-record-v1.1.schema.json). Five fields are required:
 
 | Field | Example for Bulgaria | Notes |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact f
 _abiz.rodopimed.example. 300 IN TXT "v=abiz1;k=bg-123456789;h=rodopimed.bg.to.co;p=AYXgN6SzW3+0iY/BT492spiU37RQVoIM4fA/xOdmm3E="
 ```
 
-- `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
+- `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
 - Tag names are lowercase and case-sensitive. A tag must not appear twice.
 - A TTL of 300 seconds is recommended.
 
-The `p` value above is a throwaway example key. Never copy it: publish your own key or leave `p` out.
+The `p` value above is a throwaway example key. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
 ### Business record (JSON)
 
@@ -102,11 +102,11 @@ For example, a provider might serve your record at `rodopimed.bg.to.co` and run 
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
-ABIZ 1.1 lets a business publish an Ed25519 public key in the DNS `p` tag. `p` is optional. When present, it must be the standard base64 encoding of the 32-byte public key: 44 characters ending in one `=`, in a single DNS string. Any other value, such as an ABIZ 1.0 hexadecimal token or a base64url key, makes the whole assertion invalid.
+ABIZ 1.1 requires an Ed25519 public key in the DNS `p` tag. `v` and `h` are required. `p` is required. `k` is optional. `p` must be 32 raw bytes in standard base64: 44 characters ending in one `=`, in a single DNS string. Base64url is not accepted. Any other value, such as an ABIZ 1.0 hexadecimal token, makes the whole assertion invalid.
 
 The matching private key belongs to the business. It is never published. A provider that holds it for you must let you export it. Software can check a signature made with the private key against the key in DNS. The business record repeats the key as `public_key` and carries a `signature` over the whole record, made with the private key (SPEC section 4.6). Software verifies the signature and checks that `public_key` equals `p`; a record that fails either check is not verified.
 
-To rotate, publish a new key in `p`. To revoke, remove `p`. Retired keys are not published in ABIZ 1.1, neither in DNS nor in the business record. A key shows which key the domain's controller published; it does not prove legal identity.
+To rotate, generate a new Ed25519 keypair, publish the new public key in the DNS or well-known assertion, re-sign the business record with the new private key, and set `public_key` to that same `p`. Allow for DNS caching and propagation. Removing only `p` is not valid revocation while an ABIZ 1.1 assertion remains: to withdraw it, remove the complete DNS TXT record or well-known declaration. Retired keys are not published in ABIZ 1.1, neither in DNS nor in the business record. A key shows which key the domain's controller published; it does not prove legal identity.
 
 ## 5. What AI tools will see
 
@@ -136,6 +136,6 @@ Bulgaria is in the European Union, so the GDPR applies to personal data in your 
 ## 7. Further reading
 
 - [ABIZ specification (SPEC.md)](../../../SPEC.md): DNS syntax (section 3.1.1), the `p` key (section 3.3), business keys (section 4.2)
-- [Normative JSON Schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normative JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Reference validator, scripts/validate.py](../../../scripts/validate.py)
 - [All European guides](index.md)

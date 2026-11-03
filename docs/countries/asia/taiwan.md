@@ -46,9 +46,9 @@ tw-<registration-number>
 _abiz.tainanwoodwork.example. 300 IN TXT "v=abiz1;k=tw-12345678;h=tainanwoodwork.tw.to.co;p=FI+198S8Nxl8YBHxifTHSTlkDnzb7zXGpd6FpyjYZjE="
 ```
 
-上方的 `p` 值是為本頁產生的一次性範例金鑰。切勿複製：請發布您自己的金鑰，或省略 `p`。本頁所有名稱、號碼與網域皆為虛構。
+上方的 `p` 值是為本頁產生的一次性範例金鑰。切勿複製：請發布您自己的金鑰。ABIZ 1.1 声明必须包含 `p`。本頁所有名稱、號碼與網域皆為虛構。
 
-省略選用的 `k` 與 `p` 標籤時，以下寫法同樣有效：
+省略選用的 `k` 標籤時，以下寫法同樣有效：
 
 ```dns
 _abiz.tainanwoodwork.example. 300 IN TXT "v=abiz1;h=tainanwoodwork.tw.to.co;p=FI+198S8Nxl8YBHxifTHSTlkDnzb7zXGpd6FpyjYZjE="
@@ -88,10 +88,10 @@ python scripts/validate.py record.json --domain tainanwoodwork.example --dns-val
 
 ## 4. 金鑰與簽章（ABIZ 1.1）
 
-ABIZ 1.1 新增選用的簽章金鑰。DNS 中的 `p` 標籤可存放 Ed25519 公鑰：以標準 base64 編碼的 44 個字元，結尾為一個 `=`（SPEC 第 3.3.2 節）。企業或代表企業的服務商保管對應的私鑰，可簽署他人以已發布公鑰驗證的內容。私鑰始終屬於企業，託管服務商必須允許企業匯出私鑰。
+ABIZ 1.1 要求簽章金鑰。DNS 中的 `p` 標籤存放 Ed25519 公鑰：32 個原始位元組，標準 base64，44 個字元，結尾一個 `=`（SPEC 第 3.3.2 節）。不接受 base64url。企業或代表企業的服務商保管對應的私鑰，並用它簽署企業紀錄。私鑰始終屬於企業，託管服務商必須允許企業匯出私鑰。
 
-- `p` 是選用的。一旦出現，必須是有效金鑰；其他任何值，例如 ABIZ 1.0 舊的十六進位權杖或 base64url 金鑰，都會使整筆聲明無效。
-- 只發布目前的金鑰。更換時，在 `p` 發布新金鑰；撤銷時，刪除 `p`。在 ABIZ 1.1 中，已停用的金鑰既不在 DNS 中發布，也不在企業紀錄中發布。
+- `v` 與 `h` 為必填。`p` 為必填。`k` 為選用。`p` 必須是有效金鑰；其他任何值，例如 ABIZ 1.0 舊的十六進位權杖或 base64url 金鑰，都會使整筆聲明無效。
+- 只發布目前的金鑰。輪換時，產生新的 Ed25519 金鑰對，在 DNS 或 well-known 聲明中發布新公鑰，用新私鑰重新簽署企業紀錄，並使 `public_key` 與該 `p` 相同。請考慮 DNS 快取與傳播。在 ABIZ 1.1 聲明仍然存在時，僅刪除 `p` 不是有效撤銷：要撤回聲明，須刪除完整的 DNS 或 well-known 聲明。在 ABIZ 1.1 中，已停用的金鑰既不在 DNS 中發布，也不在企業紀錄中發布。
 - 金鑰顯示誰控制該網域的 DNS，並不證明法律身分。
 
 ## 5. AI 工具會看到什麼
@@ -114,6 +114,6 @@ ABIZ 1.1 新增選用的簽章金鑰。DNS 中的 `p` 標籤可存放 Ed25519 �
 ## 7. 延伸閱讀
 
 - [ABIZ 規格（SPEC.md，英文）](../../../SPEC.md)
-- [企業紀錄 JSON Schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [企業紀錄 JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [參考驗證器](../../../scripts/validate.py)
 - [ABIZ 國家和地區指南：亞洲](index.md)

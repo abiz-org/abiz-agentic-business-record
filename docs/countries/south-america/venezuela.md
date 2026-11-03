@@ -155,16 +155,16 @@ Por ejemplo, un proveedor puede alojar el registro en `www.panaderialacandelaria
 
 ## 4. Claves y firmas (ABIZ 1.1)
 
-- **`p` es opcional.** Si está presente, debe ser una clave pública Ed25519 en base64 estándar: exactamente 44 caracteres, terminada en un único `=`, que se decodifica en 32 bytes (sección 3.3.2). Cualquier otro valor, como un antiguo token hexadecimal de ABIZ 1.0 o una clave en base64url, invalida toda la aserción. Sustitúyalo por una clave o elimínelo.
-- **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
+- **`p` es obligatoria.** `v` y `h` son obligatorios; `k` es opcional. `p` debe ser una clave pública Ed25519: 32 bytes en bruto, base64 estándar, exactamente 44 caracteres, un único `=` final. Base64url no se acepta (sección 3.3.2). Cualquier otro valor, como un antiguo token hexadecimal de ABIZ 1.0, invalida toda la aserción.
+- **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
   _abiz.panaderialacandelaria.example. 300 IN TXT "v=abiz1;h=www.panaderialacandelaria.example/abiz.json;p=v8Ggu5ha9uyzh1NTF+AJS+GDSRBxJLRTzfElFl/h8TM="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).
-- **Firmas.** El software puede comprobar una firma Ed25519 separada con la clave publicada. ABIZ 1.1 todavía no define qué bytes de un registro cubre una firma, así que una comprobación de firma solo tiene sentido para un mensaje que ambas partes hayan acordado.
-- **Rotación y claves retiradas.** Para rotar, publique la nueva clave en `p`; la anterior deja de ser la vigente cuando vence el TTL del registro TXT. ABIZ 1.1 no publica claves retiradas: ni en el DNS ni en el registro (se rechaza una propiedad `retired_keys`).
+- **Firmas.** El software puede comprobar una firma Ed25519 separada con la clave publicada. La firma del registro cubre la forma canónica RFC 8785 del registro sin el miembro `signature`, y se comprueba con `public_key`, que debe ser igual a `p` (SPEC sección 4.6). Una firma sobre otro mensaje solo tiene sentido si ambas partes lo han acordado.
+- **Rotación y revocación.** Genere un nuevo par Ed25519, publique la nueva clave pública en la aserción DNS o well-known, vuelva a firmar el registro con la nueva clave privada y haga que `public_key` sea ese mismo `p`. Tenga en cuenta la caché y la propagación del DNS; la clave anterior deja de ser la vigente cuando vence el TTL. Quitar solo `p` no es una revocación válida mientras la aserción ABIZ 1.1 siga publicada: para retirarla, elimine la declaración DNS o well-known completa. ABIZ 1.1 no publica claves retiradas (se rechaza una propiedad `retired_keys`).
 - **Qué demuestra una clave.** Muestra qué clave publicó quien controla el dominio. No firma por sí misma el registro TXT ni demuestra la identidad legal. Use DNSSEC si su proveedor de DNS lo admite.
 
 ## 5. Qué verán las herramientas de IA
@@ -190,6 +190,6 @@ También puede indicar que el dominio y el registro se refieren el uno al otro, 
 ## 7. Más información
 
 - [Especificación ABIZ](../../../SPEC.md) (en inglés): sección 3.1.1 (sintaxis TXT), sección 3.3 (claves `p`), sección 4.2 (claves de empresa)
-- [JSON Schema del registro](../../../schemas/abiz-business-record-v1.schema.json)
+- [JSON Schema del registro](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validador de referencia](../../../scripts/validate.py) y [ejemplos](../../../examples/)
 - [Todas las guías de América del Sur](index.md)

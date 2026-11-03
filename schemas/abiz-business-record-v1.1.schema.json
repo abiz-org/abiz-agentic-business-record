@@ -1,0 +1,1046 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json",
+  "title": "ABIZ 1.1 Business Record (proposed; protocol family abiz1)",
+  "description": "Structural schema for the proposed ABIZ 1.1 revision. It is not a formal publication. The published ABIZ 1.0 contract is schemas/abiz-business-record-v1.schema.json ($id https://abizrecord.org/schema/abiz-business-record-v1.schema.json). This revision specifies the business_key, registration_number and case-insensitive country rules, snake_case member names, the REQUIRED public_key and signature members (SPEC section 4.6), and the 2026-11-03 location, contact, hours and listing amendment (SPEC section 4.7): email and phone, blog_url and rss_url, tax_registrations, social_profiles, categories, media, review_summaries, operational_status, and structured locations with a nested address, geo, opening_hours, service_areas and external_listings. Root opening_hours, contact_email, contact_phone and the flat location address members are removed, and recent_posts is prohibited. $defs/retired_key reserves a nested retired-key shape; it is not a record property. The schema checks only the form of public_key and signature: a consumer MUST also verify the signature over the RFC 8785 canonical record and compare public_key with the DNS or well-known p. scripts/validate.py adds the checks JSON Schema cannot express (overlapping hours, duplicate identifiers, assigned codes, time zones, URL safety). Independent DNS and registry checks are required for full conformance.",
+  "type": "object",
+  "required": [
+    "record_version",
+    "business_name",
+    "country",
+    "identity_host",
+    "domains",
+    "public_key",
+    "signature"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "record_version": {
+      "const": "abiz1",
+      "description": "Wire protocol family abiz1. Document revisions, including a proposed 1.1, may advance without changing this value."
+    },
+    "business_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "\\S"
+    },
+    "country": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2}$",
+      "description": "Assigned ISO 3166-1 alpha-2 country code. Case-insensitive; canonical form is lowercase. The validator checks it against data/iso3166.json."
+    },
+    "identity_host": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9.-]*(?:/[^\\s?#]*)?$",
+      "description": "DNS h value: lowercase DNS hostname with optional path; never includes https://"
+    },
+    "domains": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "format": "hostname",
+        "minLength": 4,
+        "maxLength": 253
+      },
+      "description": "Business-controlled domain names this record claims. DNS cross-check must confirm control."
+    },
+    "public_key": {
+      "type": "string",
+      "minLength": 44,
+      "maxLength": 44,
+      "pattern": "^[A-Za-z0-9+/]{43}=$",
+      "description": "REQUIRED (ABIZ 1.1, SPEC section 4.6.1). The business's Ed25519 public key: standard base64 of 32 bytes, 44 characters, one trailing '='. MUST equal the p value of the DNS assertion or well-known file that points to this record."
+    },
+    "business_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2}-(?:[A-Za-z0-9]{1,3}-)?[A-Za-z0-9]+$",
+      "maxLength": 128,
+      "description": "country[-subdivision]-registration-number (SPEC section 4.2.1). Case-insensitive; canonical form has lowercase country and subdivision and an uppercase number. Assigned codes and the subdivision rule (section 4.2.2) are checked by the validator."
+    },
+    "registration_number": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 96,
+      "pattern": "^[A-Za-z0-9]+$",
+      "description": "Normalised registration number: ASCII letters and digits only (SPEC section 4.2.3). Case-insensitive; canonical form is uppercase."
+    },
+    "mcp_server_url": {
+      "$ref": "#/$defs/https_url",
+      "description": "Optional. No conformance requirement to operate an MCP server."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "website": {
+      "$ref": "#/$defs/https_url"
+    },
+    "email": {
+      "$ref": "#/$defs/email",
+      "description": "Public customer-facing email address of the business (SPEC section 4.7.2). Replaces contact_email."
+    },
+    "phone": {
+      "$ref": "#/$defs/phone",
+      "description": "Primary public customer-facing telephone number of the business (SPEC section 4.7.2). Replaces contact_phone."
+    },
+    "logo_url": {
+      "$ref": "#/$defs/https_url"
+    },
+    "blog_url": {
+      "$ref": "#/$defs/https_url",
+      "description": "Canonical public index of the business's published articles or news (SPEC section 4.7.3). Changes to posts do not change the record."
+    },
+    "rss_url": {
+      "$ref": "#/$defs/https_url",
+      "description": "Canonical public RSS 2.0 feed (SPEC section 4.7.3). Not Atom or JSON Feed. Feed items are never copied into the record."
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC date and time of the last change to the record. Covered by the signature; producers SHOULD include it and update it on every re-signing (SPEC section 4.6.6)."
+    },
+    "services": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "url": {
+            "$ref": "#/$defs/https_url"
+          }
+        }
+      },
+      "description": "Services the business offers, business-wide (SPEC section 4.7.5). Unchanged by the 2026-11-03 amendment except that url is limited to 2048 characters."
+    },
+    "locations": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/location"
+      },
+      "description": "Places of business (SPEC section 4.7.6). Each location's values are its own and are not inherited from the business level. A business with no public place of business may omit locations."
+    },
+    "tax_registrations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "$ref": "#/$defs/tax_registration"
+      },
+      "description": "Verified, current tax registrations that the business has expressly consented to publish (SPEC section 4.7.4). Never pending, failed, expired or withdrawn claims."
+    },
+    "social_profiles": {
+      "$ref": "#/$defs/social_profiles",
+      "description": "Business-wide public social media profiles (SPEC section 4.7.5)."
+    },
+    "categories": {
+      "$ref": "#/$defs/categories",
+      "description": "Business-wide categories from an identified taxonomy (SPEC section 4.7.5)."
+    },
+    "media": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/media_item"
+      },
+      "description": "Curated public media, business-level only, at most 10 items (SPEC section 4.7.9). Not a limit on the business's own gallery. Locations have no media member."
+    },
+    "review_summaries": {
+      "$ref": "#/$defs/review_summaries",
+      "description": "Per-platform review summaries (SPEC section 4.7.10)."
+    },
+    "operational_status": {
+      "$ref": "#/$defs/operational_status",
+      "description": "Whether the business as a whole is operating (SPEC section 4.7.8)."
+    },
+    "links": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "url": {
+            "$ref": "#/$defs/https_url"
+          }
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9-]+(?:\\.[a-z0-9-]+)+$"
+      },
+      "additionalProperties": true,
+      "description": "Vendor-namespaced extensions (reverse-domain keys); consumers may ignore unfamiliar extensions. Member names inside an extension are vendor-defined; snake_case is RECOMMENDED. Extensions are covered by the signature."
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 88,
+      "maxLength": 88,
+      "pattern": "^[A-Za-z0-9+/]{86}==$",
+      "description": "REQUIRED (ABIZ 1.1, SPEC section 4.6). PureEd25519 signature, standard base64 of 64 bytes (88 characters), over the UTF-8 octets of the RFC 8785 (JCS) canonical serialisation of this record with the signature member removed. Verified with public_key."
+    }
+  },
+  "dependentRequired": {
+    "business_key": [
+      "registration_number"
+    ],
+    "registration_number": [
+      "business_key"
+    ]
+  },
+  "$defs": {
+    "https_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[^\\s/?#@]+(?:[/?#][^\\s]*)?$",
+      "maxLength": 2048,
+      "description": "HTTPS URL, at most 2048 characters, with no user information (SPEC section 4.7.1). The validator also rejects IP literals, non-default ports and fragments."
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "minLength": 3,
+      "maxLength": 320
+    },
+    "phone": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "\\S",
+      "description": "Public telephone number. E.164 (for example +441174960142) is RECOMMENDED; a correctly formatted local number is allowed."
+    },
+    "country_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Assigned ISO 3166-1 alpha-2 code, uppercase. Authoritative."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Optional human-readable name in any language. Never used in place of code."
+        }
+      }
+    },
+    "region_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}-[A-Z0-9]{1,3}$",
+          "description": "Complete ISO 3166-2 subdivision code, uppercase, for example GB-ENG or US-VT. Its country part MUST equal address.country.code. Publish only a code you have checked."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Optional human-readable state, province or region name."
+        }
+      }
+    },
+    "address": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "country"
+      ],
+      "properties": {
+        "street_lines": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "pattern": "\\S"
+          },
+          "description": "One to three street lines. Omit when the street is not to be published."
+        },
+        "locality": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 180,
+          "pattern": "\\S",
+          "description": "City, town or village."
+        },
+        "postal_code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "\\S"
+        },
+        "region": {
+          "$ref": "#/$defs/region_ref"
+        },
+        "country": {
+          "$ref": "#/$defs/country_ref"
+        }
+      },
+      "dependentRequired": {
+        "street_lines": [
+          "locality"
+        ]
+      },
+      "description": "Public postal address of a location (SPEC section 4.7.6.2). Omit every part that is not to be published."
+    },
+    "geo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "description": "WGS 84 coordinates of the premises. Both members are required together."
+    },
+    "time_of_day": {
+      "type": "string",
+      "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+    },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opens",
+        "closes"
+      ],
+      "properties": {
+        "opens": {
+          "$ref": "#/$defs/time_of_day"
+        },
+        "closes": {
+          "type": "string",
+          "pattern": "^(?:(?:[01][0-9]|2[0-3]):[0-5][0-9]|24:00)$",
+          "description": "Local closing time. 24:00 is the end of the day. A time earlier than opens means the next day (overnight)."
+        }
+      }
+    },
+    "periods": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/period"
+      },
+      "description": "Up to four periods in order of opens, not overlapping. An empty array means closed."
+    },
+    "opening_hours": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time_zone"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "weekly"
+          ]
+        },
+        {
+          "required": [
+            "exceptions"
+          ]
+        },
+        {
+          "required": [
+            "appointment_only"
+          ]
+        }
+      ],
+      "properties": {
+        "time_zone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_+-]*(?:/[A-Za-z0-9_+-]+)*$",
+          "description": "IANA time zone identifier, for example Europe/London. The validator checks it is known."
+        },
+        "weekly": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 7,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "day",
+              "periods"
+            ],
+            "properties": {
+              "day": {
+                "enum": [
+                  "monday",
+                  "tuesday",
+                  "wednesday",
+                  "thursday",
+                  "friday",
+                  "saturday",
+                  "sunday"
+                ]
+              },
+              "periods": {
+                "$ref": "#/$defs/periods"
+              }
+            }
+          },
+          "description": "Regular hours, at most one entry per day. A day that is absent has unknown hours; a day with no periods is closed."
+        },
+        "exceptions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "date",
+              "periods"
+            ],
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+              },
+              "periods": {
+                "$ref": "#/$defs/periods"
+              }
+            }
+          },
+          "description": "Dated exceptions that replace the weekly hours for that local date. An empty periods array means closed all day."
+        },
+        "appointment_only": {
+          "type": "boolean",
+          "description": "true: visits are by appointment only. Any weekly or exception periods are the hours in which appointments are offered."
+        }
+      }
+    },
+    "social_profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "enum": [
+          "linkedin",
+          "x",
+          "instagram",
+          "facebook",
+          "youtube",
+          "tiktok",
+          "pinterest",
+          "vimeo",
+          "snapchat",
+          "clubhouse"
+        ]
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/https_url"
+      },
+      "description": "Public profile URLs keyed by network. Only the listed network keys are allowed; a later revision adds keys."
+    },
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taxonomy",
+        "id"
+      ],
+      "properties": {
+        "taxonomy": {
+          "anyOf": [
+            {
+              "enum": [
+                "isic_rev4",
+                "isic_rev5",
+                "nace_rev2",
+                "nace_rev2_1",
+                "naics_2022",
+                "uk_sic_2007",
+                "anzsic_2006"
+              ]
+            },
+            {
+              "$ref": "#/$defs/https_url"
+            }
+          ],
+          "description": "A registered taxonomy token (SPEC section 4.7.5) or an HTTPS URI that identifies the taxonomy, such as a provider's published category list."
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "\\S",
+          "description": "The category identifier within that taxonomy, exactly as the taxonomy writes it."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Optional display label in any language. Not an identifier."
+        }
+      }
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "primary": {
+          "$ref": "#/$defs/category"
+        },
+        "additional": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 9,
+          "items": {
+            "$ref": "#/$defs/category"
+          }
+        }
+      }
+    },
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+    },
+    "service_area": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}(?:-[A-Z0-9]{1,3})?$",
+              "description": "ISO 3166-1 alpha-2 country code or ISO 3166-2 subdivision code, uppercase."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "postal_code",
+            "country"
+          ],
+          "properties": {
+            "postal_code": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 32,
+              "pattern": "\\S",
+              "description": "A full postal code or a published outward or prefix code (for example BS1)."
+            },
+            "country": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "center",
+            "radius_m"
+          ],
+          "properties": {
+            "center": {
+              "$ref": "#/$defs/geo",
+              "description": "A coarse centre point, such as a town centre. Never the coordinates of a private address."
+            },
+            "radius_m": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500000,
+              "description": "Radius in metres."
+            }
+          }
+        }
+      ],
+      "description": "One served area: a coded country or subdivision, a postal code, or a circle. No other shapes (SPEC section 4.7.7)."
+    },
+    "platform": {
+      "anyOf": [
+        {
+          "enum": [
+            "google_business_profile",
+            "apple_maps"
+          ]
+        },
+        {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-z0-9-]+(?:\\.[a-z0-9-]+)+$"
+        }
+      ],
+      "description": "Registered platform token, or a reverse-domain name controlled by the platform operator (SPEC section 4.7.11)."
+    },
+    "external_listing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "public_url"
+      ],
+      "properties": {
+        "platform": {
+          "$ref": "#/$defs/platform"
+        },
+        "public_url": {
+          "$ref": "#/$defs/https_url",
+          "description": "The listing's actual public URL, as the platform publishes it. Never built from an opaque identifier."
+        },
+        "external_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "\\S",
+          "description": "The platform's public identifier for the listing, if it has one."
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the publisher last saw the listing at public_url."
+        },
+        "claimed_by_business": {
+          "type": "boolean",
+          "description": "true: the business controls this listing on the platform. Absent or false: the listing was found, not claimed. A business statement, not platform verification."
+        }
+      }
+    },
+    "review_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "rating",
+        "rating_scale",
+        "review_count",
+        "source_url",
+        "observed_at"
+      ],
+      "properties": {
+        "platform": {
+          "$ref": "#/$defs/platform"
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "rating_scale": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "description": "The best possible rating on this platform, for example 5."
+        },
+        "review_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "source_url": {
+          "$ref": "#/$defs/https_url",
+          "description": "Public page where the summary can be seen."
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "One platform's aggregate rating. Never combined across platforms; never reviewer names or review text."
+    },
+    "review_summaries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "$ref": "#/$defs/review_summary"
+      }
+    },
+    "operational_status": {
+      "enum": [
+        "open",
+        "temporarily_closed",
+        "permanently_closed",
+        "unknown"
+      ]
+    },
+    "tax_registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jurisdiction",
+        "scheme",
+        "number",
+        "verified_at",
+        "verification_source"
+      ],
+      "properties": {
+        "jurisdiction": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}(?:-[A-Z0-9]{1,3})?$",
+          "description": "ISO 3166-1 alpha-2 code, or ISO 3166-2 code for a subdivision authority, uppercase. EU VAT numbers use the member state's code."
+        },
+        "scheme": {
+          "enum": [
+            "vat",
+            "gst",
+            "sales_tax",
+            "other"
+          ],
+          "description": "The type of tax registration. Not a claim of tax compliance."
+        },
+        "number": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^\\S(?:.*\\S)?$",
+          "description": "The number as the authority publishes it."
+        },
+        "verified_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC time of the most recent successful check of this exact number."
+        },
+        "verification_source": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"
+            },
+            {
+              "$ref": "#/$defs/https_url"
+            }
+          ],
+          "description": "Who checked it: a short token naming the authority's checking service (for example vies or hmrc_vat) or an HTTPS URL of that service."
+        },
+        "verification_expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the claim must be re-checked or withdrawn. Later than verified_at."
+        }
+      }
+    },
+    "media_item": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "url",
+        "content_type"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "kind": {
+          "enum": [
+            "logo",
+            "cover",
+            "image",
+            "video"
+          ]
+        },
+        "url": {
+          "$ref": "#/$defs/https_url"
+        },
+        "content_type": {
+          "type": "string",
+          "pattern": "^(?:image/(?:jpeg|png|webp|gif|avif|svg\\+xml)|video/(?:mp4|webm))$"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "caption": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "alt_text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "decorative": {
+          "type": "boolean"
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "video"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "additionalProperties": false,
+        "properties": {
+          "id": true,
+          "kind": true,
+          "url": true,
+          "content_type": {
+            "pattern": "^video/"
+          }
+        }
+      },
+      "else": {
+        "additionalProperties": false,
+        "properties": {
+          "id": true,
+          "kind": true,
+          "url": true,
+          "content_type": {
+            "pattern": "^image/"
+          },
+          "width": true,
+          "height": true,
+          "caption": true,
+          "alt_text": true,
+          "decorative": true,
+          "position": true,
+          "updated_at": true
+        },
+        "if": {
+          "properties": {
+            "decorative": {
+              "const": true
+            }
+          },
+          "required": [
+            "decorative"
+          ]
+        },
+        "then": {
+          "not": {
+            "required": [
+              "alt_text"
+            ]
+          }
+        },
+        "else": {
+          "required": [
+            "alt_text"
+          ]
+        }
+      },
+      "description": "One curated public image or video. An image needs alt_text unless decorative is true. A video carries only id, kind, url and content_type."
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "location_id": {
+          "$ref": "#/$defs/slug",
+          "description": "Stable public identifier, unique within locations, kept across edits and never reused for another place. Not an internal database key."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "registered-office",
+            "trading",
+            "other"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 180
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "address": {
+          "$ref": "#/$defs/address"
+        },
+        "geo": {
+          "$ref": "#/$defs/geo"
+        },
+        "website": {
+          "$ref": "#/$defs/https_url"
+        },
+        "email": {
+          "$ref": "#/$defs/email"
+        },
+        "phone": {
+          "$ref": "#/$defs/phone"
+        },
+        "logo_url": {
+          "$ref": "#/$defs/https_url"
+        },
+        "social_profiles": {
+          "$ref": "#/$defs/social_profiles"
+        },
+        "categories": {
+          "$ref": "#/$defs/categories"
+        },
+        "opening_hours": {
+          "$ref": "#/$defs/opening_hours"
+        },
+        "service_areas": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/service_area"
+          }
+        },
+        "external_listings": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/external_listing"
+          }
+        },
+        "review_summaries": {
+          "$ref": "#/$defs/review_summaries"
+        },
+        "operational_status": {
+          "$ref": "#/$defs/operational_status"
+        },
+        "public": {
+          "type": "boolean",
+          "description": "true: the business presents this location as a place customers or visitors can go. It is not consent to publish any detail: omitted details stay unpublished."
+        }
+      },
+      "dependentSchemas": {
+        "geo": {
+          "required": [
+            "address"
+          ],
+          "properties": {
+            "address": {
+              "required": [
+                "street_lines"
+              ]
+            }
+          }
+        }
+      },
+      "description": "One place of business. Its contact, website, hours and profiles are its own and are not inherited from the business level. geo requires a published street address."
+    },
+    "retired_key": {
+      "description": "ABIZ 1.1 (proposed). Reserved shape of one retired Ed25519 public key. Not a business-record property: no record property refers to this definition, and unknown top-level properties such as retired_keys are rejected. DNS must not carry retired keys.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_key",
+        "retired_at",
+        "binding_signature"
+      ],
+      "properties": {
+        "public_key": {
+          "type": "string",
+          "minLength": 44,
+          "maxLength": 44,
+          "pattern": "^[A-Za-z0-9+/]{43}=$",
+          "description": "Retired Ed25519 public key: 32 bytes, standard base64, one trailing '='."
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "Optional UTC instant when this key became current."
+        },
+        "retired_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+          "description": "UTC instant when this key stopped being current. For reason compromised, the asserted compromise time."
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "rotated",
+            "compromised"
+          ]
+        },
+        "binding_signature": {
+          "type": "string",
+          "minLength": 88,
+          "maxLength": 88,
+          "pattern": "^[A-Za-z0-9+/]{86}==$",
+          "description": "PureEd25519 signature by the current key, standard base64 of 64 bytes. ABIZ 1.1 does not define the signed message."
+        }
+      }
+    }
+  }
+}

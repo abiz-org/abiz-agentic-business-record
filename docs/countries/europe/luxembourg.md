@@ -12,7 +12,7 @@ Seule l'entreprise, ou une personne qu'elle mandate, peut modifier le DNS de son
 
 ### Champs obligatoires
 
-La fiche d'entreprise est un document JSON qui doit être conforme au [schéma normatif](../../../schemas/abiz-business-record-v1.schema.json). Cinq champs sont obligatoires :
+La fiche d'entreprise est un document JSON qui doit être conforme au [schéma normatif](../../../schemas/abiz-business-record-v1.1.schema.json). Cinq champs sont obligatoires :
 
 | Champ | Exemple | Remarques |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous for
 _abiz.moselleconseil.example. 300 IN TXT "v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=FYW5a+Z8meiCqr3w/usJyWi4BNnoKCPpytCTywIh05c="
 ```
 
-- `v=abiz1` doit venir en premier. `h` est obligatoire ; `k` et `p` sont facultatifs.
+- `v=abiz1` doit venir en premier. `h` et `p` sont obligatoires ; `k` est facultatif.
 - Les noms de balises sont en minuscules et sensibles à la casse. Une balise ne doit pas apparaître deux fois.
 - Une durée de vie (TTL) de 300 secondes est recommandée.
 
-La valeur `p` ci-dessus est une clé d'exemple jetable. Ne la copiez jamais : publiez votre propre clé ou omettez `p`.
+La valeur `p` ci-dessus est une clé d'exemple jetable. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`.
 
 ### Fiche d'entreprise (JSON)
 
@@ -102,11 +102,11 @@ Par exemple, un fournisseur peut servir votre fiche à l'adresse `moselleconseil
 
 ## 4. Clés et signatures (ABIZ 1.1)
 
-ABIZ 1.1 permet de publier une clé publique Ed25519 dans la balise DNS `p`. `p` est facultatif. S'il est présent, il doit s'agir de l'encodage base64 standard de la clé de 32 octets : 44 caractères terminés par un seul `=`, dans une seule chaîne DNS. Toute autre valeur, comme un jeton hexadécimal ABIZ 1.0 ou une clé en base64url, rend l'ensemble de l'enregistrement invalide.
+ABIZ 1.1 exige une clé publique Ed25519 dans la balise DNS `p`. `v` et `h` sont obligatoires. `p` est obligatoire. `k` est facultatif. `p` doit être 32 octets bruts en base64 standard : 44 caractères terminés par un seul `=`, dans une seule chaîne DNS. Le base64url n'est pas accepté. Toute autre valeur, comme un jeton hexadécimal ABIZ 1.0, rend l'ensemble de l'enregistrement invalide.
 
-La clé privée correspondante appartient à l'entreprise et n'est jamais publiée. Un fournisseur qui la conserve pour vous doit vous permettre de l'exporter. Un logiciel peut vérifier une signature produite avec la clé privée à l'aide de la clé publiée dans le DNS. ABIZ 1.1 ne définit pas encore quels octets une signature de la fiche couvre.
+La clé privée correspondante appartient à l'entreprise et n'est jamais publiée. Un fournisseur qui la conserve pour vous doit vous permettre de l'exporter. Un logiciel peut vérifier une signature produite avec la clé privée à l'aide de la clé publiée dans le DNS. La signature de la fiche couvre la forme canonique RFC 8785 de la fiche sans le membre `signature`, et se vérifie avec `public_key`, qui doit être égal à `p` (SPEC section 4.6).
 
-Pour changer de clé, publiez-en une nouvelle dans `p` ; pour la révoquer, supprimez `p`. Les clés retirées ne sont pas publiées en ABIZ 1.1, ni dans le DNS ni dans la fiche. La clé montre quelle clé le titulaire du domaine a publiée ; elle ne prouve pas l'identité juridique.
+Pour changer de clé, générez une nouvelle paire Ed25519, publiez la nouvelle clé publique dans l'assertion DNS ou well-known, resignez la fiche avec la nouvelle clé privée, et faites correspondre `public_key` à ce `p`. Tenez compte du cache DNS. Supprimer seulement `p` n'est pas une révocation valable tant que l'assertion ABIZ 1.1 reste en place : pour la retirer, supprimez toute la déclaration. Les clés retirées ne sont pas publiées en ABIZ 1.1, ni dans le DNS ni dans la fiche. La clé montre quelle clé le titulaire du domaine a publiée ; elle ne prouve pas l'identité juridique.
 
 ## 5. Ce que voient les outils d'IA
 
@@ -136,6 +136,6 @@ Le RGPD s'applique aux données personnelles de votre fiche, par exemple le nom 
 ## 7. Pour aller plus loin
 
 - [Spécification ABIZ (SPEC.md, en anglais)](../../../SPEC.md) : syntaxe DNS (section 3.1.1), clé `p` (section 3.3), clés d'entreprise (section 4.2)
-- [Schéma JSON normatif](../../../schemas/abiz-business-record-v1.schema.json)
+- [Schéma JSON normatif](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validateur de référence, scripts/validate.py](../../../scripts/validate.py)
 - [Tous les guides pour l'Europe](index.md)

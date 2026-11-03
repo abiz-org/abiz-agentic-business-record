@@ -174,15 +174,15 @@ Por exemplo, um provedor pode hospedar o registro da Padaria Pão de Mel em `pad
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 
-- **`p` é opcional.** Quando presente, deve ser uma chave pública Ed25519 em base64 padrão: exatamente 44 caracteres, terminando em um único `=`, que decodifica para 32 bytes (seção 3.3.2). Qualquer outro valor, como um antigo token hexadecimal da ABIZ 1.0 ou uma chave em base64url, invalida toda a declaração. Substitua-o por uma chave ou remova-o.
-- **Exemplo** (a chave é um exemplo descartável; a chave privada correspondente foi descartada). Nunca a copie: publique a sua própria chave ou omita `p`.
+- **`p` é obrigatória.** `v` e `h` são obrigatórios; `k` é opcional. `p` deve ser uma chave pública Ed25519: 32 bytes brutos, base64 padrão, exatamente 44 caracteres, um único `=` no fim. Base64url não é aceito (seção 3.3.2). Qualquer outro valor, como um antigo token hexadecimal da ABIZ 1.0, invalida toda a declaração.
+- **Exemplo** (a chave é um exemplo descartável; a chave privada correspondente foi descartada). Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`.
 
   ```dns
   _abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw="
   ```
 
 - **A chave privada pertence à empresa.** Ela nunca deve aparecer no DNS, no registro nem num repositório público. Um provedor pode gerá-la e guardá-la por você (modo hospedado), mas deve permitir que você a exporte a qualquer momento, por exemplo em PKCS#8, e apagar a cópia dele quando você pedir (seção 3.3.4).
-- **Assinaturas.** Um software pode verificar uma assinatura Ed25519 destacada com a chave publicada. A ABIZ 1.1 ainda não define quais bytes de um registro uma assinatura cobre; por isso, a verificação só faz sentido para uma mensagem combinada entre as duas partes.
+- **Assinaturas.** Um software pode verificar uma assinatura Ed25519 destacada com a chave publicada. A assinatura do registro cobre a forma canônica RFC 8785 do registro sem o membro `signature` e é verificada com `public_key`, que deve ser igual a `p` (SPEC seção 4.6). Uma assinatura sobre outra mensagem só faz sentido se as duas partes tiverem combinado essa mensagem.
 - **Rotação e chaves aposentadas.** Para trocar de chave, publique a nova em `p`; a antiga deixa de ser a vigente depois que o TTL do registro TXT expira. A ABIZ 1.1 não publica chaves aposentadas: nem no DNS, nem no registro (uma propriedade `retired_keys` é rejeitada).
 - **O que uma chave prova.** Ela mostra qual chave quem controla o domínio publicou. Ela não assina, por si só, o registro TXT e não prova identidade jurídica. Use DNSSEC se o seu provedor de DNS oferecer.
 
@@ -210,6 +210,6 @@ Ele também pode informar que o domínio e o registro apontam um para o outro, q
 ## 7. Para saber mais
 
 - [Especificação da ABIZ](../../../SPEC.md) (em inglês): seção 3.1.1 (sintaxe TXT), seção 3.3 (chaves `p`), seção 4.2 (chaves empresariais)
-- [JSON Schema do registro](../../../schemas/abiz-business-record-v1.schema.json)
+- [JSON Schema do registro](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validador de referência](../../../scripts/validate.py) e [exemplos](../../../examples/)
 - [Todos os guias da América do Sul](index.md)

@@ -29,12 +29,12 @@ from validate import (
     well_known_tags,
 )
 
-SCHEMA = json.loads((ROOT / "schemas" / "abiz-business-record-v1.schema.json").read_text())
+SCHEMA = json.loads((ROOT / "schemas" / "abiz-business-record-v1.1.schema.json").read_text())
 REG = json.loads((ROOT / "examples" / "registered-us.json").read_text())
 UNIT = json.loads((ROOT / "examples" / "unit-us.json").read_text())
 WK_REG = json.loads((ROOT / "examples" / "well-known-registered-us.json").read_text())
 WK_UNREG = json.loads((ROOT / "examples" / "well-known-unregistered-us.json").read_text())
-WK_SCHEMA = json.loads((ROOT / "schemas" / "abiz-well-known-v1.schema.json").read_text())
+WK_SCHEMA = json.loads((ROOT / "schemas" / "abiz-well-known-v1.1.schema.json").read_text())
 UNREG = json.loads((ROOT / "examples" / "unregistered-us.json").read_text())
 # Throwaway public key from examples/dns-ed25519-p.txt. The private key was not committed.
 P_MESSAGE = b"abiz1.1 p-key test"
@@ -121,9 +121,13 @@ class ABIZConformanceTests(unittest.TestCase):
         self.assertTrue(validate_record(bad, SCHEMA))
 
     def test_schema_description_matches_published_1_0(self):
-        description = SCHEMA["description"]
-        self.assertIn("ABIZ 1.0", description)
+        published = json.loads((ROOT / "schemas" / "abiz-business-record-v1.schema.json").read_text())
+        description = published["description"]
+        self.assertIn("published ABIZ 1.0", description)
         self.assertNotIn("1.1 public-review", description)
+        self.assertEqual(published["$id"], "https://abizrecord.org/schema/abiz-business-record-v1.schema.json")
+        self.assertIn("proposed", SCHEMA["description"].lower())
+        self.assertEqual(SCHEMA["$id"], "https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json")
 
     def test_p_key_valid_example(self):
         dns = example_dns()
@@ -485,7 +489,7 @@ class ABIZWellKnownTests(unittest.TestCase):
 
     def test_schema_is_valid_draft_2020_12(self):
         Draft202012Validator.check_schema(WK_SCHEMA)
-        self.assertEqual(WK_SCHEMA["$id"], "https://abizrecord.org/schema/abiz-well-known-v1.schema.json")
+        self.assertEqual(WK_SCHEMA["$id"], "https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json")
 
     def test_examples_validate(self):
         for doc in (WK_REG, WK_UNREG):
