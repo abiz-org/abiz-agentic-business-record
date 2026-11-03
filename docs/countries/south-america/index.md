@@ -1,4 +1,10 @@
-# Agentic business records in South America
+# ABIZ country guides — South America
+
+[← All regions](../README.md)
+
+Find out how to become an agentic business with ABIZ. Choose your country below for local guidance on business registration details, publishing your ABIZ record and connecting your domain.
+
+## About these guides
 
 Country guides for businesses in South America that want to publish an ABIZ (Agentic Business Record): a public JSON business record, and a DNS TXT record at `_abiz` on a domain the business controls that points to it. Every guide follows ABIZ 1.1 as merged in [SPEC.md](../../../SPEC.md); where a guide and the specification differ, the specification wins.
 
@@ -6,21 +12,35 @@ The optional business key `k` never has a subdivision code in South America: sec
 
 Each guide is written in the country's main business language.
 
-| Country | Code | Language | Guide |
-| --- | --- | --- | --- |
-| Argentina | `ar` | Spanish | [argentina.md](argentina.md) |
-| Bolivia | `bo` | Spanish | [bolivia.md](bolivia.md) |
-| Brazil | `br` | Portuguese (Brazil) | [brazil.md](brazil.md) |
-| Chile | `cl` | Spanish | [chile.md](chile.md) |
-| Colombia | `co` | Spanish | [colombia.md](colombia.md) |
-| Ecuador | `ec` | Spanish | [ecuador.md](ecuador.md) |
-| Guyana | `gy` | English | [guyana.md](guyana.md) |
-| Paraguay | `py` | Spanish | [paraguay.md](paraguay.md) |
-| Peru | `pe` | Spanish | [peru.md](peru.md) |
-| Suriname | `sr` | Dutch | [suriname.md](suriname.md) |
-| Uruguay | `uy` | Spanish | [uruguay.md](uruguay.md) |
-| Venezuela | `ve` | Spanish | [venezuela.md](venezuela.md) |
+## Country guides
+
+| Country | Language | Guide |
+|---|---|---|
+| Argentina | Español | [Leer la guía](argentina.md) |
+| Bolivia | Español | [Leer la guía](bolivia.md) |
+| Brazil | Português (Brasil) | [Ler o guia](brazil.md) |
+| Chile | Español | [Leer la guía](chile.md) |
+| Colombia | Español | [Leer la guía](colombia.md) |
+| Ecuador | Español | [Leer la guía](ecuador.md) |
+| Guyana | English | [Read guide](guyana.md) |
+| Paraguay | Español | [Leer la guía](paraguay.md) |
+| Peru | Español | [Leer la guía](peru.md) |
+| Suriname | Nederlands | [Lees de gids](suriname.md) |
+| Uruguay | Español | [Leer la guía](uruguay.md) |
+| Venezuela | Español | [Leer la guía](venezuela.md) |
 
 All examples are fictional. Hostnames ending in `.to.co` illustrate one provider's naming scheme; ABIZ does not require any provider.
 
 See also: [SPEC.md](../../../SPEC.md), [JSON Schema](../../../schemas/abiz-business-record-v1.schema.json), [validator](../../../scripts/validate.py).
+
+## Other regions
+
+- [Africa](../africa/index.md)
+- [Asia](../asia/index.md)
+- [Europe](../europe/index.md)
+- [North America](../north-america/index.md)
+- [Oceania](../oceania/index.md)
+
+---
+
+[← Back to all regions](../README.md)
