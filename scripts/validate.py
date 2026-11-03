@@ -3,11 +3,12 @@
 
 This does not perform DNS lookups, registry checks, or HTTPS fetches.
 
-The optional --check-p-key mode checks the ABIZ 1.1 (proposed) Ed25519
-public key in the DNS p tag, and any retired-keys binding signatures.
-It is off by default, so an ABIZ 1.0 opaque p token still passes.
-Key format uses the standard library. Verifying a signature imports
-the optional cryptography package on demand:
+ABIZ 1.1 (proposed): a DNS p tag, when present, must be an Ed25519 public
+key in standard base64 (44 characters, one "="). Any other p value,
+including an ABIZ 1.0 hex token or base64url, makes the assertion invalid.
+The key format check uses the standard library. Verifying an optional
+detached signature (--p-message / --p-signature) imports the optional
+cryptography package on demand:
 
     python -m pip install -r requirements-p-key.txt
 """
@@ -31,7 +32,6 @@ HOST = re.compile(r"^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
 P_KEY_RE = re.compile(r"^[A-Za-z0-9+/]{43}=$")
 # 64-byte Ed25519 signature: 86 alphabet chars + "==".
 P_SIG_RE = re.compile(r"^[A-Za-z0-9+/]{86}==$")
-UTC_INSTANT = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 
 def safe_host(value: str) -> bool:
@@ -113,6 +113,9 @@ def dns_tags(value: str) -> dict[str, str]:
         raise ValueError("Missing h= DNS tag")
     if identity_parts(tags["h"]) is None:
         raise ValueError("Invalid DNS h= host/path")
+    if "p" in tags:
+        # ABIZ 1.1: p is optional, but when present it MUST be a key (SPEC 3.3.2, 3.3.7).
+        decode_ed25519_public_key(tags["p"])
     return tags
 
 
@@ -132,8 +135,8 @@ def _decode_standard_base64(value: str, pattern: re.Pattern[str], purpose: str, 
 
 
 def decode_ed25519_public_key(value: str) -> bytes:
-    """Decode an ABIZ 1.1 (proposed) p value to 32 raw public-key bytes."""
-    return _decode_standard_base64(value, P_KEY_RE, "p", 32)
+    """Decode an ABIZ 1.1 (proposed) p value to 32 raw public-key bytes; reject anything else."""
+    return _decode_standard_base64(value, P_KEY_RE, "p (Ed25519 public key)", 32)
 
 
 def decode_ed25519_signature(value: str) -> bytes:
@@ -157,71 +160,12 @@ def verify_ed25519_signature(public_key: bytes, message: bytes, signature: bytes
         raise ValueError("Ed25519 signature did not verify") from exc
 
 
-def retired_key_message(domains: list[str], entry: dict) -> bytes:
-    """UTF-8 binding message for one retired-keys entry. See SPEC section 3.3.6.
-
-    Every line, including the last, ends with LF. The signature is not included.
-    """
-    normalised = sorted({d.lower().rstrip(".") for d in domains})
-    if not normalised or any(d == "" for d in normalised):
-        raise ValueError("retired-key binding needs at least one domain")
-    lines = [
-        "ABIZ-RETIRED-KEY-V1",
-        "domains=" + ",".join(normalised),
-        "public-key=" + entry["public-key"],
-        "valid-from=" + entry.get("valid-from", ""),
-        "retired-at=" + entry["retired-at"],
-        "reason=" + entry.get("reason", ""),
-    ]
-    return ("\n".join(lines) + "\n").encode("utf-8")
-
-
-def compromised_key_rejects_time(entry: dict, signature_time: str) -> bool:
-    """Whether a compromised retired key MUST NOT verify a signature at signature_time.
-
-    Both times are producer-asserted UTC instants, YYYY-MM-DDThh:mm:ssZ.
-    A time equal to retired-at is not later, so it is not rejected by this rule.
-    """
-    if entry.get("reason") != "compromised":
-        return False
-    retired_at = entry.get("retired-at", "")
-    if not UTC_INSTANT.fullmatch(retired_at) or not UTC_INSTANT.fullmatch(signature_time):
-        raise ValueError("compromised-key time check needs UTC timestamps YYYY-MM-DDThh:mm:ssZ")
-    return signature_time > retired_at
-
-
-def check_retired_keys(record: dict, current_public: bytes, current_p: str) -> list[str]:
-    """Verify retired-keys binding signatures against the current DNS p key."""
-    errors = []
-    seen = set()
-    for index, entry in enumerate(record.get("retired-keys", [])):
-        label = f"retired-keys/{index}"
-        try:
-            if entry["public-key"] == current_p:
-                raise ValueError("retired public-key repeats the current DNS p key")
-            if entry["public-key"] in seen:
-                raise ValueError("duplicate retired public-key")
-            seen.add(entry["public-key"])
-            decode_ed25519_public_key(entry["public-key"])
-            verify_ed25519_signature(
-                current_public,
-                retired_key_message(record["domains"], entry),
-                decode_ed25519_signature(entry["binding-signature"]),
-            )
-        except (ValueError, RuntimeError, KeyError) as exc:
-            errors.append(f"{label}: {exc}")
-    return errors
-
-
-def check_p_key(tags: dict[str, str], message: bytes | None = None, signature: str | None = None) -> bytes:
-    """Opt-in ABIZ 1.1 key check. Absent or malformed p is an error in this mode."""
-    if (message is None) != (signature is None):
-        raise ValueError("p signature verification needs both a message and a signature")
+def check_p_signature(tags: dict[str, str], message: bytes, signature: str) -> bytes:
+    """Verify a detached PureEd25519 signature against the DNS p key."""
     if "p" not in tags:
-        raise ValueError("DNS assertion has no p= tag")
+        raise ValueError("DNS assertion has no p= tag to verify a signature against")
     key = decode_ed25519_public_key(tags["p"])
-    if signature is not None:
-        verify_ed25519_signature(key, message, decode_ed25519_signature(signature))
+    verify_ed25519_signature(key, message, decode_ed25519_signature(signature))
     return key
 
 
@@ -231,7 +175,6 @@ def validate_record(
     domain=None,
     dns_value=None,
     *,
-    check_p_key_mode: bool = False,
     p_message: bytes | None = None,
     p_signature: str | None = None,
 ) -> list[str]:
@@ -264,8 +207,8 @@ def validate_record(
             errors.append("invalid queried domain")
         elif d not in {x.lower().rstrip(".") for x in record["domains"]}:
             errors.append("DNS owner domain is missing from record.domains")
-    if (p_message is not None or p_signature is not None) and not check_p_key_mode:
-        errors.append("A p signature check requires check_p_key")
+    if (p_message is None) != (p_signature is None):
+        errors.append("p signature verification needs both a message and a signature")
     if dns_value:
         try:
             tags = dns_tags(dns_value)
@@ -275,13 +218,12 @@ def validate_record(
                 errors.append("registered business requires matching DNS k")
             if "business-key" not in record and "k" in tags:
                 errors.append("DNS k is present for record without a business-key")
-            if check_p_key_mode:
-                current = check_p_key(tags, p_message, p_signature)
-                errors.extend(check_retired_keys(record, current, tags["p"]))
+            if p_message is not None and p_signature is not None:
+                check_p_signature(tags, p_message, p_signature)
         except (ValueError, RuntimeError) as exc:
             errors.append(str(exc))
-    elif check_p_key_mode:
-        errors.append("--check-p-key requires a DNS assertion")
+    elif p_signature is not None:
+        errors.append("p signature verification requires a DNS assertion")
     return errors
 
 
@@ -291,27 +233,20 @@ def main():
     ap.add_argument("--domain", help="Domain under which _abiz TXT record is published")
     ap.add_argument("--dns-value", help="Value inside ABIZ TXT record, not the full DNS zone line")
     ap.add_argument(
-        "--check-p-key",
-        action="store_true",
-        help="Opt in to ABIZ 1.1 Ed25519 checks for the DNS p tag (off by default)",
-    )
-    ap.add_argument(
         "--p-message",
-        help="UTF-8 message for an optional PureEd25519 check (requires --check-p-key and --p-signature)",
+        help="UTF-8 message for an optional PureEd25519 check (requires --dns-value and --p-signature)",
     )
     ap.add_argument(
         "--p-signature",
-        help="Standard base64 of the 64-byte Ed25519 signature (requires --check-p-key and --p-message)",
+        help="Standard base64 of the 64-byte Ed25519 signature (requires --dns-value and --p-message)",
     )
     args = ap.parse_args()
-    if args.check_p_key and not (args.domain and args.dns_value):
-        ap.error("--check-p-key requires --domain and --dns-value")
     if bool(args.domain) != bool(args.dns_value):
         ap.error("--domain and --dns-value must be supplied together for DNS assertion checks")
     if (args.p_message is None) != (args.p_signature is None):
         ap.error("--p-message and --p-signature must be supplied together")
-    if args.p_signature is not None and not args.check_p_key:
-        ap.error("--p-message and --p-signature require --check-p-key")
+    if args.p_signature is not None and not args.dns_value:
+        ap.error("--p-message and --p-signature require --domain and --dns-value")
     try:
         schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
         record = json.loads(args.json_file.read_text(encoding="utf-8"))
@@ -321,7 +256,6 @@ def main():
             schema,
             args.domain,
             args.dns_value,
-            check_p_key_mode=args.check_p_key,
             p_message=None if args.p_message is None else args.p_message.encode("utf-8"),
             p_signature=args.p_signature,
         )
@@ -332,10 +266,8 @@ def main():
         for error in errors:
             print("ERROR:", error, file=sys.stderr)
         return 1
-    if args.check_p_key and args.p_signature is not None:
+    if args.p_signature is not None:
         print("PASS: schema + offline DNS/document consistency; Ed25519 signature matches p")
-    elif args.check_p_key:
-        print("PASS: schema + offline DNS/document consistency; p is a 32-byte Ed25519 public key")
     elif args.dns_value:
         print("PASS: schema + offline DNS/document consistency (not a live DNS or registry check)")
     else:

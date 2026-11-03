@@ -45,19 +45,20 @@ python -m unittest discover -s tests -v
 
 Passing the local schema establishes **record conformance only**. Passing the DNS checks additionally establishes a valid domain-to-record assertion; it is not an independent government-register confirmation.
 
-## Check a proposed 1.1 `p` key
+## The proposed 1.1 `p` key
 
-By default, `p` is not interpreted. An existing opaque token still passes. `--check-p-key` checks that `p` is a 44-character standard-base64 Ed25519 public key (32 bytes). Add `--p-message` and `--p-signature` to verify a detached signature. Signature verification needs the optional `cryptography` package:
+`p` is optional. When the DNS assertion contains `p`, the validator always checks that it is a 44-character standard-base64 Ed25519 public key (32 bytes, one trailing `=`). Any other value fails, including an ABIZ 1.0 hexadecimal token and base64url. See SPEC section 3.3.7 for migrating existing values. The format check needs no extra package. To verify a detached signature, add `--p-message` and `--p-signature`; that needs the optional `cryptography` package:
 
 ```sh
 python -m pip install -r requirements-p-key.txt
 python scripts/validate.py examples/registered-us.json \
   --domain harbourbikes.example \
   --dns-value "$(sed -n '/^v=abiz1/p' examples/dns-ed25519-p.txt)" \
-  --check-p-key
+  --p-message "abiz1.1 p-key test" \
+  --p-signature "K8z1ImVMyYZF7tGBnyaL4fhI3WAnCTo1EKHS77J+uLCet14Sbg629QmXc1e6rIjn3KtZdXgKNtuakuTLmruKAg=="
 ```
 
-`--check-p-key` also checks `retired-keys` binding signatures when that provisional property is present. See `examples/registered-us-retired-key.json`.
+A business record cannot carry retired keys. The schema reserves their shape only as the nested definition `$defs/retired-key`.
 
 ## Standards governance
 

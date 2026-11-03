@@ -8,12 +8,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+from jsonschema import Draft202012Validator, FormatChecker
 from validate import (
-    compromised_key_rejects_time,
     decode_ed25519_public_key,
     dns_tags,
     is_abiz_assertion,
-    retired_key_message,
     validate_record,
 )
 
@@ -26,6 +25,14 @@ P_SIGNATURE = (
     "K8z1ImVMyYZF7tGBnyaL4fhI3WAnCTo1EKHS77J+uLCet14Sbg629QmXc1e6rIjn"
     "3KtZdXgKNtuakuTLmruKAg=="
 )
+# Shape of $defs/retired-key. Not a record property; the signature is a placeholder.
+RETIRED_KEY_ENTRY = {
+    "public-key": "CtW5mtOK/a36noCey4n3kQDYbl498nnTnArU5MPs+gs=",
+    "valid-from": "2025-01-01T00:00:00Z",
+    "retired-at": "2026-10-01T00:00:00Z",
+    "reason": "rotated",
+    "binding-signature": P_SIGNATURE,
+}
 
 
 def example_dns() -> str:
@@ -89,9 +96,11 @@ class ABIZConformanceTests(unittest.TestCase):
         self.assertTrue(tags["p"].endswith("="))
         key = decode_ed25519_public_key(tags["p"])
         self.assertEqual(len(key), 32)
-        self.assertEqual(validate_record(
-            REG, SCHEMA, "harbourbikes.example", dns, check_p_key_mode=True), [])
-        # Default mode is unchanged: the same key is also a legal opaque token.
+        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", dns), [])
+
+    def test_no_p_passes(self):
+        dns = "v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co"
+        self.assertNotIn("p", dns_tags(dns))
         self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", dns), [])
 
     def test_p_key_accepts_plus_and_slash(self):
@@ -101,6 +110,7 @@ class ABIZConformanceTests(unittest.TestCase):
         self.assertIn("/", value)
         self.assertEqual(len(value), 44)
         self.assertEqual(decode_ed25519_public_key(value), raw)
+        self.assertEqual(dns_tags(f"v=abiz1;h=a.example;p={value}")["p"], value)
 
     def test_p_key_malformed_base64(self):
         key = example_dns().split("p=", 1)[1]
@@ -123,22 +133,45 @@ class ABIZConformanceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 decode_ed25519_public_key(bad)
         dns = example_dns().split("p=", 1)[0] + "p=" + short
-        errors = validate_record(
-            REG, SCHEMA, "harbourbikes.example", dns, check_p_key_mode=True)
-        self.assertTrue(errors)
+        self.assertTrue(validate_record(REG, SCHEMA, "harbourbikes.example", dns))
 
     def test_dns_duplicate_p_tag_fails(self):
         key = example_dns().split("p=", 1)[1]
         with self.assertRaises(ValueError):
             dns_tags(f"v=abiz1;h=harbour-bike-repair.or.us.to.co;p={key};p={key}")
 
-    def test_opaque_p_passes_unless_key_check_is_requested(self):
-        token = "ab" * 16  # 32 hex characters, as used by some 1.0 handshakes
-        dns = f"v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co;p={token}"
-        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", dns), [])
-        errors = validate_record(
-            REG, SCHEMA, "harbourbikes.example", dns, check_p_key_mode=True)
-        self.assertTrue(any(e.startswith("p must be") for e in errors))
+    def _dns_with_p(self, value):
+        return f"v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co;p={value}"
+
+    def test_hex_token_p_fails(self):
+        # 32 hex characters, the ABIZ 1.0 one-time handshake shape. Invalid from 1.1.
+        token = "ede69a675ead36c690cc8689e1d3e21d"
+        dns = self._dns_with_p(token)
+        with self.assertRaises(ValueError):
+            dns_tags(dns)
+        errors = validate_record(REG, SCHEMA, "harbourbikes.example", dns)
+        self.assertTrue(any(e.startswith("p (Ed25519 public key) must be") for e in errors), errors)
+        # Spaced 1.0-style records with a hex token also fail, on p rather than whitespace.
+        with self.assertRaises(ValueError):
+            dns_tags(f"v=abiz1; h=harbour-bike-repair.or.us.to.co; p={token}")
+
+    def test_base64url_p_fails(self):
+        raw = bytes([255, 239]) + bytes(range(30))
+        standard = base64.b64encode(raw).decode("ascii")
+        padded_url = base64.urlsafe_b64encode(raw).decode("ascii")
+        unpadded_url = padded_url.rstrip("=")
+        self.assertNotEqual(standard, padded_url)
+        self.assertEqual(len(unpadded_url), 43)
+        for bad in (padded_url, unpadded_url, "ed25519:" + unpadded_url):
+            with self.subTest(value=bad):
+                self.assertTrue(validate_record(
+                    REG, SCHEMA, "harbourbikes.example", self._dns_with_p(bad)))
+
+    def test_missing_padding_p_fails(self):
+        key = example_dns().split("p=", 1)[1]
+        self.assertTrue(key.endswith("="))
+        self.assertTrue(validate_record(
+            REG, SCHEMA, "harbourbikes.example", self._dns_with_p(key[:-1])))
 
     def test_p_key_signature_round_trip(self):
         try:
@@ -148,13 +181,13 @@ class ABIZConformanceTests(unittest.TestCase):
         dns = example_dns()
         self.assertEqual(validate_record(
             REG, SCHEMA, "harbourbikes.example", dns,
-            check_p_key_mode=True, p_message=P_MESSAGE, p_signature=P_SIGNATURE), [])
+            p_message=P_MESSAGE, p_signature=P_SIGNATURE), [])
         errors = validate_record(
             REG, SCHEMA, "harbourbikes.example", dns,
-            check_p_key_mode=True, p_message=b"different message", p_signature=P_SIGNATURE)
+            p_message=b"different message", p_signature=P_SIGNATURE)
         self.assertTrue(any("did not verify" in e for e in errors))
 
-    def test_cli_check_p_key_mode(self):
+    def test_cli_p_key_checked_by_default(self):
         dns = example_dns()
         base = [
             sys.executable, str(ROOT / "scripts" / "validate.py"),
@@ -165,14 +198,12 @@ class ABIZConformanceTests(unittest.TestCase):
         plain = subprocess.run(base, capture_output=True, text=True, check=False)
         self.assertEqual(plain.returncode, 0, plain.stderr)
         self.assertIn("offline DNS/document consistency", plain.stdout)
-        self.assertNotIn("Ed25519", plain.stdout)
 
-        checked = subprocess.run(base + ["--check-p-key"], capture_output=True, text=True, check=False)
-        self.assertEqual(checked.returncode, 0, checked.stderr)
-        self.assertIn("32-byte Ed25519 public key", checked.stdout)
+        retired_flag = subprocess.run(base + ["--check-p-key"], capture_output=True, text=True, check=False)
+        self.assertEqual(retired_flag.returncode, 2)  # the opt-in flag no longer exists
 
         signed = subprocess.run(
-            base + ["--check-p-key", "--p-message", P_MESSAGE.decode(), "--p-signature", P_SIGNATURE],
+            base + ["--p-message", P_MESSAGE.decode(), "--p-signature", P_SIGNATURE],
             capture_output=True, text=True, check=False)
         if "requires the optional cryptography package" in signed.stderr:
             self.assertNotEqual(signed.returncode, 0)
@@ -180,64 +211,34 @@ class ABIZConformanceTests(unittest.TestCase):
             self.assertEqual(signed.returncode, 0, signed.stderr)
             self.assertIn("signature matches p", signed.stdout)
 
-        opaque = dns.rsplit("p=", 1)[0] + "p=" + ("ab" * 16)
+        hex_token = dns.rsplit("p=", 1)[0] + "p=" + ("ab" * 16)
         rejected = subprocess.run(
-            base[:-1] + [opaque, "--check-p-key"],
-            capture_output=True, text=True, check=False)
+            base[:-1] + [hex_token], capture_output=True, text=True, check=False)
         self.assertEqual(rejected.returncode, 1)
-        still_ok = subprocess.run(
-            base[:-1] + [opaque], capture_output=True, text=True, check=False)
-        self.assertEqual(still_ok.returncode, 0, still_ok.stderr)
+        self.assertIn("Ed25519 public key", rejected.stderr)
 
-    def _retired_record(self):
-        return json.loads((ROOT / "examples" / "registered-us-retired-key.json").read_text(encoding="utf-8"))
+    def test_top_level_retired_keys_fails(self):
+        bad = copy.deepcopy(REG)
+        bad["retired-keys"] = [RETIRED_KEY_ENTRY]
+        errors = validate_record(bad, SCHEMA)
+        self.assertTrue(any("retired-keys" in e for e in errors), errors)
+        self.assertNotIn("retired-keys", SCHEMA["properties"])
 
-    def _retired_dns(self):
-        for line in (ROOT / "examples" / "dns-retired-keys.txt").read_text(encoding="utf-8").splitlines():
-            if line.startswith("v=abiz1;"):
-                return line.strip()
-        raise AssertionError("examples/dns-retired-keys.txt has no assertion")
-
-    def test_retired_key_entry_verifies(self):
-        record = self._retired_record()
-        dns = self._retired_dns()
-        self.assertEqual(validate_record(record, SCHEMA), [])
-        self.assertEqual(validate_record(
-            record, SCHEMA, "harbourbikes.example", dns, check_p_key_mode=True), [])
-        entry = record["retired-keys"][0]
-        message = retired_key_message(record["domains"], entry)
-        self.assertTrue(message.endswith(b"\n"))
-        self.assertIn(b"domains=harbourbikes.example\n", message)
-        self.assertNotIn(b"binding-signature", message)
-
-    def test_retired_key_bad_signature_fails_key_check_only(self):
-        record = self._retired_record()
-        dns = self._retired_dns()
-        record["retired-keys"][0]["binding-signature"] = P_SIGNATURE
-        self.assertEqual(validate_record(record, SCHEMA), [])
-        errors = validate_record(
-            record, SCHEMA, "harbourbikes.example", dns, check_p_key_mode=True)
-        self.assertTrue(any("did not verify" in error for error in errors), errors)
-
-    def test_retired_key_malformed_public_key_fails_schema(self):
-        record = self._retired_record()
-        record["retired-keys"][0]["public-key"] = "not-a-key"
-        self.assertTrue(validate_record(record, SCHEMA))
-        record = self._retired_record()
-        record["retired-keys"][0]["public-key"] = base64.b64encode(b"\x11" * 31).decode("ascii")
-        self.assertTrue(validate_record(record, SCHEMA))
-
-    def test_compromised_retired_key_time_rule(self):
-        entry = {"reason": "compromised", "retired-at": "2026-10-01T00:00:00Z"}
-        self.assertFalse(compromised_key_rejects_time(entry, "2026-10-01T00:00:00Z"))
-        self.assertFalse(compromised_key_rejects_time(entry, "2026-09-30T23:59:59Z"))
-        self.assertTrue(compromised_key_rejects_time(entry, "2026-10-01T00:00:01Z"))
-        rotated = {"reason": "rotated", "retired-at": "2026-10-01T00:00:00Z"}
-        self.assertFalse(compromised_key_rejects_time(rotated, "2027-01-01T00:00:00Z"))
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_nested_retired_key_definition_validates(self):
+        nested = {"$ref": "#/$defs/retired-key", "$defs": SCHEMA["$defs"]}
+        validator = Draft202012Validator(nested, format_checker=FormatChecker())
+        self.assertEqual(list(validator.iter_errors(RETIRED_KEY_ENTRY)), [])
+        for change in (
+            {"public-key": "not-a-key"},
+            {"public-key": base64.b64encode(b"\x11" * 31).decode("ascii")},
+            {"reason": "lost"},
+            {"extra": "x"},
+        ):
+            with self.subTest(change=change):
+                self.assertTrue(list(validator.iter_errors({**RETIRED_KEY_ENTRY, **change})))
+        missing = dict(RETIRED_KEY_ENTRY)
+        del missing["binding-signature"]
+        self.assertTrue(list(validator.iter_errors(missing)))
 
 
 class ABIZTagListWhitespaceTests(unittest.TestCase):
@@ -316,3 +317,7 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
                       "v=abiz1x;h=a.example", "h=a.example;v=abiz1", "x v=abiz1"):
             with self.subTest(value=other):
                 self.assertFalse(is_abiz_assertion(other))
+
+
+if __name__ == "__main__":
+    unittest.main()

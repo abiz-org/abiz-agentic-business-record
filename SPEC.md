@@ -11,7 +11,7 @@
 
 This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
 
-Sections 3.1.1 and 3.3 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace, and an Ed25519 key in the optional DNS `p` tag. They are not part of the ABIZ 1.0 conformance baseline. Every valid ABIZ 1.0 assertion and record stays valid. The wire version stays `v=abiz1`.
+Sections 3.1.1 and 3.3 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace, and an Ed25519 key in the optional DNS `p` tag. They are not part of the ABIZ 1.0 conformance baseline. The whitespace change is backwards-compatible. The `p` change is deliberately not: a non-key `p` value is invalid from ABIZ 1.1 (section 3.3.7). The wire version stays `v=abiz1`.
 
 ## 1. Scope and purpose
 
@@ -45,7 +45,7 @@ The TTL SHOULD be 300 seconds. Tag names and values are case-sensitive. A consum
 
 #### 3.1.1 Tag-list syntax (ABIZ 1.1, proposed)
 
-ABIZ 1.0 allowed no whitespace anywhere in the assertion. ABIZ 1.1 proposes the tag-list syntax used by other DNS TXT policy records: optional whitespace around `;` and `=`, leading and trailing whitespace, and one trailing `;`. This follows DKIM (RFC 6376 section 3.2, `tag-list`), DMARC (RFC 7489 section 6.4, `dmarc-sep = *WSP %x3b *WSP`, with a final optional separator), MTA-STS (RFC 8461 section 3.1, `sts-field-delim = *WSP ";" *WSP`) and SMTP TLS Reporting (RFC 8460 section 3, `field-delim = *WSP ";" *WSP`). SPF (RFC 7208 section 4.6.1 and section 12) likewise separates terms with one or more spaces and allows trailing spaces. Every value that was valid under ABIZ 1.0 is valid under this syntax, with the same tags.
+ABIZ 1.0 allowed no whitespace anywhere in the assertion. ABIZ 1.1 proposes the tag-list syntax used by other DNS TXT policy records: optional whitespace around `;` and `=`, leading and trailing whitespace, and one trailing `;`. This follows DKIM (RFC 6376 section 3.2, `tag-list`), DMARC (RFC 7489 section 6.4, `dmarc-sep = *WSP %x3b *WSP`, with a final optional separator), MTA-STS (RFC 8461 section 3.1, `sts-field-delim = *WSP ";" *WSP`) and SMTP TLS Reporting (RFC 8460 section 3, `field-delim = *WSP ";" *WSP`). SPF (RFC 7208 section 4.6.1 and section 12) likewise separates terms with one or more spaces and allows trailing spaces. Every value that was valid under ABIZ 1.0 parses under this syntax, with the same tags. (Section 3.3.7 separately makes a non-key `p` value invalid.)
 
 The assertion, after character-string assembly, MUST match `abiz-record` (ABNF, RFC 5234; `%s` is case-sensitive, RFC 7405):
 
@@ -76,7 +76,7 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 | `v=abiz1` | MUST | Wire protocol family; always first |
 | `h=<record-host>` | MUST | HTTPS hostname plus optional path of the public business record, without URL scheme |
 | `k=<country-registration>` | REQUIRED for registered businesses | Independent registration key; MAY be absent for unregistered businesses |
-| `p=<token-or-key>` | MAY | Optional. In ABIZ 1.0, an opaque provider token. In ABIZ 1.1 (proposed), an Ed25519 public key; see section 3.3. Not a password and not proof of legal identity |
+| `p=<public-key>` | MAY | Optional. In ABIZ 1.1 (proposed), when present, MUST be an Ed25519 public key in standard base64; any other value is invalid (section 3.3). ABIZ 1.0 allowed an opaque provider token. Not a password and not proof of legal identity |
 
 `h` MAY refer to a record hosted by an independent service. A producer need not own the host serving the record; it MUST control the queried DNS domain and have permission for the published record.
 
@@ -106,23 +106,25 @@ _abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-OR123456;h=harbour-bike-rep
 
 ### 3.3 The `p` tag (ABIZ 1.1, proposed)
 
-This section is a proposal. ABIZ 1.0 consumers MUST keep treating `p` as an opaque token. A 1.1 implementation MUST follow this section only when it claims the 1.1 key behaviour.
+This section is a proposal. It changes the meaning of `p` on purpose: from ABIZ 1.1, `p` is either absent or a valid Ed25519 public key. Any other value makes the assertion invalid. Section 3.3.7 covers migrating existing values.
 
 #### 3.3.1 Role
 
-In ABIZ 1.0, `p` is optional and provider-specific. The value is a non-empty token with no spaces. It is not checked as a key. Deployments have used it for a one-time domain-control handshake, including a 32-character hexadecimal token.
+In ABIZ 1.0, `p` was optional and provider-specific: a non-empty token that was not checked as a key. Deployments used it for a one-time domain-control handshake, including a 32-character hexadecimal token.
 
-ABIZ 1.1 proposes to make that tag a persistent signing identity. The business, or a provider acting for it, generates an Ed25519 keypair and publishes the public key in `p`. The private key remains the business's property (section 3.3.4). A later signature can be checked against the published key. The one-time token is replaced by a key the business can keep using.
+ABIZ 1.1 makes that tag a persistent signing identity. The business, or a provider acting for it, generates an Ed25519 keypair and publishes the public key in `p`. The private key remains the business's property (section 3.3.4). A later signature can be checked against the published key. The one-time token is replaced by a key the business can keep using.
+
+`p` remains OPTIONAL. An assertion without `p` is valid. An assertion with `p` is valid only when `p` is a key that matches section 3.3.2.
 
 Publishing the key shows that the controller of the domain put that public key in DNS. It does not authenticate the TXT record. It does not prove that a registered business owns the domain. Section 9 still applies: DNS assertions are public and unauthenticated by default, and DNS control alone does not prove business ownership. Producers and consumers SHOULD still use DNSSEC where they can. DNSSEC authenticates the DNS data. The key names a signer the domain controller published.
 
-`p` is DNS-only. The business-record schema does not contain the current key (section 4). Retired keys are the exception: they are carried in that record, not in DNS (section 3.3.6).
+`p` is DNS-only. The business record does not contain the current key or any previous key (section 4).
 
 #### 3.3.2 Key encoding
 
-`p` MUST be the standard base64 encoding (RFC 4648, section 4) of the raw 32-byte Ed25519 public key (RFC 8032). The alphabet is `A–Z`, `a–z`, `0–9`, `+` and `/`, with `=` padding. This is the DKIM Ed25519 `p=` encoding (RFC 8463, using the base64 `p=` syntax in RFC 6376). It is not base64url (RFC 4648, section 5).
+`p` MUST be the standard base64 encoding (RFC 4648, section 4) of the raw 32-byte Ed25519 public key (RFC 8032). The alphabet is `A–Z`, `a–z`, `0–9`, `+` and `/`, with `=` padding. This is the DKIM Ed25519 `p=` encoding (RFC 8463, using the base64 `p=` syntax in RFC 6376). Base64url (RFC 4648, section 5), padded or unpadded, MUST be rejected.
 
-The choice follows the length and the RFC together. Standard base64 of 32 bytes is 44 characters, including one trailing `=`. Unpadded base64url of the same key is 43 characters. Padded base64url is also 44 characters, but it uses `-` and `_` in place of `+` and `/`. RFC 8463 uses standard base64 (RFC 4648 section 4), not base64url. ABIZ requires that encoding: 44 characters, standard alphabet, one trailing `=`.
+Standard base64 of 32 bytes is 44 characters, including one trailing `=`. Unpadded base64url of the same key is 43 characters. Padded base64url is also 44 characters, but it uses `-` and `_` in place of `+` and `/`. ABIZ requires the RFC 8463 form: 44 characters, standard alphabet, one trailing `=`. `+`, `/` and `=` are ordinary octets in a TXT character-string, and `=` cannot be confused with the tag separator because a consumer splits each tag on its first `=` only.
 
 A conforming `p` value MUST:
 
@@ -133,9 +135,9 @@ A conforming `p` value MUST:
 - be canonical: encoding those 32 bytes again with standard base64 MUST reproduce the value;
 - contain no whitespace. DKIM allows folding whitespace inside base64. ABIZ does not, because an ABIZ tag value MUST NOT contain whitespace (section 3.1.1). Whitespace around the value, before `;` or after `=`, is not part of it.
 
-The 44 characters MUST sit in a single DNS TXT character-string (RFC 1035). Producers MUST NOT split `p` across adjacent character-strings. The value fits well inside the 255-octet character-string limit. Consumers parse `p` after the usual TXT character-string assembly, splitting each tag on the first `=` only, so the padding character remains part of the value.
+The 44 characters MUST sit in a single DNS TXT character-string (RFC 1035). Producers MUST NOT split `p` across adjacent character-strings. The value fits well inside the 255-octet character-string limit.
 
-32 bytes encoded with standard base64 always have this shape. A 31-byte string of 44 characters ends in `==`. A 33-byte string of 44 characters has no padding. Both MUST be rejected.
+A 31-byte string of 44 characters ends in `==`. A 33-byte string of 44 characters has no padding. Both MUST be rejected, as MUST a 43-character value without padding.
 
 #### 3.3.3 Generating a keypair
 
@@ -180,73 +182,50 @@ When the business changes provider, it MAY publish the same `p` through the new 
 
 #### 3.3.5 Consumer verification
 
-**Ordinary discovery (ABIZ 1.0 compatible).** A consumer MUST accept a well-formed `v=abiz1` assertion whether or not `p` is a valid key. A duplicate `p` tag MUST be rejected, as for any other tag. A `p` value that does not match section 3.3.2 MUST NOT be used as a public key and MUST NOT be described as a signing identity. Discovery MUST NOT fail only because `p` is an opaque 1.0 token, such as a 32-character hexadecimal string.
+**Discovery.** A consumer that claims ABIZ 1.1 MUST check `p` whenever it is present. If `p` does not match section 3.3.2, the assertion is invalid, exactly as for a malformed `h`. This includes opaque ABIZ 1.0 tokens such as a 32-character hexadecimal string, and base64url keys. A duplicate `p` tag MUST be rejected, as for any other recognised tag. An assertion without `p` is checked as before. The format check needs only base64 decoding, with no cryptographic library.
 
-**Valid key.** If `p` matches section 3.3.2, a 1.1 consumer MAY use those 32 bytes as the Ed25519 public key for that domain.
-
-**Opt-in key check.** When a consumer is asked to check the key, it MUST reject that check if `p` is missing or does not match section 3.3.2. The reference validator does this only with `--check-p-key`. That mode is off by default, so 1.0 records still pass ordinary validation. The format check uses the standard library. It does not need a third-party package.
+**Valid key.** If `p` matches section 3.3.2, the consumer MAY use those 32 bytes as the Ed25519 public key for that domain.
 
 **Signatures.** A detached signature is the raw 64-byte Ed25519 signature (RFC 8032, PureEd25519, with no pre-hash), encoded in the same standard base64 (88 characters, including the final `==`). The message is the raw octets the producer and consumer agreed. ABIZ does not take DKIM's header canonicalisation or SHA-256 body hash from RFC 8463. Only the public-key encoding is shared with that RFC. Verification succeeds only when RFC 8032 verification succeeds for that key, message and signature.
 
-ABIZ 1.1 does not define which octets a business-record signature covers. Until that is specified, a signature check is only meaningful for a message both sides already agreed. The reference validator can check such a pair with `--p-message` and `--p-signature`. Those arguments require `--check-p-key`. `--p-message` is UTF-8 text. `--p-signature` is the 88-character standard base64 signature. Signature verification needs the optional `cryptography` package. If it is not installed, the format check still runs and the signature check fails with an error that names the missing dependency.
+ABIZ 1.1 does not define which octets a business-record signature covers. Until that is specified, a signature check is only meaningful for a message both sides already agreed. The reference validator can check such a pair with `--p-message` (UTF-8 text) and `--p-signature` (the 88-character standard base64 signature). Signature verification needs the optional `cryptography` package; without it, the format check still runs and the signature check fails with an error that names the missing dependency.
 
-**Wire version.** This proposal does not change `v=abiz1`. Ordinary consumers keep accepting 1.0 tokens. A new version tag is not required for that compatible reading. Whether a later revision should add a version tag so a non-key `p` can be rejected is unresolved (section 3.3.7).
+**Wire version.** This proposal does not change `v=abiz1`. A strict ABIZ 1.0 consumer that treats `p` as opaque still accepts a 1.1 key, because a key is a valid 1.0 token. The reverse does not hold: a 1.1 consumer rejects a non-key `p` (section 3.3.7).
 
-#### 3.3.6 Revocation and retired keys
+#### 3.3.6 Rotation and revocation
 
-The current signing key is only the `p` tag in DNS. Producers MUST NOT publish retired keys in DNS. `_abiz` stays limited to the current key. Support for rotation and revocation is required.
+The current signing key is only the `p` tag in DNS. Producers MUST NOT publish previous keys in DNS, and the business record does not carry them. `_abiz` stays limited to the current key.
 
-A retired public key is carried in the HTTPS business record, under the optional property `retired-keys`. That name is provisional. It is an ABIZ 1.1 (proposed) schema property (section 4). An ABIZ 1.0 record omits it and remains valid.
+**Rotation.** The producer generates a new keypair and publishes the new public key as DNS `p`. The TTL SHOULD remain 300 seconds (section 3.1). Once the TXT TTL has passed, consumers MUST NOT keep treating the replaced `p` as the current key.
 
-Each entry MUST include:
+**Revocation.** Removing `p` withdraws the key as the current identity once the TXT TTL has passed.
 
-- `public-key`: the retired Ed25519 public key, in the 44-character standard base64 form of section 3.3.2;
-- `retired-at`: when the key stopped being current, UTC, exactly `YYYY-MM-DDThh:mm:ssZ`;
-- `binding-signature`: a PureEd25519 signature made by the current key (the private key for DNS `p`), as standard base64 of the 64-byte signature (88 characters).
+ABIZ 1.1 does not define a published list of retired keys. The schema reserves the shape of a retired-key entry as a nested definition, `$defs/retired-key` (section 4). It is not a record property, and a business record that contains `retired-keys` or any other unknown top-level property MUST be rejected. A later revision, or another document that references the definition, may use that shape.
 
-An entry MAY include `valid-from`, in the same timestamp form, and `reason`, which is `rotated` or `compromised`. The current `p` value MUST NOT appear in the list. A public key MUST NOT be repeated in the list.
+#### 3.3.7 Migration of existing `p` values
 
-**Binding message.** The current key signs this UTF-8 text. Every line ends with one line feed (U+000A), including the last line. Absent optional fields are empty. The signature field itself is not part of the text.
+All existing `p` values are upgraded by this revision. A `p` value published under ABIZ 1.0 that is not a valid key under section 3.3.2, such as a 32-character hexadecimal handshake token, fails ABIZ 1.1 validation, and the whole assertion is invalid. Producers MUST republish `p` as an Ed25519 public key (section 3.3.3) or remove it. Because `p` is optional, an assertion without `p` stays valid.
 
-```text
-ABIZ-RETIRED-KEY-V1
-domains=<domains>
-public-key=<public-key>
-valid-from=<valid-from>
-retired-at=<retired-at>
-reason=<reason>
-```
+This is a deliberate breaking change, confined to non-key `p` values. Every other ABIZ 1.0 assertion and record stays valid under ABIZ 1.1, with the same meaning. The whitespace relaxation of section 3.1.1 only adds accepted forms.
 
-`<domains>` is the record's `domains` array: lowercase, a single trailing dot removed, duplicates removed, sorted by Unicode code point, then joined with `,` and no spaces. The other values are the exact JSON strings from the entry. This is a fixed octet string. It is not a JSON canonicalisation such as RFC 8785.
-
-A consumer MUST rebuild that string from the fetched record. It MUST ignore an entry whose signature does not verify against the current DNS `p`. If `p` is not a confirmed 1.1 key, it MUST ignore every entry. Ignoring an entry does not by itself make the rest of the record invalid. The reference validator reports a bad binding signature only when `--check-p-key` is set. Ordinary validation checks the schema shape only.
-
-Someone who controls only the web host can omit an entry. They cannot add or change one without the current private key. Changing `domains` changes the signed string, so the producer MUST re-sign each entry with the current key after that change.
-
-**Rotation.** The producer generates a new keypair, adds the old public key to `retired-keys` with `retired-at` set and a binding signature from the new key, and publishes the new public key as DNS `p`. Until DNS shows that new `p`, consumers ignore the new entry. Producers SHOULD publish the record and the TXT change together. The TTL SHOULD remain 300 seconds (section 3.1). `examples/registered-us-retired-key.json` is an illustration, with the matching current `p` in `examples/dns-retired-keys.txt`. The private keys are not in the repository.
-
-**Compromise.** When `reason` is `compromised`, `retired-at` is the compromise time the producer asserts. A consumer MUST NOT accept another signature checked with that retired key when that signature is associated with a time later than `retired-at`. A time equal to `retired-at` is not later. These times are producer-asserted. This specification does not define a trusted clock. If the consumer cannot place the other signature in time, it SHOULD refuse the compromised key.
-
-Removing `p`, or replacing it without a `retired-keys` entry, still withdraws the old key as the current identity once the TXT TTL has passed. Consumers MUST NOT keep treating a replaced `p` as the current key after that.
-
-#### 3.3.7 Unresolved points
+#### 3.3.8 Unresolved points
 
 This proposal does not decide the following. They are recorded so implementers do not treat silence as a decision:
 
 - whether `p` is required for any verified tier;
-- where retired keys are carried is decided: the business record, not DNS (section 3.3.6). Still open: the property name (`retired-keys` is provisional), and how long a producer should keep entries;
 - whether a record host stores a copy of the public key;
-- whether a future wire version should make a non-key `p` invalid, instead of ignoring it for signing;
-- whether ABIZ should move to the unpadded base64url form used by `draft-morrison-mcp-dns-discovery` (section 12);
-- which octets a signature over the rest of the business record would cover. The retired-key binding message is defined in section 3.3.6.
+- whether, and where, a later revision publishes retired keys using `$defs/retired-key`, and how long entries would be kept;
+- which octets a signature over the business record would cover.
+
+Decided in this revision: `p` uses standard base64 (RFC 4648 section 4, RFC 8463), not base64url; and from ABIZ 1.1 a non-key `p` is invalid.
 
 ## 4. Published business record and normative schema
 
 The `h` target MUST be fetched over HTTPS with `Accept: application/json`. It MUST return a JSON object that validates against [the normative ABIZ schema](schemas/abiz-business-record-v1.schema.json) in **JSON Schema Draft 2020-12**. Record conformance is a REQUIRED step for ABIZ conformance; a document that merely parses as JSON does not qualify.
 
-The schema does not define the current key. That value exists only as DNS `p`. When section 3.3 applies, its encoding is normative there: standard base64 of the raw 32-byte Ed25519 public key, the same `p=` encoding DKIM specifies for Ed25519 in RFC 8463 (RFC 4648 section 4, with padding).
+The schema does not define the current key. That value exists only as DNS `p`, and its encoding is normative in section 3.3.2: standard base64 of the raw 32-byte Ed25519 public key, the same `p=` encoding DKIM specifies for Ed25519 in RFC 8463 (RFC 4648 section 4, with padding).
 
-ABIZ 1.1 (proposed) adds one optional schema property, `retired-keys` (section 3.3.6). The name is provisional. The property is not required, so an ABIZ 1.0 record stays valid.
+ABIZ 1.1 (proposed) adds no record property. The schema's `$defs` holds a nested definition, `retired-key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
 
 ### 4.1 Required properties
 
@@ -264,7 +243,7 @@ Registered businesses MUST provide `registration-number` and matching `business-
 
 ### 4.3 Optional useful facts
 
-The schema defines optional `description`, `website`, `contact-email`, `contact-phone`, `logo-url`, `last-updated`, `services`, `locations`, `opening-hours`, `links` and, in ABIZ 1.1 (proposed), `retired-keys`. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record.
+The schema defines optional `description`, `website`, `contact-email`, `contact-phone`, `logo-url`, `last-updated`, `services`, `locations`, `opening-hours` and `links`. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record.
 
 Implementations MAY add namespaced values inside `extensions` (reverse-domain keys). Unknown top-level properties MUST be rejected. Extensions MUST NOT override the meaning of mandatory fields.
 
@@ -278,8 +257,7 @@ Schema validation does **not** check:
 - whether `business-key` matches `k` and `country`;
 - whether a registration number is real;
 - whether URLs are reachable;
-- whether the business is genuine;
-- whether a `retired-keys` binding signature verifies, unless the consumer has opted into the key check (section 3.3.6).
+- whether the business is genuine.
 
 These checks are performed separately, with clear results. The supplied offline reference validator implements schema and local DNS/document checks; it does not query registries or fetch untrusted URLs.
 
@@ -295,7 +273,7 @@ A conforming producer MUST:
 6. ensure `identity-host` matches `h` exactly after canonical hostname normalization;
 7. ensure DNS `k`, if present, matches the document `business-key` and registration fields.
 
-A producer that publishes an ABIZ 1.1 signing identity MUST set `p` as specified in section 3.3 and MUST NOT publish the private key. Publishing `p` remains optional for ABIZ 1.0. A producer that retires a key MUST follow section 3.3.6 and MUST NOT put that key in DNS.
+A producer that publishes `p` MUST set it to an Ed25519 public key as specified in section 3.3, and MUST NOT publish the private key. Publishing `p` remains optional. A producer that still publishes a non-key ABIZ 1.0 `p` token MUST republish it as a key or remove it (section 3.3.7). A producer that rotates a key MUST follow section 3.3.6 and MUST NOT put the old key in DNS.
 
 A human-readable HTML page and Markdown representation SHOULD also be offered, but MAY use content negotiation. A `.md` extension is not required.
 
@@ -312,7 +290,7 @@ A conforming consumer MUST:
 7. compare `k` to the business record's registration fields, when `k` is present;
 8. label domain-link checks separately from legal registration checks.
 
-A consumer that claims ABIZ 1.1 MUST parse the assertion with the tag-list syntax of section 3.1.1, so it accepts optional whitespace around `;` and `=` and one trailing `;`. For the proposed 1.1 key, a consumer MUST follow sections 3.3.5 and 3.3.6. It MUST NOT treat an opaque 1.0 `p` token as an Ed25519 public key. It MUST ignore a retired-key entry whose binding signature does not verify. A key check is separate from record conformance and from legal registration.
+A consumer that claims ABIZ 1.1 MUST parse the assertion with the tag-list syntax of section 3.1.1, so it accepts optional whitespace around `;` and `=` and one trailing `;`. It MUST reject an assertion whose `p` is present but is not a valid key under section 3.3.2, including an ABIZ 1.0 hexadecimal token or a base64url value, and MUST follow sections 3.3.5 and 3.3.6. A key check is separate from record conformance and from legal registration.
 
 A consumer MAY check registration details against authoritative registries; if it does not, it MUST NOT describe a business as legally verified. A consumer MUST NOT automatically trust instructions, URLs or tool results embedded in the record.
 
@@ -333,7 +311,7 @@ A parent business MAY list units and their domains in an implementation-specific
 
 ## 9. Security and privacy
 
-DNS assertions are public and not authenticated by default. Producers SHOULD use DNSSEC where available; consumers SHOULD verify DNSSEC where supported. DNS control alone does not prove business ownership. An Ed25519 public key in `p` does not change that. It shows which key the domain controller published. It does not sign the TXT record by itself, and it does not prove legal identity. An opaque 1.0 `p` token MUST NOT be presented as a cryptographic identity. The private key is the business's property and MUST be protected. In hosted mode a provider MAY hold that key and sign for the business. It MUST follow the export and deletion rules in section 3.3.4. Holding the key does not transfer ownership. Retired keys belong in the business record, each bound by a signature from the current key (section 3.3.6). A host that does not hold that private key cannot add a valid entry. It can omit one. Compromise times in that list are producer-asserted. Consumers MUST implement SSRF safeguards, HTTPS-only target handling, host/redirect validation, content size/time limits and output escaping. MCP endpoints MUST not be called automatically solely because they appear in a record.
+DNS assertions are public and not authenticated by default. Producers SHOULD use DNSSEC where available; consumers SHOULD verify DNSSEC where supported. DNS control alone does not prove business ownership. An Ed25519 public key in `p` does not change that. It shows which key the domain controller published. It does not sign the TXT record by itself, and it does not prove legal identity. A non-key `p` value is invalid under ABIZ 1.1 (section 3.3.7) and MUST NOT be presented as a cryptographic identity. The private key is the business's property and MUST be protected. In hosted mode a provider MAY hold that key and sign for the business. It MUST follow the export and deletion rules in section 3.3.4. Holding the key does not transfer ownership. Consumers MUST implement SSRF safeguards, HTTPS-only target handling, host/redirect validation, content size/time limits and output escaping. MCP endpoints MUST not be called automatically solely because they appear in a record.
 
 A publisher MUST consider personal data and only publish intentionally public facts. A domain claim MUST NOT be presented as a legal verification badge.
 
@@ -369,4 +347,4 @@ ABIZ 1.1 (proposed) encodes the DNS `p` tag as standard base64 with padding, mat
 
 The two mechanisms can appear in one zone at different owner names (`_abiz`, and the draft's `_mcp` or `_alter`). The draft is an individual submission. It is not an IETF standard, and this specification does not require it.
 
-Whether ABIZ should adopt that draft's base64url form instead of RFC 8463 is unresolved. See section 3.3.7.
+ABIZ does not adopt that draft's base64url form. `p` uses the RFC 8463 standard base64 form, and a base64url `p` value is invalid (section 3.3.2). The DKIM precedent applies to the same kind of record, a DNS TXT tag-list, and standard base64 needs no escaping in TXT.
