@@ -17,7 +17,7 @@
 | `record_version` | `abiz1` |
 | `business_name` | الاسم العام الذي يعرفه العملاء، مثل `صابون حلب` |
 | `country` | `sy`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity_host` | `www.alepposoap.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `www.alepposoap.example`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["alepposoap.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
@@ -43,7 +43,7 @@ sy-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json;p=3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0="
+_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -51,29 +51,29 @@ _abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json;p=3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0="
+_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc="
 ```
 
-سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.alepposoap.example/abiz.json`:
+سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.alepposoap.example/?format=json`:
 
 ```json
 {
   "record_version": "abiz1",
   "business_name": "صابون حلب",
   "country": "sy",
-  "identity_host": "www.alepposoap.example/abiz.json",
+  "identity_host": "www.alepposoap.example",
   "domains": [
     "alepposoap.example"
   ],
-  "public_key": "3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0=",
-  "signature": "XEUuziUwC1NPx2SC72BXEnOFMr7Z6QFIBSnHL+zy0A3ZqOgkgzPUaixDdVPXPiBChSbZl4k3OqkpsgRWSZEpDQ=="
+  "public_key": "ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc=",
+  "signature": "cz3QM2v0HpLdtvhpDmERcqFgdk+aZWC0kmBqELJ9uKdzXr3jaY0j0jlZS7Ngo5nMXUiV0zBNUZQ3HMhKid52Bw=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain alepposoap.example --dns-value 'v=abiz1;h=www.alepposoap.example/abiz.json;p=3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0='
+python scripts/validate.py record.json --domain alepposoap.example --dns-value 'v=abiz1;h=www.alepposoap.example;p=ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.

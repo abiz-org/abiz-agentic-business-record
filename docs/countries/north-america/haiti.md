@@ -45,7 +45,7 @@ _abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesol
 Une entreprise sans numéro d’immatriculation, ou qui préfère ne pas le publier, omet simplement `k` :
 
 ```dns
-_abiz.etaldumarche.example. 300 IN TXT "v=abiz1;h=etaldumarche.biz.to.co"
+_abiz.etaldumarche.example. 300 IN TXT "v=abiz1;h=etaldumarche.biz.to.co;p=zIMWmu467zkZanP4uaCFGRpLI95fgU1B/wByXofvoqc="
 ```
 
 ### Exemple de fiche (JSON)
@@ -147,7 +147,7 @@ Cet exemple est fictif. Il passe le validateur de référence.
 
 ### Où héberger la fiche
 
-Vous pouvez servir la fiche vous-même depuis n’importe quelle URL HTTPS qui renvoie le document JSON, par exemple `h=www.boulangeriesoleil.example/abiz.json`, ou faire appel à n’importe quel fournisseur compatible. ABIZ n’impose ni fournisseur ni schéma de nommage. Dans tous les cas, l’`identity_host` de la fiche doit correspondre à `h`, et `domains` doit inclure le domaine où vous publiez l’enregistrement TXT.
+Vous pouvez servir la fiche vous-même depuis n’importe quelle URL HTTPS qui renvoie le document JSON, par exemple `h=www.boulangeriesoleil.example`, ou faire appel à n’importe quel fournisseur compatible. ABIZ n’impose ni fournisseur ni schéma de nommage. Dans tous les cas, l’`identity_host` de la fiche doit correspondre à `h`, et `domains` doit inclure le domaine où vous publiez l’enregistrement TXT.
 
 Avant de publier, vérifiez la fiche et la valeur DNS avec le validateur de référence :
 
@@ -174,7 +174,7 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie Soleil à 
 
 - **La clé privée appartient à l’entreprise.** Elle ne doit jamais figurer dans le DNS, dans la fiche ni dans un dépôt public. Un fournisseur peut la générer et la conserver pour vous (mode hébergé), mais il doit vous permettre de l’exporter à tout moment, par exemple au format PKCS#8, et supprimer sa copie à votre demande (section 3.3.4).
 - **Signatures.** Un logiciel peut vérifier une signature Ed25519 détachée à l’aide de la clé publiée. La signature de la fiche couvre la forme canonique RFC 8785 de la fiche sans le membre `signature`, et se vérifie avec `public_key`, qui doit être égal à `p` (SPEC section 4.6). Une signature sur un autre message n’a de sens que si les deux parties ont convenu de ce message.
-- **Rotation et clés retirées.** Pour changer de clé, publiez la nouvelle dans `p`; l’ancienne cesse d’être la clé courante une fois le TTL de l’enregistrement TXT écoulé. ABIZ 1.1 ne publie pas les clés retirées : ni dans le DNS, ni dans la fiche (une propriété `retired_keys` est rejetée).
+- **Rotation, révocation et clés retirées.** Pour changer de clé, générez une nouvelle paire Ed25519, publiez la nouvelle clé publique dans `p` (assertion DNS ou well-known), signez de nouveau la fiche avec la nouvelle clé privée et donnez à `public_key` la même valeur que `p`; l’ancienne cesse d’être la clé courante une fois le TTL de l’enregistrement TXT écoulé. Retirer seulement `p` n’est pas une révocation valide tant que l’assertion ABIZ 1.1 reste publiée : pour la retirer, supprimez la déclaration DNS ou well-known complète. ABIZ 1.1 ne publie pas les clés retirées : ni dans le DNS, ni dans la fiche (une propriété `retired_keys` est rejetée).
 - **Ce que prouve une clé.** Elle indique quelle clé la personne qui contrôle le domaine a publiée. Elle ne signe pas à elle seule l’enregistrement TXT et ne prouve pas l’identité juridique. Utilisez DNSSEC si votre hébergeur DNS le permet.
 
 ## 5. Ce que verront les outils d’IA

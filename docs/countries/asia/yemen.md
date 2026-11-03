@@ -17,7 +17,7 @@
 | `record_version` | `abiz1` |
 | `business_name` | الاسم العام الذي يعرفه العملاء، مثل `بن حراز` |
 | `country` | `ye`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity_host` | `www.harazcoffee.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `www.harazcoffee.example`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["harazcoffee.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
@@ -47,7 +47,7 @@ ye-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;k=ye-12345;h=www.harazcoffee.example/abiz.json;p=7LmjYVCfVfZu6FM0spK1bATomCbP2/lnvMXXkzoqku0="
+_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;k=ye-12345;h=www.harazcoffee.example;p=anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,10 +55,10 @@ _abiz.harazcoffee.example. 300 IN TXT "v=abiz1;k=ye-12345;h=www.harazcoffee.exam
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;h=www.harazcoffee.example/abiz.json;p=7LmjYVCfVfZu6FM0spK1bATomCbP2/lnvMXXkzoqku0="
+_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;h=www.harazcoffee.example;p=anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw="
 ```
 
-سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.harazcoffee.example/abiz.json`:
+سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.harazcoffee.example/?format=json`:
 
 ```json
 {
@@ -67,19 +67,19 @@ _abiz.harazcoffee.example. 300 IN TXT "v=abiz1;h=www.harazcoffee.example/abiz.js
   "country": "ye",
   "business_key": "ye-12345",
   "registration_number": "12345",
-  "identity_host": "www.harazcoffee.example/abiz.json",
+  "identity_host": "www.harazcoffee.example",
   "domains": [
     "harazcoffee.example"
   ],
-  "public_key": "7LmjYVCfVfZu6FM0spK1bATomCbP2/lnvMXXkzoqku0=",
-  "signature": "V/IBc1JTdIbrVg5C5dSmRhQBytVz9nazBkOJyhbcJG5rzI6yTH7x5Wngn/Wh8n462lbARDJ+MWlHKAK/gaB1Bw=="
+  "public_key": "anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw=",
+  "signature": "w0/qK8+EWpykcpinfhiTxgTuFzVoRFpShwalT+F/g3na4BXUT8lULYPAh7vyn7E7Swrw20snl67JcxZQsDJCBw=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain harazcoffee.example --dns-value 'v=abiz1;k=ye-12345;h=www.harazcoffee.example/abiz.json;p=7LmjYVCfVfZu6FM0spK1bATomCbP2/lnvMXXkzoqku0='
+python scripts/validate.py record.json --domain harazcoffee.example --dns-value 'v=abiz1;k=ye-12345;h=www.harazcoffee.example;p=anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.

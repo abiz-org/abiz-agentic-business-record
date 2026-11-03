@@ -19,7 +19,7 @@ En Cuba, cualquier negocio, inscrito o no, puede publicar un registro ABIZ. Esta
 | `record_version` | Siempre `abiz1` | `abiz1` |
 | `business_name` | El nombre público del negocio | `Taller de Bicicletas La Rueda` |
 | `country` | El código de país ISO 3166-1 alfa-2, en minúsculas | `cu` |
-| `identity_host` | El host, con ruta opcional, donde se sirve el registro; debe coincidir con `h` en el DNS | `www.tallerlarueda.example/abiz.json` |
+| `identity_host` | El host, con ruta opcional, donde se sirve el registro; debe coincidir con `h` en el DNS | `www.tallerlarueda.example` |
 | `domains` | Los dominios que usted controla y que el registro reclama | `["tallerlarueda.example"]` |
 
 ### La clave de empresa opcional `k`
@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example/abiz.json;p=XQ81sC7mfXdyOOmLxNlboEwNqQwGzycec3H42rdewDM="
+_abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example;p=BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -49,11 +49,11 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "record_version": "abiz1",
   "business_name": "Taller de Bicicletas La Rueda",
   "country": "cu",
-  "identity_host": "www.tallerlarueda.example/abiz.json",
+  "identity_host": "www.tallerlarueda.example",
   "domains": [
     "tallerlarueda.example"
   ],
-  "public_key": "XQ81sC7mfXdyOOmLxNlboEwNqQwGzycec3H42rdewDM=",
+  "public_key": "BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q=",
   "description": "Reparación y venta de bicicletas.",
   "website": "https://tallerlarueda.example",
   "locations": [
@@ -131,27 +131,27 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "zyzEYbEWFKfjA05roV0zwJAONqnZfE5pFXAOgFc40t7lQSpUaRS9WFSp9dDJbAeB7AII6mUFUj7Mq0GHGmvpAw=="
+  "signature": "Is8AhEYXFG/qjDjYqZ6zEfxUdzVitGy7yqqNaDH7z5PvXUUdEEXSEMyexI3HcT42YihLwaUiqYOJvhSLqrkHDA=="
 }
 ```
 
 ### Dónde se aloja el registro
 
-Puede servir el registro usted mismo desde cualquier URL HTTPS que devuelva el documento JSON, por ejemplo `h=www.tallerlarueda.example/abiz.json`, o usar cualquier proveedor compatible. ABIZ no exige un proveedor ni un esquema de nombres concreto. Elija lo que elija, el `identity_host` del registro debe coincidir con `h`, y `domains` debe incluir el dominio donde publica el registro TXT.
+Puede servir el registro usted mismo desde cualquier URL HTTPS que devuelva el documento JSON, por ejemplo `h=www.tallerlarueda.example`, o usar cualquier proveedor compatible. ABIZ no exige un proveedor ni un esquema de nombres concreto. Elija lo que elija, el `identity_host` del registro debe coincidir con `h`, y `domains` debe incluir el dominio donde publica el registro TXT.
 
 Antes de publicar, compruebe el registro y el valor DNS con el validador de referencia:
 
 ```sh
 python scripts/validate.py record.json \
   --domain tallerlarueda.example \
-  --dns-value 'v=abiz1;h=www.tallerlarueda.example/abiz.json;p=XQ81sC7mfXdyOOmLxNlboEwNqQwGzycec3H42rdewDM='
+  --dns-value 'v=abiz1;h=www.tallerlarueda.example;p=BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q='
 ```
 
 ## 3. Proveedores y MCP
 
 El Model Context Protocol (MCP) es un protocolo abierto que permite a los asistentes de IA usar herramientas y leer datos de servicios externos de forma estándar. Un registro ABIZ puede incluir un `mcp_server_url` opcional: la dirección HTTPS de un servidor MCP que responda preguntas sobre el negocio, como horarios, servicios o disponibilidad. ABIZ no exige un servidor MCP, y que figure en el registro no lo avala: el software compatible no debe llamarlo automáticamente solo porque aparezca en un registro, y debe aplicar sus propios controles de acceso.
 
-Por ejemplo, un proveedor puede alojar el registro en `www.tallerlarueda.example/abiz.json` e indicar su servidor MCP en `mcp_server_url`. Puede cambiar de proveedor, o pasar a alojarlo usted mismo, cambiando `h` y el `identity_host` del registro.
+Por ejemplo, un proveedor puede alojar el registro en `www.tallerlarueda.example` e indicar su servidor MCP en `mcp_server_url`. Puede cambiar de proveedor, o pasar a alojarlo usted mismo, cambiando `h` y el `identity_host` del registro.
 
 ## 4. Claves y firmas (ABIZ 1.1)
 
@@ -159,7 +159,7 @@ Por ejemplo, un proveedor puede alojar el registro en `www.tallerlarueda.example
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example/abiz.json;p=XQ81sC7mfXdyOOmLxNlboEwNqQwGzycec3H42rdewDM="
+  _abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example;p=BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

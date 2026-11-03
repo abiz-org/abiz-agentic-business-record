@@ -17,7 +17,7 @@
 | `record_version` | `abiz1` |
 | `business_name` | الاسم العام الذي يعرفه العملاء، مثل `مطاحن الجزيرة` |
 | `country` | `sd`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity_host` | `www.gezirahmills.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `www.gezirahmills.example`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["gezirahmills.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
@@ -47,7 +47,7 @@ sd-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;k=sd-12345;h=www.gezirahmills.example/abiz.json;p=QDvs3Qp/Pu88bQ3lv7SBHCPqycZZ+6Wo+rIe3cSiEi8="
+_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;k=sd-12345;h=www.gezirahmills.example;p=W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,10 +55,10 @@ _abiz.gezirahmills.example. 300 IN TXT "v=abiz1;k=sd-12345;h=www.gezirahmills.ex
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;h=www.gezirahmills.example/abiz.json;p=QDvs3Qp/Pu88bQ3lv7SBHCPqycZZ+6Wo+rIe3cSiEi8="
+_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;h=www.gezirahmills.example;p=W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY="
 ```
 
-سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.gezirahmills.example/abiz.json`:
+سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.gezirahmills.example/?format=json`:
 
 ```json
 {
@@ -67,19 +67,19 @@ _abiz.gezirahmills.example. 300 IN TXT "v=abiz1;h=www.gezirahmills.example/abiz.
   "country": "sd",
   "business_key": "sd-12345",
   "registration_number": "12345",
-  "identity_host": "www.gezirahmills.example/abiz.json",
+  "identity_host": "www.gezirahmills.example",
   "domains": [
     "gezirahmills.example"
   ],
-  "public_key": "QDvs3Qp/Pu88bQ3lv7SBHCPqycZZ+6Wo+rIe3cSiEi8=",
-  "signature": "hnl3Nz9DFcNuS5m91oGdfyulLgK6GlefHVAjaTHSlB86Pe/+u/pEtuRPkpQVp4Or8Pv+H3nj8TJJGtn+KG4nDw=="
+  "public_key": "W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY=",
+  "signature": "JdSttojcQznoTnnk/V6EFEj4h7NnJ0cch0lPFuEj/Rms8T72WYv/0JYJWYyWHbz9Qthg/NoB4lTaJRbpd+ZOAA=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain gezirahmills.example --dns-value 'v=abiz1;k=sd-12345;h=www.gezirahmills.example/abiz.json;p=QDvs3Qp/Pu88bQ3lv7SBHCPqycZZ+6Wo+rIe3cSiEi8='
+python scripts/validate.py record.json --domain gezirahmills.example --dns-value 'v=abiz1;k=sd-12345;h=www.gezirahmills.example;p=W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.

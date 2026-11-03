@@ -45,7 +45,7 @@ _abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.t
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
 
 ```dns
-_abiz.puestodelmercado.example. 300 IN TXT "v=abiz1;h=puestodelmercado.biz.to.co"
+_abiz.puestodelmercado.example. 300 IN TXT "v=abiz1;h=puestodelmercado.biz.to.co;p=4QbH80a8v3DjoIBo1W6pIoCHDpNW/7bGZ5ouw8lJHT8="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -147,7 +147,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 
 ### Dónde se aloja el registro
 
-Puede servir el registro usted mismo desde cualquier URL HTTPS que devuelva el documento JSON, por ejemplo `h=www.cafelasbrumas.example/abiz.json`, o usar cualquier proveedor compatible. ABIZ no exige un proveedor ni un esquema de nombres concreto. Elija lo que elija, el `identity_host` del registro debe coincidir con `h`, y `domains` debe incluir el dominio donde publica el registro TXT.
+Puede servir el registro usted mismo desde cualquier URL HTTPS que devuelva el documento JSON, por ejemplo `h=www.cafelasbrumas.example`, o usar cualquier proveedor compatible. ABIZ no exige un proveedor ni un esquema de nombres concreto. Elija lo que elija, el `identity_host` del registro debe coincidir con `h`, y `domains` debe incluir el dominio donde publica el registro TXT.
 
 Antes de publicar, compruebe el registro y el valor DNS con el validador de referencia:
 

@@ -48,7 +48,7 @@ _abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baecke
 - Tag-Namen werden kleingeschrieben und unterscheiden Groß- und Kleinschreibung. Kein Tag darf doppelt vorkommen.
 - Empfohlen wird eine TTL von 300 Sekunden.
 
-Der `p`-Wert oben ist ein Wegwerf-Beispielschlüssel. Übernehmen Sie ihn nie: Veröffentlichen Sie Ihren eigenen Schlüssel oder lassen Sie `p` weg.
+Der `p`-Wert oben ist ein Wegwerf-Beispielschlüssel. Übernehmen Sie ihn nie: Veröffentlichen Sie Ihren eigenen Schlüssel. Eine ABIZ-1.1-Assertion muss `p` enthalten.
 
 ### Unternehmenseintrag (JSON)
 
