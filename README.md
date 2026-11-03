@@ -24,6 +24,7 @@ Country-specific help for becoming an agentic business with ABIZ:
 - [Europe](docs/countries/europe/)
 - [North America](docs/countries/north-america/)
 - [Oceania](docs/countries/oceania/)
+- [South America](docs/countries/south-america/)
 
 ## How ABIZ works
 
