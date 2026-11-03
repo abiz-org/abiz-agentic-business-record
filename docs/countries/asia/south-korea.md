@@ -14,15 +14,15 @@
 
 | 항목 | 예시와 규칙 |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | 고객이 아는 공개 상호. 예: `주식회사 한강소프트` |
+| `record_version` | `abiz1` |
+| `business_name` | 고객이 아는 공개 상호. 예: `주식회사 한강소프트` |
 | `country` | `kr`, ISO 3166-1 alpha-2 코드, 소문자 |
-| `identity-host` | `hangangsoft.kr.to.co`, DNS의 `h`와 정확히 일치해야 합니다 |
+| `identity_host` | `hangangsoft.kr.to.co`, DNS의 `h`와 정확히 일치해야 합니다 |
 | `domains` | `["hangangsoft.example"]`, `_abiz`가 있는 도메인을 포함해야 합니다 |
 
 ### 선택 항목인 사업자 키 `k`
 
-`k`는 등기 여부와 관계없이 모든 사업자에게 선택 사항입니다. 게시한다면 레코드의 `business-key`와 같아야 하며, 이때 레코드에 `registration-number`도 있어야 합니다. 대한민국의 형식은 다음과 같습니다.
+`k`는 등기 여부와 관계없이 모든 사업자에게 선택 사항입니다. 게시한다면 레코드의 `business_key`와 같아야 하며, 이때 레코드에 `registration_number`도 있어야 합니다. 대한민국의 형식은 다음과 같습니다.
 
 ```text
 kr-<registration-number>
@@ -32,18 +32,18 @@ kr-<registration-number>
 
 **사용할 번호:** 법인등기부에 적힌 13자리 법인등록번호(예: `110111-1234567`)입니다. 사업자등록번호(10자리)는 개인사업자에게도 부여되는 세무 번호입니다. 개인사업자는 법인등록번호가 없으며, 사업자등록번호를 키로 써도 되는지는 SPEC에 정해져 있지 않으므로 확실하지 않으면 `k`를 생략하십시오.
 
-**정규화(SPEC 4.2.3절):** 등록 기관이 발급한 그대로의 번호에서 시작해 Unicode NFKC 정규화를 적용하고, 공백, `-`, `.`, `/`, 각종 대시를 없앤 뒤 영문자를 대문자로 바꿉니다. 앞자리 0과 영문 접두어는 유지합니다. 결과는 ASCII 영문자와 숫자로만 이루어져야 하며, 그렇지 않으면 사업자 키를 게시할 수 없으므로 `k`, `business-key`, `registration-number`를 생략합니다.
+**정규화(SPEC 4.2.3절):** 등록 기관이 발급한 그대로의 번호에서 시작해 Unicode NFKC 정규화를 적용하고, 공백, `-`, `.`, `/`, 각종 대시를 없앤 뒤 영문자를 대문자로 바꿉니다. 앞자리 0과 영문 접두어는 유지합니다. 결과는 ASCII 영문자와 숫자로만 이루어져야 하며, 그렇지 않으면 사업자 키를 게시할 수 없으므로 `k`, `business_key`, `registration_number`를 생략합니다.
 
-**예시(가상):** `110111-1234567`는 `1101111234567`이 되므로 `k=kr-1101111234567`입니다. 레코드에는 `"business-key": "kr-1101111234567"`, `"registration-number": "1101111234567"`로 씁니다. 키는 대소문자를 구분하지 않고 비교하며, 표준 형식은 국가 코드 소문자, 번호 대문자입니다.
+**예시(가상):** `110111-1234567`는 `1101111234567`이 되므로 `k=kr-1101111234567`입니다. 레코드에는 `"business_key": "kr-1101111234567"`, `"registration_number": "1101111234567"`로 씁니다. 키는 대소문자를 구분하지 않고 비교하며, 표준 형식은 국가 코드 소문자, 번호 대문자입니다.
 
-**개인사업자:** 가진 번호가 주민등록번호처럼 개인 번호뿐이라면 `k`를 게시하지 마십시오. `k`, `business-key`, `registration-number`를 생략해도 레코드는 유효합니다.
+**개인사업자:** 가진 번호가 주민등록번호처럼 개인 번호뿐이라면 `k`를 게시하지 마십시오. `k`, `business_key`, `registration_number`를 생략해도 레코드는 유효합니다.
 
 ### DNS TXT 레코드
 
 도메인의 `_abiz`에 TXT 레코드를 하나만, 공백 없는 간결한 형식으로, `v=abiz1`을 맨 앞에 두어 게시합니다.
 
 ```dns
-_abiz.hangangsoft.example. 300 IN TXT "v=abiz1;k=kr-1101111234567;h=hangangsoft.kr.to.co;p=RctbzI2AKImyXAHWM1lkkWZMharg7LwYuGealKH6lFc="
+_abiz.hangangsoft.example. 300 IN TXT "v=abiz1;k=kr-1101111234567;h=hangangsoft.kr.to.co;p=LqkTwDsUcRTOL6UWK7Ar37uYedhwVV/a1llJv4N3sLk="
 ```
 
 위의 `p` 값은 이 페이지를 위해 생성한 일회용 예시 키입니다. 절대 복사하지 마십시오. 자신의 키를 게시하거나 `p`를 생략하십시오. 이 페이지의 모든 이름, 번호, 도메인은 가상입니다.
@@ -51,38 +51,40 @@ _abiz.hangangsoft.example. 300 IN TXT "v=abiz1;k=kr-1101111234567;h=hangangsoft.
 선택 태그 `k`와 `p`를 뺀 다음 형식도 유효합니다.
 
 ```dns
-_abiz.hangangsoft.example. 300 IN TXT "v=abiz1;h=hangangsoft.kr.to.co"
+_abiz.hangangsoft.example. 300 IN TXT "v=abiz1;h=hangangsoft.kr.to.co;p=LqkTwDsUcRTOL6UWK7Ar37uYedhwVV/a1llJv4N3sLk="
 ```
 
 `https://hangangsoft.kr.to.co`에서 `application/json`으로 제공되는 사업자 레코드:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "주식회사 한강소프트",
+  "record_version": "abiz1",
+  "business_name": "주식회사 한강소프트",
   "country": "kr",
-  "business-key": "kr-1101111234567",
-  "registration-number": "1101111234567",
-  "identity-host": "hangangsoft.kr.to.co",
+  "business_key": "kr-1101111234567",
+  "registration_number": "1101111234567",
+  "identity_host": "hangangsoft.kr.to.co",
   "domains": [
     "hangangsoft.example"
-  ]
+  ],
+  "public_key": "LqkTwDsUcRTOL6UWK7Ar37uYedhwVV/a1llJv4N3sLk=",
+  "signature": "sG2cFcV3rn9n9KzrJRbKvh75eelbzQbIjhEXkwIUB8192jba+gnUyvR9QVsxl091vtcNA9ANXgR7mmUJOku3DQ=="
 }
 ```
 
 게시 전에 레코드를 확인하려면 이 저장소의 사본에서 참조 검증기를 실행하십시오.
 
 ```sh
-python scripts/validate.py record.json --domain hangangsoft.example --dns-value 'v=abiz1;k=kr-1101111234567;h=hangangsoft.kr.to.co;p=RctbzI2AKImyXAHWM1lkkWZMharg7LwYuGealKH6lFc='
+python scripts/validate.py record.json --domain hangangsoft.example --dns-value 'v=abiz1;k=kr-1101111234567;h=hangangsoft.kr.to.co;p=LqkTwDsUcRTOL6UWK7Ar37uYedhwVV/a1llJv4N3sLk='
 ```
 
 JSON 레코드는 아무 HTTPS 서버에서 직접 호스팅해도 되고, 호환되는 어떤 제공업체를 이용해도 됩니다. ABIZ는 특정 제공업체를 요구하지 않습니다.
 
 ## 3. 제공업체와 MCP 이용
 
-모델 컨텍스트 프로토콜(Model Context Protocol, MCP)은 AI 어시스턴트가 외부 서버의 도구를 호출하고 데이터를 읽을 수 있게 하는 표준 개방형 프로토콜입니다. 사업자 레코드에는 선택 항목 `mcp-server-url`(예약이나 상품 정보 등을 위한 사업자 MCP 서버의 HTTPS 주소)을 넣을 수 있습니다. ABIZ는 그 서버를 보증하지 않으며, 도구는 자체 접근 통제를 적용해야 합니다(SPEC 4.2.6절).
+모델 컨텍스트 프로토콜(Model Context Protocol, MCP)은 AI 어시스턴트가 외부 서버의 도구를 호출하고 데이터를 읽을 수 있게 하는 표준 개방형 프로토콜입니다. 사업자 레코드에는 선택 항목 `mcp_server_url`(예약이나 상품 정보 등을 위한 사업자 MCP 서버의 HTTPS 주소)을 넣을 수 있습니다. ABIZ는 그 서버를 보증하지 않으며, 도구는 자체 접근 통제를 적용해야 합니다(SPEC 4.2.6절).
 
-제공업체가 레코드를 호스팅하고 DNS 포인터를 대신 게시할 수도 있습니다. 예를 들어 to.co에 레코드를 둔 대한민국의 등기 법인은 호스트 `hangangsoft.kr.to.co`를 쓰고, DNS 값은 `v=abiz1;k=kr-1101111234567;h=hangangsoft.kr.to.co`가 됩니다. 미등기 사업자는 `hangangsoft-seoul.biz.to.co`처럼 지역명을 넣은 호스트를 쓸 수 있습니다. 다른 호환 제공업체나 자체 서버도 같은 방식으로 작동합니다.
+제공업체가 레코드를 호스팅하고 DNS 포인터를 대신 게시할 수도 있습니다. 예를 들어 to.co에 레코드를 둔 대한민국의 등기 법인은 호스트 `hangangsoft.kr.to.co`를 쓰고, DNS 값은 `v=abiz1;k=kr-1101111234567;h=hangangsoft.kr.to.co;p=LqkTwDsUcRTOL6UWK7Ar37uYedhwVV/a1llJv4N3sLk=`가 됩니다. 미등기 사업자는 `hangangsoft-seoul.biz.to.co`처럼 지역명을 넣은 호스트를 쓸 수 있습니다. 다른 호환 제공업체나 자체 서버도 같은 방식으로 작동합니다.
 
 ## 4. 키와 서명(ABIZ 1.1)
 

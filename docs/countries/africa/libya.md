@@ -14,15 +14,15 @@
 
 | الحقل | مثال وقاعدة |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | الاسم العام الذي يعرفه العملاء، مثل `ورشة الواحة` |
+| `record_version` | `abiz1` |
+| `business_name` | الاسم العام الذي يعرفه العملاء، مثل `ورشة الواحة` |
 | `country` | `ly`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity-host` | `www.alwahaworkshop.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `www.alwahaworkshop.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["alwahaworkshop.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
 
-المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business-key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration-number`. الصيغة في ليبيا هي:
+المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business_key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration_number`. الصيغة في ليبيا هي:
 
 ```text
 ly-<registration-number>
@@ -32,22 +32,22 @@ ly-<registration-number>
 
 **أي رقم:** رقم القيد في السجل التجاري. لم نتمكن من التأكد من وجود رقم موحّد وفريد على المستوى الوطني؛ فإذا لم يكن رقمك كذلك فلا تنشر `k`، لأن القسم 4.2.2 من المواصفة لا يسمح برمز تقسيم إداري لليبيا.
 
-**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business-key` و`registration-number`.
+**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business_key` و`registration_number`.
 
-**مثال تطبيقي (وهمي):** يصبح `12345` بعد التطبيع `12345`، فيكون `k=ly-12345`. وفي السجل: `"business-key": "ly-12345"` و`"registration-number": "12345"`. تُقارن المفاتيح دون تمييز بين الأحرف الكبيرة والصغيرة؛ والصيغة القياسية: رمز الدولة بأحرف صغيرة والرقم بأحرف كبيرة.
+**مثال تطبيقي (وهمي):** يصبح `12345` بعد التطبيع `12345`، فيكون `k=ly-12345`. وفي السجل: `"business_key": "ly-12345"` و`"registration_number": "12345"`. تُقارن المفاتيح دون تمييز بين الأحرف الكبيرة والصغيرة؛ والصيغة القياسية: رمز الدولة بأحرف صغيرة والرقم بأحرف كبيرة.
 
 **يُرجى التحقق:** لم نتمكن من تأكيد الصيغة الدقيقة لهذا الرقم من مصدر رسمي، لذا فالمثال توضيحي فقط. استخدم الرقم كما يظهر في وثيقة التسجيل الرسمية الخاصة بك. وإذا لم يكن واضحًا أي رقم يميّز منشأتك على المستوى الوطني، فلا تنشر `k` حتى تتأكد.
 
 **الأرقام غير اللاتينية:** لا يحوّل NFKC الأرقام المشرقية مثل ١٢٣ إلى 0–9. فإذا كان رقمك مكتوبًا بهذه الأرقام فقط، فلن تكون النتيجة ASCII ولا يمكن نشر مفتاح. لا تعرّف ABIZ 1.1 أي تحويل للأرقام، لذا استخدم الرقم فقط إذا كان السجل يصدره أيضًا بالأرقام 0–9.
 
-**أصحاب المنشآت الفردية:** إذا كان الرقم الوحيد لديك رقمًا شخصيًا، مثل رقم الهوية الوطنية أو رقم ضريبي شخصي، فلا تنشر `k`. احذف `k` و`business-key` و`registration-number`؛ ويبقى السجل صالحًا.
+**أصحاب المنشآت الفردية:** إذا كان الرقم الوحيد لديك رقمًا شخصيًا، مثل رقم الهوية الوطنية أو رقم ضريبي شخصي، فلا تنشر `k`. احذف `k` و`business_key` و`registration_number`؛ ويبقى السجل صالحًا.
 
 ### سجل DNS من نوع TXT
 
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;k=ly-12345;h=www.alwahaworkshop.example/abiz.json;p=XEYRH2sF0fR66DIP1wcn4lrnd//iNIRAWqKKOVUpINA="
+_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;k=ly-12345;h=www.alwahaworkshop.example/abiz.json;p=cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص أو احذف `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,36 +55,38 @@ _abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;k=ly-12345;h=www.alwahaworksho
 ومن دون الوسمين الاختياريين `k` و`p`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;h=www.alwahaworkshop.example/abiz.json"
+_abiz.alwahaworkshop.example. 300 IN TXT "v=abiz1;h=www.alwahaworkshop.example/abiz.json;p=cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.alwahaworkshop.example/abiz.json`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "ورشة الواحة",
+  "record_version": "abiz1",
+  "business_name": "ورشة الواحة",
   "country": "ly",
-  "business-key": "ly-12345",
-  "registration-number": "12345",
-  "identity-host": "www.alwahaworkshop.example/abiz.json",
+  "business_key": "ly-12345",
+  "registration_number": "12345",
+  "identity_host": "www.alwahaworkshop.example/abiz.json",
   "domains": [
     "alwahaworkshop.example"
-  ]
+  ],
+  "public_key": "cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64=",
+  "signature": "DrJbHGCcWYIehjjtjeznYOOl2CozVRw2crKuFIv9QqMZJSLvQ8PbKmEvuNvlBSNRT+4HCIBBgqxxAJlyBR5mAg=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain alwahaworkshop.example --dns-value 'v=abiz1;k=ly-12345;h=www.alwahaworkshop.example/abiz.json;p=XEYRH2sF0fR66DIP1wcn4lrnd//iNIRAWqKKOVUpINA='
+python scripts/validate.py record.json --domain alwahaworkshop.example --dns-value 'v=abiz1;k=ly-12345;h=www.alwahaworkshop.example/abiz.json;p=cy3YvoKHiXThukvxRQxL/kLnUQiocsD6xEZaewMHP64='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
 
 ## 3. الاستعانة بمزوّد وببروتوكول MCP
 
-بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp-server-url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
+بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
 يمكن أن يستضيف السجلَّ خادمُك الخاص أو أي مزوّد متوافق. لا يقدّم هذا الدليل أمثلة لمزوّدين في ليبيا؛ تحقّق من أن المزوّد الذي تختاره يستطيع قانونًا خدمة المنشآت هناك.
 

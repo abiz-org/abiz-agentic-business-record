@@ -16,15 +16,15 @@ Der Unternehmenseintrag ist ein JSON-Dokument, das dem [normativen Schema](../..
 
 | Feld | Beispiel | Hinweise |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Immer dieser Wert |
-| `business-name` | `Rheintal Treuhand AG` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
+| `record_version` | `abiz1` | Immer dieser Wert |
+| `business_name` | `Rheintal Treuhand AG` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
 | `country` | `li` | Ländercode nach ISO 3166-1 Alpha-2; kanonisch in Kleinbuchstaben |
-| `identity-host` | `rheintaltreuhand.li.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
+| `identity_host` | `rheintaltreuhand.li.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
 | `domains` | `["rheintaltreuhand.example"]` | Die Domains, die dieser Eintrag beansprucht, einschließlich der Domain mit `_abiz` |
 
 ### Optionaler Unternehmensschlüssel `k`
 
-`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business-key` und `registration-number` enthalten, und `k` muss `business-key` entsprechen.
+`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business_key` und `registration_number` enthalten, und `k` muss `business_key` entsprechen.
 
 In Liechtenstein lautet der Schlüssel `li-`, gefolgt von der Registernummer. Eine Untergliederung wie Bundesland oder Kanton kommt im Schlüssel nicht vor; ein Schlüssel mit Mittelteil wie `li-xx-…` ist ungültig.
 
@@ -32,7 +32,7 @@ In Liechtenstein lautet der Schlüssel `li-`, gefolgt von der Registernummer. Ei
 - **Zu verwendende Nummer:** die Registernummer im Format `FL-0002.123.456-7`, mit dem Präfix `FL`
 - **Schreibweise:** Ausgangspunkt ist die Nummer, wie das Register sie vergibt. Wenden Sie die Unicode-Normalisierung NFKC an, entfernen Sie Leerzeichen, `-`, `.`, `/` und andere Bindestriche und schreiben Sie Buchstaben groß. Führende Nullen und Buchstabenpräfixe bleiben erhalten. Das Ergebnis darf nur ASCII-Buchstaben und -Ziffern enthalten.
 
-Beispiel (erfundene Nummer): Aus `FL-0002.123.456-7` wird `FL00021234567`. Der Eintrag enthält dann `"registration-number": "FL00021234567"` und `"business-key": "li-FL00021234567"`, im DNS steht `k=li-FL00021234567`. Das Präfix `FL` gehört zur Nummer und bleibt erhalten.
+Beispiel (erfundene Nummer): Aus `FL-0002.123.456-7` wird `FL00021234567`. Der Eintrag enthält dann `"registration_number": "FL00021234567"` und `"business_key": "li-FL00021234567"`, im DNS steht `k=li-FL00021234567`. Das Präfix `FL` gehört zur Nummer und bleibt erhalten.
 
 Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Veröffentlichen Sie dennoch die kanonische Form: Ländercode klein, Nummer groß.
 
@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.rheintaltreuhand.example. 300 IN TXT "v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=aJFpZtSOqtz03vph8byS4pnoUNsTX3wLVacrjop7uQI="
+_abiz.rheintaltreuhand.example. 300 IN TXT "v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=eHum0cwX/MjyN58du34hBQrub3S/ebJjJ7yQbD/8gVs="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -56,15 +56,16 @@ Der Eintrag, der unter `https://rheintaltreuhand.li.to.co` als `application/json
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Rheintal Treuhand AG",
+  "record_version": "abiz1",
+  "business_name": "Rheintal Treuhand AG",
   "country": "li",
-  "business-key": "li-FL00021234567",
-  "registration-number": "FL00021234567",
-  "identity-host": "rheintaltreuhand.li.to.co",
+  "business_key": "li-FL00021234567",
+  "registration_number": "FL00021234567",
+  "identity_host": "rheintaltreuhand.li.to.co",
   "domains": [
     "rheintaltreuhand.example"
   ],
+  "public_key": "eHum0cwX/MjyN58du34hBQrub3S/ebJjJ7yQbD/8gVs=",
   "description": "Treuhandbüro in Vaduz.",
   "website": "https://rheintaltreuhand.example",
   "locations": [
@@ -74,14 +75,15 @@ Der Eintrag, der unter `https://rheintaltreuhand.li.to.co` als `application/json
       "country": "li",
       "public": true
     }
-  ]
+  ],
+  "signature": "OUm5Ig1EOAAFkMSFNQjUSM4LbG38LcE0rXn9nb78IRfATbBcf6sEGtkCJw/EvcsLS3ayzUfTKKaxVpGUCoBRAQ=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain rheintaltreuhand.example --dns-value 'v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=aJFpZtSOqtz03vph8byS4pnoUNsTX3wLVacrjop7uQI='
+python scripts/validate.py record.json --domain rheintaltreuhand.example --dns-value 'v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=eHum0cwX/MjyN58du34hBQrub3S/ebJjJ7yQbD/8gVs='
 ```
 
 ### Selbst hosten oder über einen Anbieter
@@ -90,7 +92,7 @@ Sie können den Eintrag selbst auf einem beliebigen HTTPS-Host bereitstellen, de
 
 ## 3. Anbieter und MCP
 
-MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp-server-url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
+MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp_server_url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
 
 Ein Beispiel: Ein Anbieter stellt Ihren Eintrag unter `rheintaltreuhand.li.to.co` bereit und betreibt einen MCP-Server. Ein damit verbundener Assistent kann dann nach den Öffnungszeiten oder Leistungen von Rheintal Treuhand AG fragen und erhält die Angaben aus Ihrem Eintrag, statt sie zu erraten.
 

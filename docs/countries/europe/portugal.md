@@ -16,15 +16,15 @@ O registo da empresa é um documento JSON que tem de cumprir o [esquema normativ
 
 | Campo | Exemplo | Notas |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Sempre este valor |
-| `business-name` | `Pastelaria Ribeira Lda` | O nome público, normalmente como consta do registo comercial, com a forma jurídica se a usar |
+| `record_version` | `abiz1` | Sempre este valor |
+| `business_name` | `Pastelaria Ribeira Lda` | O nome público, normalmente como consta do registo comercial, com a forma jurídica se a usar |
 | `country` | `pt` | Código de país ISO 3166-1 alfa-2; a forma canónica é em minúsculas |
-| `identity-host` | `pastelariaribeira.pt.to.co` | Exatamente o valor DNS `h`: um nome de anfitrião com caminho opcional, sem `https://` |
+| `identity_host` | `pastelariaribeira.pt.to.co` | Exatamente o valor DNS `h`: um nome de anfitrião com caminho opcional, sem `https://` |
 | `domains` | `["pastelariaribeira.example"]` | Os domínios reivindicados pelo registo, incluindo o que tem `_abiz` |
 
 ### Chave de empresa `k` (opcional)
 
-`k` é opcional para qualquer empresa, registada ou não. Se o publicar, o registo tem de incluir também `business-key` e `registration-number`, e `k` tem de ser igual a `business-key`.
+`k` é opcional para qualquer empresa, registada ou não. Se o publicar, o registo tem de incluir também `business_key` e `registration_number`, e `k` tem de ser igual a `business_key`.
 
 Em Portugal a chave é `pt-` seguido do número, sem subdivisão territorial: uma chave com uma parte intermédia, como `pt-xx-…`, é inválida.
 
@@ -32,7 +32,7 @@ Em Portugal a chave é `pt-` seguido do número, sem subdivisão territorial: um
 - **Número a usar:** o NIPC (número de identificação de pessoa coletiva), de 9 algarismos, que é também o número de matrícula no registo comercial
 - **Como o escrever:** parta do número tal como é atribuído, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e outros hífenes e escreva as letras em maiúsculas. Os zeros à esquerda e os prefixos em letras mantêm-se. O resultado só pode conter letras e algarismos ASCII.
 
-Exemplo (número inventado): `512 345 678` passa a `512345678`. O registo contém então `"registration-number": "512345678"` e `"business-key": "pt-512345678"`, e o DNS indica `k=pt-512345678`. Não use o prefixo `PT` do número de IVA.
+Exemplo (número inventado): `512 345 678` passa a `512345678`. O registo contém então `"registration_number": "512345678"` e `"business_key": "pt-512345678"`, e o DNS indica `k=pt-512345678`. Não use o prefixo `PT` do número de IVA.
 
 As chaves comparam-se sem distinguir maiúsculas de minúsculas, mas publique a forma canónica: código do país em minúsculas e número em maiúsculas.
 
@@ -41,7 +41,7 @@ As chaves comparam-se sem distinguir maiúsculas de minúsculas, mas publique a 
 Publique um único registo TXT ABIZ em `_abiz` no seu domínio, na forma compacta e sem espaços:
 
 ```dns
-_abiz.pastelariaribeira.example. 300 IN TXT "v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=2ykgIzyZRrt3qiw2g/1+4+2XuleRVhuWo0lhr/v7fjM="
+_abiz.pastelariaribeira.example. 300 IN TXT "v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=hOSUEJCNcRNjwQAF0FCN1gXzwve2coITUAABhYt/zRs="
 ```
 
 - `v=abiz1` tem de vir primeiro. `h` é obrigatório; `k` e `p` são opcionais.
@@ -56,15 +56,16 @@ O registo disponibilizado em `https://pastelariaribeira.pt.to.co` como `applicat
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Pastelaria Ribeira Lda",
+  "record_version": "abiz1",
+  "business_name": "Pastelaria Ribeira Lda",
   "country": "pt",
-  "business-key": "pt-512345678",
-  "registration-number": "512345678",
-  "identity-host": "pastelariaribeira.pt.to.co",
+  "business_key": "pt-512345678",
+  "registration_number": "512345678",
+  "identity_host": "pastelariaribeira.pt.to.co",
   "domains": [
     "pastelariaribeira.example"
   ],
+  "public_key": "hOSUEJCNcRNjwQAF0FCN1gXzwve2coITUAABhYt/zRs=",
   "description": "Pastelaria no Porto.",
   "website": "https://pastelariaribeira.example",
   "locations": [
@@ -74,14 +75,15 @@ O registo disponibilizado em `https://pastelariaribeira.pt.to.co` como `applicat
       "country": "pt",
       "public": true
     }
-  ]
+  ],
+  "signature": "9BWX86ltZD8zMI9pMtYeymfR5X6VJkdiYVjlKI+AwNNuYzhKqOa3F9BZdCI01kkagm4HHeSj/Qhv45uGGBGEAw=="
 }
 ```
 
 Com o validador de referência pode verificar localmente o registo e o valor DNS:
 
 ```sh
-python scripts/validate.py record.json --domain pastelariaribeira.example --dns-value 'v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=2ykgIzyZRrt3qiw2g/1+4+2XuleRVhuWo0lhr/v7fjM='
+python scripts/validate.py record.json --domain pastelariaribeira.example --dns-value 'v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=hOSUEJCNcRNjwQAF0FCN1gXzwve2coITUAABhYt/zRs='
 ```
 
 ### Alojamento próprio ou através de um fornecedor
@@ -90,7 +92,7 @@ Pode disponibilizar o registo em qualquer anfitrião HTTPS que controle ou usar 
 
 ## 3. Fornecedores e MCP
 
-O MCP (Model Context Protocol) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos. Um fornecedor pode gerir um servidor MCP através do qual um assistente obtém diretamente o seu registo público. Pode indicá-lo no campo opcional `mcp-server-url`. O ABIZ não exige um servidor MCP, e uma ferramenta não deve chamá-lo automaticamente só porque consta de um registo.
+O MCP (Model Context Protocol) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos. Um fornecedor pode gerir um servidor MCP através do qual um assistente obtém diretamente o seu registo público. Pode indicá-lo no campo opcional `mcp_server_url`. O ABIZ não exige um servidor MCP, e uma ferramenta não deve chamá-lo automaticamente só porque consta de um registo.
 
 Por exemplo, um fornecedor pode disponibilizar o seu registo em `pastelariaribeira.pt.to.co` e gerir um servidor MCP. Um assistente ligado a esse servidor pode então perguntar pelo horário ou pelos serviços da Pastelaria Ribeira Lda e receber os dados do seu registo, em vez de os adivinhar. A to.co, um desses fornecedores, explica o ABIZ numa [página em português](https://to.co/pt-pt/abiz).
 

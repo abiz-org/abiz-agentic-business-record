@@ -14,15 +14,15 @@ Mọi hồ sơ doanh nghiệp đều cần năm trường sau (SPEC mục 4.1):
 
 | Trường | Ví dụ và quy tắc |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | tên công khai mà khách hàng biết, ví dụ `Công ty TNHH Gốm Bát Tràng` |
+| `record_version` | `abiz1` |
+| `business_name` | tên công khai mà khách hàng biết, ví dụ `Công ty TNHH Gốm Bát Tràng` |
 | `country` | `vn`, mã ISO 3166-1 alpha-2, viết thường |
-| `identity-host` | `gombattrang.vn.to.co`, phải trùng khớp hoàn toàn với `h` trong DNS |
+| `identity_host` | `gombattrang.vn.to.co`, phải trùng khớp hoàn toàn với `h` trong DNS |
 | `domains` | `["gombattrang.example"]`, phải gồm tên miền chứa `_abiz` |
 
 ### Khóa doanh nghiệp tùy chọn `k`
 
-`k` là tùy chọn với mọi doanh nghiệp, dù đã đăng ký hay chưa. Nếu công bố, giá trị phải bằng `business-key` trong hồ sơ, và khi đó hồ sơ cũng phải có `registration-number`. Với Việt Nam, dạng thức là:
+`k` là tùy chọn với mọi doanh nghiệp, dù đã đăng ký hay chưa. Nếu công bố, giá trị phải bằng `business_key` trong hồ sơ, và khi đó hồ sơ cũng phải có `registration_number`. Với Việt Nam, dạng thức là:
 
 ```text
 vn-<registration-number>
@@ -32,18 +32,18 @@ Việt Nam không dùng mã đơn vị hành chính: không thêm mã tỉnh hay
 
 **Dùng số nào:** mã số doanh nghiệp gồm 10 chữ số, đồng thời là mã số thuế của doanh nghiệp.
 
-**Chuẩn hóa (SPEC mục 4.2.3):** bắt đầu từ số đúng như cơ quan đăng ký cấp, áp dụng chuẩn hóa Unicode NFKC, bỏ khoảng trắng, `-`, `.`, `/` và các dấu gạch, rồi chuyển chữ cái sang chữ hoa. Giữ nguyên số 0 ở đầu và tiền tố chữ. Kết quả chỉ được chứa chữ cái và chữ số ASCII; nếu không, không thể công bố khóa doanh nghiệp và phải bỏ `k`, `business-key` và `registration-number`.
+**Chuẩn hóa (SPEC mục 4.2.3):** bắt đầu từ số đúng như cơ quan đăng ký cấp, áp dụng chuẩn hóa Unicode NFKC, bỏ khoảng trắng, `-`, `.`, `/` và các dấu gạch, rồi chuyển chữ cái sang chữ hoa. Giữ nguyên số 0 ở đầu và tiền tố chữ. Kết quả chỉ được chứa chữ cái và chữ số ASCII; nếu không, không thể công bố khóa doanh nghiệp và phải bỏ `k`, `business_key` và `registration_number`.
 
-**Ví dụ (giả định):** `0123456789` trở thành `0123456789`, vậy `k=vn-0123456789`. Trong hồ sơ: `"business-key": "vn-0123456789"` và `"registration-number": "0123456789"`. Khóa được so sánh không phân biệt chữ hoa, chữ thường; dạng chuẩn là mã quốc gia viết thường và số viết hoa.
+**Ví dụ (giả định):** `0123456789` trở thành `0123456789`, vậy `k=vn-0123456789`. Trong hồ sơ: `"business_key": "vn-0123456789"` và `"registration_number": "0123456789"`. Khóa được so sánh không phân biệt chữ hoa, chữ thường; dạng chuẩn là mã quốc gia viết thường và số viết hoa.
 
-**Hộ kinh doanh và cá nhân kinh doanh:** nếu số duy nhất bạn có là số cá nhân, như số định danh cá nhân hoặc mã số thuế cá nhân, đừng công bố `k`. Bỏ `k`, `business-key` và `registration-number`; hồ sơ vẫn hợp lệ.
+**Hộ kinh doanh và cá nhân kinh doanh:** nếu số duy nhất bạn có là số cá nhân, như số định danh cá nhân hoặc mã số thuế cá nhân, đừng công bố `k`. Bỏ `k`, `business_key` và `registration_number`; hồ sơ vẫn hợp lệ.
 
 ### Bản ghi DNS TXT
 
 Công bố đúng một bản ghi TXT tên `_abiz` dưới tên miền của bạn, ở dạng gọn không có khoảng trắng, với `v=abiz1` đứng đầu:
 
 ```dns
-_abiz.gombattrang.example. 300 IN TXT "v=abiz1;k=vn-0123456789;h=gombattrang.vn.to.co;p=9lsLy/ZU3inOlAG4lKvUmbJwJf7fcaUBAV77w5eTAvY="
+_abiz.gombattrang.example. 300 IN TXT "v=abiz1;k=vn-0123456789;h=gombattrang.vn.to.co;p=/bkf1xnx/kbmxmbhuN991xSOnaRAR0GxeqvQ1s1voQc="
 ```
 
 Giá trị `p` ở trên là khóa ví dụ dùng một lần được tạo cho trang này. Tuyệt đối không sao chép: hãy công bố khóa của riêng bạn hoặc bỏ `p`. Mọi tên, số và tên miền trên trang này đều là giả định.
@@ -51,38 +51,40 @@ Giá trị `p` ở trên là khóa ví dụ dùng một lần được tạo cho
 Không có các thẻ tùy chọn `k` và `p`, bản ghi này cũng hợp lệ:
 
 ```dns
-_abiz.gombattrang.example. 300 IN TXT "v=abiz1;h=gombattrang.vn.to.co"
+_abiz.gombattrang.example. 300 IN TXT "v=abiz1;h=gombattrang.vn.to.co;p=/bkf1xnx/kbmxmbhuN991xSOnaRAR0GxeqvQ1s1voQc="
 ```
 
 Hồ sơ doanh nghiệp được cung cấp dưới dạng `application/json` tại `https://gombattrang.vn.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Công ty TNHH Gốm Bát Tràng",
+  "record_version": "abiz1",
+  "business_name": "Công ty TNHH Gốm Bát Tràng",
   "country": "vn",
-  "business-key": "vn-0123456789",
-  "registration-number": "0123456789",
-  "identity-host": "gombattrang.vn.to.co",
+  "business_key": "vn-0123456789",
+  "registration_number": "0123456789",
+  "identity_host": "gombattrang.vn.to.co",
   "domains": [
     "gombattrang.example"
-  ]
+  ],
+  "public_key": "/bkf1xnx/kbmxmbhuN991xSOnaRAR0GxeqvQ1s1voQc=",
+  "signature": "+1DxppbdcZqOE5HquDdiTyK76EItuXjh2Jxab2vaIAu19udt0zV/iPdCdKvk8gBMMk3Rdyash6MeBUhsCPzWCg=="
 }
 ```
 
 Để kiểm tra hồ sơ trước khi công bố, hãy chạy trình xác thực tham chiếu từ một bản sao của kho mã này:
 
 ```sh
-python scripts/validate.py record.json --domain gombattrang.example --dns-value 'v=abiz1;k=vn-0123456789;h=gombattrang.vn.to.co;p=9lsLy/ZU3inOlAG4lKvUmbJwJf7fcaUBAV77w5eTAvY='
+python scripts/validate.py record.json --domain gombattrang.example --dns-value 'v=abiz1;k=vn-0123456789;h=gombattrang.vn.to.co;p=/bkf1xnx/kbmxmbhuN991xSOnaRAR0GxeqvQ1s1voQc='
 ```
 
 Bạn có thể tự lưu trữ hồ sơ JSON trên bất kỳ máy chủ HTTPS nào, hoặc dùng bất kỳ nhà cung cấp tương thích nào. ABIZ không bắt buộc một nhà cung cấp cụ thể.
 
 ## 3. Dùng nhà cung cấp và MCP
 
-Model Context Protocol (MCP) là giao thức mở cho phép trợ lý AI gọi công cụ và đọc dữ liệu từ máy chủ bên ngoài theo cách chuẩn hóa. Hồ sơ doanh nghiệp có thể có trường tùy chọn `mcp-server-url`, là địa chỉ HTTPS của máy chủ MCP của doanh nghiệp, ví dụ để đặt chỗ hoặc xem thông tin sản phẩm. ABIZ không bảo đảm cho máy chủ đó; công cụ phải tự áp dụng kiểm soát truy cập (SPEC mục 4.2.6).
+Model Context Protocol (MCP) là giao thức mở cho phép trợ lý AI gọi công cụ và đọc dữ liệu từ máy chủ bên ngoài theo cách chuẩn hóa. Hồ sơ doanh nghiệp có thể có trường tùy chọn `mcp_server_url`, là địa chỉ HTTPS của máy chủ MCP của doanh nghiệp, ví dụ để đặt chỗ hoặc xem thông tin sản phẩm. ABIZ không bảo đảm cho máy chủ đó; công cụ phải tự áp dụng kiểm soát truy cập (SPEC mục 4.2.6).
 
-Nhà cung cấp có thể lưu trữ hồ sơ và công bố con trỏ DNS thay bạn. Ví dụ, một công ty đã đăng ký tại Việt Nam có hồ sơ lưu trên to.co có thể dùng máy chủ `gombattrang.vn.to.co`, cho giá trị DNS `v=abiz1;k=vn-0123456789;h=gombattrang.vn.to.co`. Hộ kinh doanh chưa đăng ký có thể dùng máy chủ theo tên thành phố như `gombattrang-hanoi.biz.to.co`. Mọi nhà cung cấp tương thích, hoặc máy chủ của riêng bạn, đều hoạt động theo cùng một cách.
+Nhà cung cấp có thể lưu trữ hồ sơ và công bố con trỏ DNS thay bạn. Ví dụ, một công ty đã đăng ký tại Việt Nam có hồ sơ lưu trên to.co có thể dùng máy chủ `gombattrang.vn.to.co`, cho giá trị DNS `v=abiz1;k=vn-0123456789;h=gombattrang.vn.to.co;p=/bkf1xnx/kbmxmbhuN991xSOnaRAR0GxeqvQ1s1voQc=`. Hộ kinh doanh chưa đăng ký có thể dùng máy chủ theo tên thành phố như `gombattrang-hanoi.biz.to.co`. Mọi nhà cung cấp tương thích, hoặc máy chủ của riêng bạn, đều hoạt động theo cùng một cách.
 
 ## 4. Khóa và chữ ký (ABIZ 1.1)
 

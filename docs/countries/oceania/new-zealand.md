@@ -16,30 +16,30 @@ In New Zealand, a company can add its company number as a business key; a sole t
 
 | Field | What to put | Example |
 | --- | --- | --- |
-| `record-version` | Always `abiz1` | `abiz1` |
-| `business-name` | Your public business name | `Kauri Coast Bakery Limited` |
+| `record_version` | Always `abiz1` | `abiz1` |
+| `business_name` | Your public business name | `Kauri Coast Bakery Limited` |
 | `country` | The ISO 3166-1 alpha-2 country code, lower case | `nz` |
-| `identity-host` | The host, and optional path, where the record is served; it must match DNS `h` | `kauricoastbakery.nz.to.co` |
+| `identity_host` | The host, and optional path, where the record is served; it must match DNS `h` | `kauricoastbakery.nz.to.co` |
 | `domains` | The domains you control that this record claims | `["kauricoastbakery.example"]` |
 
 ### The optional business key `k`
 
-`k` is optional for every business. If you publish it, it must follow section 4.2 of the specification and it must equal the record's `business-key`. Case does not matter when keys are compared, but the canonical form has a lower-case country code and an upper-case registration number.
+`k` is optional for every business. If you publish it, it must follow section 4.2 of the specification and it must equal the record's `business_key`. Case does not matter when keys are compared, but the canonical form has a lower-case country code and an upper-case registration number.
 
 Format: `nz-` followed by the company number from the Companies Register. Section 4.2.2 of the specification does not list New Zealand, so the key has no subdivision code. The specification asks for the number from the national company register, which is the company number. It does not name the New Zealand Business Number (NZBN), so this guide does not use the NZBN in `k`. A sole trader or partnership with only an NZBN should leave `k` out.
 
-**Normalising the number (section 4.2.3).** Start from the number exactly as the register issues it. Apply Unicode NFKC normalisation; remove spaces, hyphens, dots and slashes; convert letters to upper case; keep leading zeros and letter prefixes. If anything else is left, such as brackets, `&` or an accented letter, the number cannot be expressed and you cannot publish a business key: leave out `k`, `business-key` and `registration-number`.
+**Normalising the number (section 4.2.3).** Start from the number exactly as the register issues it. Apply Unicode NFKC normalisation; remove spaces, hyphens, dots and slashes; convert letters to upper case; keep leading zeros and letter prefixes. If anything else is left, such as brackets, `&` or an accented letter, the number cannot be expressed and you cannot publish a business key: leave out `k`, `business_key` and `registration_number`.
 
 **Example (fictional):** company number `1234567` gives the key `nz-1234567`.
 
-If you include `business-key` and `registration-number` in the record, include both, and make the number part of the key equal `registration-number`. Including them does not oblige you to publish `k` in DNS. If you do publish `k`, the record must contain the matching `business-key`.
+If you include `business_key` and `registration_number` in the record, include both, and make the number part of the key equal `registration_number`. Including them does not oblige you to publish `k` in DNS. If you do publish `k`, the record must contain the matching `business_key`.
 
 ### The DNS TXT record
 
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co"
+_abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -54,15 +54,16 @@ This example is fictional. It passes the reference validator.
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Kauri Coast Bakery Limited",
+  "record_version": "abiz1",
+  "business_name": "Kauri Coast Bakery Limited",
   "country": "nz",
-  "business-key": "nz-1234567",
-  "registration-number": "1234567",
-  "identity-host": "kauricoastbakery.nz.to.co",
+  "business_key": "nz-1234567",
+  "registration_number": "1234567",
+  "identity_host": "kauricoastbakery.nz.to.co",
   "domains": [
     "kauricoastbakery.example"
   ],
+  "public_key": "pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk=",
   "description": "Pies, sourdough and kūmara bread.",
   "website": "https://kauricoastbakery.example",
   "locations": [
@@ -73,29 +74,30 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "opening-hours": [
+  "opening_hours": [
     "Mo-Sa 06:30-16:00"
-  ]
+  ],
+  "signature": "qLuF+C0MhhPxN7VZziO/7C/a2qYQD9wJOCqbY51ynmB+8DrGsxedJKDa4kHD6mQaHNypk5Gr1zXQ/JK6oD5XDg=="
 }
 ```
 
 ### Where the record lives
 
-You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.kauricoastbakery.example/abiz.json`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity-host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
+You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.kauricoastbakery.example/abiz.json`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity_host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
 
 Before you publish, check the record and the DNS value with the reference validator:
 
 ```sh
 python scripts/validate.py record.json \
   --domain kauricoastbakery.example \
-  --dns-value 'v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co'
+  --dns-value 'v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk='
 ```
 
 ## 3. Using a provider and MCP
 
-The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside services in a standard way. An ABIZ record may include an optional `mcp-server-url`, an HTTPS address of an MCP server that can answer questions about the business, such as opening hours, services or availability. ABIZ does not require an MCP server, and a listed server is not vouched for: compatible software must not call it automatically just because it appears in a record, and must apply its own access controls.
+The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside services in a standard way. An ABIZ record may include an optional `mcp_server_url`, an HTTPS address of an MCP server that can answer questions about the business, such as opening hours, services or availability. ABIZ does not require an MCP server, and a listed server is not vouched for: compatible software must not call it automatically just because it appears in a record, and must apply its own access controls.
 
-For example, a provider might host the record for Kauri Coast Bakery at `kauricoastbakery.nz.to.co`, publish the DNS TXT record through its own set-up flow, and list its MCP server in `mcp-server-url`. You can move to another provider, or to self-hosting, by changing `h` and the record's `identity-host`.
+For example, a provider might host the record for Kauri Coast Bakery at `kauricoastbakery.nz.to.co`, publish the DNS TXT record through its own set-up flow, and list its MCP server in `mcp_server_url`. You can move to another provider, or to self-hosting, by changing `h` and the record's `identity_host`.
 
 To see how one provider describes this for New Zealand businesses, see [ABIZ records on to.co](https://to.co/en-nz/abiz).
 
@@ -105,12 +107,12 @@ To see how one provider describes this for New Zealand businesses, see [ABIZ rec
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=vRQ/msFSbiUXpVkneLBNtxi+eh7oP9aK0xZIiBjiht4="
+  _abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).
-- **Signing.** Software can check a detached Ed25519 signature against the published key. ABIZ 1.1 does not yet define which bytes of a business record a signature covers, so a signature check only means something for a message both sides have agreed.
-- **Rotation and retired keys.** To rotate, publish the new key in `p`; the old key stops being current once the TXT TTL has passed. ABIZ 1.1 does not publish retired keys: not in DNS, and not in the record (a `retired-keys` property is rejected).
+- **Signing.** Software can check a detached Ed25519 signature against the published key. The business record repeats the key as `public_key` and carries a `signature` over the whole record, made with the private key (SPEC section 4.6). Software verifies the signature and checks that `public_key` equals `p`; a record that fails either check is not verified.
+- **Rotation and retired keys.** To rotate, publish the new key in `p`; the old key stops being current once the TXT TTL has passed. ABIZ 1.1 does not publish retired keys: not in DNS, and not in the record (a `retired_keys` property is rejected).
 - **What a key proves.** It shows which key the controller of the domain published. It does not sign the TXT record by itself, and it does not prove legal identity. Use DNSSEC where your DNS host supports it.
 
 ## 5. What AI tools will see

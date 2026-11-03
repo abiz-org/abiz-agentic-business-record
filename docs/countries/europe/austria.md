@@ -16,15 +16,15 @@ Der Unternehmenseintrag ist ein JSON-Dokument, das dem [normativen Schema](../..
 
 | Feld | Beispiel | Hinweise |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Immer dieser Wert |
-| `business-name` | `Tischlerei Gruber GmbH` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
+| `record_version` | `abiz1` | Immer dieser Wert |
+| `business_name` | `Tischlerei Gruber GmbH` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
 | `country` | `at` | Ländercode nach ISO 3166-1 Alpha-2; kanonisch in Kleinbuchstaben |
-| `identity-host` | `tischlereigruber.at.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
+| `identity_host` | `tischlereigruber.at.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
 | `domains` | `["tischlereigruber.example"]` | Die Domains, die dieser Eintrag beansprucht, einschließlich der Domain mit `_abiz` |
 
 ### Optionaler Unternehmensschlüssel `k`
 
-`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business-key` und `registration-number` enthalten, und `k` muss `business-key` entsprechen.
+`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business_key` und `registration_number` enthalten, und `k` muss `business_key` entsprechen.
 
 In Österreich lautet der Schlüssel `at-`, gefolgt von der Registernummer. Eine Untergliederung wie Bundesland oder Kanton kommt im Schlüssel nicht vor; ein Schlüssel mit Mittelteil wie `at-xx-…` ist ungültig.
 
@@ -32,7 +32,7 @@ In Österreich lautet der Schlüssel `at-`, gefolgt von der Registernummer. Eine
 - **Zu verwendende Nummer:** die Firmenbuchnummer: Ziffern und der Prüfbuchstabe, ohne die Abkürzung „FN“. Die Nummer ist österreichweit eindeutig
 - **Schreibweise:** Ausgangspunkt ist die Nummer, wie das Register sie vergibt. Wenden Sie die Unicode-Normalisierung NFKC an, entfernen Sie Leerzeichen, `-`, `.`, `/` und andere Bindestriche und schreiben Sie Buchstaben groß. Führende Nullen und Buchstabenpräfixe bleiben erhalten. Das Ergebnis darf nur ASCII-Buchstaben und -Ziffern enthalten.
 
-Beispiel (erfundene Nummer): Aus `FN 123456 a` wird `123456A`. Der Eintrag enthält dann `"registration-number": "123456A"` und `"business-key": "at-123456A"`, im DNS steht `k=at-123456A`. „FN“ steht nur für „Firmenbuchnummer“ und ist kein Teil der Nummer; der Prüfbuchstabe gehört dazu und wird großgeschrieben.
+Beispiel (erfundene Nummer): Aus `FN 123456 a` wird `123456A`. Der Eintrag enthält dann `"registration_number": "123456A"` und `"business_key": "at-123456A"`, im DNS steht `k=at-123456A`. „FN“ steht nur für „Firmenbuchnummer“ und ist kein Teil der Nummer; der Prüfbuchstabe gehört dazu und wird großgeschrieben.
 
 Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Veröffentlichen Sie dennoch die kanonische Form: Ländercode klein, Nummer groß.
 
@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.tischlereigruber.example. 300 IN TXT "v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=IKwCE5KlwXunGpr12PTfPGttWErNxzYsmEyYZ89KD/U="
+_abiz.tischlereigruber.example. 300 IN TXT "v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=jmHW7wMj+crN3bqhGUneCwKuobWHHzabi8t8Uvgz9aw="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -56,15 +56,16 @@ Der Eintrag, der unter `https://tischlereigruber.at.to.co` als `application/json
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Tischlerei Gruber GmbH",
+  "record_version": "abiz1",
+  "business_name": "Tischlerei Gruber GmbH",
   "country": "at",
-  "business-key": "at-123456A",
-  "registration-number": "123456A",
-  "identity-host": "tischlereigruber.at.to.co",
+  "business_key": "at-123456A",
+  "registration_number": "123456A",
+  "identity_host": "tischlereigruber.at.to.co",
   "domains": [
     "tischlereigruber.example"
   ],
+  "public_key": "jmHW7wMj+crN3bqhGUneCwKuobWHHzabi8t8Uvgz9aw=",
   "description": "Tischlerei in Graz.",
   "website": "https://tischlereigruber.example",
   "locations": [
@@ -74,14 +75,15 @@ Der Eintrag, der unter `https://tischlereigruber.at.to.co` als `application/json
       "country": "at",
       "public": true
     }
-  ]
+  ],
+  "signature": "n4HOouHSOqB1FVpYdG23Ev10FTJKlFCds86e5b/AoBQ7Au6wnCpe2trGf7BJ1YuAUmNYYRQFVJIyiZY1O59XCg=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain tischlereigruber.example --dns-value 'v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=IKwCE5KlwXunGpr12PTfPGttWErNxzYsmEyYZ89KD/U='
+python scripts/validate.py record.json --domain tischlereigruber.example --dns-value 'v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=jmHW7wMj+crN3bqhGUneCwKuobWHHzabi8t8Uvgz9aw='
 ```
 
 ### Selbst hosten oder über einen Anbieter
@@ -90,7 +92,7 @@ Sie können den Eintrag selbst auf einem beliebigen HTTPS-Host bereitstellen, de
 
 ## 3. Anbieter und MCP
 
-MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp-server-url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
+MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp_server_url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
 
 Ein Beispiel: Ein Anbieter stellt Ihren Eintrag unter `tischlereigruber.at.to.co` bereit und betreibt einen MCP-Server. Ein damit verbundener Assistent kann dann nach den Öffnungszeiten oder Leistungen von Tischlerei Gruber GmbH fragen und erhält die Angaben aus Ihrem Eintrag, statt sie zu erraten.
 

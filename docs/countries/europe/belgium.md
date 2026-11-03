@@ -16,15 +16,15 @@ Het bedrijfsrecord is een JSON-document dat moet voldoen aan het [normatieve sch
 
 | Veld | Voorbeeld | Toelichting |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Altijd deze waarde |
-| `business-name` | `Bakkerij Peeters BV` | De openbare naam, meestal zoals in het register, met rechtsvorm als u die gebruikt |
+| `record_version` | `abiz1` | Altijd deze waarde |
+| `business_name` | `Bakkerij Peeters BV` | De openbare naam, meestal zoals in het register, met rechtsvorm als u die gebruikt |
 | `country` | `be` | Landcode volgens ISO 3166-1 alfa-2; de canonieke vorm is in kleine letters |
-| `identity-host` | `bakkerijpeeters.be.to.co` | Precies de DNS-waarde `h`: een hostnaam met optioneel pad, zonder `https://` |
+| `identity_host` | `bakkerijpeeters.be.to.co` | Precies de DNS-waarde `h`: een hostnaam met optioneel pad, zonder `https://` |
 | `domains` | `["bakkerijpeeters.example"]` | De domeinen die dit record claimt, inclusief het domein met `_abiz` |
 
 ### Optionele bedrijfssleutel `k`
 
-`k` is voor elk bedrijf optioneel, ingeschreven of niet. Als u `k` publiceert, moet het record ook `business-key` en `registration-number` bevatten, en moet `k` gelijk zijn aan `business-key`.
+`k` is voor elk bedrijf optioneel, ingeschreven of niet. Als u `k` publiceert, moet het record ook `business_key` en `registration_number` bevatten, en moet `k` gelijk zijn aan `business_key`.
 
 In België bestaat de sleutel uit `be-` gevolgd door het inschrijvingsnummer, zonder onderverdeling: een sleutel met een middendeel, zoals `be-xx-…`, is ongeldig.
 
@@ -32,7 +32,7 @@ In België bestaat de sleutel uit `be-` gevolgd door het inschrijvingsnummer, zo
 - **Te gebruiken nummer:** het ondernemingsnummer van 10 cijfers, geschreven als `0123.456.789`. Niet het vestigingseenheidsnummer
 - **Schrijfwijze:** begin bij het nummer zoals het register het toekent, pas Unicode-normalisatie NFKC toe, verwijder spaties, `-`, `.`, `/` en andere streepjes en zet letters in hoofdletters. Voorloopnullen en lettervoorvoegsels blijven staan. Het resultaat mag alleen ASCII-letters en -cijfers bevatten.
 
-Voorbeeld (verzonnen nummer): `0123.456.789` wordt `0123456789`. Het record bevat dan `"registration-number": "0123456789"` en `"business-key": "be-0123456789"`, en in de DNS staat `k=be-0123456789`. Het eerste cijfer (`0` of `1`) hoort bij het nummer en blijft staan.
+Voorbeeld (verzonnen nummer): `0123.456.789` wordt `0123456789`. Het record bevat dan `"registration_number": "0123456789"` en `"business_key": "be-0123456789"`, en in de DNS staat `k=be-0123456789`. Het eerste cijfer (`0` of `1`) hoort bij het nummer en blijft staan.
 
 Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, maar publiceer de canonieke vorm: landcode in kleine letters, nummer in hoofdletters.
 
@@ -41,7 +41,7 @@ Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, m
 Publiceer precies één ABIZ-TXT-record onder `_abiz` op uw domein, in de compacte vorm zonder spaties:
 
 ```dns
-_abiz.bakkerijpeeters.example. 300 IN TXT "v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=Pca7ZiY6dX5FGfz1H/LbbpSiLOEmSDyv8Bc1IThbIfI="
+_abiz.bakkerijpeeters.example. 300 IN TXT "v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=6AlcxbHbjCjF8g/lr38ut46/Wx/lKPK6lOtCNhJ+iMA="
 ```
 
 - `v=abiz1` moet vooraan staan. `h` is verplicht; `k` en `p` zijn optioneel.
@@ -56,15 +56,16 @@ Het record dat op `https://bakkerijpeeters.be.to.co` als `application/json` word
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Bakkerij Peeters BV",
+  "record_version": "abiz1",
+  "business_name": "Bakkerij Peeters BV",
   "country": "be",
-  "business-key": "be-0123456789",
-  "registration-number": "0123456789",
-  "identity-host": "bakkerijpeeters.be.to.co",
+  "business_key": "be-0123456789",
+  "registration_number": "0123456789",
+  "identity_host": "bakkerijpeeters.be.to.co",
   "domains": [
     "bakkerijpeeters.example"
   ],
+  "public_key": "6AlcxbHbjCjF8g/lr38ut46/Wx/lKPK6lOtCNhJ+iMA=",
   "description": "Ambachtelijke bakkerij in Gent.",
   "website": "https://bakkerijpeeters.example",
   "locations": [
@@ -74,14 +75,15 @@ Het record dat op `https://bakkerijpeeters.be.to.co` als `application/json` word
       "country": "be",
       "public": true
     }
-  ]
+  ],
+  "signature": "PNNPq2uqJdjyRv4DalrJzL0pOSujkQLWPrucYPwm/2XTyXHDArK2Thav0xEjl9RDQs1fbQtheiiTlh6TkK9FDQ=="
 }
 ```
 
 Met de referentievalidator controleert u record en DNS-waarde lokaal:
 
 ```sh
-python scripts/validate.py record.json --domain bakkerijpeeters.example --dns-value 'v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=Pca7ZiY6dX5FGfz1H/LbbpSiLOEmSDyv8Bc1IThbIfI='
+python scripts/validate.py record.json --domain bakkerijpeeters.example --dns-value 'v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=6AlcxbHbjCjF8g/lr38ut46/Wx/lKPK6lOtCNhJ+iMA='
 ```
 
 ### Zelf hosten of via een aanbieder
@@ -90,7 +92,7 @@ U kunt het record zelf leveren op elke HTTPS-host die u beheert, of een compatib
 
 ## 3. Aanbieders en MCP
 
-MCP (Model Context Protocol) is een open protocol waarmee AI-assistenten hulpmiddelen aanroepen en gegevens van externe servers lezen. Een aanbieder kan een MCP-server draaien waarmee een assistent uw openbare record rechtstreeks opvraagt. U kunt die server vermelden in het optionele veld `mcp-server-url`. ABIZ vereist geen MCP-server, en een hulpmiddel hoort een server niet automatisch aan te roepen alleen omdat die in een record staat.
+MCP (Model Context Protocol) is een open protocol waarmee AI-assistenten hulpmiddelen aanroepen en gegevens van externe servers lezen. Een aanbieder kan een MCP-server draaien waarmee een assistent uw openbare record rechtstreeks opvraagt. U kunt die server vermelden in het optionele veld `mcp_server_url`. ABIZ vereist geen MCP-server, en een hulpmiddel hoort een server niet automatisch aan te roepen alleen omdat die in een record staat.
 
 Een voorbeeld: een aanbieder publiceert uw record op `bakkerijpeeters.be.to.co` en draait een MCP-server. Een assistent die met die server verbonden is, kan dan naar de openingstijden of diensten van Bakkerij Peeters BV vragen en krijgt de gegevens uit uw record, in plaats van te gokken.
 

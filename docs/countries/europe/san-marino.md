@@ -16,15 +16,15 @@ La scheda dell'impresa è un documento JSON che deve rispettare lo [schema norma
 
 | Campo | Esempio | Note |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Sempre questo valore |
-| `business-name` | `Titano Ceramiche S.r.l.` | Il nome pubblico, di solito come risulta dal registro, con la forma giuridica se la usate |
+| `record_version` | `abiz1` | Sempre questo valore |
+| `business_name` | `Titano Ceramiche S.r.l.` | Il nome pubblico, di solito come risulta dal registro, con la forma giuridica se la usate |
 | `country` | `sm` | Codice paese ISO 3166-1 alpha-2; la forma canonica è in minuscolo |
-| `identity-host` | `titanoceramiche.sm.to.co` | Esattamente il valore DNS `h`: un nome host con percorso facoltativo, senza `https://` |
+| `identity_host` | `titanoceramiche.sm.to.co` | Esattamente il valore DNS `h`: un nome host con percorso facoltativo, senza `https://` |
 | `domains` | `["titanoceramiche.example"]` | I domini rivendicati dalla scheda, compreso quello che contiene `_abiz` |
 
 ### Chiave d'impresa `k` (facoltativa)
 
-`k` è facoltativa per ogni impresa, iscritta o no. Se la pubblicate, la scheda deve contenere anche `business-key` e `registration-number`, e `k` deve essere uguale a `business-key`.
+`k` è facoltativa per ogni impresa, iscritta o no. Se la pubblicate, la scheda deve contenere anche `business_key` e `registration_number`, e `k` deve essere uguale a `business_key`.
 
 A San Marino la chiave è `sm-` seguito dal numero di iscrizione, senza suddivisione territoriale: una chiave con una parte centrale, come `sm-xx-…`, non è valida.
 
@@ -32,7 +32,7 @@ A San Marino la chiave è `sm-` seguito dal numero di iscrizione, senza suddivis
 - **Numero da usare:** il Codice Operatore Economico (COE): il prefisso `SM` seguito da 5 cifre, l'identificativo che vale per lo stesso operatore in tutti i registri sammarinesi
 - **Come scriverlo:** partite dal numero come lo rilascia il registro, applicate la normalizzazione Unicode NFKC, togliete spazi, `-`, `.`, `/` e gli altri trattini, poi scrivete le lettere in maiuscolo. Zeri iniziali e prefissi in lettere restano. Il risultato deve contenere solo lettere e cifre ASCII.
 
-Esempio (numero inventato): `SM01234` è già in forma canonica. La scheda contiene allora `"registration-number": "SM01234"` e `"business-key": "sm-SM01234"`, e nel DNS compare `k=sm-SM01234`. Mantenete il prefisso `SM` e gli zeri iniziali.
+Esempio (numero inventato): `SM01234` è già in forma canonica. La scheda contiene allora `"registration_number": "SM01234"` e `"business_key": "sm-SM01234"`, e nel DNS compare `k=sm-SM01234`. Mantenete il prefisso `SM` e gli zeri iniziali.
 
 Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate la forma canonica: codice del paese in minuscolo, numero in maiuscolo.
 
@@ -41,7 +41,7 @@ Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate 
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.titanoceramiche.example. 300 IN TXT "v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=6+pWr/lzRj1lxDwcjPkE8CqXk83X/TDDeAUa6/fThlg="
+_abiz.titanoceramiche.example. 300 IN TXT "v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=LNzo6azZH0JdDc8KMUz6EOYlL6aIYroP6z4Xhsiq6X8="
 ```
 
 - `v=abiz1` deve venire per primo. `h` è obbligatorio; `k` e `p` sono facoltativi.
@@ -56,15 +56,16 @@ La scheda servita all'indirizzo `https://titanoceramiche.sm.to.co` come `applica
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Titano Ceramiche S.r.l.",
+  "record_version": "abiz1",
+  "business_name": "Titano Ceramiche S.r.l.",
   "country": "sm",
-  "business-key": "sm-SM01234",
-  "registration-number": "SM01234",
-  "identity-host": "titanoceramiche.sm.to.co",
+  "business_key": "sm-SM01234",
+  "registration_number": "SM01234",
+  "identity_host": "titanoceramiche.sm.to.co",
   "domains": [
     "titanoceramiche.example"
   ],
+  "public_key": "LNzo6azZH0JdDc8KMUz6EOYlL6aIYroP6z4Xhsiq6X8=",
   "description": "Laboratorio di ceramica a Borgo Maggiore.",
   "website": "https://titanoceramiche.example",
   "locations": [
@@ -74,14 +75,15 @@ La scheda servita all'indirizzo `https://titanoceramiche.sm.to.co` come `applica
       "country": "sm",
       "public": true
     }
-  ]
+  ],
+  "signature": "u241LUx4DFaDhll1FYr+Nt/eh4BuX2Z2l/DVxYyelEVKDl1KPGO8SNeslBdluTPYIb6N8hvU1U97FNH3E34cDQ=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain titanoceramiche.example --dns-value 'v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=6+pWr/lzRj1lxDwcjPkE8CqXk83X/TDDeAUa6/fThlg='
+python scripts/validate.py record.json --domain titanoceramiche.example --dns-value 'v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=LNzo6azZH0JdDc8KMUz6EOYlL6aIYroP6z4Xhsiq6X8='
 ```
 
 ### In proprio o tramite un fornitore
@@ -90,7 +92,7 @@ Potete pubblicare la scheda voi stessi su qualsiasi host HTTPS che controllate, 
 
 ## 3. Fornitori e MCP
 
-MCP (Model Context Protocol) è un protocollo aperto con cui gli assistenti di IA richiamano strumenti e leggono dati da server esterni. Un fornitore può gestire un server MCP tramite il quale un assistente ottiene direttamente la vostra scheda pubblica. Potete indicarlo nel campo facoltativo `mcp-server-url`. ABIZ non richiede un server MCP, e uno strumento non dovrebbe richiamarlo automaticamente solo perché compare in una scheda.
+MCP (Model Context Protocol) è un protocollo aperto con cui gli assistenti di IA richiamano strumenti e leggono dati da server esterni. Un fornitore può gestire un server MCP tramite il quale un assistente ottiene direttamente la vostra scheda pubblica. Potete indicarlo nel campo facoltativo `mcp_server_url`. ABIZ non richiede un server MCP, e uno strumento non dovrebbe richiamarlo automaticamente solo perché compare in una scheda.
 
 Per esempio, un fornitore può pubblicare la vostra scheda all'indirizzo `titanoceramiche.sm.to.co` e gestire un server MCP. Un assistente collegato a quel server può allora chiedere gli orari o i servizi di Titano Ceramiche S.r.l. e ricevere i dati dalla vostra scheda, invece di tirare a indovinare.
 

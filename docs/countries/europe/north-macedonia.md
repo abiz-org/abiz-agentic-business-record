@@ -16,15 +16,15 @@ The business record is a JSON document that must validate against the [normative
 
 | Field | Example for North Macedonia | Notes |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Always this value |
-| `business-name` | `Ohridski Biser DOOEL` | The public name, usually as it appears on the register, with the legal form if you use it |
+| `record_version` | `abiz1` | Always this value |
+| `business_name` | `Ohridski Biser DOOEL` | The public name, usually as it appears on the register, with the legal form if you use it |
 | `country` | `mk` | ISO 3166-1 alpha-2 code; lowercase is the canonical form |
-| `identity-host` | `ohridskibiser.mk.to.co` | Exactly the DNS `h` value: a hostname with an optional path, without `https://` |
+| `identity_host` | `ohridskibiser.mk.to.co` | Exactly the DNS `h` value: a hostname with an optional path, without `https://` |
 | `domains` | `["ohridskibiser.example"]` | The domains this record claims, including the one that carries `_abiz` |
 
 ### Optional business key `k`
 
-`k` is optional for every business, registered or not. If you publish it, the record must also contain `business-key` and `registration-number`, and `k` must equal `business-key`.
+`k` is optional for every business, registered or not. If you publish it, the record must also contain `business_key` and `registration_number`, and `k` must equal `business_key`.
 
 In North Macedonia the key is `mk-` followed by the registration number. North Macedonia uses no subdivision, so a key with a middle part, such as `mk-xx-…`, is invalid.
 
@@ -32,7 +32,7 @@ In North Macedonia the key is `mk-` followed by the registration number. North M
 - **Number to use:** the 7-digit EMBS (ЕМБС, unique entity registration number). Not the EDB tax number
 - **How to write it:** start from the number as the register issues it, apply Unicode NFKC normalisation, remove spaces, `-`, `.`, `/` and other dash characters, then write letters in uppercase. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits.
 
-Worked example (invented number): `1234567` is already in canonical form. The record then has `"registration-number": "1234567"` and `"business-key": "mk-1234567"`, and DNS carries `k=mk-1234567`.
+Worked example (invented number): `1234567` is already in canonical form. The record then has `"registration_number": "1234567"` and `"business_key": "mk-1234567"`, and DNS carries `k=mk-1234567`.
 
 Keys are compared case-insensitively, but publish the canonical form: lowercase country code, uppercase number.
 
@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.ohridskibiser.example. 300 IN TXT "v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=IIBmDu1jn7125eOuCv7SmIRdv8heY6iI2Cj5bq2VYoc="
+_abiz.ohridskibiser.example. 300 IN TXT "v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=kJa3iPlv2kPdKip1DPWjZWe+MqWmp7RC+Om9U1kqB/4="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -56,15 +56,16 @@ The record served at `https://ohridskibiser.mk.to.co`, as `application/json`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Ohridski Biser DOOEL",
+  "record_version": "abiz1",
+  "business_name": "Ohridski Biser DOOEL",
   "country": "mk",
-  "business-key": "mk-1234567",
-  "registration-number": "1234567",
-  "identity-host": "ohridskibiser.mk.to.co",
+  "business_key": "mk-1234567",
+  "registration_number": "1234567",
+  "identity_host": "ohridskibiser.mk.to.co",
   "domains": [
     "ohridskibiser.example"
   ],
+  "public_key": "kJa3iPlv2kPdKip1DPWjZWe+MqWmp7RC+Om9U1kqB/4=",
   "description": "Jewellery workshop in Ohrid.",
   "website": "https://ohridskibiser.example",
   "locations": [
@@ -74,14 +75,15 @@ The record served at `https://ohridskibiser.mk.to.co`, as `application/json`:
       "country": "mk",
       "public": true
     }
-  ]
+  ],
+  "signature": "QFogU5Ifr0KwtCa0GvqnYFM7QkqZHrqqeWO3IWZu0JpW0TOjYC/OE8vmDu2ZzWeGTWc+iqNmx9XwIfo6TyP/Dw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain ohridskibiser.example --dns-value 'v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=IIBmDu1jn7125eOuCv7SmIRdv8heY6iI2Cj5bq2VYoc='
+python scripts/validate.py record.json --domain ohridskibiser.example --dns-value 'v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=kJa3iPlv2kPdKip1DPWjZWe+MqWmp7RC+Om9U1kqB/4='
 ```
 
 ### Self-hosted or through a provider
@@ -90,7 +92,7 @@ You can serve the record yourself on any HTTPS host you control, or use any comp
 
 ## 3. Using a provider and MCP
 
-MCP (Model Context Protocol) is an open protocol that lets AI assistants call tools and read data from external servers. A provider can run an MCP server so that an assistant can request your public record directly. You can list one in the optional `mcp-server-url` field. ABIZ does not require an MCP server, and a tool should not call one automatically just because a record lists it.
+MCP (Model Context Protocol) is an open protocol that lets AI assistants call tools and read data from external servers. A provider can run an MCP server so that an assistant can request your public record directly. You can list one in the optional `mcp_server_url` field. ABIZ does not require an MCP server, and a tool should not call one automatically just because a record lists it.
 
 For example, a provider might serve your record at `ohridskibiser.mk.to.co` and run an MCP server. An assistant connected to that server could then ask for the opening hours or services of Ohridski Biser DOOEL and receive the facts from your record, not from a guess.
 
@@ -98,7 +100,7 @@ For example, a provider might serve your record at `ohridskibiser.mk.to.co` and 
 
 ABIZ 1.1 lets a business publish an Ed25519 public key in the DNS `p` tag. `p` is optional. When present, it must be the standard base64 encoding of the 32-byte public key: 44 characters ending in one `=`, in a single DNS string. Any other value, such as an ABIZ 1.0 hexadecimal token or a base64url key, makes the whole assertion invalid.
 
-The matching private key belongs to the business. It is never published. A provider that holds it for you must let you export it. Software can check a signature made with the private key against the key in DNS. ABIZ 1.1 does not yet define which bytes a signature over the business record covers.
+The matching private key belongs to the business. It is never published. A provider that holds it for you must let you export it. Software can check a signature made with the private key against the key in DNS. The business record repeats the key as `public_key` and carries a `signature` over the whole record, made with the private key (SPEC section 4.6). Software verifies the signature and checks that `public_key` equals `p`; a record that fails either check is not verified.
 
 To rotate, publish a new key in `p`. To revoke, remove `p`. Retired keys are not published in ABIZ 1.1, neither in DNS nor in the business record. A key shows which key the domain's controller published; it does not prove legal identity.
 

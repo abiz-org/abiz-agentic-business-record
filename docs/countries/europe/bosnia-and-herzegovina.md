@@ -16,24 +16,24 @@ The business record is a JSON document that must validate against the [normative
 
 | Field | Example for Bosnia and Herzegovina | Notes |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Always this value |
-| `business-name` | `Mostarski Kamen d.o.o.` | The public name, usually as it appears on the register, with the legal form if you use it |
+| `record_version` | `abiz1` | Always this value |
+| `business_name` | `Mostarski Kamen d.o.o.` | The public name, usually as it appears on the register, with the legal form if you use it |
 | `country` | `ba` | ISO 3166-1 alpha-2 code; lowercase is the canonical form |
-| `identity-host` | `mostarskikamen.ba.to.co` | Exactly the DNS `h` value: a hostname with an optional path, without `https://` |
+| `identity_host` | `mostarskikamen.ba.to.co` | Exactly the DNS `h` value: a hostname with an optional path, without `https://` |
 | `domains` | `["mostarskikamen.example"]` | The domains this record claims, including the one that carries `_abiz` |
 
 ### Optional business key `k`
 
 `k` is optional for every business, and a record without it is fully valid.
 
-A business in Bosnia and Herzegovina cannot publish a business key under ABIZ 1.1. Companies are registered by the courts of the two entities (the Federation of Bosnia and Herzegovina and Republika Srpska) and of Brčko District, not in one national company register. The specification says that a country with only subdivision-level registers, which section 4.2.2 does not list, cannot yet carry a business key. Leave out `k`, `business-key` and `registration-number`. A later revision may add a rule, for example using the national identification number (JIB).
+A business in Bosnia and Herzegovina cannot publish a business key under ABIZ 1.1. Companies are registered by the courts of the two entities (the Federation of Bosnia and Herzegovina and Republika Srpska) and of Brčko District, not in one national company register. The specification says that a country with only subdivision-level registers, which section 4.2.2 does not list, cannot yet carry a business key. Leave out `k`, `business_key` and `registration_number`. A later revision may add a rule, for example using the national identification number (JIB).
 
 ### DNS TXT record
 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.mostarskikamen.example. 300 IN TXT "v=abiz1;h=mostarskikamen.ba.to.co;p=F8BW5Ja3duEUPZgr5sHqtq00h0cpDimPpilNH1DaqFU="
+_abiz.mostarskikamen.example. 300 IN TXT "v=abiz1;h=mostarskikamen.ba.to.co;p=Dm8FiSEq1PEecnhd3qOgAU+nd2ExPaSjfrTz0dnai7M="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -48,13 +48,14 @@ The record served at `https://mostarskikamen.ba.to.co`, as `application/json`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Mostarski Kamen d.o.o.",
+  "record_version": "abiz1",
+  "business_name": "Mostarski Kamen d.o.o.",
   "country": "ba",
-  "identity-host": "mostarskikamen.ba.to.co",
+  "identity_host": "mostarskikamen.ba.to.co",
   "domains": [
     "mostarskikamen.example"
   ],
+  "public_key": "Dm8FiSEq1PEecnhd3qOgAU+nd2ExPaSjfrTz0dnai7M=",
   "description": "Stonemasons in Mostar.",
   "website": "https://mostarskikamen.example",
   "locations": [
@@ -64,14 +65,15 @@ The record served at `https://mostarskikamen.ba.to.co`, as `application/json`:
       "country": "ba",
       "public": true
     }
-  ]
+  ],
+  "signature": "/76u72dMpAssHXFTR0RtFbqOwYZn4Bg4HNs5Tp/V9t0UxKGwQKaX/3dmQzjQzzg/ifjeFSVTfv9eNWNKiNlRBw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain mostarskikamen.example --dns-value 'v=abiz1;h=mostarskikamen.ba.to.co;p=F8BW5Ja3duEUPZgr5sHqtq00h0cpDimPpilNH1DaqFU='
+python scripts/validate.py record.json --domain mostarskikamen.example --dns-value 'v=abiz1;h=mostarskikamen.ba.to.co;p=Dm8FiSEq1PEecnhd3qOgAU+nd2ExPaSjfrTz0dnai7M='
 ```
 
 ### Self-hosted or through a provider
@@ -80,7 +82,7 @@ You can serve the record yourself on any HTTPS host you control, or use any comp
 
 ## 3. Using a provider and MCP
 
-MCP (Model Context Protocol) is an open protocol that lets AI assistants call tools and read data from external servers. A provider can run an MCP server so that an assistant can request your public record directly. You can list one in the optional `mcp-server-url` field. ABIZ does not require an MCP server, and a tool should not call one automatically just because a record lists it.
+MCP (Model Context Protocol) is an open protocol that lets AI assistants call tools and read data from external servers. A provider can run an MCP server so that an assistant can request your public record directly. You can list one in the optional `mcp_server_url` field. ABIZ does not require an MCP server, and a tool should not call one automatically just because a record lists it.
 
 For example, a provider might serve your record at `mostarskikamen.ba.to.co` and run an MCP server. An assistant connected to that server could then ask for the opening hours or services of Mostarski Kamen d.o.o. and receive the facts from your record, not from a guess.
 
@@ -88,7 +90,7 @@ For example, a provider might serve your record at `mostarskikamen.ba.to.co` and
 
 ABIZ 1.1 lets a business publish an Ed25519 public key in the DNS `p` tag. `p` is optional. When present, it must be the standard base64 encoding of the 32-byte public key: 44 characters ending in one `=`, in a single DNS string. Any other value, such as an ABIZ 1.0 hexadecimal token or a base64url key, makes the whole assertion invalid.
 
-The matching private key belongs to the business. It is never published. A provider that holds it for you must let you export it. Software can check a signature made with the private key against the key in DNS. ABIZ 1.1 does not yet define which bytes a signature over the business record covers.
+The matching private key belongs to the business. It is never published. A provider that holds it for you must let you export it. Software can check a signature made with the private key against the key in DNS. The business record repeats the key as `public_key` and carries a `signature` over the whole record, made with the private key (SPEC section 4.6). Software verifies the signature and checks that `public_key` equals `p`; a record that fails either check is not verified.
 
 To rotate, publish a new key in `p`. To revoke, remove `p`. Retired keys are not published in ABIZ 1.1, neither in DNS nor in the business record. A key shows which key the domain's controller published; it does not prove legal identity.
 

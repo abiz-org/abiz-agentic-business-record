@@ -16,28 +16,28 @@ In Tuvalu, any business, registered or not, can publish an ABIZ record. Whether 
 
 | Field | What to put | Example |
 | --- | --- | --- |
-| `record-version` | Always `abiz1` | `abiz1` |
-| `business-name` | Your public business name | `Funafuti Marine Supplies Ltd` |
+| `record_version` | Always `abiz1` | `abiz1` |
+| `business_name` | Your public business name | `Funafuti Marine Supplies Ltd` |
 | `country` | The ISO 3166-1 alpha-2 country code, lower case | `tv` |
-| `identity-host` | The host, and optional path, where the record is served; it must match DNS `h` | `funafutimarinesupplies.tv.to.co` |
+| `identity_host` | The host, and optional path, where the record is served; it must match DNS `h` | `funafutimarinesupplies.tv.to.co` |
 | `domains` | The domains you control that this record claims | `["funafutimarinesupplies.example"]` |
 
 ### The optional business key `k`
 
-`k` is optional for every business. If you publish it, it must follow section 4.2 of the specification and it must equal the record's `business-key`. Case does not matter when keys are compared, but the canonical form has a lower-case country code and an upper-case registration number.
+`k` is optional for every business. If you publish it, it must follow section 4.2 of the specification and it must equal the record's `business_key`. Case does not matter when keys are compared, but the canonical form has a lower-case country code and an upper-case registration number.
 
-If you include a key, its format is `tv-` followed by the company number from the national register; section 4.2.2 of the specification does not list Tuvalu, so there is no subdivision code. Tuvalu registers domestic companies and international companies under different laws, and we have not been able to confirm that the two sets of numbers never overlap. If you are not sure your number is unique in Tuvalu, leave out `k`, `business-key` and `registration-number`. Everything else in this guide works without `k`.
+If you include a key, its format is `tv-` followed by the company number from the national register; section 4.2.2 of the specification does not list Tuvalu, so there is no subdivision code. Tuvalu registers domestic companies and international companies under different laws, and we have not been able to confirm that the two sets of numbers never overlap. If you are not sure your number is unique in Tuvalu, leave out `k`, `business_key` and `registration_number`. Everything else in this guide works without `k`.
 
-**Normalising the number (section 4.2.3).** Start from the number exactly as the register issues it. Apply Unicode NFKC normalisation; remove spaces, hyphens, dots and slashes; convert letters to upper case; keep leading zeros and letter prefixes. If anything else is left, such as brackets, `&` or an accented letter, the number cannot be expressed and you cannot publish a business key: leave out `k`, `business-key` and `registration-number`.
+**Normalising the number (section 4.2.3).** Start from the number exactly as the register issues it. Apply Unicode NFKC normalisation; remove spaces, hyphens, dots and slashes; convert letters to upper case; keep leading zeros and letter prefixes. If anything else is left, such as brackets, `&` or an accented letter, the number cannot be expressed and you cannot publish a business key: leave out `k`, `business_key` and `registration_number`.
 
-If you include `business-key` and `registration-number` in the record, include both, and make the number part of the key equal `registration-number`. Including them does not oblige you to publish `k` in DNS. If you do publish `k`, the record must contain the matching `business-key`.
+If you include `business_key` and `registration_number` in the record, include both, and make the number part of the key equal `registration_number`. Including them does not oblige you to publish `k` in DNS. If you do publish `k`, the record must contain the matching `business_key`.
 
 ### The DNS TXT record
 
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co"
+_abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ="
 ```
 
 ### Example record (JSON)
@@ -46,13 +46,14 @@ This example is fictional. It passes the reference validator.
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Funafuti Marine Supplies Ltd",
+  "record_version": "abiz1",
+  "business_name": "Funafuti Marine Supplies Ltd",
   "country": "tv",
-  "identity-host": "funafutimarinesupplies.tv.to.co",
+  "identity_host": "funafutimarinesupplies.tv.to.co",
   "domains": [
     "funafutimarinesupplies.example"
   ],
+  "public_key": "3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ=",
   "description": "Marine supplies and outboard repairs.",
   "website": "https://funafutimarinesupplies.example",
   "locations": [
@@ -63,29 +64,30 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "opening-hours": [
+  "opening_hours": [
     "Mo-Fr 08:00-16:30"
-  ]
+  ],
+  "signature": "4PKwR0du8Gf6TwZ5ycYlFT6/WJQFPxKS64A6pPgBrnOqwBDdQU5WSayW3AN4yFWcYKsgN3tsvZJR48XqJ/9NBQ=="
 }
 ```
 
 ### Where the record lives
 
-You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.funafutimarinesupplies.example/abiz.json`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity-host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
+You can serve the record yourself from any HTTPS URL that returns the JSON document, for example `h=www.funafutimarinesupplies.example/abiz.json`, or use any compatible provider. ABIZ does not require a particular provider or naming scheme. Whichever you choose, `identity_host` in the record must match `h`, and `domains` must include the domain where you publish the TXT record.
 
 Before you publish, check the record and the DNS value with the reference validator:
 
 ```sh
 python scripts/validate.py record.json \
   --domain funafutimarinesupplies.example \
-  --dns-value 'v=abiz1;h=funafutimarinesupplies.tv.to.co'
+  --dns-value 'v=abiz1;h=funafutimarinesupplies.tv.to.co;p=3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ='
 ```
 
 ## 3. Using a provider and MCP
 
-The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside services in a standard way. An ABIZ record may include an optional `mcp-server-url`, an HTTPS address of an MCP server that can answer questions about the business, such as opening hours, services or availability. ABIZ does not require an MCP server, and a listed server is not vouched for: compatible software must not call it automatically just because it appears in a record, and must apply its own access controls.
+The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside services in a standard way. An ABIZ record may include an optional `mcp_server_url`, an HTTPS address of an MCP server that can answer questions about the business, such as opening hours, services or availability. ABIZ does not require an MCP server, and a listed server is not vouched for: compatible software must not call it automatically just because it appears in a record, and must apply its own access controls.
 
-For example, a provider might host the record for Funafuti Marine Supplies at `funafutimarinesupplies.tv.to.co`, publish the DNS TXT record through its own set-up flow, and list its MCP server in `mcp-server-url`. You can move to another provider, or to self-hosting, by changing `h` and the record's `identity-host`.
+For example, a provider might host the record for Funafuti Marine Supplies at `funafutimarinesupplies.tv.to.co`, publish the DNS TXT record through its own set-up flow, and list its MCP server in `mcp_server_url`. You can move to another provider, or to self-hosting, by changing `h` and the record's `identity_host`.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
@@ -93,12 +95,12 @@ For example, a provider might host the record for Funafuti Marine Supplies at `f
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=AioNl6PKY41ZwVLopQW2HLt0xvJgtJYA184rHdZS7Mo="
+  _abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=3X0uShGti3pnk6c7pGYtnumBZ/wUO6VJap6jFe69KqQ="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).
-- **Signing.** Software can check a detached Ed25519 signature against the published key. ABIZ 1.1 does not yet define which bytes of a business record a signature covers, so a signature check only means something for a message both sides have agreed.
-- **Rotation and retired keys.** To rotate, publish the new key in `p`; the old key stops being current once the TXT TTL has passed. ABIZ 1.1 does not publish retired keys: not in DNS, and not in the record (a `retired-keys` property is rejected).
+- **Signing.** Software can check a detached Ed25519 signature against the published key. The business record repeats the key as `public_key` and carries a `signature` over the whole record, made with the private key (SPEC section 4.6). Software verifies the signature and checks that `public_key` equals `p`; a record that fails either check is not verified.
+- **Rotation and retired keys.** To rotate, publish the new key in `p`; the old key stops being current once the TXT TTL has passed. ABIZ 1.1 does not publish retired keys: not in DNS, and not in the record (a `retired_keys` property is rejected).
 - **What a key proves.** It shows which key the controller of the domain published. It does not sign the TXT record by itself, and it does not prove legal identity. Use DNSSEC where your DNS host supports it.
 
 ## 5. What AI tools will see

@@ -16,15 +16,15 @@ Rekord firmy to dokument JSON zgodny z [normatywnym schematem](../../../schemas/
 
 | Pole | Przykład | Uwagi |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Zawsze ta wartość |
-| `business-name` | `Piekarnia Kowalski sp. z o.o.` | Nazwa publiczna, zwykle jak w rejestrze, z formą prawną, jeśli jej Państwo używają |
+| `record_version` | `abiz1` | Zawsze ta wartość |
+| `business_name` | `Piekarnia Kowalski sp. z o.o.` | Nazwa publiczna, zwykle jak w rejestrze, z formą prawną, jeśli jej Państwo używają |
 | `country` | `pl` | Kod kraju ISO 3166-1 alfa-2; postać kanoniczna to małe litery |
-| `identity-host` | `piekarniakowalski.pl.to.co` | Dokładnie wartość DNS `h`: nazwa hosta z opcjonalną ścieżką, bez `https://` |
+| `identity_host` | `piekarniakowalski.pl.to.co` | Dokładnie wartość DNS `h`: nazwa hosta z opcjonalną ścieżką, bez `https://` |
 | `domains` | `["piekarniakowalski.example"]` | Domeny, których dotyczy rekord, w tym domena z `_abiz` |
 
 ### Opcjonalny klucz firmy `k`
 
-`k` jest opcjonalny dla każdej firmy, zarejestrowanej czy nie. Jeśli go Państwo publikują, rekord musi zawierać również `business-key` i `registration-number`, a `k` musi być równy `business-key`.
+`k` jest opcjonalny dla każdej firmy, zarejestrowanej czy nie. Jeśli go Państwo publikują, rekord musi zawierać również `business_key` i `registration_number`, a `k` musi być równy `business_key`.
 
 W Polsce klucz to `pl-` i numer rejestrowy, bez jednostki terytorialnej: klucz z częścią środkową, np. `pl-xx-…`, jest nieprawidłowy.
 
@@ -32,7 +32,7 @@ W Polsce klucz to `pl-` i numer rejestrowy, bez jednostki terytorialnej: klucz z
 - **Który numer:** numer KRS: 10 cyfr, z zerami wiodącymi. Nie NIP ani REGON
 - **Jak go zapisać:** proszę wyjść od numeru w postaci nadanej przez rejestr, zastosować normalizację Unicode NFKC, usunąć spacje, `-`, `.`, `/` i inne myślniki, a litery zapisać wielkimi literami. Zera wiodące i prefiksy literowe pozostają. Wynik może zawierać tylko litery i cyfry ASCII.
 
-Przykład (numer zmyślony): `0000123456` jest już w postaci kanonicznej. Rekord zawiera wtedy `"registration-number": "0000123456"` i `"business-key": "pl-0000123456"`, a w DNS jest `k=pl-0000123456`. Zera wiodące są częścią numeru i muszą zostać.
+Przykład (numer zmyślony): `0000123456` jest już w postaci kanonicznej. Rekord zawiera wtedy `"registration_number": "0000123456"` i `"business_key": "pl-0000123456"`, a w DNS jest `k=pl-0000123456`. Zera wiodące są częścią numeru i muszą zostać.
 
 Klucze porównuje się bez rozróżniania wielkości liter, ale proszę publikować postać kanoniczną: kod kraju małymi literami, numer wielkimi.
 
@@ -41,7 +41,7 @@ Klucze porównuje się bez rozróżniania wielkości liter, ale proszę publikow
 Proszę opublikować dokładnie jeden rekord TXT ABIZ pod `_abiz` w swojej domenie, w postaci zwartej, bez spacji:
 
 ```dns
-_abiz.piekarniakowalski.example. 300 IN TXT "v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=xUqctjSuFt6vqtzJQwdvY2L3gBOIUIGBH+TVnJl4lXs="
+_abiz.piekarniakowalski.example. 300 IN TXT "v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=R1xb/hAMVTqr+f73Uslvmdx9b2MvAfuLLJj1Rpnbixk="
 ```
 
 - `v=abiz1` musi być pierwsze. `h` jest wymagane; `k` i `p` są opcjonalne.
@@ -56,15 +56,16 @@ Rekord udostępniany pod `https://piekarniakowalski.pl.to.co` jako `application/
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Piekarnia Kowalski sp. z o.o.",
+  "record_version": "abiz1",
+  "business_name": "Piekarnia Kowalski sp. z o.o.",
   "country": "pl",
-  "business-key": "pl-0000123456",
-  "registration-number": "0000123456",
-  "identity-host": "piekarniakowalski.pl.to.co",
+  "business_key": "pl-0000123456",
+  "registration_number": "0000123456",
+  "identity_host": "piekarniakowalski.pl.to.co",
   "domains": [
     "piekarniakowalski.example"
   ],
+  "public_key": "R1xb/hAMVTqr+f73Uslvmdx9b2MvAfuLLJj1Rpnbixk=",
   "description": "Rzemieślnicza piekarnia w Krakowie.",
   "website": "https://piekarniakowalski.example",
   "locations": [
@@ -74,14 +75,15 @@ Rekord udostępniany pod `https://piekarniakowalski.pl.to.co` jako `application/
       "country": "pl",
       "public": true
     }
-  ]
+  ],
+  "signature": "/dWv2NARt1FKomO4s5nNZ/SxGuqXeAS8PKl0lYlGNms7b4uBfzYjBVIB0dXZTqAgFI+/30CKtR4q3yehDsVYCQ=="
 }
 ```
 
 Walidatorem referencyjnym można lokalnie sprawdzić rekord i wartość DNS:
 
 ```sh
-python scripts/validate.py record.json --domain piekarniakowalski.example --dns-value 'v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=xUqctjSuFt6vqtzJQwdvY2L3gBOIUIGBH+TVnJl4lXs='
+python scripts/validate.py record.json --domain piekarniakowalski.example --dns-value 'v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=R1xb/hAMVTqr+f73Uslvmdx9b2MvAfuLLJj1Rpnbixk='
 ```
 
 ### Samodzielnie lub przez dostawcę
@@ -90,7 +92,7 @@ Rekord można udostępniać samodzielnie na dowolnym kontrolowanym hoście HTTPS
 
 ## 3. Dostawcy i MCP
 
-MCP (Model Context Protocol) to otwarty protokół, dzięki któremu asystenci AI wywołują narzędzia i odczytują dane z zewnętrznych serwerów. Dostawca może prowadzić serwer MCP, przez który asystent pobiera bezpośrednio Państwa publiczny rekord. Można go wskazać w opcjonalnym polu `mcp-server-url`. ABIZ nie wymaga serwera MCP, a narzędzie nie powinno wywoływać go automatycznie tylko dlatego, że figuruje w rekordzie.
+MCP (Model Context Protocol) to otwarty protokół, dzięki któremu asystenci AI wywołują narzędzia i odczytują dane z zewnętrznych serwerów. Dostawca może prowadzić serwer MCP, przez który asystent pobiera bezpośrednio Państwa publiczny rekord. Można go wskazać w opcjonalnym polu `mcp_server_url`. ABIZ nie wymaga serwera MCP, a narzędzie nie powinno wywoływać go automatycznie tylko dlatego, że figuruje w rekordzie.
 
 Przykład: dostawca publikuje Państwa rekord pod adresem `piekarniakowalski.pl.to.co` i prowadzi serwer MCP. Asystent połączony z tym serwerem może zapytać o godziny otwarcia lub usługi firmy Piekarnia Kowalski sp. z o.o. i otrzymać dane z rekordu, zamiast zgadywać. to.co, jeden z takich dostawców, opisuje ABIZ na [stronie w języku polskim](https://to.co/pl-pl/abiz).
 

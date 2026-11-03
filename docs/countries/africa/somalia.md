@@ -14,15 +14,15 @@ Every business record needs these five fields (SPEC section 4.1):
 
 | Field | Example and rule |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | the public name customers know, for example `Hodan Trading` |
+| `record_version` | `abiz1` |
+| `business_name` | the public name customers know, for example `Hodan Trading` |
 | `country` | `so`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `www.hodantrading.example/abiz.json`, which must match `h` in DNS exactly |
+| `identity_host` | `www.hodantrading.example/abiz.json`, which must match `h` in DNS exactly |
 | `domains` | `["hodantrading.example"]`, which must include the domain that carries `_abiz` |
 
 ### Optional business key `k`
 
-`k` is optional for every business, registered or not. If you publish it, it must equal `business-key` in the record, and the record must then also contain `registration-number`. For Somalia the form is:
+`k` is optional for every business, registered or not. If you publish it, it must equal `business_key` in the record, and the record must then also contain `registration_number`. For Somalia the form is:
 
 ```text
 so-<registration-number>
@@ -32,16 +32,16 @@ Somalia uses no subdivision: do not add a region, province or city code. SPEC se
 
 **Which number:** we could not confirm a single national register whose numbers identify businesses uniquely across Somalia.
 
-**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business-key` and `registration-number`.
+**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business_key` and `registration_number`.
 
-**No business key for now:** because registrations may sit with different authorities and SPEC section 4.2.2 allows no subdivision for `so`, we cannot confirm that any number gives a valid national key. Leave out `k`, `business-key` and `registration-number`. The rest of the record works as shown.
+**No business key for now:** because registrations may sit with different authorities and SPEC section 4.2.2 allows no subdivision for `so`, we cannot confirm that any number gives a valid national key. Leave out `k`, `business_key` and `registration_number`. The rest of the record works as shown.
 
 ### DNS TXT record
 
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json;p=S4e67JsuTmX6eqC+IMOcJsiaadrT3unOVl+fe+/oJiM="
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json;p=q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
@@ -49,34 +49,36 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` and `p` tags, this is also valid:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json"
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json;p=q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc="
 ```
 
 The business record served as `application/json` at `https://www.hodantrading.example/abiz.json`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Hodan Trading",
+  "record_version": "abiz1",
+  "business_name": "Hodan Trading",
   "country": "so",
-  "identity-host": "www.hodantrading.example/abiz.json",
+  "identity_host": "www.hodantrading.example/abiz.json",
   "domains": [
     "hodantrading.example"
-  ]
+  ],
+  "public_key": "q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc=",
+  "signature": "vb+zfF9gzEtHQJ0t7g0t9x54/GjvCvYuO7drRaCDZKIsWkqc+8W6nXcTr7qgbSHpqTj8enJ7j0s6bp/zw8qLDQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain hodantrading.example --dns-value 'v=abiz1;h=www.hodantrading.example/abiz.json;p=S4e67JsuTmX6eqC+IMOcJsiaadrT3unOVl+fe+/oJiM='
+python scripts/validate.py record.json --domain hodantrading.example --dns-value 'v=abiz1;h=www.hodantrading.example/abiz.json;p=q/Tr0+lZN7j/Em4mkmGEcUTh50Fah+VdXsdYq1S30hc='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
-The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp-server-url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
+The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
 Your own server or any compatible provider can host the record. This guide gives no provider example for Somalia; check that any provider you choose can lawfully serve businesses there.
 

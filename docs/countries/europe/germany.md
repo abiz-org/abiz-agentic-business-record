@@ -16,15 +16,15 @@ Der Unternehmenseintrag ist ein JSON-Dokument, das dem [normativen Schema](../..
 
 | Feld | Beispiel | Hinweise |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Immer dieser Wert |
-| `business-name` | `Bäckerei Müller GmbH` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
+| `record_version` | `abiz1` | Immer dieser Wert |
+| `business_name` | `Bäckerei Müller GmbH` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
 | `country` | `de` | Ländercode nach ISO 3166-1 Alpha-2; kanonisch in Kleinbuchstaben |
-| `identity-host` | `baeckereimueller.de.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
+| `identity_host` | `baeckereimueller.de.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
 | `domains` | `["baeckereimueller.example"]` | Die Domains, die dieser Eintrag beansprucht, einschließlich der Domain mit `_abiz` |
 
 ### Optionaler Unternehmensschlüssel `k`
 
-`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business-key` und `registration-number` enthalten, und `k` muss `business-key` entsprechen.
+`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business_key` und `registration_number` enthalten, und `k` muss `business_key` entsprechen.
 
 In Deutschland lautet der Schlüssel `de-`, gefolgt von der Registernummer. Eine Untergliederung wie Bundesland oder Kanton kommt im Schlüssel nicht vor; ein Schlüssel mit Mittelteil wie `de-xx-…` ist ungültig.
 
@@ -32,7 +32,7 @@ In Deutschland lautet der Schlüssel `de-`, gefolgt von der Registernummer. Eine
 - **Zu verwendende Nummer:** der XJustiz-Code des Registergerichts ([Codeliste Registergerichte](https://www.xrepository.de/details/urn:xoev-de:xunternehmen:codeliste:registergerichte)), dann die Registerart (`HRA`, `HRB`, `GNR`, `PR`, `VR`, `GSR`), dann die Nummer mit einem etwaigen Gerichtszusatz. Das ist der lokale Teil der Europäischen Unternehmenskennung (EUID) ohne den Punkt. Eine Nummer wie HRB 12345 ist nur innerhalb eines Gerichts und einer Registerart eindeutig; ein Bundesland-Kürzel macht sie nicht eindeutig
 - **Schreibweise:** Ausgangspunkt ist die Nummer, wie das Register sie vergibt. Wenden Sie die Unicode-Normalisierung NFKC an, entfernen Sie Leerzeichen, `-`, `.`, `/` und andere Bindestriche und schreiben Sie Buchstaben groß. Führende Nullen und Buchstabenpräfixe bleiben erhalten. Das Ergebnis darf nur ASCII-Buchstaben und -Ziffern enthalten.
 
-Beispiel (erfundene Nummer): Aus `HRB 12345, Amtsgericht Hamburg (EUID DEK1101R.HRB12345)` wird `K1101RHRB12345`. Der Eintrag enthält dann `"registration-number": "K1101RHRB12345"` und `"business-key": "de-K1101RHRB12345"`, im DNS steht `k=de-K1101RHRB12345`. `K1101R` ist der Code des Amtsgerichts Hamburg. Weder die Steuernummer noch die Umsatzsteuer-Identifikationsnummer ist der Schlüssel.
+Beispiel (erfundene Nummer): Aus `HRB 12345, Amtsgericht Hamburg (EUID DEK1101R.HRB12345)` wird `K1101RHRB12345`. Der Eintrag enthält dann `"registration_number": "K1101RHRB12345"` und `"business_key": "de-K1101RHRB12345"`, im DNS steht `k=de-K1101RHRB12345`. `K1101R` ist der Code des Amtsgerichts Hamburg. Weder die Steuernummer noch die Umsatzsteuer-Identifikationsnummer ist der Schlüssel.
 
 Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Veröffentlichen Sie dennoch die kanonische Form: Ländercode klein, Nummer groß.
 
@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=IlZ6CvWvnMkqHUUR2Dm2KvFtxFnkqg2J7nwBis9NdC0="
+_abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=F+QD3YhImQVUmtfNSAqcAiYSTUg6kcIBqCcNeBrklgg="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -56,15 +56,16 @@ Der Eintrag, der unter `https://baeckereimueller.de.to.co` als `application/json
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Bäckerei Müller GmbH",
+  "record_version": "abiz1",
+  "business_name": "Bäckerei Müller GmbH",
   "country": "de",
-  "business-key": "de-K1101RHRB12345",
-  "registration-number": "K1101RHRB12345",
-  "identity-host": "baeckereimueller.de.to.co",
+  "business_key": "de-K1101RHRB12345",
+  "registration_number": "K1101RHRB12345",
+  "identity_host": "baeckereimueller.de.to.co",
   "domains": [
     "baeckereimueller.example"
   ],
+  "public_key": "F+QD3YhImQVUmtfNSAqcAiYSTUg6kcIBqCcNeBrklgg=",
   "description": "Handwerksbäckerei in Hamburg.",
   "website": "https://baeckereimueller.example",
   "locations": [
@@ -74,14 +75,15 @@ Der Eintrag, der unter `https://baeckereimueller.de.to.co` als `application/json
       "country": "de",
       "public": true
     }
-  ]
+  ],
+  "signature": "R4gmgzlCdmmzetLkPtZLFxUOOe+svi97Tf24sk1JjO1JoLfdg6htDHSdT+aI7K0/K9jkx7ilxrnYHnYj+AkrDQ=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain baeckereimueller.example --dns-value 'v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=IlZ6CvWvnMkqHUUR2Dm2KvFtxFnkqg2J7nwBis9NdC0='
+python scripts/validate.py record.json --domain baeckereimueller.example --dns-value 'v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=F+QD3YhImQVUmtfNSAqcAiYSTUg6kcIBqCcNeBrklgg='
 ```
 
 ### Selbst hosten oder über einen Anbieter
@@ -90,7 +92,7 @@ Sie können den Eintrag selbst auf einem beliebigen HTTPS-Host bereitstellen, de
 
 ## 3. Anbieter und MCP
 
-MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp-server-url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
+MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp_server_url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
 
 Ein Beispiel: Ein Anbieter stellt Ihren Eintrag unter `baeckereimueller.de.to.co` bereit und betreibt einen MCP-Server. Ein damit verbundener Assistent kann dann nach den Öffnungszeiten oder Leistungen von Bäckerei Müller GmbH fragen und erhält die Angaben aus Ihrem Eintrag, statt sie zu erraten. to.co, einer der Anbieter, erklärt ABIZ in einer [Übersicht auf Deutsch](https://to.co/de-de/abiz).
 

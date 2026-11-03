@@ -14,15 +14,15 @@ Setiap rekod perniagaan memerlukan lima medan berikut (SPEC bahagian 4.1):
 
 | Medan | Contoh dan peraturan |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | nama awam yang dikenali pelanggan, contohnya `Kedai Batik Melaka` |
+| `record_version` | `abiz1` |
+| `business_name` | nama awam yang dikenali pelanggan, contohnya `Kedai Batik Melaka` |
 | `country` | `my`, kod ISO 3166-1 alpha-2 dalam huruf kecil |
-| `identity-host` | `batikmelaka.my.to.co`, mesti sama tepat dengan `h` dalam DNS |
+| `identity_host` | `batikmelaka.my.to.co`, mesti sama tepat dengan `h` dalam DNS |
 | `domains` | `["batikmelaka.example"]`, mesti mengandungi domain yang membawa `_abiz` |
 
 ### Kunci perniagaan pilihan `k`
 
-`k` adalah pilihan bagi semua perniagaan, sama ada berdaftar atau tidak. Jika diterbitkan, nilainya mesti sama dengan `business-key` dalam rekod, dan rekod itu juga mesti mengandungi `registration-number`. Bagi Malaysia, bentuknya ialah:
+`k` adalah pilihan bagi semua perniagaan, sama ada berdaftar atau tidak. Jika diterbitkan, nilainya mesti sama dengan `business_key` dalam rekod, dan rekod itu juga mesti mengandungi `registration_number`. Bagi Malaysia, bentuknya ialah:
 
 ```text
 my-<registration-number>
@@ -32,18 +32,18 @@ Malaysia tidak menggunakan kod subbahagian: jangan tambah kod negeri, daerah ata
 
 **Nombor yang digunakan:** nombor pendaftaran 12 digit yang diperkenalkan oleh SSM, contohnya `202301012345` bagi syarikat. Gunakan nombor baharu ini, bukan nombor lama.
 
-**Penormalan (SPEC bahagian 4.2.3):** mulakan dengan nombor tepat seperti yang dikeluarkan oleh pendaftar, gunakan penormalan Unicode NFKC, buang ruang, `-`, `.`, `/` dan sempang, kemudian tukar huruf kepada huruf besar. Kekalkan sifar di hadapan dan awalan huruf. Hasilnya mesti mengandungi huruf dan digit ASCII sahaja; jika tidak, kunci perniagaan tidak boleh diterbitkan dan `k`, `business-key` serta `registration-number` ditinggalkan.
+**Penormalan (SPEC bahagian 4.2.3):** mulakan dengan nombor tepat seperti yang dikeluarkan oleh pendaftar, gunakan penormalan Unicode NFKC, buang ruang, `-`, `.`, `/` dan sempang, kemudian tukar huruf kepada huruf besar. Kekalkan sifar di hadapan dan awalan huruf. Hasilnya mesti mengandungi huruf dan digit ASCII sahaja; jika tidak, kunci perniagaan tidak boleh diterbitkan dan `k`, `business_key` serta `registration_number` ditinggalkan.
 
-**Contoh (rekaan):** `202301012345` menjadi `202301012345`, maka `k=my-202301012345`. Dalam rekod: `"business-key": "my-202301012345"` dan `"registration-number": "202301012345"`. Kunci dibandingkan tanpa mengira huruf besar atau kecil; bentuk kanoniknya ialah kod negara dalam huruf kecil dan nombor dalam huruf besar.
+**Contoh (rekaan):** `202301012345` menjadi `202301012345`, maka `k=my-202301012345`. Dalam rekod: `"business_key": "my-202301012345"` dan `"registration_number": "202301012345"`. Kunci dibandingkan tanpa mengira huruf besar atau kecil; bentuk kanoniknya ialah kod negara dalam huruf kecil dan nombor dalam huruf besar.
 
-**Pemilik tunggal:** jika satu-satunya nombor yang anda ada ialah nombor peribadi, seperti nombor kad pengenalan, jangan terbitkan `k`. Tinggalkan `k`, `business-key` dan `registration-number`; rekod masih sah.
+**Pemilik tunggal:** jika satu-satunya nombor yang anda ada ialah nombor peribadi, seperti nombor kad pengenalan, jangan terbitkan `k`. Tinggalkan `k`, `business_key` dan `registration_number`; rekod masih sah.
 
 ### Rekod DNS TXT
 
 Terbitkan tepat satu rekod TXT bernama `_abiz` di bawah domain anda, dalam bentuk padat tanpa ruang, dengan `v=abiz1` di hadapan:
 
 ```dns
-_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=5w3x+dAzFjveIHQ1SEV65+TRIT4etspVpIw1o2p8kRI="
+_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc="
 ```
 
 Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. Jangan sekali-kali menyalinnya: terbitkan kunci anda sendiri atau tinggalkan `p`. Semua nama, nombor dan domain di halaman ini adalah rekaan.
@@ -51,38 +51,40 @@ Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. 
 Tanpa tag pilihan `k` dan `p`, rekod ini juga sah:
 
 ```dns
-_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;h=batikmelaka.my.to.co"
+_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc="
 ```
 
 Rekod perniagaan yang disediakan sebagai `application/json` di `https://batikmelaka.my.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Kedai Batik Melaka",
+  "record_version": "abiz1",
+  "business_name": "Kedai Batik Melaka",
   "country": "my",
-  "business-key": "my-202301012345",
-  "registration-number": "202301012345",
-  "identity-host": "batikmelaka.my.to.co",
+  "business_key": "my-202301012345",
+  "registration_number": "202301012345",
+  "identity_host": "batikmelaka.my.to.co",
   "domains": [
     "batikmelaka.example"
-  ]
+  ],
+  "public_key": "Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc=",
+  "signature": "c6CdLfRcjA4eBjOSWWTaDieka1UPIvOULIKfAfgxMHxja7XYHCnP3G+lqtR4o7xQ1jT637N+/hiyu6MBZSV+AQ=="
 }
 ```
 
 Untuk menyemak rekod sebelum diterbitkan, jalankan pengesah rujukan daripada salinan repositori ini:
 
 ```sh
-python scripts/validate.py record.json --domain batikmelaka.example --dns-value 'v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=5w3x+dAzFjveIHQ1SEV65+TRIT4etspVpIw1o2p8kRI='
+python scripts/validate.py record.json --domain batikmelaka.example --dns-value 'v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc='
 ```
 
 Anda boleh menempatkan sendiri rekod JSON pada mana-mana pelayan HTTPS, atau menggunakan mana-mana penyedia yang serasi. ABIZ tidak mewajibkan penyedia tertentu.
 
 ## 3. Menggunakan penyedia dan MCP
 
-Model Context Protocol (MCP) ialah protokol terbuka yang membolehkan pembantu AI memanggil alat dan membaca data daripada pelayan luar dengan cara yang standard. Rekod perniagaan boleh mengandungi medan pilihan `mcp-server-url`, iaitu alamat HTTPS pelayan MCP perniagaan, contohnya untuk tempahan atau maklumat produk. ABIZ tidak menjamin pelayan itu; alat mesti menggunakan kawalan akses sendiri (SPEC bahagian 4.2.6).
+Model Context Protocol (MCP) ialah protokol terbuka yang membolehkan pembantu AI memanggil alat dan membaca data daripada pelayan luar dengan cara yang standard. Rekod perniagaan boleh mengandungi medan pilihan `mcp_server_url`, iaitu alamat HTTPS pelayan MCP perniagaan, contohnya untuk tempahan atau maklumat produk. ABIZ tidak menjamin pelayan itu; alat mesti menggunakan kawalan akses sendiri (SPEC bahagian 4.2.6).
 
-Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Malaysia yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `batikmelaka.my.to.co`, dengan nilai DNS `v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `batikmelaka-melaka.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
+Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Malaysia yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `batikmelaka.my.to.co`, dengan nilai DNS `v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc=`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `batikmelaka-melaka.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
 
 ## 4. Kunci dan tandatangan (ABIZ 1.1)
 

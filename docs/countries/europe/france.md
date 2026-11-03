@@ -16,15 +16,15 @@ La fiche d'entreprise est un document JSON qui doit être conforme au [schéma n
 
 | Champ | Exemple | Remarques |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Toujours cette valeur |
-| `business-name` | `Boulangerie Martin SAS` | Le nom public, en général tel qu'il figure au registre, avec la forme juridique si vous l'utilisez |
+| `record_version` | `abiz1` | Toujours cette valeur |
+| `business_name` | `Boulangerie Martin SAS` | Le nom public, en général tel qu'il figure au registre, avec la forme juridique si vous l'utilisez |
 | `country` | `fr` | Code pays ISO 3166-1 alpha-2 ; la forme canonique est en minuscules |
-| `identity-host` | `boulangeriemartin.fr.to.co` | Exactement la valeur DNS `h` : un nom d'hôte avec un chemin facultatif, sans `https://` |
+| `identity_host` | `boulangeriemartin.fr.to.co` | Exactement la valeur DNS `h` : un nom d'hôte avec un chemin facultatif, sans `https://` |
 | `domains` | `["boulangeriemartin.example"]` | Les domaines revendiqués par la fiche, y compris celui qui porte `_abiz` |
 
 ### Clé d'entreprise `k` (facultative)
 
-`k` est facultatif pour toute entreprise, immatriculée ou non. Si vous le publiez, la fiche doit aussi contenir `business-key` et `registration-number`, et `k` doit être égal à `business-key`.
+`k` est facultatif pour toute entreprise, immatriculée ou non. Si vous le publiez, la fiche doit aussi contenir `business_key` et `registration_number`, et `k` doit être égal à `business_key`.
 
 En France, la clé s'écrit `fr-` suivi du numéro d'immatriculation, sans subdivision : une clé comportant une partie intermédiaire, comme `fr-xx-…`, est invalide.
 
@@ -32,7 +32,7 @@ En France, la clé s'écrit `fr-` suivi du numéro d'immatriculation, sans subdi
 - **Numéro à utiliser :** le numéro SIREN à 9 chiffres. Pas le SIRET (14 chiffres, propre à chaque établissement) ni le numéro de TVA intracommunautaire
 - **Écriture :** partez du numéro tel que le registre l'attribue, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les autres tirets, puis mettez les lettres en majuscules. Les zéros initiaux et les préfixes en lettres sont conservés. Le résultat ne doit contenir que des lettres et des chiffres ASCII.
 
-Exemple (numéro fictif) : `123 456 789` devient `123456789`. La fiche contient alors `"registration-number": "123456789"` et `"business-key": "fr-123456789"`, et le DNS porte `k=fr-123456789`.
+Exemple (numéro fictif) : `123 456 789` devient `123456789`. La fiche contient alors `"registration_number": "123456789"` et `"business_key": "fr-123456789"`, et le DNS porte `k=fr-123456789`.
 
 Les clés se comparent sans tenir compte de la casse, mais publiez la forme canonique : code pays en minuscules, numéro en majuscules.
 
@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.boulangeriemartin.example. 300 IN TXT "v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=TuSHL0R1nQMDYU1C/dAhqrEG591ypPBhxK32CBscjkw="
+_abiz.boulangeriemartin.example. 300 IN TXT "v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=szgBK4fodd9feDENFfCEOR2lYzofU2yQkWlngD6cZBE="
 ```
 
 - `v=abiz1` doit venir en premier. `h` est obligatoire ; `k` et `p` sont facultatifs.
@@ -56,15 +56,16 @@ La fiche servie à l'adresse `https://boulangeriemartin.fr.to.co`, au format `ap
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Boulangerie Martin SAS",
+  "record_version": "abiz1",
+  "business_name": "Boulangerie Martin SAS",
   "country": "fr",
-  "business-key": "fr-123456789",
-  "registration-number": "123456789",
-  "identity-host": "boulangeriemartin.fr.to.co",
+  "business_key": "fr-123456789",
+  "registration_number": "123456789",
+  "identity_host": "boulangeriemartin.fr.to.co",
   "domains": [
     "boulangeriemartin.example"
   ],
+  "public_key": "szgBK4fodd9feDENFfCEOR2lYzofU2yQkWlngD6cZBE=",
   "description": "Boulangerie artisanale à Lyon.",
   "website": "https://boulangeriemartin.example",
   "locations": [
@@ -74,14 +75,15 @@ La fiche servie à l'adresse `https://boulangeriemartin.fr.to.co`, au format `ap
       "country": "fr",
       "public": true
     }
-  ]
+  ],
+  "signature": "0NieNEPwb56cgaQDC3gHAJK3u8UPuUEEh1YFk2ojg543JY0Z292kMu8FtBJDYHMcl0oy/2AWTeVSM+YZMPKrCg=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain boulangeriemartin.example --dns-value 'v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=TuSHL0R1nQMDYU1C/dAhqrEG591ypPBhxK32CBscjkw='
+python scripts/validate.py record.json --domain boulangeriemartin.example --dns-value 'v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=szgBK4fodd9feDENFfCEOR2lYzofU2yQkWlngD6cZBE='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur
@@ -90,7 +92,7 @@ Vous pouvez servir la fiche vous-même sur tout hôte HTTPS que vous contrôlez,
 
 ## 3. Fournisseurs et MCP
 
-MCP (Model Context Protocol) est un protocole ouvert qui permet aux assistants d'IA d'appeler des outils et de lire des données sur des serveurs externes. Un fournisseur peut exploiter un serveur MCP grâce auquel un assistant obtient directement votre fiche publique. Vous pouvez l'indiquer dans le champ facultatif `mcp-server-url`. ABIZ n'exige pas de serveur MCP, et un outil ne doit pas en appeler un automatiquement au seul motif qu'il figure dans une fiche.
+MCP (Model Context Protocol) est un protocole ouvert qui permet aux assistants d'IA d'appeler des outils et de lire des données sur des serveurs externes. Un fournisseur peut exploiter un serveur MCP grâce auquel un assistant obtient directement votre fiche publique. Vous pouvez l'indiquer dans le champ facultatif `mcp_server_url`. ABIZ n'exige pas de serveur MCP, et un outil ne doit pas en appeler un automatiquement au seul motif qu'il figure dans une fiche.
 
 Par exemple, un fournisseur peut servir votre fiche à l'adresse `boulangeriemartin.fr.to.co` et exploiter un serveur MCP. Un assistant connecté à ce serveur peut alors demander les horaires ou les services de Boulangerie Martin SAS et obtenir les informations de votre fiche, au lieu de les deviner. to.co, l'un de ces fournisseurs, présente ABIZ dans une [page en français](https://to.co/fr-fr/abiz).
 

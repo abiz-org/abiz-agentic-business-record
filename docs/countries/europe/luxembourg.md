@@ -16,15 +16,15 @@ La fiche d'entreprise est un document JSON qui doit être conforme au [schéma n
 
 | Champ | Exemple | Remarques |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Toujours cette valeur |
-| `business-name` | `Moselle Conseil S.à r.l.` | Le nom public, en général tel qu'il figure au registre, avec la forme juridique si vous l'utilisez |
+| `record_version` | `abiz1` | Toujours cette valeur |
+| `business_name` | `Moselle Conseil S.à r.l.` | Le nom public, en général tel qu'il figure au registre, avec la forme juridique si vous l'utilisez |
 | `country` | `lu` | Code pays ISO 3166-1 alpha-2 ; la forme canonique est en minuscules |
-| `identity-host` | `moselleconseil.lu.to.co` | Exactement la valeur DNS `h` : un nom d'hôte avec un chemin facultatif, sans `https://` |
+| `identity_host` | `moselleconseil.lu.to.co` | Exactement la valeur DNS `h` : un nom d'hôte avec un chemin facultatif, sans `https://` |
 | `domains` | `["moselleconseil.example"]` | Les domaines revendiqués par la fiche, y compris celui qui porte `_abiz` |
 
 ### Clé d'entreprise `k` (facultative)
 
-`k` est facultatif pour toute entreprise, immatriculée ou non. Si vous le publiez, la fiche doit aussi contenir `business-key` et `registration-number`, et `k` doit être égal à `business-key`.
+`k` est facultatif pour toute entreprise, immatriculée ou non. Si vous le publiez, la fiche doit aussi contenir `business_key` et `registration_number`, et `k` doit être égal à `business_key`.
 
 Au Luxembourg, la clé s'écrit `lu-` suivi du numéro d'immatriculation, sans subdivision : une clé comportant une partie intermédiaire, comme `lu-xx-…`, est invalide.
 
@@ -32,7 +32,7 @@ Au Luxembourg, la clé s'écrit `lu-` suivi du numéro d'immatriculation, sans s
 - **Numéro à utiliser :** le numéro RCS, avec sa lettre (par exemple `B` pour une société commerciale)
 - **Écriture :** partez du numéro tel que le registre l'attribue, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les autres tirets, puis mettez les lettres en majuscules. Les zéros initiaux et les préfixes en lettres sont conservés. Le résultat ne doit contenir que des lettres et des chiffres ASCII.
 
-Exemple (numéro fictif) : `B123456` est déjà sous forme canonique. La fiche contient alors `"registration-number": "B123456"` et `"business-key": "lu-B123456"`, et le DNS porte `k=lu-B123456`. Conservez la lettre initiale.
+Exemple (numéro fictif) : `B123456` est déjà sous forme canonique. La fiche contient alors `"registration_number": "B123456"` et `"business_key": "lu-B123456"`, et le DNS porte `k=lu-B123456`. Conservez la lettre initiale.
 
 Les clés se comparent sans tenir compte de la casse, mais publiez la forme canonique : code pays en minuscules, numéro en majuscules.
 
@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.moselleconseil.example. 300 IN TXT "v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=5DdRuj6PRmyneE8oAVfLmXzA2kP+KG3l0nh0hM9DIOw="
+_abiz.moselleconseil.example. 300 IN TXT "v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=O1BIfPm22zpAw4zxM68gSURlRHdFi6gicxl7qa51mwA="
 ```
 
 - `v=abiz1` doit venir en premier. `h` est obligatoire ; `k` et `p` sont facultatifs.
@@ -56,15 +56,16 @@ La fiche servie à l'adresse `https://moselleconseil.lu.to.co`, au format `appli
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Moselle Conseil S.à r.l.",
+  "record_version": "abiz1",
+  "business_name": "Moselle Conseil S.à r.l.",
   "country": "lu",
-  "business-key": "lu-B123456",
-  "registration-number": "B123456",
-  "identity-host": "moselleconseil.lu.to.co",
+  "business_key": "lu-B123456",
+  "registration_number": "B123456",
+  "identity_host": "moselleconseil.lu.to.co",
   "domains": [
     "moselleconseil.example"
   ],
+  "public_key": "O1BIfPm22zpAw4zxM68gSURlRHdFi6gicxl7qa51mwA=",
   "description": "Cabinet de conseil à Luxembourg.",
   "website": "https://moselleconseil.example",
   "locations": [
@@ -74,14 +75,15 @@ La fiche servie à l'adresse `https://moselleconseil.lu.to.co`, au format `appli
       "country": "lu",
       "public": true
     }
-  ]
+  ],
+  "signature": "l6ZYUMxHgfOFE2EN+RgFNCJ8FOdOvB4Qa3iAoLUWEqoZxecvGzhZ8dxU1q2BCelRNjXt9LZucoveD+eDxSqlBw=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain moselleconseil.example --dns-value 'v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=5DdRuj6PRmyneE8oAVfLmXzA2kP+KG3l0nh0hM9DIOw='
+python scripts/validate.py record.json --domain moselleconseil.example --dns-value 'v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=O1BIfPm22zpAw4zxM68gSURlRHdFi6gicxl7qa51mwA='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur
@@ -90,7 +92,7 @@ Vous pouvez servir la fiche vous-même sur tout hôte HTTPS que vous contrôlez,
 
 ## 3. Fournisseurs et MCP
 
-MCP (Model Context Protocol) est un protocole ouvert qui permet aux assistants d'IA d'appeler des outils et de lire des données sur des serveurs externes. Un fournisseur peut exploiter un serveur MCP grâce auquel un assistant obtient directement votre fiche publique. Vous pouvez l'indiquer dans le champ facultatif `mcp-server-url`. ABIZ n'exige pas de serveur MCP, et un outil ne doit pas en appeler un automatiquement au seul motif qu'il figure dans une fiche.
+MCP (Model Context Protocol) est un protocole ouvert qui permet aux assistants d'IA d'appeler des outils et de lire des données sur des serveurs externes. Un fournisseur peut exploiter un serveur MCP grâce auquel un assistant obtient directement votre fiche publique. Vous pouvez l'indiquer dans le champ facultatif `mcp_server_url`. ABIZ n'exige pas de serveur MCP, et un outil ne doit pas en appeler un automatiquement au seul motif qu'il figure dans une fiche.
 
 Par exemple, un fournisseur peut servir votre fiche à l'adresse `moselleconseil.lu.to.co` et exploiter un serveur MCP. Un assistant connecté à ce serveur peut alors demander les horaires ou les services de Moselle Conseil S.à r.l. et obtenir les informations de votre fiche, au lieu de les deviner.
 

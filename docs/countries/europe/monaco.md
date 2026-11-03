@@ -16,15 +16,15 @@ La fiche d'entreprise est un document JSON qui doit être conforme au [schéma n
 
 | Champ | Exemple | Remarques |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Toujours cette valeur |
-| `business-name` | `Riviera Yachting SARL` | Le nom public, en général tel qu'il figure au registre, avec la forme juridique si vous l'utilisez |
+| `record_version` | `abiz1` | Toujours cette valeur |
+| `business_name` | `Riviera Yachting SARL` | Le nom public, en général tel qu'il figure au registre, avec la forme juridique si vous l'utilisez |
 | `country` | `mc` | Code pays ISO 3166-1 alpha-2 ; la forme canonique est en minuscules |
-| `identity-host` | `rivierayachting.mc.to.co` | Exactement la valeur DNS `h` : un nom d'hôte avec un chemin facultatif, sans `https://` |
+| `identity_host` | `rivierayachting.mc.to.co` | Exactement la valeur DNS `h` : un nom d'hôte avec un chemin facultatif, sans `https://` |
 | `domains` | `["rivierayachting.example"]` | Les domaines revendiqués par la fiche, y compris celui qui porte `_abiz` |
 
 ### Clé d'entreprise `k` (facultative)
 
-`k` est facultatif pour toute entreprise, immatriculée ou non. Si vous le publiez, la fiche doit aussi contenir `business-key` et `registration-number`, et `k` doit être égal à `business-key`.
+`k` est facultatif pour toute entreprise, immatriculée ou non. Si vous le publiez, la fiche doit aussi contenir `business_key` et `registration_number`, et `k` doit être égal à `business_key`.
 
 À Monaco, la clé s'écrit `mc-` suivi du numéro d'immatriculation, sans subdivision : une clé comportant une partie intermédiaire, comme `mc-xx-…`, est invalide.
 
@@ -32,7 +32,7 @@ La fiche d'entreprise est un document JSON qui doit être conforme au [schéma n
 - **Numéro à utiliser :** le numéro RCI, par exemple `12 S 12345` (année, lettre de catégorie, numéro d'ordre)
 - **Écriture :** partez du numéro tel que le registre l'attribue, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les autres tirets, puis mettez les lettres en majuscules. Les zéros initiaux et les préfixes en lettres sont conservés. Le résultat ne doit contenir que des lettres et des chiffres ASCII.
 
-Exemple (numéro fictif) : `12 S 12345` devient `12S12345`. La fiche contient alors `"registration-number": "12S12345"` et `"business-key": "mc-12S12345"`, et le DNS porte `k=mc-12S12345`. Conservez la lettre de catégorie.
+Exemple (numéro fictif) : `12 S 12345` devient `12S12345`. La fiche contient alors `"registration_number": "12S12345"` et `"business_key": "mc-12S12345"`, et le DNS porte `k=mc-12S12345`. Conservez la lettre de catégorie.
 
 Les clés se comparent sans tenir compte de la casse, mais publiez la forme canonique : code pays en minuscules, numéro en majuscules.
 
@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.rivierayachting.example. 300 IN TXT "v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=PmzpKvSoGFyJKOd08/fxwBBPe4oMKzl2PnI/j+rj16o="
+_abiz.rivierayachting.example. 300 IN TXT "v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=s14psRKLLuzjbq2fWsqvDMJ2L8/gPgXaunvTJwaL/h0="
 ```
 
 - `v=abiz1` doit venir en premier. `h` est obligatoire ; `k` et `p` sont facultatifs.
@@ -56,15 +56,16 @@ La fiche servie à l'adresse `https://rivierayachting.mc.to.co`, au format `appl
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Riviera Yachting SARL",
+  "record_version": "abiz1",
+  "business_name": "Riviera Yachting SARL",
   "country": "mc",
-  "business-key": "mc-12S12345",
-  "registration-number": "12S12345",
-  "identity-host": "rivierayachting.mc.to.co",
+  "business_key": "mc-12S12345",
+  "registration_number": "12S12345",
+  "identity_host": "rivierayachting.mc.to.co",
   "domains": [
     "rivierayachting.example"
   ],
+  "public_key": "s14psRKLLuzjbq2fWsqvDMJ2L8/gPgXaunvTJwaL/h0=",
   "description": "Services nautiques à Monaco.",
   "website": "https://rivierayachting.example",
   "locations": [
@@ -74,14 +75,15 @@ La fiche servie à l'adresse `https://rivierayachting.mc.to.co`, au format `appl
       "country": "mc",
       "public": true
     }
-  ]
+  ],
+  "signature": "vmPPxHoaJ6gMUpSyN2O7lfDzGI97239GxbDVaA8lD5+P7azFwQlCPgmb9pf+hXGa2aaiDZrnt9ZGMzTT3xe6AQ=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain rivierayachting.example --dns-value 'v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=PmzpKvSoGFyJKOd08/fxwBBPe4oMKzl2PnI/j+rj16o='
+python scripts/validate.py record.json --domain rivierayachting.example --dns-value 'v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=s14psRKLLuzjbq2fWsqvDMJ2L8/gPgXaunvTJwaL/h0='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur
@@ -90,7 +92,7 @@ Vous pouvez servir la fiche vous-même sur tout hôte HTTPS que vous contrôlez,
 
 ## 3. Fournisseurs et MCP
 
-MCP (Model Context Protocol) est un protocole ouvert qui permet aux assistants d'IA d'appeler des outils et de lire des données sur des serveurs externes. Un fournisseur peut exploiter un serveur MCP grâce auquel un assistant obtient directement votre fiche publique. Vous pouvez l'indiquer dans le champ facultatif `mcp-server-url`. ABIZ n'exige pas de serveur MCP, et un outil ne doit pas en appeler un automatiquement au seul motif qu'il figure dans une fiche.
+MCP (Model Context Protocol) est un protocole ouvert qui permet aux assistants d'IA d'appeler des outils et de lire des données sur des serveurs externes. Un fournisseur peut exploiter un serveur MCP grâce auquel un assistant obtient directement votre fiche publique. Vous pouvez l'indiquer dans le champ facultatif `mcp_server_url`. ABIZ n'exige pas de serveur MCP, et un outil ne doit pas en appeler un automatiquement au seul motif qu'il figure dans une fiche.
 
 Par exemple, un fournisseur peut servir votre fiche à l'adresse `rivierayachting.mc.to.co` et exploiter un serveur MCP. Un assistant connecté à ce serveur peut alors demander les horaires ou les services de Riviera Yachting SARL et obtenir les informations de votre fiche, au lieu de les deviner.
 

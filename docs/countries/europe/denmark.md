@@ -16,15 +16,15 @@ Virksomhedsposten er et JSON-dokument, der skal overholde det [normative skema](
 
 | Felt | Eksempel | Bemærkning |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Altid denne værdi |
-| `business-name` | `Fiskehuset Holm ApS` | Det offentlige navn, normalt som i registret, med selskabsform hvis I bruger den |
+| `record_version` | `abiz1` | Altid denne værdi |
+| `business_name` | `Fiskehuset Holm ApS` | Det offentlige navn, normalt som i registret, med selskabsform hvis I bruger den |
 | `country` | `dk` | Landekode efter ISO 3166-1 alpha-2; kanonisk form er små bogstaver |
-| `identity-host` | `fiskehusetholm.dk.to.co` | Præcis DNS-værdien `h`: et værtsnavn med valgfri sti, uden `https://` |
+| `identity_host` | `fiskehusetholm.dk.to.co` | Præcis DNS-værdien `h`: et værtsnavn med valgfri sti, uden `https://` |
 | `domains` | `["fiskehusetholm.example"]` | De domæner, posten gælder, inklusive domænet med `_abiz` |
 
 ### Frivillig virksomhedsnøgle `k`
 
-`k` er frivillig for alle virksomheder, registrerede eller ej. Hvis I offentliggør `k`, skal posten også indeholde `business-key` og `registration-number`, og `k` skal være lig med `business-key`.
+`k` er frivillig for alle virksomheder, registrerede eller ej. Hvis I offentliggør `k`, skal posten også indeholde `business_key` og `registration_number`, og `k` skal være lig med `business_key`.
 
 I Danmark er nøglen `dk-` efterfulgt af registreringsnummeret, uden regionsdel: en nøgle med en mellemdel, fx `dk-xx-…`, er ugyldig.
 
@@ -32,7 +32,7 @@ I Danmark er nøglen `dk-` efterfulgt af registreringsnummeret, uden regionsdel:
 - **Nummer:** CVR-nummeret, 8 cifre. Ikke P-nummeret (produktionsenhed) og ikke momsnummeret med præfikset `DK`
 - **Skrivemåde:** tag udgangspunkt i nummeret, som registret udsteder det, anvend Unicode-normalisering NFKC, fjern mellemrum, `-`, `.`, `/` og andre bindestreger, og skriv bogstaver med versaler. Foranstillede nuller og bogstavpræfikser bevares. Resultatet må kun indeholde ASCII-bogstaver og -cifre.
 
-Eksempel (opdigtet nummer): `12 34 56 78` bliver til `12345678`. Posten indeholder så `"registration-number": "12345678"` og `"business-key": "dk-12345678"`, og i DNS står `k=dk-12345678`.
+Eksempel (opdigtet nummer): `12 34 56 78` bliver til `12345678`. Posten indeholder så `"registration_number": "12345678"` og `"business_key": "dk-12345678"`, og i DNS står `k=dk-12345678`.
 
 Nøgler sammenlignes uden forskel på store og små bogstaver, men offentliggør den kanoniske form: landekode med små bogstaver, nummer med store.
 
@@ -41,7 +41,7 @@ Nøgler sammenlignes uden forskel på store og små bogstaver, men offentliggør
 Offentliggør præcis én ABIZ TXT-post under `_abiz` på jeres domæne, i kompakt form uden mellemrum:
 
 ```dns
-_abiz.fiskehusetholm.example. 300 IN TXT "v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=Y/CfS93IH4UyFakxF09hxhD5OPHO+B+e8nZ1U6YPtg0="
+_abiz.fiskehusetholm.example. 300 IN TXT "v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=FhDBkkVbbAT0jBQstBywifSX0TRXXYvFxk0BJmO1AD0="
 ```
 
 - `v=abiz1` skal stå først. `h` er obligatorisk; `k` og `p` er frivillige.
@@ -56,15 +56,16 @@ Posten, der leveres på `https://fiskehusetholm.dk.to.co` som `application/json`
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Fiskehuset Holm ApS",
+  "record_version": "abiz1",
+  "business_name": "Fiskehuset Holm ApS",
   "country": "dk",
-  "business-key": "dk-12345678",
-  "registration-number": "12345678",
-  "identity-host": "fiskehusetholm.dk.to.co",
+  "business_key": "dk-12345678",
+  "registration_number": "12345678",
+  "identity_host": "fiskehusetholm.dk.to.co",
   "domains": [
     "fiskehusetholm.example"
   ],
+  "public_key": "FhDBkkVbbAT0jBQstBywifSX0TRXXYvFxk0BJmO1AD0=",
   "description": "Fiskehandel i Aarhus.",
   "website": "https://fiskehusetholm.example",
   "locations": [
@@ -74,14 +75,15 @@ Posten, der leveres på `https://fiskehusetholm.dk.to.co` som `application/json`
       "country": "dk",
       "public": true
     }
-  ]
+  ],
+  "signature": "lflZ3Lh3NPfkKKxErN94MmqIh9gtpBRkZ+ANbumMmqQeGTpyfEKklRxFtZ8ZgV5nc240RLPqNfyAbnW9qWf0BQ=="
 }
 ```
 
 Med referencevalidatoren kan I kontrollere posten og DNS-værdien lokalt:
 
 ```sh
-python scripts/validate.py record.json --domain fiskehusetholm.example --dns-value 'v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=Y/CfS93IH4UyFakxF09hxhD5OPHO+B+e8nZ1U6YPtg0='
+python scripts/validate.py record.json --domain fiskehusetholm.example --dns-value 'v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=FhDBkkVbbAT0jBQstBywifSX0TRXXYvFxk0BJmO1AD0='
 ```
 
 ### Selv eller via en udbyder
@@ -90,7 +92,7 @@ I kan selv levere posten fra enhver HTTPS-vært, I kontrollerer, eller bruge en 
 
 ## 3. Udbydere og MCP
 
-MCP (Model Context Protocol) er en åben protokol, som lader AI-assistenter kalde værktøjer og læse data fra eksterne servere. En udbyder kan drive en MCP-server, hvor en assistent henter jeres offentlige post direkte. Serveren kan angives i det frivillige felt `mcp-server-url`. ABIZ kræver ingen MCP-server, og et værktøj bør ikke kalde den automatisk, bare fordi den står i en post.
+MCP (Model Context Protocol) er en åben protokol, som lader AI-assistenter kalde værktøjer og læse data fra eksterne servere. En udbyder kan drive en MCP-server, hvor en assistent henter jeres offentlige post direkte. Serveren kan angives i det frivillige felt `mcp_server_url`. ABIZ kræver ingen MCP-server, og et værktøj bør ikke kalde den automatisk, bare fordi den står i en post.
 
 Et eksempel: en udbyder offentliggør jeres post på `fiskehusetholm.dk.to.co` og driver en MCP-server. En assistent, der er forbundet til serveren, kan så spørge om åbningstider eller ydelser hos Fiskehuset Holm ApS og få oplysningerne fra jeres post i stedet for at gætte.
 

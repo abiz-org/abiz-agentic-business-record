@@ -14,15 +14,15 @@ Toute fiche d’entreprise contient ces cinq champs (section 4.1 de la SPEC) :
 
 | Champ | Exemple et règle |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | le nom public que connaissent les clients, par exemple `Pagnes de Lomé` |
+| `record_version` | `abiz1` |
+| `business_name` | le nom public que connaissent les clients, par exemple `Pagnes de Lomé` |
 | `country` | `tg`, le code ISO 3166-1 alpha-2, en minuscules |
-| `identity-host` | `pagneslome.tg.to.co`, qui doit correspondre exactement à `h` dans le DNS |
+| `identity_host` | `pagneslome.tg.to.co`, qui doit correspondre exactement à `h` dans le DNS |
 | `domains` | `["pagneslome.example"]`, qui doit inclure le domaine portant `_abiz` |
 
 ### Clé d’entreprise facultative `k`
 
-`k` est facultative pour toute entreprise, immatriculée ou non. Si vous la publiez, elle doit être égale au champ `business-key` de la fiche, qui doit alors contenir aussi `registration-number`. Pour le Togo, la forme est :
+`k` est facultative pour toute entreprise, immatriculée ou non. Si vous la publiez, elle doit être égale au champ `business_key` de la fiche, qui doit alors contenir aussi `registration_number`. Pour le Togo, la forme est :
 
 ```text
 tg-<registration-number>
@@ -32,20 +32,20 @@ Le Togo n’utilise pas de subdivision : n’ajoutez ni code de région, ni code
 
 **Quel numéro :** le numéro RCCM (Registre du commerce et du crédit mobilier) inscrit sur votre extrait d’immatriculation, tel que le greffe le délivre, lettres comprises. Il intègre le code du pays et celui du greffe : nous le traitons donc comme un numéro unique à l’échelle nationale. C’est notre lecture de la section 4.2.2 de la SPEC, qui ne cite pas les pays de l’OHADA ; elle reste à confirmer. Le format exact varie selon les greffes, par exemple `TG-LFW-01-2023-B12-01234` pour Lomé.
 
-**Normalisation (section 4.2.3 de la SPEC) :** partez du numéro tel que le registre le délivre, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les tirets, puis mettez les lettres en majuscules. Conservez les zéros initiaux et les préfixes en lettres. Le résultat ne doit contenir que des lettres et chiffres ASCII. Sinon, aucune clé d’entreprise n’est possible : omettez `k`, `business-key` et `registration-number`.
+**Normalisation (section 4.2.3 de la SPEC) :** partez du numéro tel que le registre le délivre, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les tirets, puis mettez les lettres en majuscules. Conservez les zéros initiaux et les préfixes en lettres. Le résultat ne doit contenir que des lettres et chiffres ASCII. Sinon, aucune clé d’entreprise n’est possible : omettez `k`, `business_key` et `registration_number`.
 
-**Exemple (fictif) :** `TG-LFW-01-2023-B12-01234` devient `TGLFW012023B1201234`, donc `k=tg-TGLFW012023B1201234`. Dans la fiche : `"business-key": "tg-TGLFW012023B1201234"` et `"registration-number": "TGLFW012023B1201234"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
+**Exemple (fictif) :** `TG-LFW-01-2023-B12-01234` devient `TGLFW012023B1201234`, donc `k=tg-TGLFW012023B1201234`. Dans la fiche : `"business_key": "tg-TGLFW012023B1201234"` et `"registration_number": "TGLFW012023B1201234"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
 
 **À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
 
-**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business-key` et `registration-number` ; la fiche reste valide.
+**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business_key` et `registration_number` ; la fiche reste valide.
 
 ### Enregistrement DNS TXT
 
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.pagneslome.example. 300 IN TXT "v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=5iFWJKUdcQfkVJLVxinsmmjpRp5p0X6VVGwp7uLhBB4="
+_abiz.pagneslome.example. 300 IN TXT "v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé ou omettez `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,38 +53,40 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans les balises facultatives `k` et `p`, ceci est également valide :
 
 ```dns
-_abiz.pagneslome.example. 300 IN TXT "v=abiz1;h=pagneslome.tg.to.co"
+_abiz.pagneslome.example. 300 IN TXT "v=abiz1;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://pagneslome.tg.to.co` :
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Pagnes de Lomé",
+  "record_version": "abiz1",
+  "business_name": "Pagnes de Lomé",
   "country": "tg",
-  "business-key": "tg-TGLFW012023B1201234",
-  "registration-number": "TGLFW012023B1201234",
-  "identity-host": "pagneslome.tg.to.co",
+  "business_key": "tg-TGLFW012023B1201234",
+  "registration_number": "TGLFW012023B1201234",
+  "identity_host": "pagneslome.tg.to.co",
   "domains": [
     "pagneslome.example"
-  ]
+  ],
+  "public_key": "daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY=",
+  "signature": "eGbmvKP06hr39vUKLFKWr1Oom+/bcKFdNX8v0stofIROrA36ART8r1ZlvBLaE0q8cuTcsZ4/AaTkYHE4r+dzAQ=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain pagneslome.example --dns-value 'v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=5iFWJKUdcQfkVJLVxinsmmjpRp5p0X6VVGwp7uLhBB4='
+python scripts/validate.py record.json --domain pagneslome.example --dns-value 'v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
 
 ## 3. Passer par un fournisseur et MCP
 
-Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp-server-url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
+Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Togo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `pagneslome.tg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `pagneslome-lome.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Togo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `pagneslome.tg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `pagneslome-lome.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

@@ -14,15 +14,15 @@ Toda ficha de empresa lleva estos cinco campos (sección 4.1 de la SPEC):
 
 | Campo | Ejemplo y regla |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | el nombre público que conocen los clientes, por ejemplo `Carpintería Bioko` |
+| `record_version` | `abiz1` |
+| `business_name` | el nombre público que conocen los clientes, por ejemplo `Carpintería Bioko` |
 | `country` | `gq`, el código ISO 3166-1 alfa-2, en minúsculas |
-| `identity-host` | `carpinteriabioko.gq.to.co`, que debe coincidir exactamente con `h` en el DNS |
+| `identity_host` | `carpinteriabioko.gq.to.co`, que debe coincidir exactamente con `h` en el DNS |
 | `domains` | `["carpinteriabioko.example"]`, que debe incluir el dominio que lleva `_abiz` |
 
 ### Clave de empresa opcional `k`
 
-`k` es opcional para cualquier empresa, inscrita o no. Si la publica, debe ser igual al campo `business-key` de la ficha, que entonces también debe contener `registration-number`. Para Guinea Ecuatorial, la forma es:
+`k` es opcional para cualquier empresa, inscrita o no. Si la publica, debe ser igual al campo `business_key` de la ficha, que entonces también debe contener `registration_number`. Para Guinea Ecuatorial, la forma es:
 
 ```text
 gq-<registration-number>
@@ -32,20 +32,20 @@ Guinea Ecuatorial no usa subdivisión: no añada códigos de provincia, región 
 
 **Qué número:** el número RCCM (Registro de Comercio y de Crédito Mobiliario, sistema de la OHADA) tal como figura en el certificado de inscripción, con sus letras. Como incluye el código del país y del registro, lo tratamos como único a nivel nacional. Es nuestra interpretación de la sección 4.2.2 de la SPEC, que no menciona la OHADA; conviene confirmarla. Por ejemplo `GQ/MAL/2023/B/123` para Malabo.
 
-**Normalización (sección 4.2.3 de la SPEC):** parta del número tal como lo expide el registro, aplique la normalización Unicode NFKC, elimine espacios, `-`, `.`, `/` y guiones, y pase las letras a mayúsculas. Conserve los ceros iniciales y los prefijos de letras. El resultado solo puede contener letras y dígitos ASCII; si no es así, no se puede publicar una clave de empresa: omita `k`, `business-key` y `registration-number`.
+**Normalización (sección 4.2.3 de la SPEC):** parta del número tal como lo expide el registro, aplique la normalización Unicode NFKC, elimine espacios, `-`, `.`, `/` y guiones, y pase las letras a mayúsculas. Conserve los ceros iniciales y los prefijos de letras. El resultado solo puede contener letras y dígitos ASCII; si no es así, no se puede publicar una clave de empresa: omita `k`, `business_key` y `registration_number`.
 
-**Ejemplo (ficticio):** `GQ/MAL/2023/B/123` pasa a ser `GQMAL2023B123`, así que `k=gq-GQMAL2023B123`. En la ficha: `"business-key": "gq-GQMAL2023B123"` y `"registration-number": "GQMAL2023B123"`. Las claves se comparan sin distinguir mayúsculas; la forma canónica lleva el código de país en minúsculas y el número en mayúsculas.
+**Ejemplo (ficticio):** `GQ/MAL/2023/B/123` pasa a ser `GQMAL2023B123`, así que `k=gq-GQMAL2023B123`. En la ficha: `"business_key": "gq-GQMAL2023B123"` y `"registration_number": "GQMAL2023B123"`. Las claves se comparan sin distinguir mayúsculas; la forma canónica lleva el código de país en minúsculas y el número en mayúsculas.
 
 **Compruébelo:** no hemos podido confirmar el formato exacto de este número en una fuente oficial, por lo que el ejemplo es solo orientativo. Use el número tal como figura en su documento oficial de inscripción. Si no está claro qué número identifica a la empresa a nivel nacional, no publique `k` hasta estar seguro.
 
-**Empresarios individuales:** si el único número que tiene es personal, como un documento nacional de identidad o un número fiscal personal, no publique `k`. Omita `k`, `business-key` y `registration-number`; el registro sigue siendo válido.
+**Empresarios individuales:** si el único número que tiene es personal, como un documento nacional de identidad o un número fiscal personal, no publique `k`. Omita `k`, `business_key` y `registration_number`; el registro sigue siendo válido.
 
 ### Registro DNS TXT
 
 Publique un único registro TXT en `_abiz` bajo su dominio, en forma compacta, sin espacios y con `v=abiz1` en primer lugar:
 
 ```dns
-_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=cTqoflZy3kIjDK/x9txwEatwA4JYcmetRPbNAilOa24="
+_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E="
 ```
 
 El valor `p` anterior es una clave de ejemplo desechable, generada para esta página. No la copie nunca: publique su propia clave u omita `p`. Todos los nombres, números y dominios de esta página son ficticios.
@@ -53,38 +53,40 @@ El valor `p` anterior es una clave de ejemplo desechable, generada para esta pá
 Sin las etiquetas opcionales `k` y `p`, esto también es válido:
 
 ```dns
-_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;h=carpinteriabioko.gq.to.co"
+_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E="
 ```
 
 El registro de la empresa servido como `application/json` en `https://carpinteriabioko.gq.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Carpintería Bioko",
+  "record_version": "abiz1",
+  "business_name": "Carpintería Bioko",
   "country": "gq",
-  "business-key": "gq-GQMAL2023B123",
-  "registration-number": "GQMAL2023B123",
-  "identity-host": "carpinteriabioko.gq.to.co",
+  "business_key": "gq-GQMAL2023B123",
+  "registration_number": "GQMAL2023B123",
+  "identity_host": "carpinteriabioko.gq.to.co",
   "domains": [
     "carpinteriabioko.example"
-  ]
+  ],
+  "public_key": "h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E=",
+  "signature": "ClqvogD2sf2vP9r7LM3gViz72DDK+6N/mbdvoRRmtlaRC/aThP0TiE2A/rsJWouz0gMQvFbspBe/IEJe1GK3BQ=="
 }
 ```
 
 Para comprobar una ficha antes de publicarla, ejecute el validador de referencia desde una copia de este repositorio:
 
 ```sh
-python scripts/validate.py record.json --domain carpinteriabioko.example --dns-value 'v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=cTqoflZy3kIjDK/x9txwEatwA4JYcmetRPbNAilOa24='
+python scripts/validate.py record.json --domain carpinteriabioko.example --dns-value 'v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E='
 ```
 
 Puede alojar la ficha JSON usted mismo, en cualquier servidor HTTPS, o usar cualquier proveedor compatible. ABIZ no exige un proveedor concreto.
 
 ## 3. Usar un proveedor y MCP
 
-El Model Context Protocol (MCP) es un protocolo abierto que permite a los asistentes de IA llamar a herramientas y leer datos de servidores externos de forma estándar. Una ficha puede incluir el campo opcional `mcp-server-url`, la dirección HTTPS de un servidor MCP de la empresa, por ejemplo para reservas o información de productos. ABIZ no avala ese servidor: las herramientas deben aplicar sus propios controles de acceso (sección 4.2.6 de la SPEC).
+El Model Context Protocol (MCP) es un protocolo abierto que permite a los asistentes de IA llamar a herramientas y leer datos de servidores externos de forma estándar. Una ficha puede incluir el campo opcional `mcp_server_url`, la dirección HTTPS de un servidor MCP de la empresa, por ejemplo para reservas o información de productos. ABIZ no avala ese servidor: las herramientas deben aplicar sus propios controles de acceso (sección 4.2.6 de la SPEC).
 
-Un proveedor puede alojar la ficha y publicar el puntero DNS por usted. Por ejemplo, una sociedad inscrita en Guinea Ecuatorial con la ficha alojada en to.co podría usar el host `carpinteriabioko.gq.to.co`, lo que da el valor DNS `v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co`. Una empresa no inscrita podría usar un host basado en su localidad, como `carpinteriabioko-malabo.biz.to.co`. Cualquier proveedor compatible, o su propio servidor, funciona igual.
+Un proveedor puede alojar la ficha y publicar el puntero DNS por usted. Por ejemplo, una sociedad inscrita en Guinea Ecuatorial con la ficha alojada en to.co podría usar el host `carpinteriabioko.gq.to.co`, lo que da el valor DNS `v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E=`. Una empresa no inscrita podría usar un host basado en su localidad, como `carpinteriabioko-malabo.biz.to.co`. Cualquier proveedor compatible, o su propio servidor, funciona igual.
 
 ## 4. Claves y firmas (ABIZ 1.1)
 

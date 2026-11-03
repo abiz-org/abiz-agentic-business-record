@@ -16,15 +16,15 @@ Het bedrijfsrecord is een JSON-document dat moet voldoen aan het [normatieve sch
 
 | Veld | Voorbeeld | Toelichting |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Altijd deze waarde |
-| `business-name` | `Fietsenmaker De Vries B.V.` | De openbare naam, meestal zoals in het register, met rechtsvorm als u die gebruikt |
+| `record_version` | `abiz1` | Altijd deze waarde |
+| `business_name` | `Fietsenmaker De Vries B.V.` | De openbare naam, meestal zoals in het register, met rechtsvorm als u die gebruikt |
 | `country` | `nl` | Landcode volgens ISO 3166-1 alfa-2; de canonieke vorm is in kleine letters |
-| `identity-host` | `fietsenmakerdevries.nl.to.co` | Precies de DNS-waarde `h`: een hostnaam met optioneel pad, zonder `https://` |
+| `identity_host` | `fietsenmakerdevries.nl.to.co` | Precies de DNS-waarde `h`: een hostnaam met optioneel pad, zonder `https://` |
 | `domains` | `["fietsenmakerdevries.example"]` | De domeinen die dit record claimt, inclusief het domein met `_abiz` |
 
 ### Optionele bedrijfssleutel `k`
 
-`k` is voor elk bedrijf optioneel, ingeschreven of niet. Als u `k` publiceert, moet het record ook `business-key` en `registration-number` bevatten, en moet `k` gelijk zijn aan `business-key`.
+`k` is voor elk bedrijf optioneel, ingeschreven of niet. Als u `k` publiceert, moet het record ook `business_key` en `registration_number` bevatten, en moet `k` gelijk zijn aan `business_key`.
 
 In Nederland bestaat de sleutel uit `nl-` gevolgd door het inschrijvingsnummer, zonder onderverdeling: een sleutel met een middendeel, zoals `nl-xx-…`, is ongeldig.
 
@@ -32,7 +32,7 @@ In Nederland bestaat de sleutel uit `nl-` gevolgd door het inschrijvingsnummer, 
 - **Te gebruiken nummer:** het KVK-nummer van 8 cijfers. Niet het vestigingsnummer (12 cijfers) en niet het btw-identificatienummer
 - **Schrijfwijze:** begin bij het nummer zoals het register het toekent, pas Unicode-normalisatie NFKC toe, verwijder spaties, `-`, `.`, `/` en andere streepjes en zet letters in hoofdletters. Voorloopnullen en lettervoorvoegsels blijven staan. Het resultaat mag alleen ASCII-letters en -cijfers bevatten.
 
-Voorbeeld (verzonnen nummer): `12345678` staat al in de canonieke vorm. Het record bevat dan `"registration-number": "12345678"` en `"business-key": "nl-12345678"`, en in de DNS staat `k=nl-12345678`.
+Voorbeeld (verzonnen nummer): `12345678` staat al in de canonieke vorm. Het record bevat dan `"registration_number": "12345678"` en `"business_key": "nl-12345678"`, en in de DNS staat `k=nl-12345678`.
 
 Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, maar publiceer de canonieke vorm: landcode in kleine letters, nummer in hoofdletters.
 
@@ -41,7 +41,7 @@ Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, m
 Publiceer precies één ABIZ-TXT-record onder `_abiz` op uw domein, in de compacte vorm zonder spaties:
 
 ```dns
-_abiz.fietsenmakerdevries.example. 300 IN TXT "v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=Zdt0bZ7xoFc47wyxbvoj5wYGZn51e++ap33tNasbS0w="
+_abiz.fietsenmakerdevries.example. 300 IN TXT "v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=j4I88ldun0pst/oOl5WF+uIVP2hX4szG4S55bSJO8Ug="
 ```
 
 - `v=abiz1` moet vooraan staan. `h` is verplicht; `k` en `p` zijn optioneel.
@@ -56,15 +56,16 @@ Het record dat op `https://fietsenmakerdevries.nl.to.co` als `application/json` 
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Fietsenmaker De Vries B.V.",
+  "record_version": "abiz1",
+  "business_name": "Fietsenmaker De Vries B.V.",
   "country": "nl",
-  "business-key": "nl-12345678",
-  "registration-number": "12345678",
-  "identity-host": "fietsenmakerdevries.nl.to.co",
+  "business_key": "nl-12345678",
+  "registration_number": "12345678",
+  "identity_host": "fietsenmakerdevries.nl.to.co",
   "domains": [
     "fietsenmakerdevries.example"
   ],
+  "public_key": "j4I88ldun0pst/oOl5WF+uIVP2hX4szG4S55bSJO8Ug=",
   "description": "Fietsenmaker in Utrecht.",
   "website": "https://fietsenmakerdevries.example",
   "locations": [
@@ -74,14 +75,15 @@ Het record dat op `https://fietsenmakerdevries.nl.to.co` als `application/json` 
       "country": "nl",
       "public": true
     }
-  ]
+  ],
+  "signature": "TVF7OIemkJHIt3a0U8ye6riP7nNiJ2Su6oN02fGIxS4Bvbf1jeGSzSrtwrvEDUeujj92+7WX9WohryZTNEC2Aw=="
 }
 ```
 
 Met de referentievalidator controleert u record en DNS-waarde lokaal:
 
 ```sh
-python scripts/validate.py record.json --domain fietsenmakerdevries.example --dns-value 'v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=Zdt0bZ7xoFc47wyxbvoj5wYGZn51e++ap33tNasbS0w='
+python scripts/validate.py record.json --domain fietsenmakerdevries.example --dns-value 'v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=j4I88ldun0pst/oOl5WF+uIVP2hX4szG4S55bSJO8Ug='
 ```
 
 ### Zelf hosten of via een aanbieder
@@ -90,7 +92,7 @@ U kunt het record zelf leveren op elke HTTPS-host die u beheert, of een compatib
 
 ## 3. Aanbieders en MCP
 
-MCP (Model Context Protocol) is een open protocol waarmee AI-assistenten hulpmiddelen aanroepen en gegevens van externe servers lezen. Een aanbieder kan een MCP-server draaien waarmee een assistent uw openbare record rechtstreeks opvraagt. U kunt die server vermelden in het optionele veld `mcp-server-url`. ABIZ vereist geen MCP-server, en een hulpmiddel hoort een server niet automatisch aan te roepen alleen omdat die in een record staat.
+MCP (Model Context Protocol) is een open protocol waarmee AI-assistenten hulpmiddelen aanroepen en gegevens van externe servers lezen. Een aanbieder kan een MCP-server draaien waarmee een assistent uw openbare record rechtstreeks opvraagt. U kunt die server vermelden in het optionele veld `mcp_server_url`. ABIZ vereist geen MCP-server, en een hulpmiddel hoort een server niet automatisch aan te roepen alleen omdat die in een record staat.
 
 Een voorbeeld: een aanbieder publiceert uw record op `fietsenmakerdevries.nl.to.co` en draait een MCP-server. Een assistent die met die server verbonden is, kan dan naar de openingstijden of diensten van Fietsenmaker De Vries B.V. vragen en krijgt de gegevens uit uw record, in plaats van te gokken. to.co, een van die aanbieders, legt ABIZ uit op een [Nederlandstalige pagina](https://to.co/nl-nl/abiz).
 

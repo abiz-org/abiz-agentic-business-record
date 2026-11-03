@@ -16,15 +16,15 @@
 
 | Поле | Пример | Примечание |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Всегда это значение |
-| `business-name` | `ООО «Лесная Ягода»` | Публичное название, обычно как в реестре, с организационно-правовой формой, если вы её используете |
+| `record_version` | `abiz1` | Всегда это значение |
+| `business_name` | `ООО «Лесная Ягода»` | Публичное название, обычно как в реестре, с организационно-правовой формой, если вы её используете |
 | `country` | `by` | Код страны по ISO 3166-1 alpha-2; каноническая форма — строчными буквами |
-| `identity-host` | `www.lesnayayagoda.example/abiz.json` | Ровно значение DNS `h`: имя хоста с необязательным путём, без `https://` |
+| `identity_host` | `www.lesnayayagoda.example/abiz.json` | Ровно значение DNS `h`: имя хоста с необязательным путём, без `https://` |
 | `domains` | `["lesnayayagoda.example"]` | Домены, к которым относится запись, включая домен с `_abiz` |
 
 ### Необязательный ключ компании `k`
 
-`k` необязателен для любой организации, зарегистрированной или нет. Если вы публикуете `k`, запись должна также содержать `business-key` и `registration-number`, а `k` должен совпадать с `business-key`.
+`k` необязателен для любой организации, зарегистрированной или нет. Если вы публикуете `k`, запись должна также содержать `business_key` и `registration_number`, а `k` должен совпадать с `business_key`.
 
 В Беларуси ключ состоит из `by-` и регистрационного номера, без региональной части: ключ со средней частью, например `by-xx-…`, недействителен.
 
@@ -32,7 +32,7 @@
 - **Какой номер:** учётный номер плательщика (УНП), 9 знаков, под которым организация внесена в ЕГР
 - **Как записать:** возьмите номер в том виде, в каком его присваивает реестр, примените нормализацию Unicode NFKC, удалите пробелы, `-`, `.`, `/` и другие тире, буквы переведите в верхний регистр. Ведущие нули и буквенные префиксы сохраняются. Результат может содержать только латинские буквы и цифры ASCII.
 
-Пример (вымышленный номер): `123456789` уже записан в канонической форме. Тогда запись содержит `"registration-number": "123456789"` и `"business-key": "by-123456789"`, а в DNS указано `k=by-123456789`.
+Пример (вымышленный номер): `123456789` уже записан в канонической форме. Тогда запись содержит `"registration_number": "123456789"` и `"business_key": "by-123456789"`, а в DNS указано `k=by-123456789`.
 
 Ключи сравниваются без учёта регистра, но публикуйте каноническую форму: код страны строчными буквами, номер прописными.
 
@@ -41,7 +41,7 @@
 Опубликуйте на своём домене под `_abiz` ровно одну запись TXT ABIZ, в компактной форме без пробелов:
 
 ```dns
-_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=5Wn8UfD0ZCIaHar+hn89O8Nn0sJs7zyfvdetrok9rB8="
+_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=jaPnKD2iYvITR2PuJ3aRIPpzNEAQ3VXjqXorblhzY1s="
 ```
 
 - `v=abiz1` должен стоять первым. `h` обязателен; `k` и `p` необязательны.
@@ -56,15 +56,16 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "ООО «Лесная Ягода»",
+  "record_version": "abiz1",
+  "business_name": "ООО «Лесная Ягода»",
   "country": "by",
-  "business-key": "by-123456789",
-  "registration-number": "123456789",
-  "identity-host": "www.lesnayayagoda.example/abiz.json",
+  "business_key": "by-123456789",
+  "registration_number": "123456789",
+  "identity_host": "www.lesnayayagoda.example/abiz.json",
   "domains": [
     "lesnayayagoda.example"
   ],
+  "public_key": "jaPnKD2iYvITR2PuJ3aRIPpzNEAQ3VXjqXorblhzY1s=",
   "description": "Производитель ягодных продуктов в Минске.",
   "website": "https://lesnayayagoda.example",
   "locations": [
@@ -74,14 +75,15 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
       "country": "by",
       "public": true
     }
-  ]
+  ],
+  "signature": "HF1xssDKA3z2YNJnUuVLXPViCG6rkEcsoHVObW2OoKNqeK4hlkC32whIfdNiP4pdJAW2wYwiD2vscytgZOGBDg=="
 }
 ```
 
 Эталонным валидатором можно проверить запись и значение DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=5Wn8UfD0ZCIaHar+hn89O8Nn0sJs7zyfvdetrok9rB8='
+python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example/abiz.json;p=jaPnKD2iYvITR2PuJ3aRIPpzNEAQ3VXjqXorblhzY1s='
 ```
 
 ### Самостоятельно или через поставщика
@@ -90,7 +92,7 @@ python scripts/validate.py record.json --domain lesnayayagoda.example --dns-valu
 
 ## 3. Поставщики и MCP
 
-MCP (Model Context Protocol) — открытый протокол, с помощью которого ИИ-ассистенты вызывают инструменты и читают данные с внешних серверов. Поставщик может держать сервер MCP, через который ассистент получает вашу публичную запись напрямую. Его можно указать в необязательном поле `mcp-server-url`. ABIZ не требует сервера MCP, и инструмент не должен вызывать его автоматически только потому, что он указан в записи.
+MCP (Model Context Protocol) — открытый протокол, с помощью которого ИИ-ассистенты вызывают инструменты и читают данные с внешних серверов. Поставщик может держать сервер MCP, через который ассистент получает вашу публичную запись напрямую. Его можно указать в необязательном поле `mcp_server_url`. ABIZ не требует сервера MCP, и инструмент не должен вызывать его автоматически только потому, что он указан в записи.
 
 Пример: если вы сами публикуете запись по адресу `www.lesnayayagoda.example/abiz.json`, любой совместимый инструмент или сервер MCP прочитает её так же, как запись, размещённую у поставщика. Для ABIZ поставщик не нужен: достаточно собственного домена и HTTPS-хостинга.
 

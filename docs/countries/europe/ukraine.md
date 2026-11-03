@@ -16,15 +16,15 @@
 
 | Поле | Приклад | Примітка |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Завжди це значення |
-| `business-name` | `ТОВ «Карпатський Мед»` | Публічна назва, зазвичай як у реєстрі, з організаційно-правовою формою, якщо ви її використовуєте |
+| `record_version` | `abiz1` | Завжди це значення |
+| `business_name` | `ТОВ «Карпатський Мед»` | Публічна назва, зазвичай як у реєстрі, з організаційно-правовою формою, якщо ви її використовуєте |
 | `country` | `ua` | Код країни за ISO 3166-1 alpha-2; канонічна форма — малими літерами |
-| `identity-host` | `karpatskyimed.ua.to.co` | Точно значення DNS `h`: ім'я хоста з необов'язковим шляхом, без `https://` |
+| `identity_host` | `karpatskyimed.ua.to.co` | Точно значення DNS `h`: ім'я хоста з необов'язковим шляхом, без `https://` |
 | `domains` | `["karpatskyimed.example"]` | Домени, яких стосується запис, включно з доменом із `_abiz` |
 
 ### Необов'язковий ключ компанії `k`
 
-`k` необов'язковий для будь-якого бізнесу, зареєстрованого чи ні. Якщо ви публікуєте `k`, запис має також містити `business-key` і `registration-number`, а `k` має дорівнювати `business-key`.
+`k` необов'язковий для будь-якого бізнесу, зареєстрованого чи ні. Якщо ви публікуєте `k`, запис має також містити `business_key` і `registration_number`, а `k` має дорівнювати `business_key`.
 
 В Україні ключ складається з `ua-` і реєстраційного коду, без регіональної частини: ключ із середньою частиною, наприклад `ua-xx-…`, недійсний.
 
@@ -32,7 +32,7 @@
 - **Який номер:** ідентифікаційний код за ЄДРПОУ, 8 цифр. Не індивідуальний податковий номер платника ПДВ
 - **Як записати:** візьміть код у тому вигляді, в якому його присвоює реєстр, застосуйте нормалізацію Unicode NFKC, вилучіть пробіли, `-`, `.`, `/` та інші тире, а літери переведіть у верхній регістр. Початкові нулі та літерні префікси зберігаються. Результат може містити лише латинські літери й цифри ASCII.
 
-Приклад (вигаданий код): `12345678` уже має канонічну форму. Тоді запис містить `"registration-number": "12345678"` і `"business-key": "ua-12345678"`, а в DNS зазначено `k=ua-12345678`. Зберігайте початкові нулі, якщо вони є.
+Приклад (вигаданий код): `12345678` уже має канонічну форму. Тоді запис містить `"registration_number": "12345678"` і `"business_key": "ua-12345678"`, а в DNS зазначено `k=ua-12345678`. Зберігайте початкові нулі, якщо вони є.
 
 Ключі порівнюються без урахування регістру, але публікуйте канонічну форму: код країни малими літерами, номер великими.
 
@@ -41,7 +41,7 @@
 Опублікуйте на своєму домені під `_abiz` рівно один запис TXT ABIZ у компактній формі без пробілів:
 
 ```dns
-_abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=VqbUeQNcOaIoqKGh3JwV+mmmPoGgfDtHpS+1UrnYmyw="
+_abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=x9WxLMbcEacHVqEiZ7dnO/JkGZDiwz5K5mgEpPEZ4h8="
 ```
 
 - `v=abiz1` має стояти першим. `h` обов'язковий; `k` і `p` необов'язкові.
@@ -56,15 +56,16 @@ _abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.u
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "ТОВ «Карпатський Мед»",
+  "record_version": "abiz1",
+  "business_name": "ТОВ «Карпатський Мед»",
   "country": "ua",
-  "business-key": "ua-12345678",
-  "registration-number": "12345678",
-  "identity-host": "karpatskyimed.ua.to.co",
+  "business_key": "ua-12345678",
+  "registration_number": "12345678",
+  "identity_host": "karpatskyimed.ua.to.co",
   "domains": [
     "karpatskyimed.example"
   ],
+  "public_key": "x9WxLMbcEacHVqEiZ7dnO/JkGZDiwz5K5mgEpPEZ4h8=",
   "description": "Пасіка та продаж меду у Львові.",
   "website": "https://karpatskyimed.example",
   "locations": [
@@ -74,14 +75,15 @@ _abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.u
       "country": "ua",
       "public": true
     }
-  ]
+  ],
+  "signature": "mpkqyINrsBM6X3waKLbkAnALL68SsKiECGCq5PQ4ydHVflzxEOszmtO/6nAtB59t/7/TgHGNEs9wibOI3zQ8Cg=="
 }
 ```
 
 Еталонним валідатором можна перевірити запис і значення DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain karpatskyimed.example --dns-value 'v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=VqbUeQNcOaIoqKGh3JwV+mmmPoGgfDtHpS+1UrnYmyw='
+python scripts/validate.py record.json --domain karpatskyimed.example --dns-value 'v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=x9WxLMbcEacHVqEiZ7dnO/JkGZDiwz5K5mgEpPEZ4h8='
 ```
 
 ### Самостійно або через постачальника
@@ -90,7 +92,7 @@ python scripts/validate.py record.json --domain karpatskyimed.example --dns-valu
 
 ## 3. Постачальники та MCP
 
-MCP (Model Context Protocol) — відкритий протокол, за допомогою якого ШІ-асистенти викликають інструменти й читають дані із зовнішніх серверів. Постачальник може підтримувати сервер MCP, через який асистент отримує ваш публічний запис безпосередньо. Його можна вказати в необов'язковому полі `mcp-server-url`. ABIZ не вимагає сервера MCP, і інструмент не повинен викликати його автоматично лише тому, що він зазначений у записі.
+MCP (Model Context Protocol) — відкритий протокол, за допомогою якого ШІ-асистенти викликають інструменти й читають дані із зовнішніх серверів. Постачальник може підтримувати сервер MCP, через який асистент отримує ваш публічний запис безпосередньо. Його можна вказати в необов'язковому полі `mcp_server_url`. ABIZ не вимагає сервера MCP, і інструмент не повинен викликати його автоматично лише тому, що він зазначений у записі.
 
 Приклад: постачальник публікує ваш запис за адресою `karpatskyimed.ua.to.co` і підтримує сервер MCP. Асистент, підключений до цього сервера, може запитати про години роботи чи послуги ТОВ «Карпатський Мед» і отримати дані з вашого запису, а не вгадувати.
 

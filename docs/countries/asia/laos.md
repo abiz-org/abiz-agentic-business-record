@@ -14,15 +14,15 @@ Every business record needs these five fields (SPEC section 4.1):
 
 | Field | Example and rule |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | the public name customers know, for example `Luang Prabang Weaving` |
+| `record_version` | `abiz1` |
+| `business_name` | the public name customers know, for example `Luang Prabang Weaving` |
 | `country` | `la`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `luangprabangweaving.la.to.co`, which must match `h` in DNS exactly |
+| `identity_host` | `luangprabangweaving.la.to.co`, which must match `h` in DNS exactly |
 | `domains` | `["luangprabangweaving.example"]`, which must include the domain that carries `_abiz` |
 
 ### Optional business key `k`
 
-`k` is optional for every business, registered or not. If you publish it, it must equal `business-key` in the record, and the record must then also contain `registration-number`. For Laos the form is:
+`k` is optional for every business, registered or not. If you publish it, it must equal `business_key` in the record, and the record must then also contain `registration_number`. For Laos the form is:
 
 ```text
 la-<registration-number>
@@ -32,22 +32,22 @@ Laos uses no subdivision: do not add a region, province or city code. SPEC secti
 
 **Which number:** the enterprise registration number on your certificate, written with the digits 0–9.
 
-**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business-key` and `registration-number`.
+**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business_key` and `registration_number`.
 
-**Worked example (fictional):** `012345678` becomes `012345678`, so `k=la-012345678`. In the record: `"business-key": "la-012345678"` and `"registration-number": "012345678"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
+**Worked example (fictional):** `012345678` becomes `012345678`, so `k=la-012345678`. In the record: `"business_key": "la-012345678"` and `"registration_number": "012345678"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
 
 **Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
 
 **Non-Latin digits:** NFKC does not turn digits such as ໑໒໓ into 0–9. If your number exists only in that form, the result is not ASCII and no business key is possible. ABIZ 1.1 defines no digit conversion, so use the number only if the register also issues it with the digits 0–9.
 
-**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business-key` and `registration-number`; the record is still valid.
+**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business_key` and `registration_number`; the record is still valid.
 
 ### DNS TXT record
 
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=tgQyuO3raRWfuJYEkKVWpxYfpZbzivoWU121Gzpd8s8="
+_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
@@ -55,38 +55,40 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` and `p` tags, this is also valid:
 
 ```dns
-_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;h=luangprabangweaving.la.to.co"
+_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI="
 ```
 
 The business record served as `application/json` at `https://luangprabangweaving.la.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Luang Prabang Weaving",
+  "record_version": "abiz1",
+  "business_name": "Luang Prabang Weaving",
   "country": "la",
-  "business-key": "la-012345678",
-  "registration-number": "012345678",
-  "identity-host": "luangprabangweaving.la.to.co",
+  "business_key": "la-012345678",
+  "registration_number": "012345678",
+  "identity_host": "luangprabangweaving.la.to.co",
   "domains": [
     "luangprabangweaving.example"
-  ]
+  ],
+  "public_key": "Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI=",
+  "signature": "bfSS/LcdJ3ijFmLjwKA0p3DaRyQN5xzvuW2V2ptqknqxuU55nx9i57JgzVKIAgjMpYL2s5xeEcE98q5pgUngDQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain luangprabangweaving.example --dns-value 'v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=tgQyuO3raRWfuJYEkKVWpxYfpZbzivoWU121Gzpd8s8='
+python scripts/validate.py record.json --domain luangprabangweaving.example --dns-value 'v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
-The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp-server-url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
+The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Laos with a record hosted by to.co might use the host `luangprabangweaving.la.to.co`, giving the DNS value `v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co`. An unregistered business might use a town-based host such as `luangprabangweaving-luangprabang.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Laos with a record hosted by to.co might use the host `luangprabangweaving.la.to.co`, giving the DNS value `v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI=`. An unregistered business might use a town-based host such as `luangprabangweaving-luangprabang.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

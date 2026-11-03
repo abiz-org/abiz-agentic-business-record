@@ -14,15 +14,15 @@ Todas as fichas de empresa têm estes cinco campos (secção 4.1 da SPEC):
 
 | Campo | Exemplo e regra |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | o nome público que os clientes conhecem, por exemplo `Chocolates do Equador` |
+| `record_version` | `abiz1` |
+| `business_name` | o nome público que os clientes conhecem, por exemplo `Chocolates do Equador` |
 | `country` | `st`, o código ISO 3166-1 alfa-2, em minúsculas |
-| `identity-host` | `chocolatesequador.st.to.co`, que tem de coincidir exatamente com `h` no DNS |
+| `identity_host` | `chocolatesequador.st.to.co`, que tem de coincidir exatamente com `h` no DNS |
 | `domains` | `["chocolatesequador.example"]`, que tem de incluir o domínio onde está `_abiz` |
 
 ### Chave de empresa opcional `k`
 
-A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business-key` da ficha, que nesse caso também tem de conter `registration-number`. Para São Tomé e Príncipe, a forma é:
+A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business_key` da ficha, que nesse caso também tem de conter `registration_number`. Para São Tomé e Príncipe, a forma é:
 
 ```text
 st-<registration-number>
@@ -32,20 +32,20 @@ São Tomé e Príncipe não usa subdivisão: não acrescente código de região,
 
 **Que número:** o NIF (Número de Identificação Fiscal) da empresa, atribuído a nível nacional.
 
-**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business-key` e `registration-number`.
+**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business_key` e `registration_number`.
 
-**Exemplo (fictício):** `123456789` passa a `123456789`, logo `k=st-123456789`. Na ficha: `"business-key": "st-123456789"` e `"registration-number": "123456789"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
+**Exemplo (fictício):** `123456789` passa a `123456789`, logo `k=st-123456789`. Na ficha: `"business_key": "st-123456789"` e `"registration_number": "123456789"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
 
 **Confirme:** não conseguimos confirmar o formato exato deste número numa fonte oficial, pelo que o exemplo é apenas ilustrativo. Use o número tal como consta do seu documento oficial de registo. Se não for claro qual o número que identifica a empresa a nível nacional, não publique `k` até ter a certeza.
 
-**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business-key` e `registration-number`; o registo continua válido.
+**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business_key` e `registration_number`; o registo continua válido.
 
 ### Registo DNS TXT
 
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=NVV5/WujNOHQZUSJbYLG9SWv0er+MI/kOATzVpiEM8Y="
+_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave ou omita `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,38 +53,40 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;h=chocolatesequador.st.to.co"
+_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E="
 ```
 
 O registo da empresa servido como `application/json` em `https://chocolatesequador.st.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Chocolates do Equador",
+  "record_version": "abiz1",
+  "business_name": "Chocolates do Equador",
   "country": "st",
-  "business-key": "st-123456789",
-  "registration-number": "123456789",
-  "identity-host": "chocolatesequador.st.to.co",
+  "business_key": "st-123456789",
+  "registration_number": "123456789",
+  "identity_host": "chocolatesequador.st.to.co",
   "domains": [
     "chocolatesequador.example"
-  ]
+  ],
+  "public_key": "K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E=",
+  "signature": "t2D0C+yQgRzaWFqCCA+JcUU1zYSXSbzKgwqwxI/Jr2q+tkLkLio5utMHvnU81kfIvf/kYcSiv1c3v35Hv0tlAQ=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain chocolatesequador.example --dns-value 'v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=NVV5/WujNOHQZUSJbYLG9SWv0er+MI/kOATzVpiEM8Y='
+python scripts/validate.py record.json --domain chocolatesequador.example --dns-value 'v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
 
 ## 3. Usar um fornecedor e o MCP
 
-O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp-server-url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
+O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em São Tomé e Príncipe com a ficha alojada no to.co poderia usar o anfitrião `chocolatesequador.st.to.co`, o que dá o valor DNS `v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `chocolatesequador-saotome.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em São Tomé e Príncipe com a ficha alojada no to.co poderia usar o anfitrião `chocolatesequador.st.to.co`, o que dá o valor DNS `v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `chocolatesequador-saotome.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 

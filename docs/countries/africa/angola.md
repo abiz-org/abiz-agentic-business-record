@@ -14,15 +14,15 @@ Todas as fichas de empresa têm estes cinco campos (secção 4.1 da SPEC):
 
 | Campo | Exemplo e regra |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | o nome público que os clientes conhecem, por exemplo `Oficina Kianda` |
+| `record_version` | `abiz1` |
+| `business_name` | o nome público que os clientes conhecem, por exemplo `Oficina Kianda` |
 | `country` | `ao`, o código ISO 3166-1 alfa-2, em minúsculas |
-| `identity-host` | `oficinakianda.ao.to.co`, que tem de coincidir exatamente com `h` no DNS |
+| `identity_host` | `oficinakianda.ao.to.co`, que tem de coincidir exatamente com `h` no DNS |
 | `domains` | `["oficinakianda.example"]`, que tem de incluir o domínio onde está `_abiz` |
 
 ### Chave de empresa opcional `k`
 
-A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business-key` da ficha, que nesse caso também tem de conter `registration-number`. Para Angola, a forma é:
+A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business_key` da ficha, que nesse caso também tem de conter `registration_number`. Para Angola, a forma é:
 
 ```text
 ao-<registration-number>
@@ -32,20 +32,20 @@ Angola não usa subdivisão: não acrescente código de região, província ou c
 
 **Que número:** o NIF (Número de Identificação Fiscal) da empresa, que é atribuído a nível nacional. Também existe o número de matrícula na Conservatória do Registo Comercial, mas esse depende da conservatória.
 
-**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business-key` e `registration-number`.
+**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business_key` e `registration_number`.
 
-**Exemplo (fictício):** `5417123456` passa a `5417123456`, logo `k=ao-5417123456`. Na ficha: `"business-key": "ao-5417123456"` e `"registration-number": "5417123456"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
+**Exemplo (fictício):** `5417123456` passa a `5417123456`, logo `k=ao-5417123456`. Na ficha: `"business_key": "ao-5417123456"` e `"registration_number": "5417123456"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
 
 **Confirme:** não conseguimos confirmar o formato exato deste número numa fonte oficial, pelo que o exemplo é apenas ilustrativo. Use o número tal como consta do seu documento oficial de registo. Se não for claro qual o número que identifica a empresa a nível nacional, não publique `k` até ter a certeza.
 
-**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business-key` e `registration-number`; o registo continua válido.
+**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business_key` e `registration_number`; o registo continua válido.
 
 ### Registo DNS TXT
 
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.oficinakianda.example. 300 IN TXT "v=abiz1;k=ao-5417123456;h=oficinakianda.ao.to.co;p=iCHeBZg8xv6RrNOvJFwaEDRiRjG99g1HUm63RqmM7yg="
+_abiz.oficinakianda.example. 300 IN TXT "v=abiz1;k=ao-5417123456;h=oficinakianda.ao.to.co;p=JEugRD7+tdcQd8PxZ29QDKo3i0eqcaLPDGHgDUCqfVs="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave ou omita `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,38 +53,40 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.oficinakianda.example. 300 IN TXT "v=abiz1;h=oficinakianda.ao.to.co"
+_abiz.oficinakianda.example. 300 IN TXT "v=abiz1;h=oficinakianda.ao.to.co;p=JEugRD7+tdcQd8PxZ29QDKo3i0eqcaLPDGHgDUCqfVs="
 ```
 
 O registo da empresa servido como `application/json` em `https://oficinakianda.ao.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Oficina Kianda",
+  "record_version": "abiz1",
+  "business_name": "Oficina Kianda",
   "country": "ao",
-  "business-key": "ao-5417123456",
-  "registration-number": "5417123456",
-  "identity-host": "oficinakianda.ao.to.co",
+  "business_key": "ao-5417123456",
+  "registration_number": "5417123456",
+  "identity_host": "oficinakianda.ao.to.co",
   "domains": [
     "oficinakianda.example"
-  ]
+  ],
+  "public_key": "JEugRD7+tdcQd8PxZ29QDKo3i0eqcaLPDGHgDUCqfVs=",
+  "signature": "BXSd0hLyQG6xwWprn7yEErTrVbIkNNf9Etm4Zo5VMwhbBSemdTj+mdgDCes9skozwOcIKN7ghc6cC3gmGY8PBQ=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain oficinakianda.example --dns-value 'v=abiz1;k=ao-5417123456;h=oficinakianda.ao.to.co;p=iCHeBZg8xv6RrNOvJFwaEDRiRjG99g1HUm63RqmM7yg='
+python scripts/validate.py record.json --domain oficinakianda.example --dns-value 'v=abiz1;k=ao-5417123456;h=oficinakianda.ao.to.co;p=JEugRD7+tdcQd8PxZ29QDKo3i0eqcaLPDGHgDUCqfVs='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
 
 ## 3. Usar um fornecedor e o MCP
 
-O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp-server-url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
+O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Angola com a ficha alojada no to.co poderia usar o anfitrião `oficinakianda.ao.to.co`, o que dá o valor DNS `v=abiz1;k=ao-5417123456;h=oficinakianda.ao.to.co`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `oficinakianda-luanda.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Angola com a ficha alojada no to.co poderia usar o anfitrião `oficinakianda.ao.to.co`, o que dá o valor DNS `v=abiz1;k=ao-5417123456;h=oficinakianda.ao.to.co;p=JEugRD7+tdcQd8PxZ29QDKo3i0eqcaLPDGHgDUCqfVs=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `oficinakianda-luanda.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 
