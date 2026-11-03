@@ -1,6 +1,6 @@
 # Jak se stát agentní firmou s ABIZ v Česku
 
-*Průvodce ABIZ 1.1 (návrh). Závazná je [specifikace (SPEC.md, anglicky)](../../../SPEC.md): pokud se tento průvodce a specifikace liší, platí specifikace.*
+*Průvodce zveřejněnou specifikací ABIZ 1.1. Závazná je [specifikace (SPEC.md, anglicky)](../../../SPEC.md): pokud se tento průvodce a specifikace liší, platí specifikace.*
 
 ## 1. Co to znamená pro firmu v Česku
 

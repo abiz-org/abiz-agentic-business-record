@@ -1,6 +1,6 @@
 # Devenir une entreprise agentique avec ABIZ en République du Congo
 
-*Guide pour ABIZ 1.1 (proposition). La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle ; le lingala et le kituba sont langues nationales.
+*Guide pour la spécification publiée ABIZ 1.1. La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle ; le lingala et le kituba sont langues nationales.
 
 ## 1. Ce que cela signifie pour une entreprise en République du Congo
 

@@ -1,6 +1,6 @@
 # Convertirse en una empresa agéntica con ABIZ en España
 
-*Guía de ABIZ 1.1 (propuesta). El texto de referencia es la [especificación (SPEC.md, en inglés)](../../../SPEC.md): si esta guía y la especificación difieren, prevalece la especificación.*
+*Guía de la especificación publicada ABIZ 1.1. El texto de referencia es la [especificación (SPEC.md, en inglés)](../../../SPEC.md): si esta guía y la especificación difieren, prevalece la especificación.*
 
 ## 1. Qué significa para una empresa en España
 

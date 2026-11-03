@@ -1,6 +1,6 @@
 # Cum deveniți o afacere agentică cu ABIZ în Republica Moldova
 
-*Ghid pentru ABIZ 1.1 (propunere). Textul de referință este [specificația (SPEC.md, în engleză)](../../../SPEC.md): dacă acest ghid și specificația diferă, prevalează specificația.*
+*Ghid pentru ABIZ 1.1 (specificația publicată). Textul de referință este [specificația (SPEC.md, în engleză)](../../../SPEC.md): dacă acest ghid și specificația diferă, prevalează specificația.*
 
 ## 1. Ce înseamnă pentru o firmă în Republica Moldova
 

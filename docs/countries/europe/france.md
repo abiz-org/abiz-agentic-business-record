@@ -1,6 +1,6 @@
 # Devenir une entreprise agentique avec ABIZ en France
 
-*Guide pour ABIZ 1.1 (proposition). Le texte de référence est la [spécification (SPEC.md, en anglais)](../../../SPEC.md) : en cas de divergence entre ce guide et la spécification, la spécification prévaut.*
+*Guide pour la spécification publiée ABIZ 1.1. Le texte de référence est la [spécification (SPEC.md, en anglais)](../../../SPEC.md) : en cas de divergence entre ce guide et la spécification, la spécification prévaut.*
 
 ## 1. Ce que cela signifie pour une entreprise en France
 

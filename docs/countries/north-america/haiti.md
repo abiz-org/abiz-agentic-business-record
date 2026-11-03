@@ -1,6 +1,6 @@
 # Devenir une entreprise agentique avec ABIZ en Haïti
 
-*Guide d’ABIZ 1.1 (proposée). [SPEC.md](../../../SPEC.md) est le texte de référence : en cas d’écart entre ce guide et la spécification, c’est la spécification qui s’applique.* Haïti a deux langues officielles, le français et le créole haïtien (kreyòl); ce guide est en français, la langue des formalités d’entreprise.
+*Guide de la spécification publiée ABIZ 1.1. [SPEC.md](../../../SPEC.md) est le texte de référence : en cas d’écart entre ce guide et la spécification, c’est la spécification qui s’applique.* Haïti a deux langues officielles, le français et le créole haïtien (kreyòl); ce guide est en français, la langue des formalités d’entreprise.
 
 ## 1. Ce que cela signifie pour une entreprise en Haïti
 

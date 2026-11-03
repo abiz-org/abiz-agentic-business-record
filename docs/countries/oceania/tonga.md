@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Tonga
 
-*A guide to ABIZ 1.1 (proposed). [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* Tonga's official languages are Tongan and English; this guide is in English.
+*A guide to published ABIZ 1.1. [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* Tonga's official languages are Tongan and English; this guide is in English.
 
 ## 1. What this means for a business in Tonga
 

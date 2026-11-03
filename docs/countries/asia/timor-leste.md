@@ -1,6 +1,6 @@
 # Tornar-se uma empresa agêntica com o ABIZ em Timor-Leste
 
-*Guia para o ABIZ 1.1 (proposta). A [especificação (SPEC.md, em inglês)](../../../SPEC.md) é o texto de referência: se este guia e a especificação divergirem, aplica-se a especificação.* O tétum e o português são línguas oficiais; o inglês e o indonésio são línguas de trabalho.
+*Guia para a especificação publicada ABIZ 1.1. A [especificação (SPEC.md, em inglês)](../../../SPEC.md) é o texto de referência: se este guia e a especificação divergirem, aplica-se a especificação.* O tétum e o português são línguas oficiais; o inglês e o indonésio são línguas de trabalho.
 
 ## 1. O que isto significa para uma empresa em Timor-Leste
 

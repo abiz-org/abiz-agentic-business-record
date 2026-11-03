@@ -1,6 +1,6 @@
 # Agenttiseksi yritykseksi ABIZin avulla Suomessa
 
-*Opas ABIZ 1.1:een (ehdotus). Velvoittava teksti on [määrittely (SPEC.md, englanniksi)](../../../SPEC.md): jos tämä opas ja määrittely eroavat, määrittely on ratkaiseva.* Suomessa on kaksi kansalliskieltä; tämä opas on suomeksi. Ruotsinkielistä versiota ei vielä ole.
+*Opas julkaistuun ABIZ 1.1 -määrittelyyn. Velvoittava teksti on [määrittely (SPEC.md, englanniksi)](../../../SPEC.md): jos tämä opas ja määrittely eroavat, määrittely on ratkaiseva.* Suomessa on kaksi kansalliskieltä; tämä opas on suomeksi. Ruotsinkielistä versiota ei vielä ole.
 
 ## 1. Mitä tämä tarkoittaa yritykselle Suomessa
 

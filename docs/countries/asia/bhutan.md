@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Bhutan
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Dzongkha is the national language; English is widely used in government and business. This guide is in English.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Dzongkha is the national language; English is widely used in government and business. This guide is in English.
 
 ## 1. What this means for a business in Bhutan
 

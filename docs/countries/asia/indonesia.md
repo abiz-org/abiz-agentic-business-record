@@ -1,6 +1,6 @@
 # Menjadi Bisnis Agentik dengan ABIZ di Indonesia
 
-*Panduan untuk ABIZ 1.1 (usulan). [Spesifikasi (SPEC.md, bahasa Inggris)](../../../SPEC.md) adalah acuan utama: jika panduan ini berbeda dengan spesifikasi, yang berlaku adalah spesifikasi.*
+*Panduan untuk ABIZ 1.1 (spesifikasi yang diterbitkan). [Spesifikasi (SPEC.md, bahasa Inggris)](../../../SPEC.md) adalah acuan utama: jika panduan ini berbeda dengan spesifikasi, yang berlaku adalah spesifikasi.*
 
 ## 1. Artinya bagi pelaku usaha di Indonesia
 

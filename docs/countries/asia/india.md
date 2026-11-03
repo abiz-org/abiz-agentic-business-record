@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in India
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Hindi and English are the official languages of the Union, and states use their own languages; English is the main language of company registration.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Hindi and English are the official languages of the Union, and states use their own languages; English is the main language of company registration.
 
 ## 1. What this means for a business in India
 

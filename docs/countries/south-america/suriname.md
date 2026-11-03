@@ -1,6 +1,6 @@
 # Een agentisch bedrijf worden met ABIZ in Suriname
 
-*Gids voor ABIZ 1.1 (voorstel). [SPEC.md](../../../SPEC.md) is de gezaghebbende tekst: als deze gids en de specificatie verschillen, geldt de specificatie.*
+*Gids voor de gepubliceerde specificatie ABIZ 1.1. [SPEC.md](../../../SPEC.md) is de gezaghebbende tekst: als deze gids en de specificatie verschillen, geldt de specificatie.*
 
 ## 1. Wat dit betekent voor een bedrijf in Suriname
 

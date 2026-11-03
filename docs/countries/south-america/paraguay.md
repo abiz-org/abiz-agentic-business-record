@@ -1,6 +1,6 @@
 # Convertirse en un negocio agéntico con ABIZ en Paraguay
 
-*Guía de ABIZ 1.1 (propuesta). [SPEC.md](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.* Paraguay tiene dos idiomas oficiales, el castellano y el guaraní; esta guía está en castellano, el idioma más usado en los negocios.
+*Guía de la especificación publicada ABIZ 1.1. [SPEC.md](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.* Paraguay tiene dos idiomas oficiales, el castellano y el guaraní; esta guía está en castellano, el idioma más usado en los negocios.
 
 ## 1. Qué significa para una empresa en Paraguay
 

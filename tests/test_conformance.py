@@ -290,7 +290,7 @@ class ABIZConformanceTests(unittest.TestCase):
 
 
 class ABIZTagListWhitespaceTests(unittest.TestCase):
-    """ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1."""
+    """Published ABIZ 1.1 tag-list grammar, SPEC.md section 3.1.1."""
 
     HOST = "harbour-bike-repair.or.us.to.co"
     CANONICAL = {"v": "abiz1", "k": "us-or-123456", "h": HOST, "p": P}
@@ -368,7 +368,7 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
 
 
 class ABIZBusinessKeyTests(unittest.TestCase):
-    """ABIZ 1.1 (proposed) business key, SPEC.md section 4.2."""
+    """Published ABIZ 1.1 business key, SPEC.md section 4.2."""
 
     HOST = "harbour-bike-repair.or.us.to.co"
 

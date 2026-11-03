@@ -6,7 +6,7 @@ Find out how to become an agentic business with ABIZ. Choose your country below 
 
 ## About these guides
 
-These guides explain, country by country, how a business in Africa can publish an agentic business record (ABIZ): a DNS TXT record on its own domain that points to a public JSON record of its business facts, so that compatible AI tools can find and check them. They follow ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is the authoritative text: if a guide and the specification differ, the specification applies.
+These guides explain, country by country, how a business in Africa can publish an agentic business record (ABIZ): a DNS TXT record on its own domain that points to a public JSON record of its business facts, so that compatible AI tools can find and check them. They follow published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is the authoritative text: if a guide and the specification differ, the specification applies.
 
 Pages are written in the country's main business language where we could do so to a good standard; the others are in English for now. All example businesses, numbers, domains and keys are fictional. Never copy an example `p` value.
 

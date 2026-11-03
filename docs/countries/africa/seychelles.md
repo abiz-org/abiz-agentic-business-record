@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Seychelles
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Seychellois Creole, English and French are official; English is used for registration.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Seychellois Creole, English and French are official; English is used for registration.
 
 ## 1. What this means for a business in Seychelles
 

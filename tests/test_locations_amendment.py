@@ -1,4 +1,4 @@
-"""ABIZ 1.1 (proposed), 2026-11-03 amendment: location, contact, hours and listing fields (SPEC section 4.7)."""
+"""Published ABIZ 1.1, 2026-11-03 amendment: location, contact, hours and listing fields (SPEC section 4.7)."""
 import copy
 import json
 import sys

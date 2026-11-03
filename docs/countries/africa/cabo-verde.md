@@ -1,6 +1,6 @@
 # Tornar-se uma empresa agêntica com o ABIZ em Cabo Verde
 
-*Guia para o ABIZ 1.1 (proposta). A [especificação (SPEC.md, em inglês)](../../../SPEC.md) é o texto de referência: se este guia e a especificação divergirem, aplica-se a especificação.* O português é a língua oficial; o crioulo cabo-verdiano é a língua mais falada.
+*Guia para a especificação publicada ABIZ 1.1. A [especificação (SPEC.md, em inglês)](../../../SPEC.md) é o texto de referência: se este guia e a especificação divergirem, aplica-se a especificação.* O português é a língua oficial; o crioulo cabo-verdiano é a língua mais falada.
 
 ## 1. O que isto significa para uma empresa em Cabo Verde
 

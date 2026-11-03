@@ -1,6 +1,6 @@
 # Bli ett agentiskt företag med ABIZ i Sverige
 
-*En guide till ABIZ 1.1 (förslag). [Specifikationen (SPEC.md, på engelska)](../../../SPEC.md) gäller: om guiden och specifikationen skiljer sig åt gäller specifikationen.*
+*En guide till ABIZ 1.1 (publicerad specifikation). [Specifikationen (SPEC.md, på engelska)](../../../SPEC.md) gäller: om guiden och specifikationen skiljer sig åt gäller specifikationen.*
 
 ## 1. Vad det betyder för ett företag i Sverige
 

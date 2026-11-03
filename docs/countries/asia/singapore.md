@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Singapore
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the main language of business and of ACRA; Malay, Mandarin and Tamil are also official.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the main language of business and of ACRA; Malay, Mandarin and Tamil are also official.
 
 ## 1. What this means for a business in Singapore
 

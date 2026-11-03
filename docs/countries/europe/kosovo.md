@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Kosovo
 
-*A guide to ABIZ 1.1 (proposed). [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* This page is in English; versions in Albanian and Serbian have not been written yet.
+*A guide to published ABIZ 1.1. [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* This page is in English; versions in Albanian and Serbian have not been written yet.
 
 > **Important:** under ABIZ 1.1, a business in Kosovo cannot yet publish a conformant ABIZ record. The required `country` field must be an assigned ISO 3166-1 alpha-2 code, and Kosovo's commonly used code, `XK`, is a user-assigned code, not an assigned one. The specification names `xk` as invalid (section 4.2.1), it is not in the repository's [list of codes](../../../data/iso3166.json), and the reference validator rejects it. No business key `k` is possible either. This page explains what ABIZ is and what would be needed; it does not give a record to copy.
 

@@ -1,6 +1,6 @@
 # Convertirse en un negocio agéntico con ABIZ en Bolivia
 
-*Guía de ABIZ 1.1 (propuesta). [SPEC.md](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.* Bolivia tiene el castellano y 36 idiomas indígenas como lenguas oficiales; esta guía está en castellano, el idioma más usado en los negocios.
+*Guía de la especificación publicada ABIZ 1.1. [SPEC.md](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.* Bolivia tiene el castellano y 36 idiomas indígenas como lenguas oficiales; esta guía está en castellano, el idioma más usado en los negocios.
 
 ## 1. Qué significa para una empresa en Bolivia
 

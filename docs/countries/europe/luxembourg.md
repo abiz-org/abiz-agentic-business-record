@@ -1,6 +1,6 @@
 # Devenir une entreprise agentique avec ABIZ au Luxembourg
 
-*Guide pour ABIZ 1.1 (proposition). Le texte de référence est la [spécification (SPEC.md, en anglais)](../../../SPEC.md) : en cas de divergence entre ce guide et la spécification, la spécification prévaut.* Le Luxembourg a trois langues administratives ; ce guide est en français, la langue la plus utilisée pour les démarches d'entreprise. Il n'existe pas encore de version en luxembourgeois ou en allemand.
+*Guide pour la spécification publiée ABIZ 1.1. Le texte de référence est la [spécification (SPEC.md, en anglais)](../../../SPEC.md) : en cas de divergence entre ce guide et la spécification, la spécification prévaut.* Le Luxembourg a trois langues administratives ; ce guide est en français, la langue la plus utilisée pour les démarches d'entreprise. Il n'existe pas encore de version en luxembourgeois ou en allemand.
 
 ## 1. Ce que cela signifie pour une entreprise au Luxembourg
 

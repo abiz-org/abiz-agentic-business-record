@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in South Africa
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* South Africa has 12 official languages; English is the main language of business and of the CIPC.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* South Africa has 12 official languages; English is the main language of business and of the CIPC.
 
 ## 1. What this means for a business in South Africa
 
