@@ -3,9 +3,11 @@
 
 This does not perform DNS lookups, registry checks, or HTTPS fetches.
 
-ABIZ 1.1 (proposed): a DNS p tag, when present, must be an Ed25519 public
-key in standard base64 (44 characters, one "="). Any other p value,
+ABIZ 1.1: the DNS p tag is REQUIRED and must be an Ed25519 public key in
+standard base64 (44 characters, one "="). A missing p, or any other p value,
 including an ABIZ 1.0 hex token or base64url, makes the assertion invalid.
+The same tags may instead come from https://<domain>/.well-known/abiz.json
+(SPEC section 3.4); a DNS assertion takes precedence over that file.
 The key format check uses the standard library. Verifying an optional
 detached signature (--p-message / --p-signature) imports the optional
 cryptography package on demand:
@@ -28,12 +30,26 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "schemas" / "abiz-business-record-v1.schema.json"
+WELL_KNOWN_SCHEMA = ROOT / "schemas" / "abiz-well-known-v1.schema.json"
+# SPEC.md section 3.4: the well-known file and its limits.
+WELL_KNOWN_PATH = "/.well-known/abiz.json"
+WELL_KNOWN_MAX_BYTES = 65_536
+WELL_KNOWN_MEMBERS = ("v", "k", "h", "p")
+# SPEC.md section 4.5: the format query parameter and its media types.
+FORMAT_MEDIA_TYPES = {
+    "html": "text/html; charset=utf-8",
+    "markdown": "text/markdown; charset=utf-8",
+    "json": "application/json",
+}
+FORMAT_ALIASES = {"md": "markdown"}
 ISO3166 = json.loads((ROOT / "data" / "iso3166.json").read_text(encoding="utf-8"))
 COUNTRIES = frozenset(ISO3166["countries"])
 SUBDIVISIONS = {c: frozenset(v) for c, v in ISO3166["subdivisions"].items()}
 # SPEC.md section 4.2.2: countries whose key includes a subdivision.
 # "required": always; "provincial": required except for a federal (Corporations Canada) key.
 SUBDIVISION_RULE = {"us": "required", "ae": "required", "ca": "provincial"}
+# SPEC.md section 4.2.7: assigned codes that ABIZ does not support.
+UNSUPPORTED_COUNTRIES = frozenset({"kp"})
 REG_NUMBER_RE = re.compile(r"^[A-Za-z0-9]+$")
 BUSINESS_KEY_MAX = 128
 # Removed by producer normalisation after NFKC (section 4.2.3).
@@ -86,6 +102,8 @@ def check_country(code: str) -> str:
     """Return the canonical (lowercase) country code, or raise if it is not assigned."""
     if not re.fullmatch(r"[A-Za-z]{2}", code or "") or code.lower() not in COUNTRIES:
         raise ValueError(f"country {code!r} is not an assigned ISO 3166-1 alpha-2 code")
+    if code.lower() in UNSUPPORTED_COUNTRIES:
+        raise ValueError(f"country {code!r} is not supported by ABIZ (SPEC section 4.2.7)")
     return code.lower()
 
 
@@ -180,9 +198,11 @@ def dns_tags(value: str) -> dict[str, str]:
         raise ValueError("Invalid DNS h= host/path")
     if "k" in tags:
         parse_business_key(tags["k"])  # SPEC section 4.2.1
-    if "p" in tags:
-        # ABIZ 1.1: p is optional, but when present it MUST be a key (SPEC 3.3.2, 3.3.7).
-        decode_ed25519_public_key(tags["p"])
+    if "p" not in tags:
+        # ABIZ 1.1: p is REQUIRED (SPEC 3.2, 3.3.1).
+        raise ValueError("Missing p= DNS tag (p is required, SPEC section 3.2)")
+    # p MUST be an Ed25519 public key (SPEC 3.3.2, 3.3.7).
+    decode_ed25519_public_key(tags["p"])
     return tags
 
 
@@ -236,6 +256,123 @@ def check_p_signature(tags: dict[str, str], message: bytes, signature: str) -> b
     return key
 
 
+def well_known_tags(document: object) -> dict[str, str]:
+    """Read the tags of a /.well-known/abiz.json document (SPEC section 3.4).
+
+    The document carries the same v, k, h and p as the DNS assertion, one JSON
+    string each. Unknown members are ignored. Every value obeys the same rules
+    as the DNS tag value, so the result is checked exactly as dns_tags() checks
+    a TXT value.
+    """
+    if not isinstance(document, dict):
+        raise ValueError("well-known document must be a JSON object")
+    for member in WELL_KNOWN_MEMBERS:
+        if member in document and not isinstance(document[member], str):
+            raise ValueError(f"well-known member {member!r} must be a string")
+    if document.get("v") != "abiz1":
+        raise ValueError('well-known document must have "v": "abiz1"')
+    for member in ("h", "p"):
+        if member not in document:
+            raise ValueError(f"well-known document is missing {member!r}")
+    parts = ["v=abiz1"]
+    for member in ("k", "h", "p"):
+        if member not in document:
+            continue
+        value = document[member]
+        if not value or any(c.isspace() or c == ";" for c in value):
+            raise ValueError(f"well-known member {member!r} must be a non-empty value without whitespace or ';'")
+        parts.append(f"{member}={value}")
+    return dns_tags(";".join(parts))
+
+
+def _same_tags(a: dict[str, str], b: dict[str, str]) -> bool:
+    if identity_parts(a["h"]) != identity_parts(b["h"]) or a["p"] != b["p"]:
+        return False
+    return a.get("k", "").lower() == b.get("k", "").lower()
+
+
+def resolve_sources(
+    txt_values: list[str] | None,
+    document: object | None,
+    warnings: list[str] | None = None,
+) -> tuple[dict[str, str], str]:
+    """Apply the precedence rules of SPEC section 3.4.4. Returns (tags, source).
+
+    txt_values is the TXT RRset at _abiz.<domain> (None when the DNS query
+    failed); document is the parsed well-known file (None when it is absent).
+    source is "dns" or "well-known".
+    """
+    if txt_values is None:
+        raise ValueError("DNS lookup failed: the result is unavailable, not absent (no fallback)")
+    assertions = [v for v in txt_values if is_abiz_assertion(v)]
+    if len(assertions) > 1:
+        raise ValueError("More than one v=abiz1 TXT record: invalid (the well-known file is not used)")
+    if assertions:
+        tags = dns_tags(assertions[0])  # a malformed DNS assertion is invalid: no fallback
+        if document is not None and warnings is not None:
+            try:
+                if not _same_tags(tags, well_known_tags(document)):
+                    warnings.append("well-known file disagrees with the DNS assertion; DNS used")
+            except ValueError as exc:
+                warnings.append(f"well-known file ignored ({exc}); DNS used")
+        return tags, "dns"
+    if document is None:
+        raise ValueError("No ABIZ assertion: no v=abiz1 TXT record and no well-known file")
+    return well_known_tags(document), "well-known"
+
+
+def select_representation(format_value: str | None, accept: str | None = None) -> str:
+    """Reference host behaviour for the record host (SPEC section 4.5).
+
+    An explicit, recognised format parameter wins. Otherwise (absent or not
+    recognised) the Accept header decides. The default is HTML.
+    """
+    if format_value is not None:
+        chosen = FORMAT_ALIASES.get(format_value, format_value)
+        if chosen in FORMAT_MEDIA_TYPES:
+            return chosen
+    ranked = []
+    for index, item in enumerate((accept or "").split(",")):
+        fields = [f.strip() for f in item.split(";")]
+        media, q = fields[0].lower(), 1.0
+        for f in fields[1:]:
+            if f.lower().startswith("q="):
+                try:
+                    q = float(f[2:])
+                except ValueError:
+                    q = 0.0
+        if q > 0:
+            ranked.append((-q, index, media))
+    for _, _, media in sorted(ranked):
+        if media == "application/json":
+            return "json"
+        if media == "text/markdown":
+            return "markdown"
+        if media in ("text/html", "application/xhtml+xml", "*/*", "text/*"):
+            return "html"
+    return "html"
+
+
+def validate_well_known(document: object, schema: dict | None = None) -> list[str]:
+    """Check a /.well-known/abiz.json document on its own (SPEC section 3.4)."""
+    if schema is None:
+        schema = json.loads(WELL_KNOWN_SCHEMA.read_text(encoding="utf-8"))
+    errors = [f"{'/'.join(map(str, e.path)) or '$'}: {e.message}" for e in
+              Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(document)]
+    if errors:
+        return sorted(errors)
+    try:
+        well_known_tags(document)
+    except ValueError as exc:
+        errors.append(str(exc))
+    return errors
+
+
+def is_well_known_document(document: object) -> bool:
+    """A JSON file with "v" and no "record-version" is a well-known document, not a business record."""
+    return isinstance(document, dict) and "v" in document and "record-version" not in document
+
+
 def validate_record(
     record: dict,
     schema: dict,
@@ -244,6 +381,8 @@ def validate_record(
     *,
     p_message: bytes | None = None,
     p_signature: str | None = None,
+    well_known: object | None = None,
+    warnings: list[str] | None = None,
 ) -> list[str]:
     errors = [f"{'/'.join(map(str, e.path)) or '$'}: {e.message}" for e in
               Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(record)]
@@ -288,9 +427,9 @@ def validate_record(
             errors.append("DNS owner domain is missing from record.domains")
     if (p_message is None) != (p_signature is None):
         errors.append("p signature verification needs both a message and a signature")
-    if dns_value:
+    if dns_value or well_known is not None:
         try:
-            tags = dns_tags(dns_value)
+            tags, _source = resolve_sources([dns_value] if dns_value else [], well_known, warnings)
             if identity_parts(tags["h"]) != identity_parts(record["identity-host"]):
                 errors.append("DNS h and identity-host do not match")
             # k is optional (SPEC section 3.2). When present it must equal business-key,
@@ -305,7 +444,7 @@ def validate_record(
         except (ValueError, RuntimeError) as exc:
             errors.append(str(exc))
     elif p_signature is not None:
-        errors.append("p signature verification requires a DNS assertion")
+        errors.append("p signature verification requires a DNS assertion or well-known file")
     return errors
 
 
@@ -315,6 +454,11 @@ def main():
     ap.add_argument("--domain", help="Domain under which _abiz TXT record is published")
     ap.add_argument("--dns-value", help="Value inside ABIZ TXT record, not the full DNS zone line")
     ap.add_argument(
+        "--well-known",
+        type=Path,
+        help="Local copy of https://<domain>/.well-known/abiz.json (SPEC section 3.4); DNS wins if both are given",
+    )
+    ap.add_argument(
         "--p-message",
         help="UTF-8 message for an optional PureEd25519 check (requires --dns-value and --p-signature)",
     )
@@ -323,16 +467,33 @@ def main():
         help="Standard base64 of the 64-byte Ed25519 signature (requires --dns-value and --p-message)",
     )
     args = ap.parse_args()
-    if bool(args.domain) != bool(args.dns_value):
-        ap.error("--domain and --dns-value must be supplied together for DNS assertion checks")
+    has_source = bool(args.dns_value) or args.well_known is not None
+    if bool(args.domain) != has_source:
+        ap.error("--domain needs --dns-value or --well-known, and they need --domain")
     if (args.p_message is None) != (args.p_signature is None):
         ap.error("--p-message and --p-signature must be supplied together")
-    if args.p_signature is not None and not args.dns_value:
-        ap.error("--p-message and --p-signature require --domain and --dns-value")
+    if args.p_signature is not None and not has_source:
+        ap.error("--p-message and --p-signature require --domain and --dns-value or --well-known")
     try:
         schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
         record = json.loads(args.json_file.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
+        well_known = None
+        if args.well_known is not None:
+            raw = args.well_known.read_bytes()
+            if len(raw) > WELL_KNOWN_MAX_BYTES:
+                raise ValueError(f"well-known file is larger than {WELL_KNOWN_MAX_BYTES} bytes")
+            well_known = json.loads(raw.decode("utf-8"))
+        warnings: list[str] = []
+        if is_well_known_document(record):
+            if has_source:
+                ap.error("a well-known document is checked on its own; omit --domain, --dns-value and --well-known")
+            errors = validate_well_known(record)
+            for error in errors:
+                print("ERROR:", error, file=sys.stderr)
+            if not errors:
+                print("PASS: ABIZ well-known document (/.well-known/abiz.json) schema and tag rules")
+            return 1 if errors else 0
         errors = validate_record(
             record,
             schema,
@@ -340,17 +501,21 @@ def main():
             args.dns_value,
             p_message=None if args.p_message is None else args.p_message.encode("utf-8"),
             p_signature=args.p_signature,
+            well_known=well_known,
+            warnings=warnings,
         )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"Invalid: {exc}", file=sys.stderr)
         return 1
+    for warning in warnings:
+        print("WARNING:", warning, file=sys.stderr)
     if errors:
         for error in errors:
             print("ERROR:", error, file=sys.stderr)
         return 1
     if args.p_signature is not None:
         print("PASS: schema + offline DNS/document consistency; Ed25519 signature matches p")
-    elif args.dns_value:
+    elif has_source:
         print("PASS: schema + offline DNS/document consistency (not a live DNS or registry check)")
     else:
         print("PASS: ABIZ record schema and local semantics (DNS not checked)")
