@@ -1,4 +1,4 @@
-# ABIZ 1.1 (proposed) sample DNS assertion.
+# ABIZ 1.1 sample DNS assertion. p is REQUIRED (SPEC section 3.2).
 # p is standard base64 (RFC 4648 section 4) of a throwaway 32-byte Ed25519 public key.
 # The private key was discarded and is not in this repository.
 # Illustrative only. This is not a live zone.
