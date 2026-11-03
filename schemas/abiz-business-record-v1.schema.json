@@ -2,22 +2,24 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://abizrecord.org/schema/abiz-business-record-v1.schema.json",
   "title": "ABIZ Business Record (protocol family abiz1)",
-  "description": "Normative structural schema for the published ABIZ 1.0 specification, with the ABIZ 1.1 (proposed) business-key, registration-number and case-insensitive country rules. $defs/retired-key reserves a nested retired-key shape; it is not a record property. Independent DNS and registry checks are required for full conformance. The DNS p key is not a property of this schema.",
+  "description": "Normative structural schema for the published ABIZ 1.0 specification, with the ABIZ 1.1 (proposed) business_key, registration_number and case-insensitive country rules, snake_case member names, and the REQUIRED public_key and signature members (SPEC section 4.6). $defs/retired_key reserves a nested retired-key shape; it is not a record property. The schema checks only the form of public_key and signature: a consumer MUST also verify the signature over the RFC 8785 canonical record and compare public_key with the DNS or well-known p. Independent DNS and registry checks are required for full conformance.",
   "type": "object",
   "required": [
-    "record-version",
-    "business-name",
+    "record_version",
+    "business_name",
     "country",
-    "identity-host",
-    "domains"
+    "identity_host",
+    "domains",
+    "public_key",
+    "signature"
   ],
   "additionalProperties": false,
   "properties": {
-    "record-version": {
+    "record_version": {
       "const": "abiz1",
       "description": "Wire protocol family abiz1. Document revisions, including a proposed 1.1, may advance without changing this value."
     },
-    "business-name": {
+    "business_name": {
       "type": "string",
       "minLength": 1,
       "maxLength": 240,
@@ -28,7 +30,7 @@
       "pattern": "^[A-Za-z]{2}$",
       "description": "Assigned ISO 3166-1 alpha-2 country code. Case-insensitive; canonical form is lowercase. The validator checks it against data/iso3166.json."
     },
-    "identity-host": {
+    "identity_host": {
       "type": "string",
       "minLength": 4,
       "maxLength": 512,
@@ -47,20 +49,27 @@
       },
       "description": "Business-controlled domain names this record claims. DNS cross-check must confirm control."
     },
-    "business-key": {
+    "public_key": {
+      "type": "string",
+      "minLength": 44,
+      "maxLength": 44,
+      "pattern": "^[A-Za-z0-9+/]{43}=$",
+      "description": "REQUIRED (ABIZ 1.1, SPEC section 4.6.1). The business's Ed25519 public key: standard base64 of 32 bytes, 44 characters, one trailing '='. MUST equal the p value of the DNS assertion or well-known file that points to this record."
+    },
+    "business_key": {
       "type": "string",
       "pattern": "^[A-Za-z]{2}-(?:[A-Za-z0-9]{1,3}-)?[A-Za-z0-9]+$",
       "maxLength": 128,
       "description": "country[-subdivision]-registration-number (SPEC section 4.2.1). Case-insensitive; canonical form has lowercase country and subdivision and an uppercase number. Assigned codes and the subdivision rule (section 4.2.2) are checked by the validator."
     },
-    "registration-number": {
+    "registration_number": {
       "type": "string",
       "minLength": 1,
       "maxLength": 96,
       "pattern": "^[A-Za-z0-9]+$",
       "description": "Normalised registration number: ASCII letters and digits only (SPEC section 4.2.3). Case-insensitive; canonical form is uppercase."
     },
-    "mcp-server-url": {
+    "mcp_server_url": {
       "type": "string",
       "format": "uri",
       "pattern": "^https://",
@@ -78,24 +87,25 @@
       "pattern": "^https://",
       "maxLength": 2048
     },
-    "contact-email": {
+    "contact_email": {
       "type": "string",
       "format": "email",
       "maxLength": 320
     },
-    "contact-phone": {
+    "contact_phone": {
       "type": "string",
       "maxLength": 64
     },
-    "logo-url": {
+    "logo_url": {
       "type": "string",
       "format": "uri",
       "pattern": "^https://",
       "maxLength": 2048
     },
-    "last-updated": {
+    "last_updated": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "description": "UTC date and time of the last change to the record. Covered by the signature; producers SHOULD include it and update it on every re-signing (SPEC section 4.6.6)."
     },
     "services": {
       "type": "array",
@@ -162,7 +172,7 @@
           "street": {
             "type": "string"
           },
-          "postal-code": {
+          "postal_code": {
             "type": "string"
           },
           "public": {
@@ -171,7 +181,7 @@
         }
       }
     },
-    "opening-hours": {
+    "opening_hours": {
       "type": "array",
       "maxItems": 50,
       "items": {
@@ -210,42 +220,49 @@
         "pattern": "^[a-z0-9-]+(?:\\.[a-z0-9-]+)+$"
       },
       "additionalProperties": true,
-      "description": "Vendor-namespaced extensions; consumers may ignore unfamiliar extensions."
+      "description": "Vendor-namespaced extensions (reverse-domain keys); consumers may ignore unfamiliar extensions. Member names inside an extension are vendor-defined; snake_case is RECOMMENDED. Extensions are covered by the signature."
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 88,
+      "maxLength": 88,
+      "pattern": "^[A-Za-z0-9+/]{86}==$",
+      "description": "REQUIRED (ABIZ 1.1, SPEC section 4.6). PureEd25519 signature, standard base64 of 64 bytes (88 characters), over the UTF-8 octets of the RFC 8785 (JCS) canonical serialisation of this record with the signature member removed. Verified with public_key."
     }
   },
   "dependentRequired": {
-    "business-key": [
-      "registration-number"
+    "business_key": [
+      "registration_number"
     ],
-    "registration-number": [
-      "business-key"
+    "registration_number": [
+      "business_key"
     ]
   },
   "$defs": {
-    "retired-key": {
-      "description": "ABIZ 1.1 (proposed). Reserved shape of one retired Ed25519 public key. Not a business-record property: no record property refers to this definition, and unknown top-level properties such as retired-keys are rejected. DNS must not carry retired keys.",
+    "retired_key": {
+      "description": "ABIZ 1.1 (proposed). Reserved shape of one retired Ed25519 public key. Not a business-record property: no record property refers to this definition, and unknown top-level properties such as retired_keys are rejected. DNS must not carry retired keys.",
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "public-key",
-        "retired-at",
-        "binding-signature"
+        "public_key",
+        "retired_at",
+        "binding_signature"
       ],
       "properties": {
-        "public-key": {
+        "public_key": {
           "type": "string",
           "minLength": 44,
           "maxLength": 44,
           "pattern": "^[A-Za-z0-9+/]{43}=$",
           "description": "Retired Ed25519 public key: 32 bytes, standard base64, one trailing '='."
         },
-        "valid-from": {
+        "valid_from": {
           "type": "string",
           "format": "date-time",
           "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
           "description": "Optional UTC instant when this key became current."
         },
-        "retired-at": {
+        "retired_at": {
           "type": "string",
           "format": "date-time",
           "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
@@ -258,7 +275,7 @@
             "compromised"
           ]
         },
-        "binding-signature": {
+        "binding_signature": {
           "type": "string",
           "minLength": 88,
           "maxLength": 88,

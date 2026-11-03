@@ -1,1 +1,3 @@
 jsonschema[format]>=4.22,<5
+# Required from ABIZ 1.1: verifies the business record's Ed25519 signature (SPEC section 4.6).
+cryptography>=41,<50

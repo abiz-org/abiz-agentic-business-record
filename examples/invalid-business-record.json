@@ -1,8 +1,9 @@
 {
-  "record-version": "abiz1",
-  "business-name": "",
+  "record_version": "abiz1",
+  "business_name": "",
   "country": "United States",
-  "identity-host": "https://wrong.example",
+  "identity_host": "https://wrong.example",
   "domains": [],
-  "mcp-server-url": "http://insecure.example/mcp"
+  "mcp_server_url": "http://insecure.example/mcp",
+  "public_key": "ede69a675ead36c690cc8689e1d3e21d"
 }

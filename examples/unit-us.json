@@ -1,13 +1,14 @@
 {
-  "record-version": "abiz1",
-  "business-name": "Harbour Bike Repair LLC, Events and Workshops",
+  "record_version": "abiz1",
+  "business_name": "Harbour Bike Repair LLC, Events and Workshops",
   "country": "us",
-  "business-key": "us-or-123456",
-  "registration-number": "123456",
-  "identity-host": "harbour-bike-repair.or.us.to.co/events",
+  "business_key": "us-or-123456",
+  "registration_number": "123456",
+  "identity_host": "harbour-bike-repair.or.us.to.co/events",
   "domains": [
     "events.harbourbikes.example"
   ],
+  "public_key": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=",
   "description": "Bike maintenance classes and group rides run by Harbour Bike Repair in Portland.",
   "website": "https://events.harbourbikes.example",
   "services": [
@@ -20,5 +21,6 @@
       "label": "Parent business record",
       "url": "https://harbour-bike-repair.or.us.to.co"
     }
-  ]
+  ],
+  "signature": "E+I5e5AkA602m6Aw5qsRp9vbHwvXnnU43mGLcMbMPwc7tQCEZOogrFOBBLqCGqFNiWBEb15jKL9zf8UNCvmEBw=="
 }
