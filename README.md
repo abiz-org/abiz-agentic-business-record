@@ -14,6 +14,12 @@ A business can publish an ABIZ DNS pointer on a domain it controls. The pointer 
 - **Conformance fixtures:** [examples/](examples/)
 - **Feedback:** use [GitHub Issues](https://github.com/abiz-org/abiz-agentic-business-record/issues); do not publish individuals' direct contact details.
 
+## Guides by region
+
+Country-specific help for becoming an agentic business with ABIZ:
+
+- [South America](docs/countries/south-america/)
+
 ## How ABIZ works
 
 1. Publish one business record over HTTPS, yourself or through a compatible provider.
