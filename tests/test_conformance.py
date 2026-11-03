@@ -10,7 +10,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from jsonschema import Draft202012Validator, FormatChecker
 from validate import (
+    canonical_business_key,
     decode_ed25519_public_key,
+    normalise_registration_number,
+    parse_business_key,
     dns_tags,
     is_abiz_assertion,
     validate_record,
@@ -47,7 +50,7 @@ class ABIZConformanceTests(unittest.TestCase):
         self.assertEqual(validate_record(REG, SCHEMA), [])
         self.assertEqual(validate_record(REG, SCHEMA,
                          "harbourbikes.example",
-                         "v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co"), [])
+                         "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"), [])
 
     def test_unregistered_business_passes_without_k_or_mcp(self):
         self.assertEqual(validate_record(UNREG, SCHEMA,
@@ -60,13 +63,13 @@ class ABIZConformanceTests(unittest.TestCase):
 
     def test_cross_record_mismatch_fails(self):
         self.assertTrue(validate_record(REG, SCHEMA, "elsewhere.example",
-                        "v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co"))
+                        "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"))
         self.assertTrue(validate_record(REG, SCHEMA, "harbourbikes.example",
-                        "v=abiz1;k=us-OR123456;h=wrong.example"))
+                        "v=abiz1;k=us-or-123456;h=wrong.example"))
 
     def test_bad_registry_key_and_insecure_url_fail(self):
         bad = copy.deepcopy(REG)
-        bad["business-key"] = "gb-OR123456"
+        bad["business-key"] = "gb-123456"
         bad["website"] = "http://example.com"
         self.assertTrue(validate_record(bad, SCHEMA))
 
@@ -99,7 +102,7 @@ class ABIZConformanceTests(unittest.TestCase):
         self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", dns), [])
 
     def test_no_p_passes(self):
-        dns = "v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co"
+        dns = "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"
         self.assertNotIn("p", dns_tags(dns))
         self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", dns), [])
 
@@ -141,7 +144,7 @@ class ABIZConformanceTests(unittest.TestCase):
             dns_tags(f"v=abiz1;h=harbour-bike-repair.or.us.to.co;p={key};p={key}")
 
     def _dns_with_p(self, value):
-        return f"v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co;p={value}"
+        return f"v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p={value}"
 
     def test_hex_token_p_fails(self):
         # 32 hex characters, the ABIZ 1.0 one-time handshake shape. Invalid from 1.1.
@@ -245,34 +248,34 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
     """ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1."""
 
     HOST = "harbour-bike-repair.or.us.to.co"
-    CANONICAL = {"v": "abiz1", "k": "us-OR123456", "h": HOST}
+    CANONICAL = {"v": "abiz1", "k": "us-or-123456", "h": HOST}
 
     def assert_parses(self, value):
         self.assertEqual(dns_tags(value), self.CANONICAL, value)
         self.assertTrue(is_abiz_assertion(value), value)
 
     def test_canonical_1_0_form_still_parses(self):
-        self.assert_parses(f"v=abiz1;k=us-OR123456;h={self.HOST}")
+        self.assert_parses(f"v=abiz1;k=us-or-123456;h={self.HOST}")
 
     def test_space_after_semicolon(self):
-        self.assert_parses(f"v=abiz1; k=us-OR123456; h={self.HOST}")
+        self.assert_parses(f"v=abiz1; k=us-or-123456; h={self.HOST}")
 
     def test_spaces_around_semicolon_and_equals(self):
-        self.assert_parses(f"v = abiz1 ; k = us-OR123456 ; h = {self.HOST}")
+        self.assert_parses(f"v = abiz1 ; k = us-or-123456 ; h = {self.HOST}")
 
     def test_tabs(self):
-        self.assert_parses(f"v=abiz1;\tk=us-OR123456\t;\th\t=\t{self.HOST}")
+        self.assert_parses(f"v=abiz1;\tk=us-or-123456\t;\th\t=\t{self.HOST}")
 
     def test_leading_and_trailing_whitespace(self):
-        self.assert_parses(f"  v=abiz1;k=us-OR123456;h={self.HOST}  ")
+        self.assert_parses(f"  v=abiz1;k=us-or-123456;h={self.HOST}  ")
 
     def test_single_trailing_semicolon(self):
-        self.assert_parses(f"v=abiz1;k=us-OR123456;h={self.HOST};")
-        self.assert_parses(f"v=abiz1; k=us-OR123456; h={self.HOST} ; ")
+        self.assert_parses(f"v=abiz1;k=us-or-123456;h={self.HOST};")
+        self.assert_parses(f"v=abiz1; k=us-or-123456; h={self.HOST} ; ")
 
     def test_spaced_record_validates_end_to_end(self):
         self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example",
-                         f"v=abiz1; k=us-OR123456; h={self.HOST};"), [])
+                         f"v=abiz1; k=us-or-123456; h={self.HOST};"), [])
 
     def test_p_padding_survives_spaces_around_equals(self):
         key = "oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
@@ -287,19 +290,19 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
     def test_still_invalid(self):
         bad = [
             f"v=abiz1; h=harbour bike.example",           # space inside a value
-            f"v=abiz1; h=a.example; k=us-OR 123456",      # space inside a value
+            f"v=abiz1; h=a.example; k=us-or-123 456",      # space inside a value
             f"v=abiz1; h={self.HOST}; h=other.example",   # duplicate recognised tag
-            f"v=abiz1; k=us-OR1; k=us-OR2; h={self.HOST}",  # duplicate k
+            f"v=abiz1; k=us-or-1; k=us-or-2; h={self.HOST}",  # duplicate k
             f"V=ABIZ1; h={self.HOST}",                    # tag names and values are case-sensitive
             f"V=abiz1; h={self.HOST}",
             f"v=ABIZ1; h={self.HOST}",
             f"h={self.HOST}; v=abiz1",                    # v must be first
-            f"k=us-OR123456; h={self.HOST}",              # v missing
+            f"k=us-or-123456; h={self.HOST}",              # v missing
             f"v=abiz2; h={self.HOST}",                    # other version
             f"v=abiz1; h={self.HOST};;",                  # only one trailing ";"
             f"v=abiz1;; h={self.HOST}",                   # empty tag
             f"v=abiz1; h={self.HOST}; flag",              # tag without "="
-            f"v=abiz1; h=; k=us-OR123456",                # empty value
+            f"v=abiz1; h=; k=us-or-123456",                # empty value
             f"v=abiz1;\nh={self.HOST}",                   # only SP and HTAB are allowed
             f"v=abiz1;\r\nh={self.HOST}",
             f"v=abiz1;\u00a0h={self.HOST}",               # no-break space is not WSP
@@ -317,6 +320,118 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
                       "v=abiz1x;h=a.example", "h=a.example;v=abiz1", "x v=abiz1"):
             with self.subTest(value=other):
                 self.assertFalse(is_abiz_assertion(other))
+
+
+class ABIZBusinessKeyTests(unittest.TestCase):
+    """ABIZ 1.1 (proposed) business key, SPEC.md section 4.2."""
+
+    HOST = "harbour-bike-repair.or.us.to.co"
+
+    def record(self, key, number, country="us"):
+        r = copy.deepcopy(REG)
+        r["country"], r["business-key"], r["registration-number"] = country, key, number
+        r["locations"][0]["country"] = country
+        return r
+
+    def test_valid_keys_per_country(self):
+        for key in ("us-or-123456", "us-dc-A1", "ca-on-1001216372", "ca-bc-BC0578072",
+                    "ca-12345678", "ae-du-1234567", "ae-az-ADGM000123", "gb-01234567",
+                    "gb-SC123456", "jp-1234567890123", "de-K1101RHRB12345", "au-123456789",
+                    "in-U72200MH2009PLC123456", "br-12345678000195", "ch-CHE123456789",
+                    "cn-91110000123456789X", "mx-ABC010101AB1", "pr-123456"):
+            with self.subTest(key=key):
+                parse_business_key(key)
+                self.assertEqual(dns_tags(f"v=abiz1;k={key};h={self.HOST}")["k"], key)
+
+    def test_invalid_country(self):
+        for key in ("uk-01234567", "xk-123", "eu-123", "zz-123", "u1-123", "usa-or-1"):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                parse_business_key(key)
+        bad = copy.deepcopy(REG)
+        bad["country"] = "UK"
+        bad["business-key"], bad["registration-number"] = "uk-123456", "123456"
+        self.assertTrue(validate_record(bad, SCHEMA))
+        bad = copy.deepcopy(UNREG)
+        bad["locations"][0]["country"] = "ZZ"
+        self.assertTrue(validate_record(bad, SCHEMA))
+
+    def test_invalid_subdivision_for_country(self):
+        for key in ("us-zz-123456", "us-on-123456", "ca-or-123", "ae-du1-1", "us-pr-123456", "us-um-1"):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                parse_business_key(key)
+
+    def test_missing_subdivision_where_required(self):
+        for key in ("us-123456", "us-OR123456", "ae-1234567"):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                parse_business_key(key)
+        with self.assertRaises(ValueError):
+            dns_tags(f"v=abiz1;k=us-OR123456;h={self.HOST}")  # the ABIZ 1.0 example key
+        self.assertTrue(validate_record(self.record("us-123456", "123456"), SCHEMA))
+
+    def test_canada_federal_key_has_no_subdivision(self):
+        self.assertEqual(parse_business_key("ca-12345678"), ("ca", None, "12345678"))
+
+    def test_subdivision_present_where_not_required(self):
+        for key in ("gb-eng-01234567", "de-by-HRB12345", "jp-13-1234567890123", "au-nsw-123456789"):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                parse_business_key(key)
+
+    def test_case_insensitive_match(self):
+        self.assertEqual(canonical_business_key("US-OR-123456"), "us-or-123456")
+        self.assertEqual(canonical_business_key("ca-bc-bc0578072"), "ca-bc-BC0578072")
+        record = self.record("US-Or-abc123", "ABC123", country="Us")
+        self.assertEqual(validate_record(record, SCHEMA), [])
+        self.assertEqual(validate_record(record, SCHEMA, "harbourbikes.example",
+                         f"v=abiz1;k=us-or-ABC123;h={self.HOST}"), [])
+        self.assertTrue(validate_record(record, SCHEMA, "harbourbikes.example",
+                        f"v=abiz1;k=us-or-ABC124;h={self.HOST}"))
+        # Uppercase record country, as in the unregistered example, is still valid.
+        self.assertEqual(UNREG["country"], "US")
+        self.assertEqual(validate_record(UNREG, SCHEMA), [])
+
+    def test_special_characters_rejected(self):
+        for number in ("HRB 12345", "123-456", "123.456", "123/456", "12_34", "AB&C", "１２３", "ÄB1"):
+            with self.subTest(number=number):
+                self.assertTrue(validate_record(self.record(f"us-or-{number}", number), SCHEMA))
+        for key in ("us-or-123_456", "us-or-123.456", "us-or-123-456", "us-or-"):
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                parse_business_key(key)
+
+    def test_key_must_match_registration_number_and_country(self):
+        self.assertTrue(validate_record(self.record("us-or-123456", "123457"), SCHEMA))
+        self.assertTrue(validate_record(self.record("ca-on-123456", "123456"), SCHEMA))
+
+    def test_normalisation(self):
+        self.assertEqual(normalise_registration_number("１２３４５６７８９０１２３"), "1234567890123")
+        self.assertEqual(normalise_registration_number("ＨＲＢ　１２３４５"), "HRB12345")
+        self.assertEqual(normalise_registration_number("HRB 12345"), "HRB12345")
+        self.assertEqual(normalise_registration_number("CHE-123.456.789"), "CHE123456789")
+        self.assertEqual(normalise_registration_number("12.345.678/0001-95"), "12345678000195")
+        self.assertEqual(normalise_registration_number("1234567-8"), "12345678")
+        self.assertEqual(normalise_registration_number("aab\u20101234"), "AAB1234")
+        self.assertEqual(normalise_registration_number("01234567"), "01234567")
+        self.assertEqual(normalise_registration_number("sc123456"), "SC123456")
+        for raw in ("第123号", "AB&C", "Ñ01", "", " - "):
+            with self.subTest(raw=raw), self.assertRaises(ValueError):
+                normalise_registration_number(raw)
+
+    def test_k_is_optional(self):
+        # Registration fields in the record do not require k in DNS.
+        self.assertIn("business-key", REG)
+        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", f"v=abiz1;h={self.HOST}"), [])
+        self.assertEqual(validate_record(UNREG, SCHEMA, "marketstand.example",
+                         "v=abiz1;h=market-stand-repairs-portland.biz.to.co"), [])
+        # But k without business-key in the record is a mismatch.
+        self.assertTrue(validate_record(UNREG, SCHEMA, "marketstand.example",
+                        "v=abiz1;k=us-or-123456;h=market-stand-repairs-portland.biz.to.co"))
+
+    def test_bundled_iso_data(self):
+        data = json.loads((ROOT / "data" / "iso3166.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(data["countries"]), 249)
+        self.assertEqual(len(data["subdivisions"]["us"]), 51)
+        self.assertEqual(len(data["subdivisions"]["ca"]), 13)
+        self.assertEqual(len(data["subdivisions"]["ae"]), 7)
+        self.assertIn("pycountry 26.2.16", data["source"])
 
 
 if __name__ == "__main__":

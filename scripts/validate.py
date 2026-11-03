@@ -20,6 +20,7 @@ import ipaddress
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -27,6 +28,16 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "schemas" / "abiz-business-record-v1.schema.json"
+ISO3166 = json.loads((ROOT / "data" / "iso3166.json").read_text(encoding="utf-8"))
+COUNTRIES = frozenset(ISO3166["countries"])
+SUBDIVISIONS = {c: frozenset(v) for c, v in ISO3166["subdivisions"].items()}
+# SPEC.md section 4.2.2: countries whose key includes a subdivision.
+# "required": always; "provincial": required except for a federal (Corporations Canada) key.
+SUBDIVISION_RULE = {"us": "required", "ae": "required", "ca": "provincial"}
+REG_NUMBER_RE = re.compile(r"^[A-Za-z0-9]+$")
+BUSINESS_KEY_MAX = 128
+# Removed by producer normalisation after NFKC (section 4.2.3).
+_REG_SEPARATORS = dict.fromkeys(map(ord, "-./\u2010\u2011\u2012\u2013\u2014\u2015\u2212"))
 HOST = re.compile(r"^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
 # 32 raw bytes, standard base64 (RFC 4648 section 4): 43 alphabet chars + one "=".
 P_KEY_RE = re.compile(r"^[A-Za-z0-9+/]{43}=$")
@@ -71,6 +82,60 @@ def identity_parts(value: str):
     return p.hostname.lower().rstrip(".") + (p.path or "")
 
 
+def check_country(code: str) -> str:
+    """Return the canonical (lowercase) country code, or raise if it is not assigned."""
+    if not re.fullmatch(r"[A-Za-z]{2}", code or "") or code.lower() not in COUNTRIES:
+        raise ValueError(f"country {code!r} is not an assigned ISO 3166-1 alpha-2 code")
+    return code.lower()
+
+
+def parse_business_key(value: str) -> tuple[str, str | None, str]:
+    """Split a business key (SPEC section 4.2.1) into canonical (country, subdivision, number).
+
+    Raises ValueError for bad grammar, unassigned codes, or a subdivision that
+    section 4.2.2 requires but is missing, or forbids but is present.
+    """
+    if not isinstance(value, str) or len(value) > BUSINESS_KEY_MAX:
+        raise ValueError(f"business key must be at most {BUSINESS_KEY_MAX} characters")
+    parts = value.split("-")
+    if len(parts) == 2:
+        country, subdivision, number = parts[0], None, parts[1]
+    elif len(parts) == 3:
+        country, subdivision, number = parts
+    else:
+        raise ValueError("business key must be country-number or country-subdivision-number")
+    country = check_country(country)
+    if not REG_NUMBER_RE.fullmatch(number):
+        raise ValueError("business key registration number must be ASCII letters and digits only")
+    rule = SUBDIVISION_RULE.get(country)
+    if subdivision is None:
+        if rule == "required":
+            raise ValueError(f"business key for {country} requires a subdivision code")
+    else:
+        if not re.fullmatch(r"[A-Za-z0-9]{1,3}", subdivision):
+            raise ValueError("business key subdivision must be 1 to 3 ASCII letters or digits")
+        if rule is None:
+            raise ValueError(f"business key for {country} must not include a subdivision")
+        subdivision = subdivision.lower()
+        if subdivision not in SUBDIVISIONS[country]:
+            raise ValueError(f"{country}-{subdivision} is not a permitted ISO 3166-2 subdivision for a business key")
+    return country, subdivision, number.upper()
+
+
+def canonical_business_key(value: str) -> str:
+    country, subdivision, number = parse_business_key(value)
+    return "-".join(x for x in (country, subdivision, number) if x)
+
+
+def normalise_registration_number(raw: str) -> str:
+    """Producer normalisation (SPEC section 4.2.3): NFKC, strip separators, uppercase."""
+    text = unicodedata.normalize("NFKC", raw)
+    text = "".join(ch for ch in text if not ch.isspace()).translate(_REG_SEPARATORS).upper()
+    if not REG_NUMBER_RE.fullmatch(text) or not text.isascii():
+        raise ValueError("registration number cannot be expressed in ASCII letters and digits")
+    return text
+
+
 # ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1. Optional SP or HTAB may
 # surround ";" and "=", and may lead or trail the value; one trailing ";" is allowed.
 # Tag names and values contain no whitespace. Every valid ABIZ 1.0 value still parses.
@@ -113,6 +178,8 @@ def dns_tags(value: str) -> dict[str, str]:
         raise ValueError("Missing h= DNS tag")
     if identity_parts(tags["h"]) is None:
         raise ValueError("Invalid DNS h= host/path")
+    if "k" in tags:
+        parse_business_key(tags["k"])  # SPEC section 4.2.1
     if "p" in tags:
         # ABIZ 1.1: p is optional, but when present it MUST be a key (SPEC 3.3.2, 3.3.7).
         decode_ed25519_public_key(tags["p"])
@@ -195,12 +262,24 @@ def validate_record(
         for item in record.get(collection, []):
             if "url" in item and not check_https(item["url"]):
                 errors.append(f"{collection}.url must be a safe HTTPS URL")
+    try:
+        check_country(record["country"])
+    except ValueError as exc:
+        errors.append(str(exc))
+    for location in record.get("locations", []):
+        try:
+            check_country(location["country"])
+        except ValueError as exc:
+            errors.append(f"locations: {exc}")
     if "business-key" in record:
-        prefix = record["country"].lower() + "-"
-        if not record["business-key"].startswith(prefix):
-            errors.append("business-key country does not match country")
-        if record["business-key"] != prefix + record["registration-number"]:
-            errors.append("business-key does not match registration-number")
+        try:
+            country, _, number = parse_business_key(record["business-key"])
+            if country != record["country"].lower():
+                errors.append("business-key country does not match country")
+            if number != record["registration-number"].upper():
+                errors.append("business-key does not match registration-number")
+        except ValueError as exc:
+            errors.append(str(exc))
     if domain:
         d = domain.lower().rstrip(".")
         if not safe_host(d):
@@ -214,10 +293,13 @@ def validate_record(
             tags = dns_tags(dns_value)
             if identity_parts(tags["h"]) != identity_parts(record["identity-host"]):
                 errors.append("DNS h and identity-host do not match")
-            if "business-key" in record and tags.get("k") != record["business-key"]:
-                errors.append("registered business requires matching DNS k")
-            if "business-key" not in record and "k" in tags:
-                errors.append("DNS k is present for record without a business-key")
+            # k is optional (SPEC section 3.2). When present it must equal business-key,
+            # compared case-insensitively (section 4.2.4).
+            if "k" in tags:
+                if "business-key" not in record:
+                    errors.append("DNS k is present for record without a business-key")
+                elif tags["k"].lower() != record["business-key"].lower():
+                    errors.append("DNS k does not match business-key")
             if p_message is not None and p_signature is not None:
                 check_p_signature(tags, p_message, p_signature)
         except (ValueError, RuntimeError) as exc:

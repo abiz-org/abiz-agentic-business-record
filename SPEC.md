@@ -3,7 +3,7 @@
 **Published version:** ABIZ 1.0  
 **DNS wire version:** `v=abiz1` (unchanged)  
 **Date:** 2026-10-23  
-**1.1 proposal:** 2026-10-31, revised 2026-11-03 (not the published version; see sections 3.1.1 and 3.3)  
+**1.1 proposal:** 2026-10-31, revised 2026-11-03 (not the published version; see sections 3.1.1, 3.3 and 4.2)  
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
 **Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
@@ -11,7 +11,7 @@
 
 This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
 
-Sections 3.1.1 and 3.3 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace, and an Ed25519 key in the optional DNS `p` tag. They are not part of the ABIZ 1.0 conformance baseline. The whitespace change is backwards-compatible. The `p` change is deliberately not: a non-key `p` value is invalid from ABIZ 1.1 (section 3.3.7). The wire version stays `v=abiz1`.
+Sections 3.1.1, 3.3 and 4.2 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace, an Ed25519 key in the optional DNS `p` tag, and a defined business-key grammar with country, subdivision and registration-number rules, with `k` optional for every business. They are not part of the ABIZ 1.0 conformance baseline. The whitespace change and optional `k` are backwards-compatible. The `p` and business-key changes are deliberately not: a non-key `p` value is invalid (section 3.3.7), and existing keys must be re-expressed (section 4.2.5). The wire version stays `v=abiz1`.
 
 ## 1. Scope and purpose
 
@@ -27,7 +27,7 @@ The key words MUST, MUST NOT, SHOULD and MAY have their RFC 2119 / RFC 8174 mean
 - **Consumer:** software reading and validating the pointer and published business record.
 - **Business record:** JSON representation of public business facts conforming to the normative schema.
 - **Record host:** the DNS hostname plus optional path in the `h=` tag (no `https://` prefix).
-- **Business key:** optional registered-business identifier in `country-registration-number` form.
+- **Business key:** optional registration identifier in `country[-subdivision]-registration-number` form (section 4.2.1).
 - **Domain check:** checks that a DNS assertion and fetched business document refer to each other; distinct from government registration checks.
 - **Record conformance:** schema and local semantic checks pass.
 - **Publisher conformance:** record conformance plus the DNS / document requirements in this specification.
@@ -41,7 +41,7 @@ An ABIZ DNS assertion is a TXT record at `_abiz.<domain>`. The first tag MUST be
 
 A TXT record made of several character-strings (RFC 1035) is read as their concatenation, with nothing added between them, as for SPF (RFC 7208 section 3.3) and DKIM (RFC 6376 section 3.6.2.2).
 
-The TTL SHOULD be 300 seconds. Tag names and values are case-sensitive. A consumer MUST ignore unknown additional tags and MUST reject an assertion in which a recognised tag (`v`, `h`, `k`, `p`) appears more than once.
+The TTL SHOULD be 300 seconds. Tag names and values are case-sensitive, except that `k` is compared case-insensitively (section 4.2.4). A consumer MUST ignore unknown additional tags and MUST reject an assertion in which a recognised tag (`v`, `h`, `k`, `p`) appears more than once.
 
 #### 3.1.1 Tag-list syntax (ABIZ 1.1, proposed)
 
@@ -67,7 +67,7 @@ Rules that go with the grammar:
 - At most one trailing `;` is allowed. An empty tag (`;;`), a tag without `=`, and a tag with an empty name or value are invalid.
 - A repeated recognised tag makes the assertion invalid. Unknown tags are ignored, including repeated ones.
 
-Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co`. A strict ABIZ 1.0 consumer rejects any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
+Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co`. A strict ABIZ 1.0 consumer rejects any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
 
 ### 3.2 Tags
 
@@ -75,7 +75,7 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 | --- | --- | --- |
 | `v=abiz1` | MUST | Wire protocol family; always first |
 | `h=<record-host>` | MUST | HTTPS hostname plus optional path of the public business record, without URL scheme |
-| `k=<country-registration>` | REQUIRED for registered businesses | Independent registration key; MAY be absent for unregistered businesses |
+| `k=<business-key>` | MAY | Optional for every business, registered or not. When present, MUST follow section 4.2.1 and MUST equal the record's `business-key`, compared case-insensitively (section 4.2.4). Registration fields in the record do not require `k` |
 | `p=<public-key>` | MAY | Optional. In ABIZ 1.1 (proposed), when present, MUST be an Ed25519 public key in standard base64; any other value is invalid (section 3.3). ABIZ 1.0 allowed an opaque provider token. Not a password and not proof of legal identity |
 
 `h` MAY refer to a record hosted by an independent service. A producer need not own the host serving the record; it MUST control the queried DNS domain and have permission for the published record.
@@ -83,7 +83,7 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 **Example — registered business (US):**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co"
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"
 ```
 
 **Example — unregistered business (US):**
@@ -99,7 +99,7 @@ These hostnames are examples of to.co's country-based registered-company hostnam
 **Example — ABIZ 1.1 (proposed) Ed25519 `p` key:**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
 ```
 
 `p` here is a throwaway Ed25519 public key. The private key is not part of this specification and is not in the repository. See `examples/dns-ed25519-p.txt` and section 3.3.
@@ -206,7 +206,7 @@ ABIZ 1.1 does not define a published list of retired keys. The schema reserves t
 
 All existing `p` values are upgraded by this revision. A `p` value published under ABIZ 1.0 that is not a valid key under section 3.3.2, such as a 32-character hexadecimal handshake token, fails ABIZ 1.1 validation, and the whole assertion is invalid. Producers MUST republish `p` as an Ed25519 public key (section 3.3.3) or remove it. Because `p` is optional, an assertion without `p` stays valid.
 
-This is a deliberate breaking change, confined to non-key `p` values. Every other ABIZ 1.0 assertion and record stays valid under ABIZ 1.1, with the same meaning. The whitespace relaxation of section 3.1.1 only adds accepted forms.
+This is a deliberate breaking change for non-key `p` values. The business-key rules of section 4.2 are the other one (section 4.2.5). Every other ABIZ 1.0 assertion and record stays valid under ABIZ 1.1, with the same meaning. The whitespace relaxation of section 3.1.1 only adds accepted forms.
 
 #### 3.3.8 Unresolved points
 
@@ -231,13 +231,85 @@ ABIZ 1.1 (proposed) adds no record property. The schema's `$defs` holds a nested
 
 - `record-version` = `abiz1`
 - `business-name`: nonempty public name
-- `country`: ISO 3166-1 alpha-2 country code
+- `country`: assigned ISO 3166-1 alpha-2 country code, case-insensitive, canonically lowercase (section 4.2.4)
 - `identity-host`: hostname and optional path matching `h`
 - `domains`: array of business-controlled domain names this record claims
 
 ### 4.2 Registration and MCP
 
-Registered businesses MUST provide `registration-number` and matching `business-key`. Unregistered businesses MAY omit both. If either registration field is present, both MUST be present. The value of `business-key` MUST match `k` where the DNS assertion contains it, and the key's country prefix MUST match the record's `country` in lowercase.
+`business-key` and `registration-number` are OPTIONAL, for registered and unregistered businesses alike. If either is present, both MUST be present. The country part of `business-key` MUST equal the record's `country`, and its registration-number part MUST equal `registration-number`, both compared case-insensitively. Including these fields in the record does not require `k` in DNS. If the DNS assertion contains `k`, `k` MUST equal `business-key` (section 4.2.4).
+
+#### 4.2.1 Business key grammar (ABIZ 1.1, proposed)
+
+The business key, used as DNS `k` and record `business-key`, has this ABNF (RFC 5234; quoted strings are case-insensitive, and `ALPHA` covers both cases):
+
+```abnf
+business-key = country "-" [ subdivision "-" ] reg-number
+country      = 2ALPHA              ; assigned ISO 3166-1 alpha-2 code (section 4.2.2)
+subdivision  = 1*3( ALPHA / DIGIT ) ; assigned ISO 3166-2 code of that country, without its "CC-" prefix
+reg-number   = 1*( ALPHA / DIGIT )  ; normalised registration number (section 4.2.3)
+```
+
+The whole key MUST NOT exceed 128 characters. `reg-number` never contains `-`, so a key splits on `-` into exactly two parts (country, number) or three parts (country, subdivision, number). Any other number of parts is invalid. The grammar is unambiguous without the country table.
+
+- `country` MUST be an assigned ISO 3166-1 alpha-2 code. Reserved and user-assigned codes are invalid: `uk` and `eu` are not assigned, so the United Kingdom is `gb`; `xk` is user-assigned.
+- `subdivision` MUST be present when section 4.2.2 requires it, MUST be an assigned ISO 3166-2 code of that country from that table when present, and MUST NOT be present for any country that section 4.2.2 does not list as using one. One business therefore has exactly one business key.
+- The reference validator checks codes against `data/iso3166.json`, extracted from pycountry 26.2.16 (Debian iso-codes data, LGPL-2.1; see `data/README.md`). A later ISO 3166 change takes effect in the validator when that file is regenerated.
+
+#### 4.2.2 Countries whose key includes a subdivision
+
+The key names the register where the business was formed (its home jurisdiction), not a place where it is registered as a foreign or extra-provincial entity. A subdivision is used only where the register itself is subdivision-level and no national number identifies the business uniquely.
+
+| Country | Subdivision in key | Register | `reg-number` | Example key |
+| --- | --- | --- | --- | --- |
+| United States (`us`) | REQUIRED: the state of formation, or `dc`. The 50 states and `us-dc` only | The state Secretary of State or equivalent business-entity filing office, for example the [Oregon Secretary of State, Corporation Division](https://sos.oregon.gov/business/Pages/default.aspx) or the [Delaware Division of Corporations](https://corp.delaware.gov/) | That office's entity or file number | `us-or-123456`, `us-de-7654321` |
+| Canada (`ca`) | REQUIRED for a provincial or territorial corporation (13 codes, `ca-ab` … `ca-yt`). ABSENT for a federal corporation | Provincial and territorial registries, for example the [Ontario Business Registry](https://www.ontario.ca/page/ontario-business-registry). Federal corporations (Canada Business Corporations Act): [Corporations Canada](https://ised-isde.canada.ca/site/corporations-canada/en) | Provincial: that registry's number (Ontario Corporation Number, BC incorporation number such as `BC0578072`, Alberta Corporate Access Number, Quebec NEQ). Federal: the Corporations Canada corporation number including its final check digit. Not the CRA Business Number | `ca-on-1001216372`, `ca-bc-BC0578072`, federal `ca-12345678` |
+| United Arab Emirates (`ae`) | REQUIRED: the emirate of the licensing authority (7 codes, `ae-az` … `ae-uq`) | Mainland: the emirate's economic department (listed by the [National Economic Register](https://u.ae/en/information-and-services/business/important-digital-services/national-economic-register/)). Free zones: each free-zone authority keeps its own register | Mainland: the licence number. Free zone: the authority's official abbreviation followed by its licence or registration number, because free-zone numbers are not unique against mainland numbers in the same emirate | `ae-du-1234567`, `ae-du-DMCC123456`, `ae-az-ADGM000123` |
+
+US territories that have their own ISO 3166-1 code (Puerto Rico `pr`, Guam `gu`, US Virgin Islands `vi`, American Samoa `as`, Northern Mariana Islands `mp`) use that country code with no subdivision, for example `pr-123456`. `us-pr` and the other outlying-area codes MUST NOT be used.
+
+Every other country uses no subdivision. Its `reg-number` is the number from the national company register. For the following countries, which are sometimes assumed to be subdivision-level, the number to use is:
+
+| Country | Why no subdivision | `reg-number` | Example key |
+| --- | --- | --- | --- |
+| Germany (`de`) | The Handelsregister is kept by local register courts (Amtsgerichte), not by states, and a number such as HRB 12345 is unique only within one court and register type. A state code would not make it unique | The register court's XJustiz code ([code list Registergerichte](https://www.xrepository.de/details/urn:xoev-de:xunternehmen:codeliste:registergerichte)), then the register type (`HRA`, `HRB`, `GNR`, `PR`, `VR`, `GSR`), then the number and any court suffix. This is the local part of the European Unique Identifier (EUID, [Commission Implementing Regulation (EU) 2021/1042](https://eur-lex.europa.eu/eli/reg_impl/2021/1042/oj)) with the `.` removed: EUID `DEK1101R.HRB12345` gives `K1101RHRB12345` | `de-K1101RHRB12345` |
+| Australia (`au`) | [ASIC](https://asic.gov.au/for-business/registering-a-company/) keeps one national register | The 9-digit ACN. An entity with no ACN may use its 11-digit ABN | `au-123456789` |
+| Mexico (`mx`) | The RFC is a national identifier issued by the [SAT](https://www.sat.gob.mx/) | The 12-character RFC of the legal person. An RFC containing `Ñ` or `&` cannot be expressed; that business omits the key | `mx-ABC010101AB1` |
+| India (`in`) | The [Ministry of Corporate Affairs](https://www.mca.gov.in/) keeps one national register | The 21-character CIN, or the LLPIN without its hyphen | `in-U72200MH2009PLC123456` |
+| Brazil (`br`) | State Juntas Comerciais register companies, but the CNPJ from the [Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cnpj) is national and unique | The 14-character CNPJ without punctuation. The [alphanumeric CNPJ](https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico) already fits the grammar | `br-12345678000195` |
+| Switzerland (`ch`) | Commercial registers are cantonal, but every entity has a national UID (searchable through [Zefix](https://www.zefix.admin.ch/)) | The UID without punctuation | `ch-CHE123456789` |
+| China (`cn`) | The Unified Social Credit Code (GB 32100-2015) is national | The 18-character code | `cn-91110000123456789X` |
+| Japan (`jp`) | The [National Tax Agency](https://www.houjin-bangou.nta.go.jp/en/) assigns every corporation a national 13-digit Corporate Number (法人番号). No prefecture is needed | The 13-digit Corporate Number, after NFKC (section 4.2.3). Not the Legal Affairs Bureau register number, and not a number written with kanji | `jp-1234567890123` |
+| United Kingdom (`gb`) | [Companies House](https://www.gov.uk/government/organisations/companies-house) keeps one register for England and Wales, Scotland and Northern Ireland | The 8-character company number, with its prefix and leading zeros | `gb-01234567`, `gb-SC123456` |
+
+A country with only subdivision-level registers that is not in the first table cannot yet carry a business key. Its businesses omit `k` and the registration fields until a revision adds it.
+
+#### 4.2.3 Registration number
+
+ABIZ cannot check a registration number against each register's format. It defines only the character set and a normalisation.
+
+`registration-number`, and the `reg-number` part of the key, MUST be one or more ASCII letters and digits (`A–Z`, `a–z`, `0–9`). Spaces and all other characters are invalid. A consumer MUST NOT normalise a received value; it MUST reject one that is not ASCII alphanumeric.
+
+A producer derives the value from the number as the register issues it:
+
+1. apply Unicode NFKC normalisation, which turns full-width digits and letters (`０-９`, `Ａ-Ｚ`) into ASCII;
+2. remove whitespace, `-`, `.`, `/`, and the hyphen and dash characters U+2010 to U+2015 and U+2212;
+3. convert ASCII letters to uppercase (the canonical form);
+4. check that the result is one or more ASCII letters and digits. If it is not, for example because it still contains kanji or `&`, the business cannot publish a business key.
+
+Leading zeros and letter prefixes are part of the number and MUST be kept: `01234567` and `1234567` are different numbers, and `SC123456` keeps `SC`. Examples: `HRB 12345` at Hamburg becomes `K1101RHRB12345`; `１２３４５６７８９０１２３` becomes `1234567890123`; `CHE-123.456.789` becomes `CHE123456789`; `12.345.678/0001-95` becomes `12345678000195`; a Corporations Canada number shown as `1234567-8` becomes `12345678`.
+
+#### 4.2.4 Case and comparison
+
+Case is not significant anywhere in a business key, nor in the record's `country` and `locations[].country`. Consumers MUST compare country codes, subdivision codes, registration numbers and whole business keys case-insensitively (ASCII case folding). `US-OR-123456`, `us-or-123456` and `us-OR-123456` are the same key.
+
+Producers SHOULD publish the canonical form: country and subdivision in lowercase, registration number in uppercase, for example `us-or-123456`, `ca-bc-BC0578072`, `de-K1101RHRB12345`. Record `country` SHOULD also be lowercase.
+
+#### 4.2.5 Migration of existing keys
+
+This is a breaking change for keys. ABIZ 1.0 allowed `.`, `_` and `-` inside the number and had no subdivision rule, so some 1.0 keys are invalid or ambiguous under 1.1. Producers MUST re-express existing `k` and `business-key` values in the section 4.2.1 form. For example, the 1.0 example key `us-OR123456` becomes `us-or-123456`, with `registration-number` `123456`.
+
+#### 4.2.6 MCP
 
 `mcp-server-url` is OPTIONAL. If present it MUST be a valid HTTPS URL, but ABIZ does not assert that the endpoint is open, safe, available or authenticated. Consumers MUST apply appropriate access controls before using any linked agent endpoint.
 
@@ -254,7 +326,7 @@ A Draft 2020-12 structural validator MUST evaluate required properties, types, c
 Schema validation does **not** check:
 - whether a business actually controls a domain;
 - whether `identity-host` matches a fetched DNS `h` value;
-- whether `business-key` matches `k` and `country`;
+- whether `business-key` matches `k` and `country`, or uses an assigned country and subdivision code (section 4.2);
 - whether a registration number is real;
 - whether URLs are reachable;
 - whether the business is genuine.
@@ -266,12 +338,12 @@ These checks are performed separately, with clear results. The supplied offline 
 A conforming producer MUST:
 
 1. publish no more than one matching `v=abiz1` TXT assertion at `_abiz.<domain>`;
-2. include `h=`; include `k=` if claiming a registered business;
+2. include `h=`; MAY include `k=`, for a registered or unregistered business;
 3. serve a JSON object at HTTPS `h` when requested as `application/json`;
 4. validate the object against the normative schema **before** publishing and whenever updated;
 5. ensure its `domains` array declares the domain at which the DNS assertion was published;
 6. ensure `identity-host` matches `h` exactly after canonical hostname normalization;
-7. ensure DNS `k`, if present, matches the document `business-key` and registration fields.
+7. ensure DNS `k`, if present, equals the document `business-key` (section 4.2.4), and that `business-key` and `registration-number` follow sections 4.2.1 to 4.2.3.
 
 A producer that publishes `p` MUST set it to an Ed25519 public key as specified in section 3.3, and MUST NOT publish the private key. Publishing `p` remains optional. A producer that still publishes a non-key ABIZ 1.0 `p` token MUST republish it as a key or remove it (section 3.3.7). A producer that rotates a key MUST follow section 3.3.6 and MUST NOT put the old key in DNS.
 
@@ -287,7 +359,7 @@ A conforming consumer MUST:
 4. request and parse JSON without executing scripts;
 5. validate it against the exact normative schema (and required format checks);
 6. verify its `identity-host` and `domains` match the DNS assertion and queried domain;
-7. compare `k` to the business record's registration fields, when `k` is present;
+7. when `k` is present, check it against section 4.2.1 and compare it case-insensitively to the record's `business-key`; reject the assertion if the record has no `business-key`;
 8. label domain-link checks separately from legal registration checks.
 
 A consumer that claims ABIZ 1.1 MUST parse the assertion with the tag-list syntax of section 3.1.1, so it accepts optional whitespace around `;` and `=` and one trailing `;`. It MUST reject an assertion whose `p` is present but is not a valid key under section 3.3.2, including an ABIZ 1.0 hexadecimal token or a base64url value, and MUST follow sections 3.3.5 and 3.3.6. A key check is separate from record conformance and from legal registration.

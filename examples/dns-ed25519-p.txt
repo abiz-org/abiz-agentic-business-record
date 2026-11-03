@@ -3,4 +3,4 @@
 # The private key was discarded and is not in this repository.
 # Illustrative only. This is not a live zone.
 
-v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ=
+v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ=
