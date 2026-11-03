@@ -16,15 +16,15 @@ Yritystietue on JSON-asiakirja, jonka on noudatettava [normatiivista skeemaa](..
 
 | Kenttä | Esimerkki | Huomautus |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Aina tämä arvo |
-| `business-name` | `Koivu Design Oy` | Julkinen nimi, yleensä kuten rekisterissä, yhtiömuodon kanssa, jos käytätte sitä |
+| `record_version` | `abiz1` | Aina tämä arvo |
+| `business_name` | `Koivu Design Oy` | Julkinen nimi, yleensä kuten rekisterissä, yhtiömuodon kanssa, jos käytätte sitä |
 | `country` | `fi` | ISO 3166-1 alpha-2 -maatunnus; kanoninen muoto on pienin kirjaimin |
-| `identity-host` | `koivudesign.fi.to.co` | Täsmälleen DNS-arvo `h`: isäntänimi ja mahdollinen polku ilman `https://`-alkua |
+| `identity_host` | `koivudesign.fi.to.co` | Täsmälleen DNS-arvo `h`: isäntänimi ja mahdollinen polku ilman `https://`-alkua |
 | `domains` | `["koivudesign.example"]` | Verkkotunnukset, joita tietue koskee, mukaan lukien se, jossa `_abiz` on |
 
 ### Vapaaehtoinen yritysavain `k`
 
-`k` on vapaaehtoinen kaikille yrityksille, olivat ne rekisteröityjä tai eivät. Jos julkaisette `k`:n, tietueessa on oltava myös `business-key` ja `registration-number`, ja `k`:n on oltava sama kuin `business-key`.
+`k` on vapaaehtoinen kaikille yrityksille, olivat ne rekisteröityjä tai eivät. Jos julkaisette `k`:n, tietueessa on oltava myös `business_key` ja `registration_number`, ja `k`:n on oltava sama kuin `business_key`.
 
 Suomessa avain on `fi-` ja sen perässä rekisterinumero ilman alueosaa: avain, jossa on keskiosa, kuten `fi-xx-…`, on virheellinen.
 
@@ -32,7 +32,7 @@ Suomessa avain on `fi-` ja sen perässä rekisterinumero ilman alueosaa: avain, 
 - **Käytettävä tunnus:** Y-tunnus, seitsemän numeroa, väliviiva ja tarkistusnumero. Ei ALV-numeroa (`FI…`)
 - **Kirjoitustapa:** lähtekää tunnuksesta sellaisena kuin rekisteri sen antaa, tehkää Unicode-normalisointi NFKC, poistakaa välilyönnit, `-`, `.`, `/` ja muut viivat ja kirjoittakaa kirjaimet isoina. Alkunollat ja kirjainetuliitteet säilytetään. Tuloksessa saa olla vain ASCII-kirjaimia ja -numeroita.
 
-Esimerkki (keksitty tunnus): `1234567-8` kirjoitetaan muodossa `12345678`. Tietueessa on tällöin `"registration-number": "12345678"` ja `"business-key": "fi-12345678"`, ja DNS:ssä `k=fi-12345678`.
+Esimerkki (keksitty tunnus): `1234567-8` kirjoitetaan muodossa `12345678`. Tietueessa on tällöin `"registration_number": "12345678"` ja `"business_key": "fi-12345678"`, ja DNS:ssä `k=fi-12345678`.
 
 Avaimia verrataan kirjainkoosta riippumatta, mutta julkaiskaa kanoninen muoto: maatunnus pienin kirjaimin, tunnus isoin.
 
@@ -41,7 +41,7 @@ Avaimia verrataan kirjainkoosta riippumatta, mutta julkaiskaa kanoninen muoto: m
 Julkaiskaa verkkotunnukseenne nimen `_abiz` alle täsmälleen yksi ABIZ TXT -tietue tiiviissä muodossa ilman välilyöntejä:
 
 ```dns
-_abiz.koivudesign.example. 300 IN TXT "v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=4vIsY+Z2F1Kx1ji4q3OwxbKWJDTAp4Rd5g3dEcn/NZU="
+_abiz.koivudesign.example. 300 IN TXT "v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=WLEcMnRLL8EZvmWmHI3VIOKCAvQUGvIPHgQMklB1oHw="
 ```
 
 - `v=abiz1` on oltava ensimmäisenä. `h` on pakollinen; `k` ja `p` ovat vapaaehtoisia.
@@ -56,15 +56,16 @@ Tietue, joka tarjoillaan osoitteessa `https://koivudesign.fi.to.co` muodossa `ap
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Koivu Design Oy",
+  "record_version": "abiz1",
+  "business_name": "Koivu Design Oy",
   "country": "fi",
-  "business-key": "fi-12345678",
-  "registration-number": "12345678",
-  "identity-host": "koivudesign.fi.to.co",
+  "business_key": "fi-12345678",
+  "registration_number": "12345678",
+  "identity_host": "koivudesign.fi.to.co",
   "domains": [
     "koivudesign.example"
   ],
+  "public_key": "WLEcMnRLL8EZvmWmHI3VIOKCAvQUGvIPHgQMklB1oHw=",
   "description": "Muotoilutoimisto Tampereella.",
   "website": "https://koivudesign.example",
   "locations": [
@@ -74,14 +75,15 @@ Tietue, joka tarjoillaan osoitteessa `https://koivudesign.fi.to.co` muodossa `ap
       "country": "fi",
       "public": true
     }
-  ]
+  ],
+  "signature": "5NwMsv53S0wLO+KnmuB/iUC20D4TVS6WYzvpYePQNj5qmGob6KqG/u49uXZYZ2pZexd5TJwOus8So+zoxyLaAg=="
 }
 ```
 
 Viitevalidaattorilla voitte tarkistaa tietueen ja DNS-arvon paikallisesti:
 
 ```sh
-python scripts/validate.py record.json --domain koivudesign.example --dns-value 'v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=4vIsY+Z2F1Kx1ji4q3OwxbKWJDTAp4Rd5g3dEcn/NZU='
+python scripts/validate.py record.json --domain koivudesign.example --dns-value 'v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=WLEcMnRLL8EZvmWmHI3VIOKCAvQUGvIPHgQMklB1oHw='
 ```
 
 ### Itse tai palveluntarjoajan kautta
@@ -90,7 +92,7 @@ Voitte tarjoilla tietueen itse miltä tahansa hallitsemaltanne HTTPS-palvelimelt
 
 ## 3. Palveluntarjoajat ja MCP
 
-MCP (Model Context Protocol) on avoin protokolla, jonka avulla tekoälyavustajat voivat käyttää työkaluja ja lukea tietoja ulkoisilta palvelimilta. Palveluntarjoaja voi ylläpitää MCP-palvelinta, jonka kautta avustaja hakee julkisen tietueenne suoraan. Palvelimen voi ilmoittaa vapaaehtoisessa kentässä `mcp-server-url`. ABIZ ei edellytä MCP-palvelinta, eikä työkalun pitäisi kutsua sitä automaattisesti vain siksi, että se mainitaan tietueessa.
+MCP (Model Context Protocol) on avoin protokolla, jonka avulla tekoälyavustajat voivat käyttää työkaluja ja lukea tietoja ulkoisilta palvelimilta. Palveluntarjoaja voi ylläpitää MCP-palvelinta, jonka kautta avustaja hakee julkisen tietueenne suoraan. Palvelimen voi ilmoittaa vapaaehtoisessa kentässä `mcp_server_url`. ABIZ ei edellytä MCP-palvelinta, eikä työkalun pitäisi kutsua sitä automaattisesti vain siksi, että se mainitaan tietueessa.
 
 Esimerkki: palveluntarjoaja julkaisee tietueenne osoitteessa `koivudesign.fi.to.co` ja ylläpitää MCP-palvelinta. Palvelimeen yhdistetty avustaja voi tällöin kysyä yrityksen Koivu Design Oy aukioloaikoja tai palveluja ja saada tiedot tietueestanne arvailun sijaan.
 

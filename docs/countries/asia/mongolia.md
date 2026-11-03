@@ -14,15 +14,15 @@ Every business record needs these five fields (SPEC section 4.1):
 
 | Field | Example and rule |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | the public name customers know, for example `Steppe Cashmere` |
+| `record_version` | `abiz1` |
+| `business_name` | the public name customers know, for example `Steppe Cashmere` |
 | `country` | `mn`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `steppecashmere.mn.to.co`, which must match `h` in DNS exactly |
+| `identity_host` | `steppecashmere.mn.to.co`, which must match `h` in DNS exactly |
 | `domains` | `["steppecashmere.example"]`, which must include the domain that carries `_abiz` |
 
 ### Optional business key `k`
 
-`k` is optional for every business, registered or not. If you publish it, it must equal `business-key` in the record, and the record must then also contain `registration-number`. For Mongolia the form is:
+`k` is optional for every business, registered or not. If you publish it, it must equal `business_key` in the record, and the record must then also contain `registration_number`. For Mongolia the form is:
 
 ```text
 mn-<registration-number>
@@ -32,20 +32,20 @@ Mongolia uses no subdivision: do not add a region, province or city code. SPEC s
 
 **Which number:** the 7-digit state registration number of the legal entity.
 
-**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business-key` and `registration-number`.
+**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business_key` and `registration_number`.
 
-**Worked example (fictional):** `1234567` becomes `1234567`, so `k=mn-1234567`. In the record: `"business-key": "mn-1234567"` and `"registration-number": "1234567"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
+**Worked example (fictional):** `1234567` becomes `1234567`, so `k=mn-1234567`. In the record: `"business_key": "mn-1234567"` and `"registration_number": "1234567"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
 
 **Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
 
-**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business-key` and `registration-number`; the record is still valid.
+**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business_key` and `registration_number`; the record is still valid.
 
 ### DNS TXT record
 
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.steppecashmere.example. 300 IN TXT "v=abiz1;k=mn-1234567;h=steppecashmere.mn.to.co;p=JJjkbGIDcjySUuEQ/wTHwvdxY0Z1XeWSHcPxWf/1CL4="
+_abiz.steppecashmere.example. 300 IN TXT "v=abiz1;k=mn-1234567;h=steppecashmere.mn.to.co;p=98A2lv1+dQXM9f3f1ac7DK4WsENU7ANuN5Rjke+Tsqk="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
@@ -53,38 +53,40 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` and `p` tags, this is also valid:
 
 ```dns
-_abiz.steppecashmere.example. 300 IN TXT "v=abiz1;h=steppecashmere.mn.to.co"
+_abiz.steppecashmere.example. 300 IN TXT "v=abiz1;h=steppecashmere.mn.to.co;p=98A2lv1+dQXM9f3f1ac7DK4WsENU7ANuN5Rjke+Tsqk="
 ```
 
 The business record served as `application/json` at `https://steppecashmere.mn.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Steppe Cashmere",
+  "record_version": "abiz1",
+  "business_name": "Steppe Cashmere",
   "country": "mn",
-  "business-key": "mn-1234567",
-  "registration-number": "1234567",
-  "identity-host": "steppecashmere.mn.to.co",
+  "business_key": "mn-1234567",
+  "registration_number": "1234567",
+  "identity_host": "steppecashmere.mn.to.co",
   "domains": [
     "steppecashmere.example"
-  ]
+  ],
+  "public_key": "98A2lv1+dQXM9f3f1ac7DK4WsENU7ANuN5Rjke+Tsqk=",
+  "signature": "N/AZaMhJaDArQqK7DAa1uki6kWyGQvlgeRQ7O5xPTZoNd/gB8jPDk+Ycnpxr1KsYCv8cp0oVo6O452To0ELLAw=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain steppecashmere.example --dns-value 'v=abiz1;k=mn-1234567;h=steppecashmere.mn.to.co;p=JJjkbGIDcjySUuEQ/wTHwvdxY0Z1XeWSHcPxWf/1CL4='
+python scripts/validate.py record.json --domain steppecashmere.example --dns-value 'v=abiz1;k=mn-1234567;h=steppecashmere.mn.to.co;p=98A2lv1+dQXM9f3f1ac7DK4WsENU7ANuN5Rjke+Tsqk='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
-The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp-server-url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
+The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Mongolia with a record hosted by to.co might use the host `steppecashmere.mn.to.co`, giving the DNS value `v=abiz1;k=mn-1234567;h=steppecashmere.mn.to.co`. An unregistered business might use a town-based host such as `steppecashmere-ulaanbaatar.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Mongolia with a record hosted by to.co might use the host `steppecashmere.mn.to.co`, giving the DNS value `v=abiz1;k=mn-1234567;h=steppecashmere.mn.to.co;p=98A2lv1+dQXM9f3f1ac7DK4WsENU7ANuN5Rjke+Tsqk=`. An unregistered business might use a town-based host such as `steppecashmere-ulaanbaatar.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

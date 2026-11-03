@@ -14,15 +14,15 @@ Todas as fichas de empresa têm estes cinco campos (secção 4.1 da SPEC):
 
 | Campo | Exemplo e regra |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | o nome público que os clientes conhecem, por exemplo `Café Ramelau` |
+| `record_version` | `abiz1` |
+| `business_name` | o nome público que os clientes conhecem, por exemplo `Café Ramelau` |
 | `country` | `tl`, o código ISO 3166-1 alfa-2, em minúsculas |
-| `identity-host` | `caferamelau.tl.to.co`, que tem de coincidir exatamente com `h` no DNS |
+| `identity_host` | `caferamelau.tl.to.co`, que tem de coincidir exatamente com `h` no DNS |
 | `domains` | `["caferamelau.example"]`, que tem de incluir o domínio onde está `_abiz` |
 
 ### Chave de empresa opcional `k`
 
-A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business-key` da ficha, que nesse caso também tem de conter `registration-number`. Para Timor-Leste, a forma é:
+A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business_key` da ficha, que nesse caso também tem de conter `registration_number`. Para Timor-Leste, a forma é:
 
 ```text
 tl-<registration-number>
@@ -32,20 +32,20 @@ Timor-Leste não usa subdivisão: não acrescente código de região, província
 
 **Que número:** o número de registo comercial atribuído pelo SERVE.
 
-**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business-key` e `registration-number`.
+**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business_key` e `registration_number`.
 
-**Exemplo (fictício):** `12345` passa a `12345`, logo `k=tl-12345`. Na ficha: `"business-key": "tl-12345"` e `"registration-number": "12345"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
+**Exemplo (fictício):** `12345` passa a `12345`, logo `k=tl-12345`. Na ficha: `"business_key": "tl-12345"` e `"registration_number": "12345"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
 
 **Confirme:** não conseguimos confirmar o formato exato deste número numa fonte oficial, pelo que o exemplo é apenas ilustrativo. Use o número tal como consta do seu documento oficial de registo. Se não for claro qual o número que identifica a empresa a nível nacional, não publique `k` até ter a certeza.
 
-**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business-key` e `registration-number`; o registo continua válido.
+**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business_key` e `registration_number`; o registo continua válido.
 
 ### Registo DNS TXT
 
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.caferamelau.example. 300 IN TXT "v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=+PY+7xsDhLUg/0dYzEv61dKZXYza9YIFc8yjc1RAl38="
+_abiz.caferamelau.example. 300 IN TXT "v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave ou omita `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,38 +53,40 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.caferamelau.example. 300 IN TXT "v=abiz1;h=caferamelau.tl.to.co"
+_abiz.caferamelau.example. 300 IN TXT "v=abiz1;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k="
 ```
 
 O registo da empresa servido como `application/json` em `https://caferamelau.tl.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Café Ramelau",
+  "record_version": "abiz1",
+  "business_name": "Café Ramelau",
   "country": "tl",
-  "business-key": "tl-12345",
-  "registration-number": "12345",
-  "identity-host": "caferamelau.tl.to.co",
+  "business_key": "tl-12345",
+  "registration_number": "12345",
+  "identity_host": "caferamelau.tl.to.co",
   "domains": [
     "caferamelau.example"
-  ]
+  ],
+  "public_key": "ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k=",
+  "signature": "h1du1bMZzlHkLmU+rRc94bXaKoubZq9GH9vocleahsSAHFTCBq+30Z/LGKHgBMVrIsmEcYeML3J6WeWk6ebeBQ=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain caferamelau.example --dns-value 'v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=+PY+7xsDhLUg/0dYzEv61dKZXYza9YIFc8yjc1RAl38='
+python scripts/validate.py record.json --domain caferamelau.example --dns-value 'v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
 
 ## 3. Usar um fornecedor e o MCP
 
-O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp-server-url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
+O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Timor-Leste com a ficha alojada no to.co poderia usar o anfitrião `caferamelau.tl.to.co`, o que dá o valor DNS `v=abiz1;k=tl-12345;h=caferamelau.tl.to.co`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `caferamelau-dili.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Timor-Leste com a ficha alojada no to.co poderia usar o anfitrião `caferamelau.tl.to.co`, o que dá o valor DNS `v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `caferamelau-dili.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 

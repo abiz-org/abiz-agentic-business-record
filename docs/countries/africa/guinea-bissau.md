@@ -14,15 +14,15 @@ Todas as fichas de empresa têm estes cinco campos (secção 4.1 da SPEC):
 
 | Campo | Exemplo e regra |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | o nome público que os clientes conhecem, por exemplo `Caju do Geba` |
+| `record_version` | `abiz1` |
+| `business_name` | o nome público que os clientes conhecem, por exemplo `Caju do Geba` |
 | `country` | `gw`, o código ISO 3166-1 alfa-2, em minúsculas |
-| `identity-host` | `cajudogeba.gw.to.co`, que tem de coincidir exatamente com `h` no DNS |
+| `identity_host` | `cajudogeba.gw.to.co`, que tem de coincidir exatamente com `h` no DNS |
 | `domains` | `["cajudogeba.example"]`, que tem de incluir o domínio onde está `_abiz` |
 
 ### Chave de empresa opcional `k`
 
-A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business-key` da ficha, que nesse caso também tem de conter `registration-number`. Para a Guiné-Bissau, a forma é:
+A `k` é opcional para qualquer empresa, registada ou não. Se a publicar, tem de ser igual ao campo `business_key` da ficha, que nesse caso também tem de conter `registration_number`. Para a Guiné-Bissau, a forma é:
 
 ```text
 gw-<registration-number>
@@ -32,20 +32,20 @@ A Guiné-Bissau não usa subdivisão: não acrescente código de região, proví
 
 **Que número:** o número RCCM (Registo do Comércio e do Crédito Mobiliário, sistema da OHADA) que consta da certidão de registo, tal como é emitido, incluindo as letras. Como integra o código do país e da conservatória, tratamo-lo como único a nível nacional. É a nossa leitura da secção 4.2.2 da SPEC, que não menciona a OHADA; deve ser confirmada. Por exemplo `GW-BIS-2023-B-123` para Bissau.
 
-**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business-key` e `registration-number`.
+**Normalização (secção 4.2.3 da SPEC):** parta do número tal como o registo o emite, aplique a normalização Unicode NFKC, retire espaços, `-`, `.`, `/` e travessões, e passe as letras a maiúsculas. Mantenha os zeros à esquerda e os prefixos em letras. O resultado só pode ter letras e algarismos ASCII. Caso contrário, não é possível publicar uma chave de empresa: omita `k`, `business_key` e `registration_number`.
 
-**Exemplo (fictício):** `GW-BIS-2023-B-123` passa a `GWBIS2023B123`, logo `k=gw-GWBIS2023B123`. Na ficha: `"business-key": "gw-GWBIS2023B123"` e `"registration-number": "GWBIS2023B123"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
+**Exemplo (fictício):** `GW-BIS-2023-B-123` passa a `GWBIS2023B123`, logo `k=gw-GWBIS2023B123`. Na ficha: `"business_key": "gw-GWBIS2023B123"` e `"registration_number": "GWBIS2023B123"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
 
 **Confirme:** não conseguimos confirmar o formato exato deste número numa fonte oficial, pelo que o exemplo é apenas ilustrativo. Use o número tal como consta do seu documento oficial de registo. Se não for claro qual o número que identifica a empresa a nível nacional, não publique `k` até ter a certeza.
 
-**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business-key` e `registration-number`; o registo continua válido.
+**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business_key` e `registration_number`; o registo continua válido.
 
 ### Registo DNS TXT
 
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=hjeE7lm91XqTQjvhDjS7TQKdVFZ/2HCcdXBY99tePu4="
+_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave ou omita `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,38 +53,40 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;h=cajudogeba.gw.to.co"
+_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw="
 ```
 
 O registo da empresa servido como `application/json` em `https://cajudogeba.gw.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Caju do Geba",
+  "record_version": "abiz1",
+  "business_name": "Caju do Geba",
   "country": "gw",
-  "business-key": "gw-GWBIS2023B123",
-  "registration-number": "GWBIS2023B123",
-  "identity-host": "cajudogeba.gw.to.co",
+  "business_key": "gw-GWBIS2023B123",
+  "registration_number": "GWBIS2023B123",
+  "identity_host": "cajudogeba.gw.to.co",
   "domains": [
     "cajudogeba.example"
-  ]
+  ],
+  "public_key": "0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw=",
+  "signature": "GpRYaPm7VmmuEMmNYPDaqntbp3/qrLlt8FY8bJF8t96XwWsjIPRtYpPwpvWHOvTrg0wz9DLHQu4Xvu4UclLTAA=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain cajudogeba.example --dns-value 'v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=hjeE7lm91XqTQjvhDjS7TQKdVFZ/2HCcdXBY99tePu4='
+python scripts/validate.py record.json --domain cajudogeba.example --dns-value 'v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
 
 ## 3. Usar um fornecedor e o MCP
 
-O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp-server-url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
+O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada na Guiné-Bissau com a ficha alojada no to.co poderia usar o anfitrião `cajudogeba.gw.to.co`, o que dá o valor DNS `v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `cajudogeba-bissau.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada na Guiné-Bissau com a ficha alojada no to.co poderia usar o anfitrião `cajudogeba.gw.to.co`, o que dá o valor DNS `v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `cajudogeba-bissau.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 

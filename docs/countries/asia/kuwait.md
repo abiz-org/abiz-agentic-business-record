@@ -14,15 +14,15 @@
 
 | الحقل | مثال وقاعدة |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | الاسم العام الذي يعرفه العملاء، مثل `مطعم الخليج` |
+| `record_version` | `abiz1` |
+| `business_name` | الاسم العام الذي يعرفه العملاء، مثل `مطعم الخليج` |
 | `country` | `kw`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity-host` | `gulfrestaurant.kw.to.co`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `gulfrestaurant.kw.to.co`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["gulfrestaurant.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
 
-المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business-key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration-number`. الصيغة في الكويت هي:
+المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business_key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration_number`. الصيغة في الكويت هي:
 
 ```text
 kw-<registration-number>
@@ -32,22 +32,22 @@ kw-<registration-number>
 
 **أي رقم:** رقم السجل التجاري الصادر عن وزارة التجارة والصناعة.
 
-**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business-key` و`registration-number`.
+**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business_key` و`registration_number`.
 
-**مثال تطبيقي (وهمي):** يصبح `123456` بعد التطبيع `123456`، فيكون `k=kw-123456`. وفي السجل: `"business-key": "kw-123456"` و`"registration-number": "123456"`. تُقارن المفاتيح دون تمييز بين الأحرف الكبيرة والصغيرة؛ والصيغة القياسية: رمز الدولة بأحرف صغيرة والرقم بأحرف كبيرة.
+**مثال تطبيقي (وهمي):** يصبح `123456` بعد التطبيع `123456`، فيكون `k=kw-123456`. وفي السجل: `"business_key": "kw-123456"` و`"registration_number": "123456"`. تُقارن المفاتيح دون تمييز بين الأحرف الكبيرة والصغيرة؛ والصيغة القياسية: رمز الدولة بأحرف صغيرة والرقم بأحرف كبيرة.
 
 **يُرجى التحقق:** لم نتمكن من تأكيد الصيغة الدقيقة لهذا الرقم من مصدر رسمي، لذا فالمثال توضيحي فقط. استخدم الرقم كما يظهر في وثيقة التسجيل الرسمية الخاصة بك. وإذا لم يكن واضحًا أي رقم يميّز منشأتك على المستوى الوطني، فلا تنشر `k` حتى تتأكد.
 
 **الأرقام غير اللاتينية:** لا يحوّل NFKC الأرقام المشرقية مثل ١٢٣ إلى 0–9. فإذا كان رقمك مكتوبًا بهذه الأرقام فقط، فلن تكون النتيجة ASCII ولا يمكن نشر مفتاح. لا تعرّف ABIZ 1.1 أي تحويل للأرقام، لذا استخدم الرقم فقط إذا كان السجل يصدره أيضًا بالأرقام 0–9.
 
-**أصحاب المنشآت الفردية:** إذا كان الرقم الوحيد لديك رقمًا شخصيًا، مثل رقم الهوية الوطنية أو رقم ضريبي شخصي، فلا تنشر `k`. احذف `k` و`business-key` و`registration-number`؛ ويبقى السجل صالحًا.
+**أصحاب المنشآت الفردية:** إذا كان الرقم الوحيد لديك رقمًا شخصيًا، مثل رقم الهوية الوطنية أو رقم ضريبي شخصي، فلا تنشر `k`. احذف `k` و`business_key` و`registration_number`؛ ويبقى السجل صالحًا.
 
 ### سجل DNS من نوع TXT
 
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=E4fOSebk2vIpTqSx8B0iUT4FT/NboZwg/a5Y8BBn55Y="
+_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص أو احذف `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,38 +55,40 @@ _abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;k=kw-123456;h=gulfrestaurant.k
 ومن دون الوسمين الاختياريين `k` و`p`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;h=gulfrestaurant.kw.to.co"
+_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://gulfrestaurant.kw.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "مطعم الخليج",
+  "record_version": "abiz1",
+  "business_name": "مطعم الخليج",
   "country": "kw",
-  "business-key": "kw-123456",
-  "registration-number": "123456",
-  "identity-host": "gulfrestaurant.kw.to.co",
+  "business_key": "kw-123456",
+  "registration_number": "123456",
+  "identity_host": "gulfrestaurant.kw.to.co",
   "domains": [
     "gulfrestaurant.example"
-  ]
+  ],
+  "public_key": "TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk=",
+  "signature": "GNshtxnqks4QCEREqKI06zcp20vVxWkzvhcKtch0O1cTdJzpFVePvhi0ERsIhiSJhNvuY692aMSlzcjEKJ23BA=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain gulfrestaurant.example --dns-value 'v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=E4fOSebk2vIpTqSx8B0iUT4FT/NboZwg/a5Y8BBn55Y='
+python scripts/validate.py record.json --domain gulfrestaurant.example --dns-value 'v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
 
 ## 3. الاستعانة بمزوّد وببروتوكول MCP
 
-بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp-server-url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
+بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في الكويت يستضيف to.co سجلها المضيف `gulfrestaurant.kw.to.co`، فتكون قيمة DNS هي `v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `gulfrestaurant-kuwaitcity.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في الكويت يستضيف to.co سجلها المضيف `gulfrestaurant.kw.to.co`، فتكون قيمة DNS هي `v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `gulfrestaurant-kuwaitcity.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

@@ -16,30 +16,30 @@ In Suriname kan een bedrijf dat in het Handelsregister staat zijn KKF-nummer als
 
 | Veld | Wat u invult | Voorbeeld |
 | --- | --- | --- |
-| `record-version` | Altijd `abiz1` | `abiz1` |
-| `business-name` | De openbare naam van het bedrijf | `Bakkerij Paramaribo N.V.` |
+| `record_version` | Altijd `abiz1` | `abiz1` |
+| `business_name` | De openbare naam van het bedrijf | `Bakkerij Paramaribo N.V.` |
 | `country` | De ISO 3166-1 alpha-2-landcode, in kleine letters | `sr` |
-| `identity-host` | De host, met optioneel pad, waar het record staat; moet gelijk zijn aan `h` in de DNS | `bakkerijparamaribo.sr.to.co` |
+| `identity_host` | De host, met optioneel pad, waar het record staat; moet gelijk zijn aan `h` in de DNS | `bakkerijparamaribo.sr.to.co` |
 | `domains` | De domeinen die u beheert en die het record claimt | `["bakkerijparamaribo.example"]` |
 
 ### De optionele bedrijfssleutel `k`
 
-`k` is voor elk bedrijf optioneel. Als u hem publiceert, moet hij voldoen aan sectie 4.2 van de specificatie en gelijk zijn aan de `business-key` in het record. Bij het vergelijken van sleutels telt hoofdletter of kleine letter niet, maar de canonieke vorm heeft de landcode in kleine letters en het inschrijvingsnummer in hoofdletters.
+`k` is voor elk bedrijf optioneel. Als u hem publiceert, moet hij voldoen aan sectie 4.2 van de specificatie en gelijk zijn aan de `business_key` in het record. Bij het vergelijken van sleutels telt hoofdletter of kleine letter niet, maar de canonieke vorm heeft de landcode in kleine letters en het inschrijvingsnummer in hoofdletters.
 
 Vorm: `sr-` gevolgd door het inschrijvingsnummer in het Handelsregister van de Kamer van Koophandel en Fabrieken (KKF). Sectie 4.2.2 van de specificatie noemt Suriname niet, dus de sleutel krijgt geen subdivisiecode. Het Handelsregister is landelijk.
 
-**Het nummer normaliseren (sectie 4.2.3).** Ga uit van het nummer precies zoals het register het uitgeeft. Pas Unicode-NFKC-normalisatie toe; verwijder spaties, koppeltekens, punten en schuine strepen; zet letters om in hoofdletters; behoud voorloopnullen en lettervoorvoegsels. Blijft er een ander teken over, zoals haakjes, `&` of een letter met accent, dan kan het nummer niet worden uitgedrukt en kunt u geen bedrijfssleutel publiceren: laat `k`, `business-key` en `registration-number` weg.
+**Het nummer normaliseren (sectie 4.2.3).** Ga uit van het nummer precies zoals het register het uitgeeft. Pas Unicode-NFKC-normalisatie toe; verwijder spaties, koppeltekens, punten en schuine strepen; zet letters om in hoofdletters; behoud voorloopnullen en lettervoorvoegsels. Blijft er een ander teken over, zoals haakjes, `&` of een letter met accent, dan kan het nummer niet worden uitgedrukt en kunt u geen bedrijfssleutel publiceren: laat `k`, `business_key` en `registration_number` weg.
 
 **Voorbeeld (fictief):** KKF-nummer `12345` geeft de sleutel `sr-12345`.
 
-Neemt u `business-key` en `registration-number` op in het record, neem dan beide op; het nummerdeel van de sleutel moet gelijk zijn aan `registration-number`. Ze opnemen verplicht u niet om `k` in de DNS te publiceren. Publiceert u `k` wel, dan moet het record de bijbehorende `business-key` bevatten.
+Neemt u `business_key` en `registration_number` op in het record, neem dan beide op; het nummerdeel van de sleutel moet gelijk zijn aan `registration_number`. Ze opnemen verplicht u niet om `k` in de DNS te publiceren. Publiceert u `k` wel, dan moet het record de bijbehorende `business_key` bevatten.
 
 ### Het DNS TXT-record
 
 Publiceer precies één TXT-record dat begint met `v=abiz1` op `_abiz.` gevolgd door uw domein. Gebruik de compacte vorm zonder spaties (sectie 3.1.1) en een TTL van 300 seconden:
 
 ```dns
-_abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co"
+_abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw="
 ```
 
 Een bedrijf zonder inschrijvingsnummer, of dat het liever niet publiceert, laat `k` gewoon weg:
@@ -54,15 +54,16 @@ Dit voorbeeld is fictief. Het slaagt voor de referentievalidator.
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Bakkerij Paramaribo N.V.",
+  "record_version": "abiz1",
+  "business_name": "Bakkerij Paramaribo N.V.",
   "country": "sr",
-  "business-key": "sr-12345",
-  "registration-number": "12345",
-  "identity-host": "bakkerijparamaribo.sr.to.co",
+  "business_key": "sr-12345",
+  "registration_number": "12345",
+  "identity_host": "bakkerijparamaribo.sr.to.co",
   "domains": [
     "bakkerijparamaribo.example"
   ],
+  "public_key": "/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw=",
   "description": "Ambachtelijke bakkerij in het centrum van Paramaribo.",
   "website": "https://bakkerijparamaribo.example",
   "locations": [
@@ -73,29 +74,30 @@ Dit voorbeeld is fictief. Het slaagt voor de referentievalidator.
       "public": true
     }
   ],
-  "opening-hours": [
+  "opening_hours": [
     "Mo-Sa 06:00-18:00"
-  ]
+  ],
+  "signature": "bXAuNPbMu6vAZQ0Pth3bhkFyYhRZPcsbDSFWutt+60GPeC8rSUAaiaeObYIe/bSTcVtQ6I0qlRnXH0ciXFOPDQ=="
 }
 ```
 
 ### Waar het record staat
 
-U kunt het record zelf aanbieden vanaf elke HTTPS-URL die het JSON-document teruggeeft, bijvoorbeeld `h=www.bakkerijparamaribo.example/abiz.json`, of elke compatibele aanbieder gebruiken. ABIZ schrijft geen bepaalde aanbieder of naamgeving voor. Wat u ook kiest: `identity-host` in het record moet gelijk zijn aan `h`, en `domains` moet het domein bevatten waarop u het TXT-record publiceert.
+U kunt het record zelf aanbieden vanaf elke HTTPS-URL die het JSON-document teruggeeft, bijvoorbeeld `h=www.bakkerijparamaribo.example/abiz.json`, of elke compatibele aanbieder gebruiken. ABIZ schrijft geen bepaalde aanbieder of naamgeving voor. Wat u ook kiest: `identity_host` in het record moet gelijk zijn aan `h`, en `domains` moet het domein bevatten waarop u het TXT-record publiceert.
 
 Controleer het record en de DNS-waarde vóór publicatie met de referentievalidator:
 
 ```sh
 python scripts/validate.py record.json \
   --domain bakkerijparamaribo.example \
-  --dns-value 'v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co'
+  --dns-value 'v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw='
 ```
 
 ## 3. Aanbieders en MCP
 
-Het Model Context Protocol (MCP) is een open protocol waarmee AI-assistenten op een standaardmanier tools van externe diensten kunnen gebruiken en gegevens kunnen lezen. Een ABIZ-record kan een optionele `mcp-server-url` bevatten: het HTTPS-adres van een MCP-server die vragen over het bedrijf beantwoordt, zoals openingstijden, diensten of beschikbaarheid. ABIZ vereist geen MCP-server, en een vermelde server wordt daarmee niet gegarandeerd: compatibele software mag hem niet automatisch aanroepen alleen omdat hij in een record staat, en moet eigen toegangscontroles toepassen.
+Het Model Context Protocol (MCP) is een open protocol waarmee AI-assistenten op een standaardmanier tools van externe diensten kunnen gebruiken en gegevens kunnen lezen. Een ABIZ-record kan een optionele `mcp_server_url` bevatten: het HTTPS-adres van een MCP-server die vragen over het bedrijf beantwoordt, zoals openingstijden, diensten of beschikbaarheid. ABIZ vereist geen MCP-server, en een vermelde server wordt daarmee niet gegarandeerd: compatibele software mag hem niet automatisch aanroepen alleen omdat hij in een record staat, en moet eigen toegangscontroles toepassen.
 
-Een aanbieder kan bijvoorbeeld het record van Bakkerij Paramaribo hosten op `bakkerijparamaribo.sr.to.co`, het DNS TXT-record via zijn eigen instelproces publiceren en zijn MCP-server vermelden in `mcp-server-url`. U kunt overstappen naar een andere aanbieder, of het record zelf gaan hosten, door `h` en de `identity-host` van het record te wijzigen.
+Een aanbieder kan bijvoorbeeld het record van Bakkerij Paramaribo hosten op `bakkerijparamaribo.sr.to.co`, het DNS TXT-record via zijn eigen instelproces publiceren en zijn MCP-server vermelden in `mcp_server_url`. U kunt overstappen naar een andere aanbieder, of het record zelf gaan hosten, door `h` en de `identity_host` van het record te wijzigen.
 
 ## 4. Sleutels en handtekeningen (ABIZ 1.1)
 
@@ -103,12 +105,12 @@ Een aanbieder kan bijvoorbeeld het record van Bakkerij Paramaribo hosten op `bak
 - **Voorbeeld** (voorbeeldsleutel voor eenmalig gebruik; de private sleutel is vernietigd). Kopieer hem nooit: publiceer uw eigen sleutel of laat `p` weg.
 
   ```dns
-  _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=YAUaDC8qXCma0pFWCMY2mL3MFpGV3b+IxqGUrsWdjc0="
+  _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw="
   ```
 
 - **De private sleutel is van het bedrijf.** Hij mag nooit in de DNS, in het record of in een openbare repository staan. Een aanbieder mag hem voor u aanmaken en bewaren (gehoste modus), maar moet u hem altijd laten exporteren, bijvoorbeeld als PKCS#8, en zijn kopie op verzoek verwijderen (sectie 3.3.4).
 - **Ondertekenen.** Software kan een losse Ed25519-handtekening controleren met de gepubliceerde sleutel. ABIZ 1.1 legt nog niet vast welke bytes van een record een handtekening dekt; een handtekeningcontrole zegt dus alleen iets over een bericht waarover beide partijen het eens zijn.
-- **Sleutelwissel en ingetrokken sleutels.** Publiceer bij een wissel de nieuwe sleutel in `p`; de oude is niet langer de huidige zodra de TTL van het TXT-record verstreken is. ABIZ 1.1 publiceert geen ingetrokken sleutels: niet in de DNS en niet in het record (een eigenschap `retired-keys` wordt afgewezen).
+- **Sleutelwissel en ingetrokken sleutels.** Publiceer bij een wissel de nieuwe sleutel in `p`; de oude is niet langer de huidige zodra de TTL van het TXT-record verstreken is. ABIZ 1.1 publiceert geen ingetrokken sleutels: niet in de DNS en niet in het record (een eigenschap `retired_keys` wordt afgewezen).
 - **Wat een sleutel bewijst.** Hij laat zien welke sleutel de beheerder van het domein heeft gepubliceerd. Hij ondertekent het TXT-record niet zelf en bewijst geen juridische identiteit. Gebruik DNSSEC als uw DNS-aanbieder dat ondersteunt.
 
 ## 5. Wat AI-tools te zien krijgen

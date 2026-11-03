@@ -14,15 +14,15 @@
 
 | الحقل | مثال وقاعدة |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | الاسم العام الذي يعرفه العملاء، مثل `صابون حلب` |
+| `record_version` | `abiz1` |
+| `business_name` | الاسم العام الذي يعرفه العملاء، مثل `صابون حلب` |
 | `country` | `sy`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity-host` | `www.alepposoap.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `www.alepposoap.example/abiz.json`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["alepposoap.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
 
-المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business-key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration-number`. الصيغة في سوريا هي:
+المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business_key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration_number`. الصيغة في سوريا هي:
 
 ```text
 sy-<registration-number>
@@ -32,9 +32,9 @@ sy-<registration-number>
 
 **أي رقم:** رقم القيد في السجل التجاري. على حد علمنا تُمسك السجلات التجارية على مستوى المحافظات، ولم نجد رقمًا وطنيًا موحّدًا.
 
-**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business-key` و`registration-number`.
+**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business_key` و`registration_number`.
 
-**لا يوجد مفتاح منشأة حاليًا:** لم نجد رقم تسجيل تجاري فريدًا على المستوى الوطني في سوريا. ووفق القسم 4.2.2 من المواصفة، لا يمكن لدولة ليس فيها إلا سجلات على مستوى التقسيمات الإدارية، وليست مذكورة في الجدول الأول، أن تحمل مفتاح منشأة بعد. احذف `k` و`business-key` و`registration-number`؛ وبقية السجل تعمل كما هو موضّح.
+**لا يوجد مفتاح منشأة حاليًا:** لم نجد رقم تسجيل تجاري فريدًا على المستوى الوطني في سوريا. ووفق القسم 4.2.2 من المواصفة، لا يمكن لدولة ليس فيها إلا سجلات على مستوى التقسيمات الإدارية، وليست مذكورة في الجدول الأول، أن تحمل مفتاح منشأة بعد. احذف `k` و`business_key` و`registration_number`؛ وبقية السجل تعمل كما هو موضّح.
 
 **الأرقام غير اللاتينية:** لا يحوّل NFKC الأرقام المشرقية مثل ١٢٣ إلى 0–9. فإذا كان رقمك مكتوبًا بهذه الأرقام فقط، فلن تكون النتيجة ASCII ولا يمكن نشر مفتاح. لا تعرّف ABIZ 1.1 أي تحويل للأرقام، لذا استخدم الرقم فقط إذا كان السجل يصدره أيضًا بالأرقام 0–9.
 
@@ -43,7 +43,7 @@ sy-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json;p=khMBcpLE64RMknn3Wbv7bmkvkytqF3Vc6TWWeXqNgWs="
+_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json;p=3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص أو احذف `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -51,34 +51,36 @@ _abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json
 ومن دون الوسمين الاختياريين `k` و`p`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json"
+_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example/abiz.json;p=3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.alepposoap.example/abiz.json`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "صابون حلب",
+  "record_version": "abiz1",
+  "business_name": "صابون حلب",
   "country": "sy",
-  "identity-host": "www.alepposoap.example/abiz.json",
+  "identity_host": "www.alepposoap.example/abiz.json",
   "domains": [
     "alepposoap.example"
-  ]
+  ],
+  "public_key": "3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0=",
+  "signature": "XEUuziUwC1NPx2SC72BXEnOFMr7Z6QFIBSnHL+zy0A3ZqOgkgzPUaixDdVPXPiBChSbZl4k3OqkpsgRWSZEpDQ=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain alepposoap.example --dns-value 'v=abiz1;h=www.alepposoap.example/abiz.json;p=khMBcpLE64RMknn3Wbv7bmkvkytqF3Vc6TWWeXqNgWs='
+python scripts/validate.py record.json --domain alepposoap.example --dns-value 'v=abiz1;h=www.alepposoap.example/abiz.json;p=3aYNsCv/nMyyKph13sbztbI2sbg7ErjZu1tqnaTZNd0='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
 
 ## 3. الاستعانة بمزوّد وببروتوكول MCP
 
-بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp-server-url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
+بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
 يمكن أن يستضيف السجلَّ خادمُك الخاص أو أي مزوّد متوافق. لا يقدّم هذا الدليل أمثلة لمزوّدين في سوريا؛ تحقّق من أن المزوّد الذي تختاره يستطيع قانونًا خدمة المنشآت هناك.
 

@@ -14,15 +14,15 @@
 
 | الحقل | مثال وقاعدة |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | الاسم العام الذي يعرفه العملاء، مثل `بخور ظفار` |
+| `record_version` | `abiz1` |
+| `business_name` | الاسم العام الذي يعرفه العملاء، مثل `بخور ظفار` |
 | `country` | `om`، رمز ISO 3166-1 alpha-2 بأحرف صغيرة |
-| `identity-host` | `dhofarincense.om.to.co`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
+| `identity_host` | `dhofarincense.om.to.co`، ويجب أن يطابق قيمة `h` في DNS تمامًا |
 | `domains` | `["dhofarincense.example"]`، ويجب أن يتضمن النطاق الذي يحمل `_abiz` |
 
 ### مفتاح المنشأة الاختياري `k`
 
-المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business-key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration-number`. الصيغة في عُمان هي:
+المفتاح `k` اختياري لكل منشأة، مسجلة كانت أم غير مسجلة. إذا نشرته فيجب أن يساوي الحقل `business_key` في السجل، ويجب حينئذ أن يحتوي السجل أيضًا على `registration_number`. الصيغة في عُمان هي:
 
 ```text
 om-<registration-number>
@@ -32,22 +32,22 @@ om-<registration-number>
 
 **أي رقم:** رقم السجل التجاري المكوّن من سبعة أرقام.
 
-**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business-key` و`registration-number`.
+**التطبيع (القسم 4.2.3 من المواصفة):** ابدأ بالرقم كما يصدره السجل، وطبّق تطبيع يونيكود NFKC، واحذف المسافات و`-` و`.` و`/` وعلامات الشرطة، ثم حوّل الحروف اللاتينية إلى أحرف كبيرة. احتفظ بالأصفار البادئة والبادئات الحرفية. يجب أن تحتوي النتيجة على حروف وأرقام ASCII فقط؛ وإلا فلا يمكن نشر مفتاح منشأة، فاحذف `k` و`business_key` و`registration_number`.
 
-**مثال تطبيقي (وهمي):** يصبح `1234567` بعد التطبيع `1234567`، فيكون `k=om-1234567`. وفي السجل: `"business-key": "om-1234567"` و`"registration-number": "1234567"`. تُقارن المفاتيح دون تمييز بين الأحرف الكبيرة والصغيرة؛ والصيغة القياسية: رمز الدولة بأحرف صغيرة والرقم بأحرف كبيرة.
+**مثال تطبيقي (وهمي):** يصبح `1234567` بعد التطبيع `1234567`، فيكون `k=om-1234567`. وفي السجل: `"business_key": "om-1234567"` و`"registration_number": "1234567"`. تُقارن المفاتيح دون تمييز بين الأحرف الكبيرة والصغيرة؛ والصيغة القياسية: رمز الدولة بأحرف صغيرة والرقم بأحرف كبيرة.
 
 **يُرجى التحقق:** لم نتمكن من تأكيد الصيغة الدقيقة لهذا الرقم من مصدر رسمي، لذا فالمثال توضيحي فقط. استخدم الرقم كما يظهر في وثيقة التسجيل الرسمية الخاصة بك. وإذا لم يكن واضحًا أي رقم يميّز منشأتك على المستوى الوطني، فلا تنشر `k` حتى تتأكد.
 
 **الأرقام غير اللاتينية:** لا يحوّل NFKC الأرقام المشرقية مثل ١٢٣ إلى 0–9. فإذا كان رقمك مكتوبًا بهذه الأرقام فقط، فلن تكون النتيجة ASCII ولا يمكن نشر مفتاح. لا تعرّف ABIZ 1.1 أي تحويل للأرقام، لذا استخدم الرقم فقط إذا كان السجل يصدره أيضًا بالأرقام 0–9.
 
-**أصحاب المنشآت الفردية:** إذا كان الرقم الوحيد لديك رقمًا شخصيًا، مثل رقم الهوية الوطنية أو رقم ضريبي شخصي، فلا تنشر `k`. احذف `k` و`business-key` و`registration-number`؛ ويبقى السجل صالحًا.
+**أصحاب المنشآت الفردية:** إذا كان الرقم الوحيد لديك رقمًا شخصيًا، مثل رقم الهوية الوطنية أو رقم ضريبي شخصي، فلا تنشر `k`. احذف `k` و`business_key` و`registration_number`؛ ويبقى السجل صالحًا.
 
 ### سجل DNS من نوع TXT
 
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.dhofarincense.example. 300 IN TXT "v=abiz1;k=om-1234567;h=dhofarincense.om.to.co;p=h2whyUA/1WF8BkDfSYVCAY266I3K7hEheVGUIDMwWd0="
+_abiz.dhofarincense.example. 300 IN TXT "v=abiz1;k=om-1234567;h=dhofarincense.om.to.co;p=ikzC+ZGczX64/SofSgAd1BNGE2dpUnGAJnsCefEHWiw="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص أو احذف `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,38 +55,40 @@ _abiz.dhofarincense.example. 300 IN TXT "v=abiz1;k=om-1234567;h=dhofarincense.om
 ومن دون الوسمين الاختياريين `k` و`p`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.dhofarincense.example. 300 IN TXT "v=abiz1;h=dhofarincense.om.to.co"
+_abiz.dhofarincense.example. 300 IN TXT "v=abiz1;h=dhofarincense.om.to.co;p=ikzC+ZGczX64/SofSgAd1BNGE2dpUnGAJnsCefEHWiw="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://dhofarincense.om.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "بخور ظفار",
+  "record_version": "abiz1",
+  "business_name": "بخور ظفار",
   "country": "om",
-  "business-key": "om-1234567",
-  "registration-number": "1234567",
-  "identity-host": "dhofarincense.om.to.co",
+  "business_key": "om-1234567",
+  "registration_number": "1234567",
+  "identity_host": "dhofarincense.om.to.co",
   "domains": [
     "dhofarincense.example"
-  ]
+  ],
+  "public_key": "ikzC+ZGczX64/SofSgAd1BNGE2dpUnGAJnsCefEHWiw=",
+  "signature": "ze6Py4P8Alc+d2eovm8uxSPQky6hQrPMOe04jZp7W2c+3B67IKlmH+98rW/QLYov6qeTeVTGI/yPENuJdvGDCA=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain dhofarincense.example --dns-value 'v=abiz1;k=om-1234567;h=dhofarincense.om.to.co;p=h2whyUA/1WF8BkDfSYVCAY266I3K7hEheVGUIDMwWd0='
+python scripts/validate.py record.json --domain dhofarincense.example --dns-value 'v=abiz1;k=om-1234567;h=dhofarincense.om.to.co;p=ikzC+ZGczX64/SofSgAd1BNGE2dpUnGAJnsCefEHWiw='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
 
 ## 3. الاستعانة بمزوّد وببروتوكول MCP
 
-بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp-server-url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
+بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في عُمان يستضيف to.co سجلها المضيف `dhofarincense.om.to.co`، فتكون قيمة DNS هي `v=abiz1;k=om-1234567;h=dhofarincense.om.to.co`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `dhofarincense-salalah.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في عُمان يستضيف to.co سجلها المضيف `dhofarincense.om.to.co`، فتكون قيمة DNS هي `v=abiz1;k=om-1234567;h=dhofarincense.om.to.co;p=ikzC+ZGczX64/SofSgAd1BNGE2dpUnGAJnsCefEHWiw=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `dhofarincense-salalah.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

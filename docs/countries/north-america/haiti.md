@@ -16,30 +16,30 @@ En Haïti, une société immatriculée au ministère du Commerce et de l’Indus
 
 | Champ | Contenu | Exemple |
 | --- | --- | --- |
-| `record-version` | Toujours `abiz1` | `abiz1` |
-| `business-name` | Le nom public de l’entreprise | `Boulangerie Soleil S.A.` |
+| `record_version` | Toujours `abiz1` | `abiz1` |
+| `business_name` | Le nom public de l’entreprise | `Boulangerie Soleil S.A.` |
 | `country` | Le code de pays ISO 3166-1 alpha-2, en minuscules | `ht` |
-| `identity-host` | L’hôte, avec un chemin facultatif, où la fiche est servie; il doit correspondre à `h` dans le DNS | `boulangeriesoleil.ht.to.co` |
+| `identity_host` | L’hôte, avec un chemin facultatif, où la fiche est servie; il doit correspondre à `h` dans le DNS | `boulangeriesoleil.ht.to.co` |
 | `domains` | Les domaines que vous contrôlez et que la fiche revendique | `["boulangeriesoleil.example"]` |
 
 ### La clé d’entreprise facultative `k`
 
-`k` est facultative pour toutes les entreprises. Si vous la publiez, elle doit respecter la section 4.2 de la spécification et être identique au `business-key` de la fiche. La casse ne compte pas dans la comparaison des clés, mais la forme canonique met le code de pays en minuscules et le numéro d’immatriculation en majuscules.
+`k` est facultative pour toutes les entreprises. Si vous la publiez, elle doit respecter la section 4.2 de la spécification et être identique au `business_key` de la fiche. La casse ne compte pas dans la comparaison des clés, mais la forme canonique met le code de pays en minuscules et le numéro d’immatriculation en majuscules.
 
 Forme : `ht-` suivi du numéro d’immatriculation de la société au registre du ministère du Commerce et de l’Industrie (MCI), qui est national. La section 4.2.2 de la spécification ne mentionne pas Haïti; la clé n’a donc pas de code de subdivision. N’utilisez pas le NIF : la spécification n’admet un numéro fiscal que là où elle le nomme expressément, comme au Mexique et au Brésil. Le format présenté ici est illustratif : nous n’avons pas pu confirmer le format exact du numéro. Utilisez le numéro tel qu’il figure sur vos documents. Si, après normalisation, il contient autre chose que des lettres et des chiffres ASCII, ou s’il n’identifie pas la société de façon unique dans tout le pays, omettez `k`.
 
-**Normaliser le numéro (section 4.2.3).** Partez du numéro tel que le registre le délivre. Appliquez la normalisation Unicode NFKC; supprimez les espaces, traits d’union, points et barres obliques; mettez les lettres en majuscules; conservez les zéros initiaux et les préfixes en lettres. S’il reste un autre caractère, par exemple des parenthèses, `&` ou une lettre accentuée, le numéro ne peut pas être exprimé et vous ne pouvez pas publier de clé : omettez `k`, `business-key` et `registration-number`.
+**Normaliser le numéro (section 4.2.3).** Partez du numéro tel que le registre le délivre. Appliquez la normalisation Unicode NFKC; supprimez les espaces, traits d’union, points et barres obliques; mettez les lettres en majuscules; conservez les zéros initiaux et les préfixes en lettres. S’il reste un autre caractère, par exemple des parenthèses, `&` ou une lettre accentuée, le numéro ne peut pas être exprimé et vous ne pouvez pas publier de clé : omettez `k`, `business_key` et `registration_number`.
 
 **Exemple (fictif) :** le numéro d’immatriculation `12345` donne la clé `ht-12345`.
 
-Si vous ajoutez `business-key` et `registration-number` à la fiche, ajoutez les deux, et la partie numérique de la clé doit être égale à `registration-number`. Les inclure ne vous oblige pas à publier `k` dans le DNS. Si vous publiez `k`, la fiche doit contenir le `business-key` correspondant.
+Si vous ajoutez `business_key` et `registration_number` à la fiche, ajoutez les deux, et la partie numérique de la clé doit être égale à `registration_number`. Les inclure ne vous oblige pas à publier `k` dans le DNS. Si vous publiez `k`, la fiche doit contenir le `business_key` correspondant.
 
 ### L’enregistrement DNS TXT
 
 Publiez un seul enregistrement TXT commençant par `v=abiz1` à `_abiz.` suivi de votre domaine. Utilisez la forme compacte, sans espaces (section 3.1.1), avec un TTL de 300 secondes :
 
 ```dns
-_abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co"
+_abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU="
 ```
 
 Une entreprise sans numéro d’immatriculation, ou qui préfère ne pas le publier, omet simplement `k` :
@@ -54,15 +54,16 @@ Cet exemple est fictif. Il passe le validateur de référence.
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Boulangerie Soleil S.A.",
+  "record_version": "abiz1",
+  "business_name": "Boulangerie Soleil S.A.",
   "country": "ht",
-  "business-key": "ht-12345",
-  "registration-number": "12345",
-  "identity-host": "boulangeriesoleil.ht.to.co",
+  "business_key": "ht-12345",
+  "registration_number": "12345",
+  "identity_host": "boulangeriesoleil.ht.to.co",
   "domains": [
     "boulangeriesoleil.example"
   ],
+  "public_key": "RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU=",
   "description": "Pain, pâtés et pain patate.",
   "website": "https://boulangeriesoleil.example",
   "locations": [
@@ -73,29 +74,30 @@ Cet exemple est fictif. Il passe le validateur de référence.
       "public": true
     }
   ],
-  "opening-hours": [
+  "opening_hours": [
     "Mo-Sa 06:00-18:00"
-  ]
+  ],
+  "signature": "lVdSk53i/eCpVDV+wcaUsikMbFWtUdh+j4kP1VO4yPBlly/MFpITpnZZETe0nq8DQST8RB7R7xS3OyQDUX6SCg=="
 }
 ```
 
 ### Où héberger la fiche
 
-Vous pouvez servir la fiche vous-même depuis n’importe quelle URL HTTPS qui renvoie le document JSON, par exemple `h=www.boulangeriesoleil.example/abiz.json`, ou faire appel à n’importe quel fournisseur compatible. ABIZ n’impose ni fournisseur ni schéma de nommage. Dans tous les cas, l’`identity-host` de la fiche doit correspondre à `h`, et `domains` doit inclure le domaine où vous publiez l’enregistrement TXT.
+Vous pouvez servir la fiche vous-même depuis n’importe quelle URL HTTPS qui renvoie le document JSON, par exemple `h=www.boulangeriesoleil.example/abiz.json`, ou faire appel à n’importe quel fournisseur compatible. ABIZ n’impose ni fournisseur ni schéma de nommage. Dans tous les cas, l’`identity_host` de la fiche doit correspondre à `h`, et `domains` doit inclure le domaine où vous publiez l’enregistrement TXT.
 
 Avant de publier, vérifiez la fiche et la valeur DNS avec le validateur de référence :
 
 ```sh
 python scripts/validate.py record.json \
   --domain boulangeriesoleil.example \
-  --dns-value 'v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co'
+  --dns-value 'v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU='
 ```
 
 ## 3. Fournisseurs et MCP
 
-Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’utiliser des outils et de lire des données provenant de services externes de façon standardisée. Une fiche ABIZ peut contenir un champ facultatif `mcp-server-url` : l’adresse HTTPS d’un serveur MCP capable de répondre à des questions sur l’entreprise, comme les heures d’ouverture, les services ou les disponibilités. ABIZ n’exige pas de serveur MCP, et sa mention dans une fiche ne le cautionne pas : un logiciel compatible ne doit pas l’appeler automatiquement du seul fait qu’il figure dans une fiche, et doit appliquer ses propres contrôles d’accès.
+Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’utiliser des outils et de lire des données provenant de services externes de façon standardisée. Une fiche ABIZ peut contenir un champ facultatif `mcp_server_url` : l’adresse HTTPS d’un serveur MCP capable de répondre à des questions sur l’entreprise, comme les heures d’ouverture, les services ou les disponibilités. ABIZ n’exige pas de serveur MCP, et sa mention dans une fiche ne le cautionne pas : un logiciel compatible ne doit pas l’appeler automatiquement du seul fait qu’il figure dans une fiche, et doit appliquer ses propres contrôles d’accès.
 
-Par exemple, un fournisseur peut héberger la fiche de la Boulangerie Soleil à `boulangeriesoleil.ht.to.co`, publier l’enregistrement DNS TXT au moyen de sa propre procédure de configuration et indiquer son serveur MCP dans `mcp-server-url`. Vous pouvez changer de fournisseur, ou héberger la fiche vous-même, en modifiant `h` et l’`identity-host` de la fiche.
+Par exemple, un fournisseur peut héberger la fiche de la Boulangerie Soleil à `boulangeriesoleil.ht.to.co`, publier l’enregistrement DNS TXT au moyen de sa propre procédure de configuration et indiquer son serveur MCP dans `mcp_server_url`. Vous pouvez changer de fournisseur, ou héberger la fiche vous-même, en modifiant `h` et l’`identity_host` de la fiche.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 
@@ -103,12 +105,12 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie Soleil à 
 - **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé ou omettez `p`.
 
   ```dns
-  _abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=tvFvHV2zzaVM4BLjNRNPvdrYRiKly07kl/tIiTnNgDY="
+  _abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=RjncRRG4vTzhHeLUXWhr1vAK5MXQ028/KpCIRhYyJSU="
   ```
 
 - **La clé privée appartient à l’entreprise.** Elle ne doit jamais figurer dans le DNS, dans la fiche ni dans un dépôt public. Un fournisseur peut la générer et la conserver pour vous (mode hébergé), mais il doit vous permettre de l’exporter à tout moment, par exemple au format PKCS#8, et supprimer sa copie à votre demande (section 3.3.4).
 - **Signatures.** Un logiciel peut vérifier une signature Ed25519 détachée à l’aide de la clé publiée. ABIZ 1.1 ne définit pas encore quels octets d’une fiche une signature couvre; une vérification de signature n’a donc de sens que pour un message convenu entre les deux parties.
-- **Rotation et clés retirées.** Pour changer de clé, publiez la nouvelle dans `p`; l’ancienne cesse d’être la clé courante une fois le TTL de l’enregistrement TXT écoulé. ABIZ 1.1 ne publie pas les clés retirées : ni dans le DNS, ni dans la fiche (une propriété `retired-keys` est rejetée).
+- **Rotation et clés retirées.** Pour changer de clé, publiez la nouvelle dans `p`; l’ancienne cesse d’être la clé courante une fois le TTL de l’enregistrement TXT écoulé. ABIZ 1.1 ne publie pas les clés retirées : ni dans le DNS, ni dans la fiche (une propriété `retired_keys` est rejetée).
 - **Ce que prouve une clé.** Elle indique quelle clé la personne qui contrôle le domaine a publiée. Elle ne signe pas à elle seule l’enregistrement TXT et ne prouve pas l’identité juridique. Utilisez DNSSEC si votre hébergeur DNS le permet.
 
 ## 5. Ce que verront les outils d’IA

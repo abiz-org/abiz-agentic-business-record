@@ -14,15 +14,15 @@ Every business record needs these five fields (SPEC section 4.1):
 
 | Field | Example and rule |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | the public name customers know, for example `Asmara Tailoring` |
+| `record_version` | `abiz1` |
+| `business_name` | the public name customers know, for example `Asmara Tailoring` |
 | `country` | `er`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `asmaratailoring.er.to.co`, which must match `h` in DNS exactly |
+| `identity_host` | `asmaratailoring.er.to.co`, which must match `h` in DNS exactly |
 | `domains` | `["asmaratailoring.example"]`, which must include the domain that carries `_abiz` |
 
 ### Optional business key `k`
 
-`k` is optional for every business, registered or not. If you publish it, it must equal `business-key` in the record, and the record must then also contain `registration-number`. For Eritrea the form is:
+`k` is optional for every business, registered or not. If you publish it, it must equal `business_key` in the record, and the record must then also contain `registration_number`. For Eritrea the form is:
 
 ```text
 er-<registration-number>
@@ -32,22 +32,22 @@ Eritrea uses no subdivision: do not add a region, province or city code. SPEC se
 
 **Which number:** we could not confirm a public, national business register number for Eritrea. If your business licence carries a number that identifies the business nationally, use it exactly as issued; otherwise leave `k` out.
 
-**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business-key` and `registration-number`.
+**Normalisation (SPEC section 4.2.3):** start from the number exactly as the register issues it, apply Unicode NFKC, remove spaces, `-`, `.`, `/` and the dash characters, then uppercase any letters. Keep leading zeros and letter prefixes. The result must contain only ASCII letters and digits. If it does not, you cannot publish a business key: leave out `k`, `business_key` and `registration_number`.
 
-**Worked example (fictional):** `12345` becomes `12345`, so `k=er-12345`. In the record: `"business-key": "er-12345"` and `"registration-number": "12345"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
+**Worked example (fictional):** `12345` becomes `12345`, so `k=er-12345`. In the record: `"business_key": "er-12345"` and `"registration_number": "12345"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
 
 **Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
 
 **Non-Latin digits:** NFKC does not turn digits such as ፩፪፫ into 0–9. If your number exists only in that form, the result is not ASCII and no business key is possible. ABIZ 1.1 defines no digit conversion, so use the number only if the register also issues it with the digits 0–9.
 
-**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business-key` and `registration-number`; the record is still valid.
+**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business_key` and `registration_number`; the record is still valid.
 
 ### DNS TXT record
 
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=xQz5iC4FwTZZhjpwu8/mjToYtVemxhul5r3W5iLm9PM="
+_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
@@ -55,38 +55,40 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` and `p` tags, this is also valid:
 
 ```dns
-_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;h=asmaratailoring.er.to.co"
+_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc="
 ```
 
 The business record served as `application/json` at `https://asmaratailoring.er.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Asmara Tailoring",
+  "record_version": "abiz1",
+  "business_name": "Asmara Tailoring",
   "country": "er",
-  "business-key": "er-12345",
-  "registration-number": "12345",
-  "identity-host": "asmaratailoring.er.to.co",
+  "business_key": "er-12345",
+  "registration_number": "12345",
+  "identity_host": "asmaratailoring.er.to.co",
   "domains": [
     "asmaratailoring.example"
-  ]
+  ],
+  "public_key": "65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc=",
+  "signature": "YouJfpJo1/hzKu3ieE3F9/2rQGhGzSaEU0qbgCRCWyoKI/Zxu6X6Y/LZvN1QY2IkyWxbC0jUmJUwG2OwfJ52Cw=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain asmaratailoring.example --dns-value 'v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=xQz5iC4FwTZZhjpwu8/mjToYtVemxhul5r3W5iLm9PM='
+python scripts/validate.py record.json --domain asmaratailoring.example --dns-value 'v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
-The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp-server-url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
+The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Eritrea with a record hosted by to.co might use the host `asmaratailoring.er.to.co`, giving the DNS value `v=abiz1;k=er-12345;h=asmaratailoring.er.to.co`. An unregistered business might use a town-based host such as `asmaratailoring-asmara.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Eritrea with a record hosted by to.co might use the host `asmaratailoring.er.to.co`, giving the DNS value `v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc=`. An unregistered business might use a town-based host such as `asmaratailoring-asmara.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

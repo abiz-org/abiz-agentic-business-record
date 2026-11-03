@@ -16,15 +16,15 @@ Företagsposten är ett JSON-dokument som måste följa det [normativa schemat](
 
 | Fält | Exempel | Kommentar |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Alltid detta värde |
-| `business-name` | `Norrland Snickeri AB` | Det offentliga namnet, oftast som i registret, med bolagsform om ni använder den |
+| `record_version` | `abiz1` | Alltid detta värde |
+| `business_name` | `Norrland Snickeri AB` | Det offentliga namnet, oftast som i registret, med bolagsform om ni använder den |
 | `country` | `se` | Landskod enligt ISO 3166-1 alpha-2; kanonisk form är gemener |
-| `identity-host` | `norrlandsnickeri.se.to.co` | Exakt DNS-värdet `h`: ett värdnamn med valfri sökväg, utan `https://` |
+| `identity_host` | `norrlandsnickeri.se.to.co` | Exakt DNS-värdet `h`: ett värdnamn med valfri sökväg, utan `https://` |
 | `domains` | `["norrlandsnickeri.example"]` | Domänerna som posten gäller, inklusive domänen med `_abiz` |
 
 ### Frivillig företagsnyckel `k`
 
-`k` är frivilligt för alla företag, registrerade eller inte. Om ni publicerar `k` måste posten också innehålla `business-key` och `registration-number`, och `k` måste vara lika med `business-key`.
+`k` är frivilligt för alla företag, registrerade eller inte. Om ni publicerar `k` måste posten också innehålla `business_key` och `registration_number`, och `k` måste vara lika med `business_key`.
 
 I Sverige är nyckeln `se-` följt av registreringsnumret, utan regionsdel: en nyckel med en mittdel, till exempel `se-xx-…`, är ogiltig.
 
@@ -32,7 +32,7 @@ I Sverige är nyckeln `se-` följt av registreringsnumret, utan regionsdel: en n
 - **Nummer att använda:** organisationsnumret, 10 siffror, skrivet som `556123-4567`. Inte momsregistreringsnumret (`SE…01`)
 - **Skrivsätt:** utgå från numret så som registret anger det, tillämpa Unicode-normalisering NFKC, ta bort mellanslag, `-`, `.`, `/` och andra streck och skriv bokstäver med versaler. Inledande nollor och bokstavsprefix behålls. Resultatet får bara innehålla ASCII-bokstäver och siffror.
 
-Exempel (påhittat nummer): `556123-4567` blir `5561234567`. Posten innehåller då `"registration-number": "5561234567"` och `"business-key": "se-5561234567"`, och i DNS står `k=se-5561234567`.
+Exempel (påhittat nummer): `556123-4567` blir `5561234567`. Posten innehåller då `"registration_number": "5561234567"` och `"business_key": "se-5561234567"`, och i DNS står `k=se-5561234567`.
 
 Nycklar jämförs utan hänsyn till versaler och gemener, men publicera den kanoniska formen: landskod med gemener, nummer med versaler.
 
@@ -41,7 +41,7 @@ Nycklar jämförs utan hänsyn till versaler och gemener, men publicera den kano
 Publicera exakt en ABIZ TXT-post under `_abiz` på er domän, i kompakt form utan mellanslag:
 
 ```dns
-_abiz.norrlandsnickeri.example. 300 IN TXT "v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=1O7oNocedjwUazsaPPTuF8pGzgzqUWAgy7s8Xr2WF7w="
+_abiz.norrlandsnickeri.example. 300 IN TXT "v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=Kl78D64jUhT9LXboNzLyfnQK/3BIeYpDMvCGw8cl+G0="
 ```
 
 - `v=abiz1` måste stå först. `h` är obligatoriskt; `k` och `p` är frivilliga.
@@ -56,15 +56,16 @@ Posten som levereras på `https://norrlandsnickeri.se.to.co` som `application/js
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Norrland Snickeri AB",
+  "record_version": "abiz1",
+  "business_name": "Norrland Snickeri AB",
   "country": "se",
-  "business-key": "se-5561234567",
-  "registration-number": "5561234567",
-  "identity-host": "norrlandsnickeri.se.to.co",
+  "business_key": "se-5561234567",
+  "registration_number": "5561234567",
+  "identity_host": "norrlandsnickeri.se.to.co",
   "domains": [
     "norrlandsnickeri.example"
   ],
+  "public_key": "Kl78D64jUhT9LXboNzLyfnQK/3BIeYpDMvCGw8cl+G0=",
   "description": "Snickeri i Umeå.",
   "website": "https://norrlandsnickeri.example",
   "locations": [
@@ -74,14 +75,15 @@ Posten som levereras på `https://norrlandsnickeri.se.to.co` som `application/js
       "country": "se",
       "public": true
     }
-  ]
+  ],
+  "signature": "VobK27NXkTs0GFk+OoEk3ehnU9hsx/8GDVJzzdPHIuyZccVgxBWCnmvWOq+caFIFVzzk0+EvHkVjxC78XGwPCw=="
 }
 ```
 
 Med referensvalideraren kan ni kontrollera posten och DNS-värdet lokalt:
 
 ```sh
-python scripts/validate.py record.json --domain norrlandsnickeri.example --dns-value 'v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=1O7oNocedjwUazsaPPTuF8pGzgzqUWAgy7s8Xr2WF7w='
+python scripts/validate.py record.json --domain norrlandsnickeri.example --dns-value 'v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=Kl78D64jUhT9LXboNzLyfnQK/3BIeYpDMvCGw8cl+G0='
 ```
 
 ### Egen drift eller via leverantör
@@ -90,7 +92,7 @@ Ni kan själva leverera posten från valfri HTTPS-värd som ni kontrollerar, ell
 
 ## 3. Leverantörer och MCP
 
-MCP (Model Context Protocol) är ett öppet protokoll som låter AI-assistenter anropa verktyg och läsa data från externa servrar. En leverantör kan driva en MCP-server där en assistent hämtar er offentliga post direkt. Servern kan anges i det frivilliga fältet `mcp-server-url`. ABIZ kräver ingen MCP-server, och ett verktyg bör inte anropa den automatiskt bara för att den står i en post.
+MCP (Model Context Protocol) är ett öppet protokoll som låter AI-assistenter anropa verktyg och läsa data från externa servrar. En leverantör kan driva en MCP-server där en assistent hämtar er offentliga post direkt. Servern kan anges i det frivilliga fältet `mcp_server_url`. ABIZ kräver ingen MCP-server, och ett verktyg bör inte anropa den automatiskt bara för att den står i en post.
 
 Ett exempel: en leverantör publicerar er post på `norrlandsnickeri.se.to.co` och driver en MCP-server. En assistent som är ansluten till servern kan då fråga efter öppettider eller tjänster hos Norrland Snickeri AB och få uppgifterna från er post i stället för att gissa. to.co, en av dessa leverantörer, förklarar ABIZ på en [svenskspråkig sida](https://to.co/sv-se/abiz).
 

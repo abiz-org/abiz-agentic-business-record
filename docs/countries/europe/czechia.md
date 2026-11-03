@@ -16,15 +16,15 @@ Záznam firmy je dokument JSON, který musí odpovídat [normativnímu schématu
 
 | Pole | Příklad | Poznámka |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Vždy tato hodnota |
-| `business-name` | `Pekárna Novák s.r.o.` | Veřejný název, obvykle jako v rejstříku, s právní formou, pokud ji používáte |
+| `record_version` | `abiz1` | Vždy tato hodnota |
+| `business_name` | `Pekárna Novák s.r.o.` | Veřejný název, obvykle jako v rejstříku, s právní formou, pokud ji používáte |
 | `country` | `cz` | Kód země podle ISO 3166-1 alpha-2; kanonický tvar je malými písmeny |
-| `identity-host` | `pekarnanovak.cz.to.co` | Přesně hodnota DNS `h`: název hostitele s volitelnou cestou, bez `https://` |
+| `identity_host` | `pekarnanovak.cz.to.co` | Přesně hodnota DNS `h`: název hostitele s volitelnou cestou, bez `https://` |
 | `domains` | `["pekarnanovak.example"]` | Domény, kterých se záznam týká, včetně domény se záznamem `_abiz` |
 
 ### Nepovinný klíč firmy `k`
 
-`k` je nepovinný pro každou firmu, zapsanou i nezapsanou. Pokud `k` zveřejníte, musí záznam obsahovat také `business-key` a `registration-number` a `k` se musí rovnat `business-key`.
+`k` je nepovinný pro každou firmu, zapsanou i nezapsanou. Pokud `k` zveřejníte, musí záznam obsahovat také `business_key` a `registration_number` a `k` se musí rovnat `business_key`.
 
 V Česku je klíč `cz-` a za ním registrační číslo, bez územní části: klíč se střední částí, například `cz-xx-…`, je neplatný.
 
@@ -32,7 +32,7 @@ V Česku je klíč `cz-` a za ním registrační číslo, bez územní části: 
 - **Které číslo:** IČO, osm číslic. Ne DIČ (`CZ…`)
 - **Zápis:** vyjděte z čísla tak, jak ho rejstřík přiděluje, použijte normalizaci Unicode NFKC, odstraňte mezery, `-`, `.`, `/` a další pomlčky a písmena převeďte na velká. Úvodní nuly a písmenné předpony zůstávají. Výsledek smí obsahovat jen písmena a číslice ASCII.
 
-Příklad (smyšlené číslo): z `123 45 678` se stane `12345678`. Záznam pak obsahuje `"registration-number": "12345678"` a `"business-key": "cz-12345678"` a v DNS je `k=cz-12345678`. IČO je celostátně jedinečné, i když rejstřík vedou krajské soudy.
+Příklad (smyšlené číslo): z `123 45 678` se stane `12345678`. Záznam pak obsahuje `"registration_number": "12345678"` a `"business_key": "cz-12345678"` a v DNS je `k=cz-12345678`. IČO je celostátně jedinečné, i když rejstřík vedou krajské soudy.
 
 Klíče se porovnávají bez ohledu na velikost písmen, ale zveřejňujte kanonický tvar: kód země malými písmeny, číslo velkými.
 
@@ -41,7 +41,7 @@ Klíče se porovnávají bez ohledu na velikost písmen, ale zveřejňujte kanon
 Na své doméně zveřejněte pod `_abiz` právě jeden záznam TXT ABIZ, v kompaktním tvaru bez mezer:
 
 ```dns
-_abiz.pekarnanovak.example. 300 IN TXT "v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=/4vFa02PNGx+t1PqiMlp4W6ry7LDwFrBwA3f8I0XYWI="
+_abiz.pekarnanovak.example. 300 IN TXT "v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=5nP0+J+3PSyN29YIlhWjgA3SRj7A+BOblNCPtDqAKyo="
 ```
 
 - `v=abiz1` musí být první. `h` je povinné; `k` a `p` jsou nepovinné.
@@ -56,15 +56,16 @@ Záznam poskytovaný na `https://pekarnanovak.cz.to.co` jako `application/json`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Pekárna Novák s.r.o.",
+  "record_version": "abiz1",
+  "business_name": "Pekárna Novák s.r.o.",
   "country": "cz",
-  "business-key": "cz-12345678",
-  "registration-number": "12345678",
-  "identity-host": "pekarnanovak.cz.to.co",
+  "business_key": "cz-12345678",
+  "registration_number": "12345678",
+  "identity_host": "pekarnanovak.cz.to.co",
   "domains": [
     "pekarnanovak.example"
   ],
+  "public_key": "5nP0+J+3PSyN29YIlhWjgA3SRj7A+BOblNCPtDqAKyo=",
   "description": "Řemeslná pekárna v Brně.",
   "website": "https://pekarnanovak.example",
   "locations": [
@@ -74,14 +75,15 @@ Záznam poskytovaný na `https://pekarnanovak.cz.to.co` jako `application/json`:
       "country": "cz",
       "public": true
     }
-  ]
+  ],
+  "signature": "K07Bz3yVkR2iz/jDtmXmDizwYHMJEJXll0CxKjOFq5Wm4A5MSeGyjHv2Pe+h/YB4aSTZOd5I6ZCFFN3FLBCHAQ=="
 }
 ```
 
 Referenčním validátorem můžete záznam a hodnotu DNS ověřit lokálně:
 
 ```sh
-python scripts/validate.py record.json --domain pekarnanovak.example --dns-value 'v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=/4vFa02PNGx+t1PqiMlp4W6ry7LDwFrBwA3f8I0XYWI='
+python scripts/validate.py record.json --domain pekarnanovak.example --dns-value 'v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=5nP0+J+3PSyN29YIlhWjgA3SRj7A+BOblNCPtDqAKyo='
 ```
 
 ### Vlastní hosting, nebo poskytovatel
@@ -90,7 +92,7 @@ Záznam můžete poskytovat sami z jakéhokoli hostitele HTTPS, který spravujet
 
 ## 3. Poskytovatelé a MCP
 
-MCP (Model Context Protocol) je otevřený protokol, díky němuž asistenti umělé inteligence volají nástroje a čtou data z externích serverů. Poskytovatel může provozovat server MCP, přes který asistent získá váš veřejný záznam přímo. Server lze uvést v nepovinném poli `mcp-server-url`. ABIZ server MCP nevyžaduje a nástroj by ho neměl volat automaticky jen proto, že je uveden v záznamu.
+MCP (Model Context Protocol) je otevřený protokol, díky němuž asistenti umělé inteligence volají nástroje a čtou data z externích serverů. Poskytovatel může provozovat server MCP, přes který asistent získá váš veřejný záznam přímo. Server lze uvést v nepovinném poli `mcp_server_url`. ABIZ server MCP nevyžaduje a nástroj by ho neměl volat automaticky jen proto, že je uveden v záznamu.
 
 Příklad: poskytovatel zveřejní váš záznam na adrese `pekarnanovak.cz.to.co` a provozuje server MCP. Asistent připojený k tomuto serveru se pak může zeptat na otevírací dobu nebo služby firmy Pekárna Novák s.r.o. a dostane údaje z vašeho záznamu, místo aby hádal.
 

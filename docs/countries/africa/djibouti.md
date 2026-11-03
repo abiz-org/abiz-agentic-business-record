@@ -14,15 +14,15 @@ Toute fiche d’entreprise contient ces cinq champs (section 4.1 de la SPEC) :
 
 | Champ | Exemple et règle |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | le nom public que connaissent les clients, par exemple `Transit du Golfe` |
+| `record_version` | `abiz1` |
+| `business_name` | le nom public que connaissent les clients, par exemple `Transit du Golfe` |
 | `country` | `dj`, le code ISO 3166-1 alpha-2, en minuscules |
-| `identity-host` | `transitdugolfe.dj.to.co`, qui doit correspondre exactement à `h` dans le DNS |
+| `identity_host` | `transitdugolfe.dj.to.co`, qui doit correspondre exactement à `h` dans le DNS |
 | `domains` | `["transitdugolfe.example"]`, qui doit inclure le domaine portant `_abiz` |
 
 ### Clé d’entreprise facultative `k`
 
-`k` est facultative pour toute entreprise, immatriculée ou non. Si vous la publiez, elle doit être égale au champ `business-key` de la fiche, qui doit alors contenir aussi `registration-number`. Pour Djibouti, la forme est :
+`k` est facultative pour toute entreprise, immatriculée ou non. Si vous la publiez, elle doit être égale au champ `business_key` de la fiche, qui doit alors contenir aussi `registration_number`. Pour Djibouti, la forme est :
 
 ```text
 dj-<registration-number>
@@ -32,20 +32,20 @@ Djibouti n’utilise pas de subdivision : n’ajoutez ni code de région, ni cod
 
 **Quel numéro :** le numéro d’immatriculation au RCS attribué par l’ODPIC, tel qu’il figure sur votre extrait. Djibouti n’est pas membre de l’OHADA et n’a qu’un registre national.
 
-**Normalisation (section 4.2.3 de la SPEC) :** partez du numéro tel que le registre le délivre, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les tirets, puis mettez les lettres en majuscules. Conservez les zéros initiaux et les préfixes en lettres. Le résultat ne doit contenir que des lettres et chiffres ASCII. Sinon, aucune clé d’entreprise n’est possible : omettez `k`, `business-key` et `registration-number`.
+**Normalisation (section 4.2.3 de la SPEC) :** partez du numéro tel que le registre le délivre, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les tirets, puis mettez les lettres en majuscules. Conservez les zéros initiaux et les préfixes en lettres. Le résultat ne doit contenir que des lettres et chiffres ASCII. Sinon, aucune clé d’entreprise n’est possible : omettez `k`, `business_key` et `registration_number`.
 
-**Exemple (fictif) :** `RCS 2023 B 1234` devient `RCS2023B1234`, donc `k=dj-RCS2023B1234`. Dans la fiche : `"business-key": "dj-RCS2023B1234"` et `"registration-number": "RCS2023B1234"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
+**Exemple (fictif) :** `RCS 2023 B 1234` devient `RCS2023B1234`, donc `k=dj-RCS2023B1234`. Dans la fiche : `"business_key": "dj-RCS2023B1234"` et `"registration_number": "RCS2023B1234"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
 
 **À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
 
-**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business-key` et `registration-number` ; la fiche reste valide.
+**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business_key` et `registration_number` ; la fiche reste valide.
 
 ### Enregistrement DNS TXT
 
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=SQMdNfE3O9Oy0mZPT2XpymPFctvqvbljcLvdK+Lvblc="
+_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé ou omettez `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,38 +53,40 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans les balises facultatives `k` et `p`, ceci est également valide :
 
 ```dns
-_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;h=transitdugolfe.dj.to.co"
+_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://transitdugolfe.dj.to.co` :
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Transit du Golfe",
+  "record_version": "abiz1",
+  "business_name": "Transit du Golfe",
   "country": "dj",
-  "business-key": "dj-RCS2023B1234",
-  "registration-number": "RCS2023B1234",
-  "identity-host": "transitdugolfe.dj.to.co",
+  "business_key": "dj-RCS2023B1234",
+  "registration_number": "RCS2023B1234",
+  "identity_host": "transitdugolfe.dj.to.co",
   "domains": [
     "transitdugolfe.example"
-  ]
+  ],
+  "public_key": "Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg=",
+  "signature": "qhY09PW13GNRv9uKDadtiTPMcL0LQxDdzEnDF5jnSW2p4dG8arbjJkypitsNulMAHe5L3qMTfa4/fkv2aCd5CQ=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain transitdugolfe.example --dns-value 'v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=SQMdNfE3O9Oy0mZPT2XpymPFctvqvbljcLvdK+Lvblc='
+python scripts/validate.py record.json --domain transitdugolfe.example --dns-value 'v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
 
 ## 3. Passer par un fournisseur et MCP
 
-Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp-server-url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
+Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée à Djibouti dont la fiche est hébergée par to.co pourrait utiliser l’hôte `transitdugolfe.dj.to.co`, ce qui donne la valeur DNS `v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `transitdugolfe-djibouti.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée à Djibouti dont la fiche est hébergée par to.co pourrait utiliser l’hôte `transitdugolfe.dj.to.co`, ce qui donne la valeur DNS `v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `transitdugolfe-djibouti.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

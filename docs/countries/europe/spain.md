@@ -16,15 +16,15 @@ La ficha de la empresa es un documento JSON que debe cumplir el [esquema normati
 
 | Campo | Ejemplo | Notas |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Siempre este valor |
-| `business-name` | `Panadería García S.L.` | El nombre público, normalmente como figura en el registro, con la forma jurídica si la usa |
+| `record_version` | `abiz1` | Siempre este valor |
+| `business_name` | `Panadería García S.L.` | El nombre público, normalmente como figura en el registro, con la forma jurídica si la usa |
 | `country` | `es` | Código de país ISO 3166-1 alfa-2; la forma canónica es en minúsculas |
-| `identity-host` | `panaderiagarcia.es.to.co` | Exactamente el valor DNS `h`: un nombre de host con ruta opcional, sin `https://` |
+| `identity_host` | `panaderiagarcia.es.to.co` | Exactamente el valor DNS `h`: un nombre de host con ruta opcional, sin `https://` |
 | `domains` | `["panaderiagarcia.example"]` | Los dominios que reclama la ficha, incluido el que lleva `_abiz` |
 
 ### Clave de empresa `k` (opcional)
 
-`k` es opcional para cualquier empresa, esté inscrita o no. Si la publica, la ficha debe incluir también `business-key` y `registration-number`, y `k` debe coincidir con `business-key`.
+`k` es opcional para cualquier empresa, esté inscrita o no. Si la publica, la ficha debe incluir también `business_key` y `registration_number`, y `k` debe coincidir con `business_key`.
 
 En España la clave es `es-` seguido del número, sin subdivisión territorial: una clave con una parte intermedia, como `es-xx-…`, no es válida.
 
@@ -32,7 +32,7 @@ En España la clave es `es-` seguido del número, sin subdivisión territorial: 
 - **Número que se usa:** el NIF de la sociedad: una letra, siete cifras y un carácter de control (antes llamado CIF)
 - **Cómo escribirlo:** parta del número tal como se emite, aplique la normalización Unicode NFKC, elimine espacios, `-`, `.`, `/` y otros guiones y escriba las letras en mayúsculas. Los ceros iniciales y los prefijos de letras se conservan. El resultado solo puede contener letras y cifras ASCII.
 
-Ejemplo (número inventado): `B-12345678` se convierte en `B12345678`. La ficha contiene entonces `"registration-number": "B12345678"` y `"business-key": "es-B12345678"`, y el DNS lleva `k=es-B12345678`. Conserve la letra inicial. No use el prefijo `ES` del NIF-IVA.
+Ejemplo (número inventado): `B-12345678` se convierte en `B12345678`. La ficha contiene entonces `"registration_number": "B12345678"` y `"business_key": "es-B12345678"`, y el DNS lleva `k=es-B12345678`. Conserve la letra inicial. No use el prefijo `ES` del NIF-IVA.
 
 Las claves se comparan sin distinguir mayúsculas y minúsculas, pero publique la forma canónica: código de país en minúsculas y número en mayúsculas.
 
@@ -41,7 +41,7 @@ Las claves se comparan sin distinguir mayúsculas y minúsculas, pero publique l
 Publique un único registro TXT de ABIZ en `_abiz` de su dominio, en forma compacta y sin espacios:
 
 ```dns
-_abiz.panaderiagarcia.example. 300 IN TXT "v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=KtIkewzCLg7RKtfdv8V5nsK0xg2eFCL/Zam/Y8FKfdM="
+_abiz.panaderiagarcia.example. 300 IN TXT "v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=m5bgVeuA5CDbNwdgDOYQMTpeJPT+mLsFF+aLgGEWVC0="
 ```
 
 - `v=abiz1` debe ir primero. `h` es obligatorio; `k` y `p` son opcionales.
@@ -56,15 +56,16 @@ La ficha que se sirve en `https://panaderiagarcia.es.to.co` como `application/js
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Panadería García S.L.",
+  "record_version": "abiz1",
+  "business_name": "Panadería García S.L.",
   "country": "es",
-  "business-key": "es-B12345678",
-  "registration-number": "B12345678",
-  "identity-host": "panaderiagarcia.es.to.co",
+  "business_key": "es-B12345678",
+  "registration_number": "B12345678",
+  "identity_host": "panaderiagarcia.es.to.co",
   "domains": [
     "panaderiagarcia.example"
   ],
+  "public_key": "m5bgVeuA5CDbNwdgDOYQMTpeJPT+mLsFF+aLgGEWVC0=",
   "description": "Panadería artesana en Valencia.",
   "website": "https://panaderiagarcia.example",
   "locations": [
@@ -74,14 +75,15 @@ La ficha que se sirve en `https://panaderiagarcia.es.to.co` como `application/js
       "country": "es",
       "public": true
     }
-  ]
+  ],
+  "signature": "b3hnuG+pAeSUKdR6mfuKW/crEODBfWaR02nm3Elvtph+3gwk7F8L+FcMZwDCBGW9gEZERFEFJ1Prse8pxdeMCQ=="
 }
 ```
 
 Con el validador de referencia puede comprobar en local la ficha y el valor DNS:
 
 ```sh
-python scripts/validate.py record.json --domain panaderiagarcia.example --dns-value 'v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=KtIkewzCLg7RKtfdv8V5nsK0xg2eFCL/Zam/Y8FKfdM='
+python scripts/validate.py record.json --domain panaderiagarcia.example --dns-value 'v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=m5bgVeuA5CDbNwdgDOYQMTpeJPT+mLsFF+aLgGEWVC0='
 ```
 
 ### Por su cuenta o con un proveedor
@@ -90,7 +92,7 @@ Puede servir la ficha usted mismo en cualquier host HTTPS que controle o usar cu
 
 ## 3. Proveedores y MCP
 
-MCP (Model Context Protocol) es un protocolo abierto con el que los asistentes de IA llaman a herramientas y leen datos de servidores externos. Un proveedor puede gestionar un servidor MCP para que un asistente obtenga directamente su ficha pública. Puede indicarlo en el campo opcional `mcp-server-url`. ABIZ no exige un servidor MCP, y una herramienta no debería llamarlo automáticamente solo porque figure en una ficha.
+MCP (Model Context Protocol) es un protocolo abierto con el que los asistentes de IA llaman a herramientas y leen datos de servidores externos. Un proveedor puede gestionar un servidor MCP para que un asistente obtenga directamente su ficha pública. Puede indicarlo en el campo opcional `mcp_server_url`. ABIZ no exige un servidor MCP, y una herramienta no debería llamarlo automáticamente solo porque figure en una ficha.
 
 Por ejemplo, un proveedor puede publicar su ficha en `panaderiagarcia.es.to.co` y gestionar un servidor MCP. Un asistente conectado a ese servidor puede preguntar por el horario o los servicios de Panadería García S.L. y recibir los datos de su ficha, en lugar de adivinarlos. to.co, uno de esos proveedores, explica ABIZ en una [página en español](https://to.co/es-es/abiz).
 

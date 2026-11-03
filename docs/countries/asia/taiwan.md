@@ -14,15 +14,15 @@
 
 | 欄位 | 範例與規則 |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | 客戶熟悉的公開名稱，例如 `臺南木作工坊有限公司` |
+| `record_version` | `abiz1` |
+| `business_name` | 客戶熟悉的公開名稱，例如 `臺南木作工坊有限公司` |
 | `country` | `tw`，ISO 3166-1 alpha-2 代碼，小寫 |
-| `identity-host` | `tainanwoodwork.tw.to.co`，必須與 DNS 中的 `h` 完全一致 |
+| `identity_host` | `tainanwoodwork.tw.to.co`，必須與 DNS 中的 `h` 完全一致 |
 | `domains` | `["tainanwoodwork.example"]`，必須包含放置 `_abiz` 的網域 |
 
 ### 選用的企業鍵 `k`
 
-不論是否已登記，`k` 對所有企業都是選用的。若要發布，必須與紀錄中的 `business-key` 相同，且紀錄中也必須包含 `registration-number`。臺灣的格式為：
+不論是否已登記，`k` 對所有企業都是選用的。若要發布，必須與紀錄中的 `business_key` 相同，且紀錄中也必須包含 `registration_number`。臺灣的格式為：
 
 ```text
 tw-<registration-number>
@@ -32,18 +32,18 @@ tw-<registration-number>
 
 **使用哪個號碼：** 公司登記資料上的 8 位數統一編號。
 
-**正規化（SPEC 第 4.2.3 節）：** 以登記機關核發的號碼為準，先進行 Unicode NFKC 正規化，移除空格、`-`、`.`、`/` 及各種連字號，再將字母轉為大寫。保留開頭的零與字母前綴。結果只能包含 ASCII 字母與數字；否則無法發布企業鍵，應省略 `k`、`business-key` 與 `registration-number`。
+**正規化（SPEC 第 4.2.3 節）：** 以登記機關核發的號碼為準，先進行 Unicode NFKC 正規化，移除空格、`-`、`.`、`/` 及各種連字號，再將字母轉為大寫。保留開頭的零與字母前綴。結果只能包含 ASCII 字母與數字；否則無法發布企業鍵，應省略 `k`、`business_key` 與 `registration_number`。
 
-**範例（虛構）：** `12345678` 正規化後為 `12345678`，因此 `k=tw-12345678`。紀錄中寫作 `"business-key": "tw-12345678"` 與 `"registration-number": "12345678"`。比較企業鍵時不分大小寫；標準形式為國家代碼小寫、號碼大寫。
+**範例（虛構）：** `12345678` 正規化後為 `12345678`，因此 `k=tw-12345678`。紀錄中寫作 `"business_key": "tw-12345678"` 與 `"registration_number": "12345678"`。比較企業鍵時不分大小寫；標準形式為國家代碼小寫、號碼大寫。
 
-**個人經營者：** 若您只有個人號碼（例如國民身分證統一編號），請不要發布 `k`。省略 `k`、`business-key` 與 `registration-number` 後，紀錄仍然有效。
+**個人經營者：** 若您只有個人號碼（例如國民身分證統一編號），請不要發布 `k`。省略 `k`、`business_key` 與 `registration_number` 後，紀錄仍然有效。
 
 ### DNS TXT 紀錄
 
 在網域下的 `_abiz` 只發布一筆 TXT 紀錄，採用不含空格的精簡格式，並以 `v=abiz1` 開頭：
 
 ```dns
-_abiz.tainanwoodwork.example. 300 IN TXT "v=abiz1;k=tw-12345678;h=tainanwoodwork.tw.to.co;p=s9g9j0e57bZ0Deg6PQE52foqe28gQ04yPVoD0AuIm4I="
+_abiz.tainanwoodwork.example. 300 IN TXT "v=abiz1;k=tw-12345678;h=tainanwoodwork.tw.to.co;p=FI+198S8Nxl8YBHxifTHSTlkDnzb7zXGpd6FpyjYZjE="
 ```
 
 上方的 `p` 值是為本頁產生的一次性範例金鑰。切勿複製：請發布您自己的金鑰，或省略 `p`。本頁所有名稱、號碼與網域皆為虛構。
@@ -51,38 +51,40 @@ _abiz.tainanwoodwork.example. 300 IN TXT "v=abiz1;k=tw-12345678;h=tainanwoodwork
 省略選用的 `k` 與 `p` 標籤時，以下寫法同樣有效：
 
 ```dns
-_abiz.tainanwoodwork.example. 300 IN TXT "v=abiz1;h=tainanwoodwork.tw.to.co"
+_abiz.tainanwoodwork.example. 300 IN TXT "v=abiz1;h=tainanwoodwork.tw.to.co;p=FI+198S8Nxl8YBHxifTHSTlkDnzb7zXGpd6FpyjYZjE="
 ```
 
 以 `application/json` 形式在 `https://tainanwoodwork.tw.to.co` 提供的企業紀錄：
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "臺南木作工坊有限公司",
+  "record_version": "abiz1",
+  "business_name": "臺南木作工坊有限公司",
   "country": "tw",
-  "business-key": "tw-12345678",
-  "registration-number": "12345678",
-  "identity-host": "tainanwoodwork.tw.to.co",
+  "business_key": "tw-12345678",
+  "registration_number": "12345678",
+  "identity_host": "tainanwoodwork.tw.to.co",
   "domains": [
     "tainanwoodwork.example"
-  ]
+  ],
+  "public_key": "FI+198S8Nxl8YBHxifTHSTlkDnzb7zXGpd6FpyjYZjE=",
+  "signature": "KyITJ5if3QEusF/WlTkwi6OxBwHk0lNfhkJKdYJtO34355hzJSIPSdcSipsgUz3btEWCrUaH/jBHJvXh/YdHCw=="
 }
 ```
 
 發布前若要檢查紀錄，可在本儲存庫的副本中執行參考驗證器：
 
 ```sh
-python scripts/validate.py record.json --domain tainanwoodwork.example --dns-value 'v=abiz1;k=tw-12345678;h=tainanwoodwork.tw.to.co;p=s9g9j0e57bZ0Deg6PQE52foqe28gQ04yPVoD0AuIm4I='
+python scripts/validate.py record.json --domain tainanwoodwork.example --dns-value 'v=abiz1;k=tw-12345678;h=tainanwoodwork.tw.to.co;p=FI+198S8Nxl8YBHxifTHSTlkDnzb7zXGpd6FpyjYZjE='
 ```
 
 您可以在任何 HTTPS 伺服器上自行託管 JSON 紀錄，也可以使用任何相容的服務商。ABIZ 不要求特定服務商。
 
 ## 3. 使用服務商與 MCP
 
-模型情境協定（Model Context Protocol，MCP）是一項開放協定，讓 AI 助理以標準方式呼叫外部伺服器上的工具並讀取資料。企業紀錄可包含選用欄位 `mcp-server-url`，也就是企業 MCP 伺服器的 HTTPS 網址，例如用於預約或產品資訊。ABIZ 不為該伺服器擔保，工具必須自行實施存取控制（SPEC 第 4.2.6 節）。
+模型情境協定（Model Context Protocol，MCP）是一項開放協定，讓 AI 助理以標準方式呼叫外部伺服器上的工具並讀取資料。企業紀錄可包含選用欄位 `mcp_server_url`，也就是企業 MCP 伺服器的 HTTPS 網址，例如用於預約或產品資訊。ABIZ 不為該伺服器擔保，工具必須自行實施存取控制（SPEC 第 4.2.6 節）。
 
-服務商可以代您託管紀錄並發布 DNS 指標。例如，一家在臺灣登記、由 to.co 託管紀錄的公司可以使用主機名稱 `tainanwoodwork.tw.to.co`，對應的 DNS 值為 `v=abiz1;k=tw-12345678;h=tainanwoodwork.tw.to.co`。未登記的商家可以使用含地名的主機名稱，例如 `tainanwoodwork-tainan.biz.to.co`。任何相容的服務商或您自己的伺服器都以相同方式運作。
+服務商可以代您託管紀錄並發布 DNS 指標。例如，一家在臺灣登記、由 to.co 託管紀錄的公司可以使用主機名稱 `tainanwoodwork.tw.to.co`，對應的 DNS 值為 `v=abiz1;k=tw-12345678;h=tainanwoodwork.tw.to.co;p=FI+198S8Nxl8YBHxifTHSTlkDnzb7zXGpd6FpyjYZjE=`。未登記的商家可以使用含地名的主機名稱，例如 `tainanwoodwork-tainan.biz.to.co`。任何相容的服務商或您自己的伺服器都以相同方式運作。
 
 ## 4. 金鑰與簽章（ABIZ 1.1）
 

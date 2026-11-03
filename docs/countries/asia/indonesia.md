@@ -14,15 +14,15 @@ Setiap catatan usaha memerlukan lima kolom berikut (SPEC bagian 4.1):
 
 | Kolom | Contoh dan aturan |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | nama publik yang dikenal pelanggan, misalnya `Kopi Gayo Nusantara` |
+| `record_version` | `abiz1` |
+| `business_name` | nama publik yang dikenal pelanggan, misalnya `Kopi Gayo Nusantara` |
 | `country` | `id`, kode ISO 3166-1 alpha-2 dalam huruf kecil |
-| `identity-host` | `kopigayo.id.to.co`, harus sama persis dengan `h` di DNS |
+| `identity_host` | `kopigayo.id.to.co`, harus sama persis dengan `h` di DNS |
 | `domains` | `["kopigayo.example"]`, harus memuat domain tempat `_abiz` berada |
 
 ### Kunci usaha opsional `k`
 
-`k` bersifat opsional bagi semua usaha, baik terdaftar maupun tidak. Jika diterbitkan, nilainya harus sama dengan `business-key` di catatan, dan catatan itu juga harus memuat `registration-number`. Untuk Indonesia, bentuknya:
+`k` bersifat opsional bagi semua usaha, baik terdaftar maupun tidak. Jika diterbitkan, nilainya harus sama dengan `business_key` di catatan, dan catatan itu juga harus memuat `registration_number`. Untuk Indonesia, bentuknya:
 
 ```text
 id-<registration-number>
@@ -32,18 +32,18 @@ Indonesia tidak memakai kode wilayah: jangan menambahkan kode provinsi atau kota
 
 **Nomor yang dipakai:** Nomor Induk Berusaha (NIB) 13 digit yang diterbitkan melalui OSS.
 
-**Normalisasi (SPEC bagian 4.2.3):** mulai dari nomor persis seperti yang diterbitkan instansi pendaftar, terapkan normalisasi Unicode NFKC, hapus spasi, `-`, `.`, `/`, dan tanda pisah, lalu ubah huruf menjadi huruf besar. Pertahankan angka nol di depan dan awalan huruf. Hasilnya hanya boleh berisi huruf dan angka ASCII; jika tidak, kunci usaha tidak dapat diterbitkan sehingga `k`, `business-key`, dan `registration-number` dihilangkan.
+**Normalisasi (SPEC bagian 4.2.3):** mulai dari nomor persis seperti yang diterbitkan instansi pendaftar, terapkan normalisasi Unicode NFKC, hapus spasi, `-`, `.`, `/`, dan tanda pisah, lalu ubah huruf menjadi huruf besar. Pertahankan angka nol di depan dan awalan huruf. Hasilnya hanya boleh berisi huruf dan angka ASCII; jika tidak, kunci usaha tidak dapat diterbitkan sehingga `k`, `business_key`, dan `registration_number` dihilangkan.
 
-**Contoh (fiktif):** `1234567890123` menjadi `1234567890123`, sehingga `k=id-1234567890123`. Di catatan: `"business-key": "id-1234567890123"` dan `"registration-number": "1234567890123"`. Kunci dibandingkan tanpa membedakan huruf besar dan kecil; bentuk kanoniknya kode negara huruf kecil dan nomor huruf besar.
+**Contoh (fiktif):** `1234567890123` menjadi `1234567890123`, sehingga `k=id-1234567890123`. Di catatan: `"business_key": "id-1234567890123"` dan `"registration_number": "1234567890123"`. Kunci dibandingkan tanpa membedakan huruf besar dan kecil; bentuk kanoniknya kode negara huruf kecil dan nomor huruf besar.
 
-**Usaha perseorangan:** jika satu-satunya nomor yang Anda miliki adalah nomor pribadi, seperti NIK atau NPWP pribadi, jangan terbitkan `k`. Hilangkan `k`, `business-key`, dan `registration-number`; catatan tetap sah.
+**Usaha perseorangan:** jika satu-satunya nomor yang Anda miliki adalah nomor pribadi, seperti NIK atau NPWP pribadi, jangan terbitkan `k`. Hilangkan `k`, `business_key`, dan `registration_number`; catatan tetap sah.
 
 ### Catatan DNS TXT
 
 Terbitkan tepat satu catatan TXT bernama `_abiz` di bawah domain Anda, dalam bentuk ringkas tanpa spasi, dengan `v=abiz1` di depan:
 
 ```dns
-_abiz.kopigayo.example. 300 IN TXT "v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=SB8RAGE+5r+DD46Spqq3pPgQeg6nOWu+t/yoUvZokcQ="
+_abiz.kopigayo.example. 300 IN TXT "v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w="
 ```
 
 Nilai `p` di atas adalah kunci contoh sekali pakai yang dibuat untuk halaman ini. Jangan pernah menyalinnya: terbitkan kunci Anda sendiri atau hilangkan `p`. Semua nama, nomor, dan domain di halaman ini fiktif.
@@ -51,38 +51,40 @@ Nilai `p` di atas adalah kunci contoh sekali pakai yang dibuat untuk halaman ini
 Tanpa tag opsional `k` dan `p`, catatan ini juga sah:
 
 ```dns
-_abiz.kopigayo.example. 300 IN TXT "v=abiz1;h=kopigayo.id.to.co"
+_abiz.kopigayo.example. 300 IN TXT "v=abiz1;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w="
 ```
 
 Catatan usaha yang disajikan sebagai `application/json` di `https://kopigayo.id.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Kopi Gayo Nusantara",
+  "record_version": "abiz1",
+  "business_name": "Kopi Gayo Nusantara",
   "country": "id",
-  "business-key": "id-1234567890123",
-  "registration-number": "1234567890123",
-  "identity-host": "kopigayo.id.to.co",
+  "business_key": "id-1234567890123",
+  "registration_number": "1234567890123",
+  "identity_host": "kopigayo.id.to.co",
   "domains": [
     "kopigayo.example"
-  ]
+  ],
+  "public_key": "dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w=",
+  "signature": "M+wv42BVAy9MTfXecSj5ojwBgtniZuaQbof26lkKTZu418pt9mrzTp+/LK5y6lo2NmEtGP0j7uY+hXNxB5SlDQ=="
 }
 ```
 
 Untuk memeriksa catatan sebelum diterbitkan, jalankan validator rujukan dari salinan repositori ini:
 
 ```sh
-python scripts/validate.py record.json --domain kopigayo.example --dns-value 'v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=SB8RAGE+5r+DD46Spqq3pPgQeg6nOWu+t/yoUvZokcQ='
+python scripts/validate.py record.json --domain kopigayo.example --dns-value 'v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w='
 ```
 
 Anda dapat meng-host catatan JSON sendiri di server HTTPS mana pun, atau memakai penyedia mana pun yang kompatibel. ABIZ tidak mewajibkan penyedia tertentu.
 
 ## 3. Memakai penyedia dan MCP
 
-Model Context Protocol (MCP) adalah protokol terbuka yang memungkinkan asisten AI memanggil alat dan membaca data dari server luar dengan cara yang baku. Catatan usaha dapat memuat kolom opsional `mcp-server-url`, yaitu alamat HTTPS server MCP milik usaha, misalnya untuk pemesanan atau informasi produk. ABIZ tidak menjamin server itu; alat harus menerapkan kontrol aksesnya sendiri (SPEC bagian 4.2.6).
+Model Context Protocol (MCP) adalah protokol terbuka yang memungkinkan asisten AI memanggil alat dan membaca data dari server luar dengan cara yang baku. Catatan usaha dapat memuat kolom opsional `mcp_server_url`, yaitu alamat HTTPS server MCP milik usaha, misalnya untuk pemesanan atau informasi produk. ABIZ tidak menjamin server itu; alat harus menerapkan kontrol aksesnya sendiri (SPEC bagian 4.2.6).
 
-Penyedia dapat meng-host catatan dan menerbitkan penunjuk DNS untuk Anda. Misalnya, perusahaan terdaftar di Indonesia yang catatannya di-host oleh to.co dapat memakai host `kopigayo.id.to.co`, sehingga nilai DNS-nya `v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co`. Usaha yang tidak terdaftar dapat memakai host berbasis nama kota seperti `kopigayo-bandung.biz.to.co`. Penyedia kompatibel lain, atau server Anda sendiri, bekerja dengan cara yang sama.
+Penyedia dapat meng-host catatan dan menerbitkan penunjuk DNS untuk Anda. Misalnya, perusahaan terdaftar di Indonesia yang catatannya di-host oleh to.co dapat memakai host `kopigayo.id.to.co`, sehingga nilai DNS-nya `v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w=`. Usaha yang tidak terdaftar dapat memakai host berbasis nama kota seperti `kopigayo-bandung.biz.to.co`. Penyedia kompatibel lain, atau server Anda sendiri, bekerja dengan cara yang sama.
 
 ## 4. Kunci dan tanda tangan (ABIZ 1.1)
 

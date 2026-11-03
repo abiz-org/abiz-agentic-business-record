@@ -14,15 +14,15 @@
 
 | שדה | דוגמה וכלל |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | השם הציבורי שהלקוחות מכירים, למשל `מאפיית הכרמל` |
+| `record_version` | `abiz1` |
+| `business_name` | השם הציבורי שהלקוחות מכירים, למשל `מאפיית הכרמל` |
 | `country` | `il`, קוד ISO 3166-1 alpha-2 באותיות קטנות |
-| `identity-host` | `carmelbakery.il.to.co`, שחייב להתאים בדיוק ל-`h` ב-DNS |
+| `identity_host` | `carmelbakery.il.to.co`, שחייב להתאים בדיוק ל-`h` ב-DNS |
 | `domains` | `["carmelbakery.example"]`, שחייב לכלול את הדומיין שבו נמצאת `_abiz` |
 
 ### מפתח עסק אופציונלי `k`
 
-`k` הוא אופציונלי לכל עסק, רשום או לא. אם מפרסמים אותו, הוא חייב להיות זהה לשדה `business-key` ברשומה, ואז הרשומה חייבת לכלול גם `registration-number`. בישראל התבנית היא:
+`k` הוא אופציונלי לכל עסק, רשום או לא. אם מפרסמים אותו, הוא חייב להיות זהה לשדה `business_key` ברשומה, ואז הרשומה חייבת לכלול גם `registration_number`. בישראל התבנית היא:
 
 ```text
 il-<registration-number>
@@ -32,18 +32,18 @@ il-<registration-number>
 
 **איזה מספר:** מספר החברה (ח״פ) בן תשע ספרות, למשל `51-234567-8`.
 
-**נרמול (סעיף 4.2.3 במפרט):** מתחילים מהמספר כפי שהרשם מנפיק אותו, מחילים נרמול Unicode מסוג NFKC, מסירים רווחים, `-`, `.`, `/` ומקפים, וממירים אותיות לטיניות לאותיות גדולות. שומרים על אפסים מובילים ועל קידומות באותיות. התוצאה חייבת לכלול רק אותיות וספרות ASCII; אחרת אי אפשר לפרסם מפתח עסק, ויש להשמיט את `k`, ‏`business-key` ו-`registration-number`.
+**נרמול (סעיף 4.2.3 במפרט):** מתחילים מהמספר כפי שהרשם מנפיק אותו, מחילים נרמול Unicode מסוג NFKC, מסירים רווחים, `-`, `.`, `/` ומקפים, וממירים אותיות לטיניות לאותיות גדולות. שומרים על אפסים מובילים ועל קידומות באותיות. התוצאה חייבת לכלול רק אותיות וספרות ASCII; אחרת אי אפשר לפרסם מפתח עסק, ויש להשמיט את `k`, ‏`business_key` ו-`registration_number`.
 
-**דוגמה (בדויה):** `51-234567-8` הופך ל-`512345678`, ולכן `k=il-512345678`. ברשומה: `"business-key": "il-512345678"` ו-`"registration-number": "512345678"`. משווים מפתחות בלי הבחנה בין אותיות גדולות לקטנות; הצורה הקנונית היא קוד מדינה באותיות קטנות ומספר באותיות גדולות.
+**דוגמה (בדויה):** `51-234567-8` הופך ל-`512345678`, ולכן `k=il-512345678`. ברשומה: `"business_key": "il-512345678"` ו-`"registration_number": "512345678"`. משווים מפתחות בלי הבחנה בין אותיות גדולות לקטנות; הצורה הקנונית היא קוד מדינה באותיות קטנות ומספר באותיות גדולות.
 
-**עוסקים יחידים:** אם המספר היחיד שלכם הוא מספר אישי, כמו מספר תעודת זהות, אל תפרסמו `k`. השמיטו את `k`, ‏`business-key` ו-`registration-number`; הרשומה עדיין תקינה.
+**עוסקים יחידים:** אם המספר היחיד שלכם הוא מספר אישי, כמו מספר תעודת זהות, אל תפרסמו `k`. השמיטו את `k`, ‏`business_key` ו-`registration_number`; הרשומה עדיין תקינה.
 
 ### רשומת DNS מסוג TXT
 
 מפרסמים רשומת TXT אחת בלבד בשם `_abiz` תחת הדומיין, בצורה דחוסה ללא רווחים, כש-`v=abiz1` ראשון:
 
 ```dns
-_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=bl8vUiCBzaNH5inSaV0kTD57usJfi+UO8bU6WIqZl8w="
+_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ="
 ```
 
 ערך ה-`p` שלמעלה הוא מפתח דוגמה חד-פעמי שנוצר לדף הזה. לעולם אל תעתיקו אותו: פרסמו מפתח משלכם או השמיטו את `p`. כל השמות, המספרים והדומיינים בדף הזה בדויים.
@@ -51,38 +51,40 @@ _abiz.carmelbakery.example. 300 IN TXT "v=abiz1;k=il-512345678;h=carmelbakery.il
 גם בלי התגים האופציונליים `k` ו-`p` הרשומה הזאת תקינה:
 
 ```dns
-_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;h=carmelbakery.il.to.co"
+_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ="
 ```
 
 רשומת העסק המוגשת כ-`application/json` בכתובת `https://carmelbakery.il.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "מאפיית הכרמל",
+  "record_version": "abiz1",
+  "business_name": "מאפיית הכרמל",
   "country": "il",
-  "business-key": "il-512345678",
-  "registration-number": "512345678",
-  "identity-host": "carmelbakery.il.to.co",
+  "business_key": "il-512345678",
+  "registration_number": "512345678",
+  "identity_host": "carmelbakery.il.to.co",
   "domains": [
     "carmelbakery.example"
-  ]
+  ],
+  "public_key": "MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ=",
+  "signature": "begQJoUvuvLiYGuid9SII/rmGv64j5IVEdNhMwG8XOWqiI93sd1ft/dNKb/14v/rYM50AIBdSzMqtzCP4k54DQ=="
 }
 ```
 
 כדי לבדוק רשומה לפני הפרסום, הריצו את כלי האימות המרכזי מתוך עותק של המאגר הזה:
 
 ```sh
-python scripts/validate.py record.json --domain carmelbakery.example --dns-value 'v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=bl8vUiCBzaNH5inSaV0kTD57usJfi+UO8bU6WIqZl8w='
+python scripts/validate.py record.json --domain carmelbakery.example --dns-value 'v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ='
 ```
 
 אפשר לארח את רשומת ה-JSON בעצמכם בכל שרת HTTPS, או להשתמש בכל ספק תואם. ABIZ אינו מחייב ספק מסוים.
 
 ## 3. שימוש בספק וב-MCP
 
-‏Model Context Protocol ‏(MCP) הוא פרוטוקול פתוח שמאפשר לעוזרי בינה מלאכותית להפעיל כלים ולקרוא נתונים משרתים חיצוניים בדרך אחידה. רשומת עסק יכולה לכלול שדה אופציונלי `mcp-server-url`, כתובת HTTPS של שרת MCP של העסק, למשל להזמנות או למידע על מוצרים. ABIZ אינו ערב לשרת הזה, והכלים חייבים להפעיל בקרות גישה משלהם (סעיף 4.2.6 במפרט).
+‏Model Context Protocol ‏(MCP) הוא פרוטוקול פתוח שמאפשר לעוזרי בינה מלאכותית להפעיל כלים ולקרוא נתונים משרתים חיצוניים בדרך אחידה. רשומת עסק יכולה לכלול שדה אופציונלי `mcp_server_url`, כתובת HTTPS של שרת MCP של העסק, למשל להזמנות או למידע על מוצרים. ABIZ אינו ערב לשרת הזה, והכלים חייבים להפעיל בקרות גישה משלהם (סעיף 4.2.6 במפרט).
 
-ספק יכול לארח את הרשומה ולפרסם את מצביע ה-DNS בשבילכם. לדוגמה, חברה רשומה בישראל שהרשומה שלה מתארחת ב-to.co יכולה להשתמש במארח `carmelbakery.il.to.co`, וערך ה-DNS יהיה `v=abiz1;k=il-512345678;h=carmelbakery.il.to.co`. עסק לא רשום יכול להשתמש במארח שמבוסס על שם העיר, כמו `carmelbakery-haifa.biz.to.co`. כל ספק תואם, או שרת משלכם, פועל באותה דרך.
+ספק יכול לארח את הרשומה ולפרסם את מצביע ה-DNS בשבילכם. לדוגמה, חברה רשומה בישראל שהרשומה שלה מתארחת ב-to.co יכולה להשתמש במארח `carmelbakery.il.to.co`, וערך ה-DNS יהיה `v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ=`. עסק לא רשום יכול להשתמש במארח שמבוסס על שם העיר, כמו `carmelbakery-haifa.biz.to.co`. כל ספק תואם, או שרת משלכם, פועל באותה דרך.
 
 ## 4. מפתחות וחתימות (ABIZ 1.1)
 

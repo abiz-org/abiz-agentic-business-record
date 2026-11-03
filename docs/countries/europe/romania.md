@@ -16,15 +16,15 @@ Doar firma, sau cine acționează în numele ei, poate modifica DNS-ul domeniulu
 
 | Câmp | Exemplu | Observații |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Întotdeauna această valoare |
-| `business-name` | `Carpați Mobila SRL` | Denumirea publică, de obicei ca în registru, cu forma juridică dacă o folosiți |
+| `record_version` | `abiz1` | Întotdeauna această valoare |
+| `business_name` | `Carpați Mobila SRL` | Denumirea publică, de obicei ca în registru, cu forma juridică dacă o folosiți |
 | `country` | `ro` | Codul țării ISO 3166-1 alpha-2; forma canonică este cu litere mici |
-| `identity-host` | `carpatimobila.ro.to.co` | Exact valoarea DNS `h`: un nume de gazdă cu cale opțională, fără `https://` |
+| `identity_host` | `carpatimobila.ro.to.co` | Exact valoarea DNS `h`: un nume de gazdă cu cale opțională, fără `https://` |
 | `domains` | `["carpatimobila.example"]` | Domeniile revendicate de înregistrare, inclusiv cel care conține `_abiz` |
 
 ### Cheia opțională a firmei `k`
 
-`k` este opțional pentru orice firmă, înregistrată sau nu. Dacă îl publicați, înregistrarea trebuie să conțină și `business-key` și `registration-number`, iar `k` trebuie să fie egal cu `business-key`.
+`k` este opțional pentru orice firmă, înregistrată sau nu. Dacă îl publicați, înregistrarea trebuie să conțină și `business_key` și `registration_number`, iar `k` trebuie să fie egal cu `business_key`.
 
 În România cheia este `ro-` urmat de numărul de înregistrare, fără subdiviziune teritorială: o cheie cu o parte intermediară, cum ar fi `ro-xx-…`, este invalidă.
 
@@ -32,7 +32,7 @@ Doar firma, sau cine acționează în numele ei, poate modifica DNS-ul domeniulu
 - **Ce număr folosiți:** codul unic de înregistrare (CUI), fără prefixul `RO` folosit pentru TVA. Nu numărul de ordine `J…`, care conține codul județului
 - **Cum îl scrieți:** porniți de la numărul așa cum îl atribuie registrul, aplicați normalizarea Unicode NFKC, eliminați spațiile, `-`, `.`, `/` și alte liniuțe, apoi scrieți literele cu majuscule. Zerourile de la început și prefixele din litere se păstrează. Rezultatul poate conține doar litere și cifre ASCII.
 
-Exemplu (număr inventat): `12345678` este deja în formă canonică. Înregistrarea conține atunci `"registration-number": "12345678"` și `"business-key": "ro-12345678"`, iar în DNS apare `k=ro-12345678`.
+Exemplu (număr inventat): `12345678` este deja în formă canonică. Înregistrarea conține atunci `"registration_number": "12345678"` și `"business_key": "ro-12345678"`, iar în DNS apare `k=ro-12345678`.
 
 Cheile se compară fără a ține cont de majuscule, dar publicați forma canonică: codul țării cu litere mici, numărul cu majuscule.
 
@@ -41,7 +41,7 @@ Cheile se compară fără a ține cont de majuscule, dar publicați forma canoni
 Publicați exact o înregistrare TXT ABIZ la `_abiz` pe domeniul dumneavoastră, în forma compactă, fără spații:
 
 ```dns
-_abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1F+iYRQX9lkKNYv+EGkBzjqQd4JgwlFoR4jCyZxRInE="
+_abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=URw9Jme7dri8/dB8HzlCC9Vpv/cFiJINcQl0QX8rVzU="
 ```
 
 - `v=abiz1` trebuie să fie primul. `h` este obligatoriu; `k` și `p` sunt opționale.
@@ -56,15 +56,16 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Carpați Mobila SRL",
+  "record_version": "abiz1",
+  "business_name": "Carpați Mobila SRL",
   "country": "ro",
-  "business-key": "ro-12345678",
-  "registration-number": "12345678",
-  "identity-host": "carpatimobila.ro.to.co",
+  "business_key": "ro-12345678",
+  "registration_number": "12345678",
+  "identity_host": "carpatimobila.ro.to.co",
   "domains": [
     "carpatimobila.example"
   ],
+  "public_key": "URw9Jme7dri8/dB8HzlCC9Vpv/cFiJINcQl0QX8rVzU=",
   "description": "Atelier de mobilă din Cluj-Napoca.",
   "website": "https://carpatimobila.example",
   "locations": [
@@ -74,14 +75,15 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
       "country": "ro",
       "public": true
     }
-  ]
+  ],
+  "signature": "+J2Q2JECgvj5r9PxmVHqhA95QOPkSZEQ9oUM4tsmdp1kL9CnxV38zbhda00qJDjnMyIBodUVq6W9I0oSE1EnDA=="
 }
 ```
 
 Cu validatorul de referință puteți verifica local înregistrarea și valoarea DNS:
 
 ```sh
-python scripts/validate.py record.json --domain carpatimobila.example --dns-value 'v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1F+iYRQX9lkKNYv+EGkBzjqQd4JgwlFoR4jCyZxRInE='
+python scripts/validate.py record.json --domain carpatimobila.example --dns-value 'v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=URw9Jme7dri8/dB8HzlCC9Vpv/cFiJINcQl0QX8rVzU='
 ```
 
 ### Găzduire proprie sau printr-un furnizor
@@ -90,7 +92,7 @@ Puteți servi înregistrarea chiar dumneavoastră, de pe orice gazdă HTTPS pe c
 
 ## 3. Furnizori și MCP
 
-MCP (Model Context Protocol) este un protocol deschis prin care asistenții AI apelează instrumente și citesc date de pe servere externe. Un furnizor poate opera un server MCP prin care un asistent obține direct înregistrarea dumneavoastră publică. Îl puteți indica în câmpul opțional `mcp-server-url`. ABIZ nu cere un server MCP, iar un instrument nu ar trebui să-l apeleze automat doar pentru că apare într-o înregistrare.
+MCP (Model Context Protocol) este un protocol deschis prin care asistenții AI apelează instrumente și citesc date de pe servere externe. Un furnizor poate opera un server MCP prin care un asistent obține direct înregistrarea dumneavoastră publică. Îl puteți indica în câmpul opțional `mcp_server_url`. ABIZ nu cere un server MCP, iar un instrument nu ar trebui să-l apeleze automat doar pentru că apare într-o înregistrare.
 
 De exemplu, un furnizor vă publică înregistrarea la `carpatimobila.ro.to.co` și operează un server MCP. Un asistent conectat la acel server poate întreba apoi de programul sau serviciile Carpați Mobila SRL și primește datele din înregistrarea dumneavoastră, în loc să ghicească.
 

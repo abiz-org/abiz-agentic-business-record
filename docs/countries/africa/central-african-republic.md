@@ -14,15 +14,15 @@ Toute fiche d’entreprise contient ces cinq champs (section 4.1 de la SPEC) :
 
 | Champ | Exemple et règle |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | le nom public que connaissent les clients, par exemple `Menuiserie Oubangui` |
+| `record_version` | `abiz1` |
+| `business_name` | le nom public que connaissent les clients, par exemple `Menuiserie Oubangui` |
 | `country` | `cf`, le code ISO 3166-1 alpha-2, en minuscules |
-| `identity-host` | `menuiserieoubangui.cf.to.co`, qui doit correspondre exactement à `h` dans le DNS |
+| `identity_host` | `menuiserieoubangui.cf.to.co`, qui doit correspondre exactement à `h` dans le DNS |
 | `domains` | `["menuiserieoubangui.example"]`, qui doit inclure le domaine portant `_abiz` |
 
 ### Clé d’entreprise facultative `k`
 
-`k` est facultative pour toute entreprise, immatriculée ou non. Si vous la publiez, elle doit être égale au champ `business-key` de la fiche, qui doit alors contenir aussi `registration-number`. Pour la République centrafricaine, la forme est :
+`k` est facultative pour toute entreprise, immatriculée ou non. Si vous la publiez, elle doit être égale au champ `business_key` de la fiche, qui doit alors contenir aussi `registration_number`. Pour la République centrafricaine, la forme est :
 
 ```text
 cf-<registration-number>
@@ -32,20 +32,20 @@ La République centrafricaine n’utilise pas de subdivision : n’ajoutez ni co
 
 **Quel numéro :** le numéro RCCM (Registre du commerce et du crédit mobilier) inscrit sur votre extrait d’immatriculation, tel que le greffe le délivre, lettres comprises. Il intègre le code du pays et celui du greffe : nous le traitons donc comme un numéro unique à l’échelle nationale. C’est notre lecture de la section 4.2.2 de la SPEC, qui ne cite pas les pays de l’OHADA ; elle reste à confirmer. Le format exact varie selon les greffes, par exemple `CA/BG/2023/B/123` pour Bangui.
 
-**Normalisation (section 4.2.3 de la SPEC) :** partez du numéro tel que le registre le délivre, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les tirets, puis mettez les lettres en majuscules. Conservez les zéros initiaux et les préfixes en lettres. Le résultat ne doit contenir que des lettres et chiffres ASCII. Sinon, aucune clé d’entreprise n’est possible : omettez `k`, `business-key` et `registration-number`.
+**Normalisation (section 4.2.3 de la SPEC) :** partez du numéro tel que le registre le délivre, appliquez la normalisation Unicode NFKC, supprimez les espaces, `-`, `.`, `/` et les tirets, puis mettez les lettres en majuscules. Conservez les zéros initiaux et les préfixes en lettres. Le résultat ne doit contenir que des lettres et chiffres ASCII. Sinon, aucune clé d’entreprise n’est possible : omettez `k`, `business_key` et `registration_number`.
 
-**Exemple (fictif) :** `CA/BG/2023/B/123` devient `CABG2023B123`, donc `k=cf-CABG2023B123`. Dans la fiche : `"business-key": "cf-CABG2023B123"` et `"registration-number": "CABG2023B123"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
+**Exemple (fictif) :** `CA/BG/2023/B/123` devient `CABG2023B123`, donc `k=cf-CABG2023B123`. Dans la fiche : `"business_key": "cf-CABG2023B123"` et `"registration_number": "CABG2023B123"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
 
 **À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
 
-**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business-key` et `registration-number` ; la fiche reste valide.
+**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business_key` et `registration_number` ; la fiche reste valide.
 
 ### Enregistrement DNS TXT
 
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.menuiserieoubangui.example. 300 IN TXT "v=abiz1;k=cf-CABG2023B123;h=menuiserieoubangui.cf.to.co;p=VvAppKSx6nUEPS9Pym4uJB54/9WT6BHDzu68c0YIAOs="
+_abiz.menuiserieoubangui.example. 300 IN TXT "v=abiz1;k=cf-CABG2023B123;h=menuiserieoubangui.cf.to.co;p=R9ungNXat07eikbyMXsY41DqTBphXwMFzN8gha54G2c="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé ou omettez `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,38 +53,40 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans les balises facultatives `k` et `p`, ceci est également valide :
 
 ```dns
-_abiz.menuiserieoubangui.example. 300 IN TXT "v=abiz1;h=menuiserieoubangui.cf.to.co"
+_abiz.menuiserieoubangui.example. 300 IN TXT "v=abiz1;h=menuiserieoubangui.cf.to.co;p=R9ungNXat07eikbyMXsY41DqTBphXwMFzN8gha54G2c="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://menuiserieoubangui.cf.to.co` :
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Menuiserie Oubangui",
+  "record_version": "abiz1",
+  "business_name": "Menuiserie Oubangui",
   "country": "cf",
-  "business-key": "cf-CABG2023B123",
-  "registration-number": "CABG2023B123",
-  "identity-host": "menuiserieoubangui.cf.to.co",
+  "business_key": "cf-CABG2023B123",
+  "registration_number": "CABG2023B123",
+  "identity_host": "menuiserieoubangui.cf.to.co",
   "domains": [
     "menuiserieoubangui.example"
-  ]
+  ],
+  "public_key": "R9ungNXat07eikbyMXsY41DqTBphXwMFzN8gha54G2c=",
+  "signature": "w/HU07WLKswDeEhK+fbhPXn2eG8naXZOFVgIlry5lOn8xI9POpG126ePR0Ri2fDnnwwqoX6E+Fp0mkOa/KEXDw=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain menuiserieoubangui.example --dns-value 'v=abiz1;k=cf-CABG2023B123;h=menuiserieoubangui.cf.to.co;p=VvAppKSx6nUEPS9Pym4uJB54/9WT6BHDzu68c0YIAOs='
+python scripts/validate.py record.json --domain menuiserieoubangui.example --dns-value 'v=abiz1;k=cf-CABG2023B123;h=menuiserieoubangui.cf.to.co;p=R9ungNXat07eikbyMXsY41DqTBphXwMFzN8gha54G2c='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
 
 ## 3. Passer par un fournisseur et MCP
 
-Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp-server-url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
+Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en République centrafricaine dont la fiche est hébergée par to.co pourrait utiliser l’hôte `menuiserieoubangui.cf.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cf-CABG2023B123;h=menuiserieoubangui.cf.to.co`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `menuiserieoubangui-bangui.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en République centrafricaine dont la fiche est hébergée par to.co pourrait utiliser l’hôte `menuiserieoubangui.cf.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cf-CABG2023B123;h=menuiserieoubangui.cf.to.co;p=R9ungNXat07eikbyMXsY41DqTBphXwMFzN8gha54G2c=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `menuiserieoubangui-bangui.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

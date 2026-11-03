@@ -14,15 +14,15 @@ AIアシスタントには「この会社の本物のウェブサイトはどれ
 
 | 項目 | 例と規則 |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | 顧客に知られている公開名。例：`株式会社山田製作所` |
+| `record_version` | `abiz1` |
+| `business_name` | 顧客に知られている公開名。例：`株式会社山田製作所` |
 | `country` | `jp`（ISO 3166-1 alpha-2コード、小文字） |
-| `identity-host` | `yamadaseisakusho.jp.to.co`。DNSの`h`と完全に一致する必要があります |
+| `identity_host` | `yamadaseisakusho.jp.to.co`。DNSの`h`と完全に一致する必要があります |
 | `domains` | `["yamadaseisakusho.example"]`。`_abiz`を置くドメインを含める必要があります |
 
 ### 任意のビジネスキー`k`
 
-`k`は、登記の有無にかかわらず、すべての事業者にとって任意です。公開する場合は、レコードの`business-key`と一致させ、レコードに`registration-number`も含めます。日本での形式は次のとおりです。
+`k`は、登記の有無にかかわらず、すべての事業者にとって任意です。公開する場合は、レコードの`business_key`と一致させ、レコードに`registration_number`も含めます。日本での形式は次のとおりです。
 
 ```text
 jp-<registration-number>
@@ -32,18 +32,18 @@ jp-<registration-number>
 
 **使う番号：** 国税庁が指定する13桁の法人番号です。法務局の会社法人等番号や、漢数字で書かれた番号ではありません（SPEC 4.2.2節）。全角数字で書かれていても、NFKCで半角の0–9になります。
 
-**正規化（SPEC 4.2.3節）：** 登録機関が発行したとおりの番号から始め、Unicode NFKC正規化を適用し、空白、`-`、`.`、`/`、各種ダッシュを取り除き、英字を大文字にします。先頭のゼロや英字の接頭辞は残します。結果はASCIIの英字と数字だけでなければなりません。そうでない場合はビジネスキーを公開できないため、`k`、`business-key`、`registration-number`を省略します。
+**正規化（SPEC 4.2.3節）：** 登録機関が発行したとおりの番号から始め、Unicode NFKC正規化を適用し、空白、`-`、`.`、`/`、各種ダッシュを取り除き、英字を大文字にします。先頭のゼロや英字の接頭辞は残します。結果はASCIIの英字と数字だけでなければなりません。そうでない場合はビジネスキーを公開できないため、`k`、`business_key`、`registration_number`を省略します。
 
-**例（架空）：** `１２３４５６７８９０１２３`は`1234567890123`になり、`k=jp-1234567890123`です。レコードでは`"business-key": "jp-1234567890123"`、`"registration-number": "1234567890123"`とします。キーは大文字小文字を区別せずに比較され、正規形は国コードが小文字、番号が大文字です。
+**例（架空）：** `１２３４５６７８９０１２３`は`1234567890123`になり、`k=jp-1234567890123`です。レコードでは`"business_key": "jp-1234567890123"`、`"registration_number": "1234567890123"`とします。キーは大文字小文字を区別せずに比較され、正規形は国コードが小文字、番号が大文字です。
 
-**個人事業主の方へ：** お持ちの番号がマイナンバー（個人番号）など個人の番号だけの場合は、`k`を公開しないでください。`k`、`business-key`、`registration-number`を省略しても、レコードは有効です。
+**個人事業主の方へ：** お持ちの番号がマイナンバー（個人番号）など個人の番号だけの場合は、`k`を公開しないでください。`k`、`business_key`、`registration_number`を省略しても、レコードは有効です。
 
 ### DNS TXTレコード
 
 ドメインの`_abiz`に、TXTレコードを1件だけ、空白のない簡潔な形式で、`v=abiz1`を先頭にして公開します。
 
 ```dns
-_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=uI2Jj/NcNiHVVPDPztvhOkhuLGdrrdlhZLLYUN9/AXg="
+_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE="
 ```
 
 上の`p`の値は、このページ用に生成した使い捨ての例示用鍵です。決してコピーしないでください。自分の鍵を公開するか、`p`を省略してください。このページの名称、番号、ドメインはすべて架空のものです。
@@ -51,38 +51,40 @@ _abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;k=jp-1234567890123;h=yamadas
 任意の`k`と`p`を省いた次の形も有効です。
 
 ```dns
-_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;h=yamadaseisakusho.jp.to.co"
+_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE="
 ```
 
 `https://yamadaseisakusho.jp.to.co`で`application/json`として提供する事業者レコード：
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "株式会社山田製作所",
+  "record_version": "abiz1",
+  "business_name": "株式会社山田製作所",
   "country": "jp",
-  "business-key": "jp-1234567890123",
-  "registration-number": "1234567890123",
-  "identity-host": "yamadaseisakusho.jp.to.co",
+  "business_key": "jp-1234567890123",
+  "registration_number": "1234567890123",
+  "identity_host": "yamadaseisakusho.jp.to.co",
   "domains": [
     "yamadaseisakusho.example"
-  ]
+  ],
+  "public_key": "VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE=",
+  "signature": "ZAuaWYREub6XOo88Iqmqxyozitn4yZCeNY0mub467bCweNt8hX5UANfX33z1FJRVIRUA8vb5eKIRC0fhKC5yAw=="
 }
 ```
 
 公開前にレコードを確認するには、このリポジトリのコピーで参照用バリデーターを実行します。
 
 ```sh
-python scripts/validate.py record.json --domain yamadaseisakusho.example --dns-value 'v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=uI2Jj/NcNiHVVPDPztvhOkhuLGdrrdlhZLLYUN9/AXg='
+python scripts/validate.py record.json --domain yamadaseisakusho.example --dns-value 'v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE='
 ```
 
 JSONレコードは任意のHTTPSサーバーで自分でホストしても、互換性のある任意のプロバイダーを使っても構いません。ABIZは特定のプロバイダーを必要としません。
 
 ## 3. プロバイダーとMCPの利用
 
-Model Context Protocol（MCP）は、AIアシスタントが外部サーバーのツールを呼び出したりデータを読んだりするための、標準化されたオープンなプロトコルです。事業者レコードには任意で`mcp-server-url`（事業者のMCPサーバーのHTTPS URL。予約や商品情報などに使います）を含められます。ABIZはそのサーバーを保証しません。ツール側で独自のアクセス制御を行う必要があります（SPEC 4.2.6節）。
+Model Context Protocol（MCP）は、AIアシスタントが外部サーバーのツールを呼び出したりデータを読んだりするための、標準化されたオープンなプロトコルです。事業者レコードには任意で`mcp_server_url`（事業者のMCPサーバーのHTTPS URL。予約や商品情報などに使います）を含められます。ABIZはそのサーバーを保証しません。ツール側で独自のアクセス制御を行う必要があります（SPEC 4.2.6節）。
 
-プロバイダーにレコードのホスティングとDNSポインタの公開を任せることもできます。たとえば、to.coでレコードをホストする日本の登記済み法人なら、ホスト`yamadaseisakusho.jp.to.co`を使い、DNSの値は`v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co`になります。未登記の事業者なら、`yamadaseisakusho-osaka.biz.to.co`のような地名を含むホストを使うこともできます。互換性のある他のプロバイダーや自社サーバーでも同じように機能します。
+プロバイダーにレコードのホスティングとDNSポインタの公開を任せることもできます。たとえば、to.coでレコードをホストする日本の登記済み法人なら、ホスト`yamadaseisakusho.jp.to.co`を使い、DNSの値は`v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE=`になります。未登記の事業者なら、`yamadaseisakusho-osaka.biz.to.co`のような地名を含むホストを使うこともできます。互換性のある他のプロバイダーや自社サーバーでも同じように機能します。
 
 ## 4. 鍵と署名（ABIZ 1.1）
 

@@ -16,15 +16,15 @@ Der Unternehmenseintrag ist ein JSON-Dokument, das dem [normativen Schema](../..
 
 | Feld | Beispiel | Hinweise |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Immer dieser Wert |
-| `business-name` | `Uhrenatelier Keller AG` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
+| `record_version` | `abiz1` | Immer dieser Wert |
+| `business_name` | `Uhrenatelier Keller AG` | Der öffentliche Name, meist wie im Register, mit Rechtsform, wenn Sie sie verwenden |
 | `country` | `ch` | Ländercode nach ISO 3166-1 Alpha-2; kanonisch in Kleinbuchstaben |
-| `identity-host` | `uhrenatelierkeller.ch.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
+| `identity_host` | `uhrenatelierkeller.ch.to.co` | Genau der DNS-Wert `h`: Hostname mit optionalem Pfad, ohne `https://` |
 | `domains` | `["uhrenatelierkeller.example"]` | Die Domains, die dieser Eintrag beansprucht, einschließlich der Domain mit `_abiz` |
 
 ### Optionaler Unternehmensschlüssel `k`
 
-`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business-key` und `registration-number` enthalten, und `k` muss `business-key` entsprechen.
+`k` ist für jedes Unternehmen optional, ob eingetragen oder nicht. Wenn Sie `k` veröffentlichen, muss der Eintrag auch `business_key` und `registration_number` enthalten, und `k` muss `business_key` entsprechen.
 
 In der Schweiz lautet der Schlüssel `ch-`, gefolgt von der Registernummer. Eine Untergliederung wie Bundesland oder Kanton kommt im Schlüssel nicht vor; ein Schlüssel mit Mittelteil wie `ch-xx-…` ist ungültig.
 
@@ -32,7 +32,7 @@ In der Schweiz lautet der Schlüssel `ch-`, gefolgt von der Registernummer. Eine
 - **Zu verwendende Nummer:** die UID ohne Satzzeichen, mit dem Präfix `CHE`. Kein Kantonskürzel: die UID ist landesweit eindeutig
 - **Schreibweise:** Ausgangspunkt ist die Nummer, wie das Register sie vergibt. Wenden Sie die Unicode-Normalisierung NFKC an, entfernen Sie Leerzeichen, `-`, `.`, `/` und andere Bindestriche und schreiben Sie Buchstaben groß. Führende Nullen und Buchstabenpräfixe bleiben erhalten. Das Ergebnis darf nur ASCII-Buchstaben und -Ziffern enthalten.
 
-Beispiel (erfundene Nummer): Aus `CHE-123.456.789` wird `CHE123456789`. Der Eintrag enthält dann `"registration-number": "CHE123456789"` und `"business-key": "ch-CHE123456789"`, im DNS steht `k=ch-CHE123456789`. Lassen Sie Zusätze wie `MWST`, `TVA` oder `IVA` weg; sie gehören zur Mehrwertsteuernummer, nicht zur UID.
+Beispiel (erfundene Nummer): Aus `CHE-123.456.789` wird `CHE123456789`. Der Eintrag enthält dann `"registration_number": "CHE123456789"` und `"business_key": "ch-CHE123456789"`, im DNS steht `k=ch-CHE123456789`. Lassen Sie Zusätze wie `MWST`, `TVA` oder `IVA` weg; sie gehören zur Mehrwertsteuernummer, nicht zur UID.
 
 Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Veröffentlichen Sie dennoch die kanonische Form: Ländercode klein, Nummer groß.
 
@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.uhrenatelierkeller.example. 300 IN TXT "v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=QGXENY6djqbSsZoEKJKpDDtkJxTZqJNfs/kkvsNhpEY="
+_abiz.uhrenatelierkeller.example. 300 IN TXT "v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=vpxtL/8E6+OOV84xCVpeQ2FHmPD1DN+QYSzpTi7ZD2I="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -56,15 +56,16 @@ Der Eintrag, der unter `https://uhrenatelierkeller.ch.to.co` als `application/js
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Uhrenatelier Keller AG",
+  "record_version": "abiz1",
+  "business_name": "Uhrenatelier Keller AG",
   "country": "ch",
-  "business-key": "ch-CHE123456789",
-  "registration-number": "CHE123456789",
-  "identity-host": "uhrenatelierkeller.ch.to.co",
+  "business_key": "ch-CHE123456789",
+  "registration_number": "CHE123456789",
+  "identity_host": "uhrenatelierkeller.ch.to.co",
   "domains": [
     "uhrenatelierkeller.example"
   ],
+  "public_key": "vpxtL/8E6+OOV84xCVpeQ2FHmPD1DN+QYSzpTi7ZD2I=",
   "description": "Uhrenatelier in Zürich.",
   "website": "https://uhrenatelierkeller.example",
   "locations": [
@@ -74,14 +75,15 @@ Der Eintrag, der unter `https://uhrenatelierkeller.ch.to.co` als `application/js
       "country": "ch",
       "public": true
     }
-  ]
+  ],
+  "signature": "1NH1w32NlsqSUw6payHsShOtGYJ5UgUwbo/WTiowqkVc686D1VRi9+la9xpHDIU3FhuOOtSacXVLLFwSA2MlBA=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain uhrenatelierkeller.example --dns-value 'v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=QGXENY6djqbSsZoEKJKpDDtkJxTZqJNfs/kkvsNhpEY='
+python scripts/validate.py record.json --domain uhrenatelierkeller.example --dns-value 'v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=vpxtL/8E6+OOV84xCVpeQ2FHmPD1DN+QYSzpTi7ZD2I='
 ```
 
 ### Selbst hosten oder über einen Anbieter
@@ -90,7 +92,7 @@ Sie können den Eintrag selbst auf einem beliebigen HTTPS-Host bereitstellen, de
 
 ## 3. Anbieter und MCP
 
-MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp-server-url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
+MCP (Model Context Protocol) ist ein offenes Protokoll, über das KI-Assistenten Werkzeuge aufrufen und Daten von externen Servern lesen. Ein Anbieter kann einen MCP-Server betreiben, über den ein Assistent Ihren öffentlichen Eintrag direkt abruft. Einen solchen Server können Sie im optionalen Feld `mcp_server_url` angeben. ABIZ verlangt keinen MCP-Server, und ein Werkzeug sollte einen Server nicht automatisch aufrufen, nur weil er in einem Eintrag steht.
 
 Ein Beispiel: Ein Anbieter stellt Ihren Eintrag unter `uhrenatelierkeller.ch.to.co` bereit und betreibt einen MCP-Server. Ein damit verbundener Assistent kann dann nach den Öffnungszeiten oder Leistungen von Uhrenatelier Keller AG fragen und erhält die Angaben aus Ihrem Eintrag, statt sie zu erraten.
 

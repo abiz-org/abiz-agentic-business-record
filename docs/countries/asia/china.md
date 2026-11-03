@@ -14,15 +14,15 @@
 
 | 字段 | 示例与规则 |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | 客户熟知的公开名称，例如 `杭州青山茶业有限公司` |
+| `record_version` | `abiz1` |
+| `business_name` | 客户熟知的公开名称，例如 `杭州青山茶业有限公司` |
 | `country` | `cn`，ISO 3166-1 alpha-2 代码，小写 |
-| `identity-host` | `qingshantea.cn.to.co`，必须与 DNS 中的 `h` 完全一致 |
+| `identity_host` | `qingshantea.cn.to.co`，必须与 DNS 中的 `h` 完全一致 |
 | `domains` | `["qingshantea.example"]`，必须包含放置 `_abiz` 的域名 |
 
 ### 可选的企业键 `k`
 
-无论是否登记注册，`k` 对所有企业都是可选的。如发布，它必须与记录中的 `business-key` 相同，且记录中还必须包含 `registration-number`。中国的格式为：
+无论是否登记注册，`k` 对所有企业都是可选的。如发布，它必须与记录中的 `business_key` 相同，且记录中还必须包含 `registration_number`。中国的格式为：
 
 ```text
 cn-<registration-number>
@@ -32,18 +32,18 @@ cn-<registration-number>
 
 **使用哪个号码：** 营业执照上的 18 位统一社会信用代码（GB 32100-2015）。它在全国唯一，不需要省份代码（SPEC 第 4.2.2 节）。
 
-**规范化（SPEC 第 4.2.3 节）：** 以登记机关签发的号码为准，先做 Unicode NFKC 规范化，去掉空格、`-`、`.`、`/` 和各类连字符，再把字母转为大写。保留前导零和字母前缀。结果只能包含 ASCII 字母和数字；否则无法发布企业键，应省略 `k`、`business-key` 和 `registration-number`。
+**规范化（SPEC 第 4.2.3 节）：** 以登记机关签发的号码为准，先做 Unicode NFKC 规范化，去掉空格、`-`、`.`、`/` 和各类连字符，再把字母转为大写。保留前导零和字母前缀。结果只能包含 ASCII 字母和数字；否则无法发布企业键，应省略 `k`、`business_key` 和 `registration_number`。
 
-**示例（虚构）：** `91330100MA2ABCDE1X` 规范化后为 `91330100MA2ABCDE1X`，因此 `k=cn-91330100MA2ABCDE1X`。记录中写作 `"business-key": "cn-91330100MA2ABCDE1X"` 和 `"registration-number": "91330100MA2ABCDE1X"`。比较企业键时不区分大小写；规范形式为国家代码小写、号码大写。
+**示例（虚构）：** `91330100MA2ABCDE1X` 规范化后为 `91330100MA2ABCDE1X`，因此 `k=cn-91330100MA2ABCDE1X`。记录中写作 `"business_key": "cn-91330100MA2ABCDE1X"` 和 `"registration_number": "91330100MA2ABCDE1X"`。比较企业键时不区分大小写；规范形式为国家代码小写、号码大写。
 
-**个体经营者：** 如果您只有个人号码（例如居民身份证号码），请不要发布 `k`。省略 `k`、`business-key` 和 `registration-number` 后，记录仍然有效。
+**个体经营者：** 如果您只有个人号码（例如居民身份证号码），请不要发布 `k`。省略 `k`、`business_key` 和 `registration_number` 后，记录仍然有效。
 
 ### DNS TXT 记录
 
 在域名下的 `_abiz` 处只发布一条 TXT 记录，采用不含空格的紧凑格式，并以 `v=abiz1` 开头：
 
 ```dns
-_abiz.qingshantea.example. 300 IN TXT "v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=I8X0AaXSjYYOD8Wg7/E6C6PTAFrb3X6b1Wor3di3l/A="
+_abiz.qingshantea.example. 300 IN TXT "v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI="
 ```
 
 上面的 `p` 值是为本页生成的一次性示例密钥。切勿复制：请发布您自己的密钥，或省略 `p`。本页中的所有名称、号码和域名均为虚构。
@@ -51,38 +51,40 @@ _abiz.qingshantea.example. 300 IN TXT "v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingsha
 省略可选的 `k` 和 `p` 标签时，以下写法同样有效：
 
 ```dns
-_abiz.qingshantea.example. 300 IN TXT "v=abiz1;h=qingshantea.cn.to.co"
+_abiz.qingshantea.example. 300 IN TXT "v=abiz1;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI="
 ```
 
 以 `application/json` 形式在 `https://qingshantea.cn.to.co` 提供的企业记录：
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "杭州青山茶业有限公司",
+  "record_version": "abiz1",
+  "business_name": "杭州青山茶业有限公司",
   "country": "cn",
-  "business-key": "cn-91330100MA2ABCDE1X",
-  "registration-number": "91330100MA2ABCDE1X",
-  "identity-host": "qingshantea.cn.to.co",
+  "business_key": "cn-91330100MA2ABCDE1X",
+  "registration_number": "91330100MA2ABCDE1X",
+  "identity_host": "qingshantea.cn.to.co",
   "domains": [
     "qingshantea.example"
-  ]
+  ],
+  "public_key": "YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI=",
+  "signature": "q7X5wXRHY1Pprasl9bCpK9oZWTPkDRZQJQPCgPhlkuJeMCMgSRqDPhOMcQge31uW3Q7buB5dA9ETUKif0NcWAg=="
 }
 ```
 
 发布前如需检查记录，可在本仓库的副本中运行参考验证器：
 
 ```sh
-python scripts/validate.py record.json --domain qingshantea.example --dns-value 'v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=I8X0AaXSjYYOD8Wg7/E6C6PTAFrb3X6b1Wor3di3l/A='
+python scripts/validate.py record.json --domain qingshantea.example --dns-value 'v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI='
 ```
 
 您可以在任何 HTTPS 服务器上自行托管 JSON 记录，也可以使用任何兼容的服务商。ABIZ 不要求使用特定服务商。
 
 ## 3. 使用服务商与 MCP
 
-模型上下文协议（Model Context Protocol，MCP）是一种开放协议，让 AI 助手以标准方式调用外部服务器上的工具并读取数据。企业记录可包含可选字段 `mcp-server-url`，即企业 MCP 服务器的 HTTPS 地址，例如用于预约或产品信息。ABIZ 不为该服务器作担保，工具必须自行实施访问控制（SPEC 第 4.2.6 节）。
+模型上下文协议（Model Context Protocol，MCP）是一种开放协议，让 AI 助手以标准方式调用外部服务器上的工具并读取数据。企业记录可包含可选字段 `mcp_server_url`，即企业 MCP 服务器的 HTTPS 地址，例如用于预约或产品信息。ABIZ 不为该服务器作担保，工具必须自行实施访问控制（SPEC 第 4.2.6 节）。
 
-服务商可以替您托管记录并发布 DNS 指针。例如，一家在中国登记、由 to.co 托管记录的公司可以使用主机名 `qingshantea.cn.to.co`，对应的 DNS 值为 `v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co`。未登记的商户可以使用含地名的主机名，例如 `qingshantea-hangzhou.biz.to.co`。任何兼容的服务商或您自己的服务器都以同样方式工作。
+服务商可以替您托管记录并发布 DNS 指针。例如，一家在中国登记、由 to.co 托管记录的公司可以使用主机名 `qingshantea.cn.to.co`，对应的 DNS 值为 `v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI=`。未登记的商户可以使用含地名的主机名，例如 `qingshantea-hangzhou.biz.to.co`。任何兼容的服务商或您自己的服务器都以同样方式工作。
 
 ## 4. 密钥与签名（ABIZ 1.1）
 

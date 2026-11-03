@@ -16,15 +16,15 @@ La scheda dell'impresa è un documento JSON che deve rispettare lo [schema norma
 
 | Campo | Esempio | Note |
 | --- | --- | --- |
-| `record-version` | `abiz1` | Sempre questo valore |
-| `business-name` | `Pasticceria Rossi S.r.l.` | Il nome pubblico, di solito come risulta dal registro, con la forma giuridica se la usate |
+| `record_version` | `abiz1` | Sempre questo valore |
+| `business_name` | `Pasticceria Rossi S.r.l.` | Il nome pubblico, di solito come risulta dal registro, con la forma giuridica se la usate |
 | `country` | `it` | Codice paese ISO 3166-1 alpha-2; la forma canonica è in minuscolo |
-| `identity-host` | `pasticceriarossi.it.to.co` | Esattamente il valore DNS `h`: un nome host con percorso facoltativo, senza `https://` |
+| `identity_host` | `pasticceriarossi.it.to.co` | Esattamente il valore DNS `h`: un nome host con percorso facoltativo, senza `https://` |
 | `domains` | `["pasticceriarossi.example"]` | I domini rivendicati dalla scheda, compreso quello che contiene `_abiz` |
 
 ### Chiave d'impresa `k` (facoltativa)
 
-`k` è facoltativa per ogni impresa, iscritta o no. Se la pubblicate, la scheda deve contenere anche `business-key` e `registration-number`, e `k` deve essere uguale a `business-key`.
+`k` è facoltativa per ogni impresa, iscritta o no. Se la pubblicate, la scheda deve contenere anche `business_key` e `registration_number`, e `k` deve essere uguale a `business_key`.
 
 In Italia la chiave è `it-` seguito dal numero di iscrizione, senza suddivisione territoriale: una chiave con una parte centrale, come `it-xx-…`, non è valida.
 
@@ -32,7 +32,7 @@ In Italia la chiave è `it-` seguito dal numero di iscrizione, senza suddivision
 - **Numero da usare:** il codice fiscale dell'impresa (11 cifre per le società), che è anche il numero di iscrizione al Registro delle imprese. Non il numero REA, che è attribuito dalla Camera di commercio di ciascuna provincia e quindi non è unico a livello nazionale
 - **Come scriverlo:** partite dal numero come lo rilascia il registro, applicate la normalizzazione Unicode NFKC, togliete spazi, `-`, `.`, `/` e gli altri trattini, poi scrivete le lettere in maiuscolo. Zeri iniziali e prefissi in lettere restano. Il risultato deve contenere solo lettere e cifre ASCII.
 
-Esempio (numero inventato): `12345678901` è già in forma canonica. La scheda contiene allora `"registration-number": "12345678901"` e `"business-key": "it-12345678901"`, e nel DNS compare `k=it-12345678901`. Per molte società il codice fiscale coincide con la partita IVA; usate il codice fiscale senza il prefisso `IT`.
+Esempio (numero inventato): `12345678901` è già in forma canonica. La scheda contiene allora `"registration_number": "12345678901"` e `"business_key": "it-12345678901"`, e nel DNS compare `k=it-12345678901`. Per molte società il codice fiscale coincide con la partita IVA; usate il codice fiscale senza il prefisso `IT`.
 
 Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate la forma canonica: codice del paese in minuscolo, numero in maiuscolo.
 
@@ -41,7 +41,7 @@ Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate 
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.pasticceriarossi.example. 300 IN TXT "v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=sNpibaetSBfXQQypOYHY4aVjGPnwcS4n5mu4GpluwxA="
+_abiz.pasticceriarossi.example. 300 IN TXT "v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=LXPN+pikbyuLSzyG6Qhanxy0kETdQuyTbway/QSu6I4="
 ```
 
 - `v=abiz1` deve venire per primo. `h` è obbligatorio; `k` e `p` sono facoltativi.
@@ -56,15 +56,16 @@ La scheda servita all'indirizzo `https://pasticceriarossi.it.to.co` come `applic
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Pasticceria Rossi S.r.l.",
+  "record_version": "abiz1",
+  "business_name": "Pasticceria Rossi S.r.l.",
   "country": "it",
-  "business-key": "it-12345678901",
-  "registration-number": "12345678901",
-  "identity-host": "pasticceriarossi.it.to.co",
+  "business_key": "it-12345678901",
+  "registration_number": "12345678901",
+  "identity_host": "pasticceriarossi.it.to.co",
   "domains": [
     "pasticceriarossi.example"
   ],
+  "public_key": "LXPN+pikbyuLSzyG6Qhanxy0kETdQuyTbway/QSu6I4=",
   "description": "Pasticceria artigianale a Bologna.",
   "website": "https://pasticceriarossi.example",
   "locations": [
@@ -74,14 +75,15 @@ La scheda servita all'indirizzo `https://pasticceriarossi.it.to.co` come `applic
       "country": "it",
       "public": true
     }
-  ]
+  ],
+  "signature": "AOW4C0TkKrXltHWAcgup8Yg3Ns+d7hW9zmbnyTt4+xWn4AN/UqQuCzhq3SItX4qg5ykUNGEBwEXICzhw8JDAAw=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain pasticceriarossi.example --dns-value 'v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=sNpibaetSBfXQQypOYHY4aVjGPnwcS4n5mu4GpluwxA='
+python scripts/validate.py record.json --domain pasticceriarossi.example --dns-value 'v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=LXPN+pikbyuLSzyG6Qhanxy0kETdQuyTbway/QSu6I4='
 ```
 
 ### In proprio o tramite un fornitore
@@ -90,7 +92,7 @@ Potete pubblicare la scheda voi stessi su qualsiasi host HTTPS che controllate, 
 
 ## 3. Fornitori e MCP
 
-MCP (Model Context Protocol) è un protocollo aperto con cui gli assistenti di IA richiamano strumenti e leggono dati da server esterni. Un fornitore può gestire un server MCP tramite il quale un assistente ottiene direttamente la vostra scheda pubblica. Potete indicarlo nel campo facoltativo `mcp-server-url`. ABIZ non richiede un server MCP, e uno strumento non dovrebbe richiamarlo automaticamente solo perché compare in una scheda.
+MCP (Model Context Protocol) è un protocollo aperto con cui gli assistenti di IA richiamano strumenti e leggono dati da server esterni. Un fornitore può gestire un server MCP tramite il quale un assistente ottiene direttamente la vostra scheda pubblica. Potete indicarlo nel campo facoltativo `mcp_server_url`. ABIZ non richiede un server MCP, e uno strumento non dovrebbe richiamarlo automaticamente solo perché compare in una scheda.
 
 Per esempio, un fornitore può pubblicare la vostra scheda all'indirizzo `pasticceriarossi.it.to.co` e gestire un server MCP. Un assistente collegato a quel server può allora chiedere gli orari o i servizi di Pasticceria Rossi S.r.l. e ricevere i dati dalla vostra scheda, invece di tirare a indovinare. to.co, uno di questi fornitori, presenta ABIZ in una [pagina in italiano](https://to.co/it-it/abiz).
 

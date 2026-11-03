@@ -14,15 +14,15 @@ Setiap rekod perniagaan memerlukan lima medan berikut (SPEC bahagian 4.1):
 
 | Medan | Contoh dan peraturan |
 |---|---|
-| `record-version` | `abiz1` |
-| `business-name` | nama awam yang dikenali pelanggan, contohnya `Kedai Kopi Kampong Ayer` |
+| `record_version` | `abiz1` |
+| `business_name` | nama awam yang dikenali pelanggan, contohnya `Kedai Kopi Kampong Ayer` |
 | `country` | `bn`, kod ISO 3166-1 alpha-2 dalam huruf kecil |
-| `identity-host` | `kopikampongayer.bn.to.co`, mesti sama tepat dengan `h` dalam DNS |
+| `identity_host` | `kopikampongayer.bn.to.co`, mesti sama tepat dengan `h` dalam DNS |
 | `domains` | `["kopikampongayer.example"]`, mesti mengandungi domain yang membawa `_abiz` |
 
 ### Kunci perniagaan pilihan `k`
 
-`k` adalah pilihan bagi semua perniagaan, sama ada berdaftar atau tidak. Jika diterbitkan, nilainya mesti sama dengan `business-key` dalam rekod, dan rekod itu juga mesti mengandungi `registration-number`. Bagi Brunei Darussalam, bentuknya ialah:
+`k` adalah pilihan bagi semua perniagaan, sama ada berdaftar atau tidak. Jika diterbitkan, nilainya mesti sama dengan `business_key` dalam rekod, dan rekod itu juga mesti mengandungi `registration_number`. Bagi Brunei Darussalam, bentuknya ialah:
 
 ```text
 bn-<registration-number>
@@ -32,20 +32,20 @@ Brunei Darussalam tidak menggunakan kod subbahagian: jangan tambah kod negeri, d
 
 **Nombor yang digunakan:** nombor pendaftaran syarikat atau nama perniagaan pada sijil pendaftaran anda, contohnya `RC/00012345` bagi syarikat.
 
-**Penormalan (SPEC bahagian 4.2.3):** mulakan dengan nombor tepat seperti yang dikeluarkan oleh pendaftar, gunakan penormalan Unicode NFKC, buang ruang, `-`, `.`, `/` dan sempang, kemudian tukar huruf kepada huruf besar. Kekalkan sifar di hadapan dan awalan huruf. Hasilnya mesti mengandungi huruf dan digit ASCII sahaja; jika tidak, kunci perniagaan tidak boleh diterbitkan dan `k`, `business-key` serta `registration-number` ditinggalkan.
+**Penormalan (SPEC bahagian 4.2.3):** mulakan dengan nombor tepat seperti yang dikeluarkan oleh pendaftar, gunakan penormalan Unicode NFKC, buang ruang, `-`, `.`, `/` dan sempang, kemudian tukar huruf kepada huruf besar. Kekalkan sifar di hadapan dan awalan huruf. Hasilnya mesti mengandungi huruf dan digit ASCII sahaja; jika tidak, kunci perniagaan tidak boleh diterbitkan dan `k`, `business_key` serta `registration_number` ditinggalkan.
 
-**Contoh (rekaan):** `RC/00012345` menjadi `RC00012345`, maka `k=bn-RC00012345`. Dalam rekod: `"business-key": "bn-RC00012345"` dan `"registration-number": "RC00012345"`. Kunci dibandingkan tanpa mengira huruf besar atau kecil; bentuk kanoniknya ialah kod negara dalam huruf kecil dan nombor dalam huruf besar.
+**Contoh (rekaan):** `RC/00012345` menjadi `RC00012345`, maka `k=bn-RC00012345`. Dalam rekod: `"business_key": "bn-RC00012345"` dan `"registration_number": "RC00012345"`. Kunci dibandingkan tanpa mengira huruf besar atau kecil; bentuk kanoniknya ialah kod negara dalam huruf kecil dan nombor dalam huruf besar.
 
 **Sila semak:** kami tidak dapat mengesahkan format tepat nombor ini daripada sumber rasmi, jadi contoh ini sekadar gambaran. Gunakan nombor tepat seperti yang tertera pada dokumen pendaftaran rasmi anda. Jika tidak jelas nombor mana yang mengenal pasti perniagaan anda di peringkat negara, jangan terbitkan `k` sehingga anda pasti.
 
-**Pemilik tunggal:** jika satu-satunya nombor yang anda ada ialah nombor peribadi, seperti nombor kad pengenalan, jangan terbitkan `k`. Tinggalkan `k`, `business-key` dan `registration-number`; rekod masih sah.
+**Pemilik tunggal:** jika satu-satunya nombor yang anda ada ialah nombor peribadi, seperti nombor kad pengenalan, jangan terbitkan `k`. Tinggalkan `k`, `business_key` dan `registration_number`; rekod masih sah.
 
 ### Rekod DNS TXT
 
 Terbitkan tepat satu rekod TXT bernama `_abiz` di bawah domain anda, dalam bentuk padat tanpa ruang, dengan `v=abiz1` di hadapan:
 
 ```dns
-_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=AloDTlIJnmkNYQ9msgtbwFSAQYnsriDqr/YYr3h8sZ8="
+_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240="
 ```
 
 Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. Jangan sekali-kali menyalinnya: terbitkan kunci anda sendiri atau tinggalkan `p`. Semua nama, nombor dan domain di halaman ini adalah rekaan.
@@ -53,38 +53,40 @@ Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. 
 Tanpa tag pilihan `k` dan `p`, rekod ini juga sah:
 
 ```dns
-_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;h=kopikampongayer.bn.to.co"
+_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240="
 ```
 
 Rekod perniagaan yang disediakan sebagai `application/json` di `https://kopikampongayer.bn.to.co`:
 
 ```json
 {
-  "record-version": "abiz1",
-  "business-name": "Kedai Kopi Kampong Ayer",
+  "record_version": "abiz1",
+  "business_name": "Kedai Kopi Kampong Ayer",
   "country": "bn",
-  "business-key": "bn-RC00012345",
-  "registration-number": "RC00012345",
-  "identity-host": "kopikampongayer.bn.to.co",
+  "business_key": "bn-RC00012345",
+  "registration_number": "RC00012345",
+  "identity_host": "kopikampongayer.bn.to.co",
   "domains": [
     "kopikampongayer.example"
-  ]
+  ],
+  "public_key": "sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240=",
+  "signature": "DtVz+TPNp2HlJeACYDy3gitC2PBWnIhoDUBAN91H683OSKvm4LiMOCIhgL4nDgPFdYVWlS2PkqHELpmBAFgdBA=="
 }
 ```
 
 Untuk menyemak rekod sebelum diterbitkan, jalankan pengesah rujukan daripada salinan repositori ini:
 
 ```sh
-python scripts/validate.py record.json --domain kopikampongayer.example --dns-value 'v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=AloDTlIJnmkNYQ9msgtbwFSAQYnsriDqr/YYr3h8sZ8='
+python scripts/validate.py record.json --domain kopikampongayer.example --dns-value 'v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240='
 ```
 
 Anda boleh menempatkan sendiri rekod JSON pada mana-mana pelayan HTTPS, atau menggunakan mana-mana penyedia yang serasi. ABIZ tidak mewajibkan penyedia tertentu.
 
 ## 3. Menggunakan penyedia dan MCP
 
-Model Context Protocol (MCP) ialah protokol terbuka yang membolehkan pembantu AI memanggil alat dan membaca data daripada pelayan luar dengan cara yang standard. Rekod perniagaan boleh mengandungi medan pilihan `mcp-server-url`, iaitu alamat HTTPS pelayan MCP perniagaan, contohnya untuk tempahan atau maklumat produk. ABIZ tidak menjamin pelayan itu; alat mesti menggunakan kawalan akses sendiri (SPEC bahagian 4.2.6).
+Model Context Protocol (MCP) ialah protokol terbuka yang membolehkan pembantu AI memanggil alat dan membaca data daripada pelayan luar dengan cara yang standard. Rekod perniagaan boleh mengandungi medan pilihan `mcp_server_url`, iaitu alamat HTTPS pelayan MCP perniagaan, contohnya untuk tempahan atau maklumat produk. ABIZ tidak menjamin pelayan itu; alat mesti menggunakan kawalan akses sendiri (SPEC bahagian 4.2.6).
 
-Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Brunei Darussalam yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `kopikampongayer.bn.to.co`, dengan nilai DNS `v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `kopikampongayer-bandarseribegawan.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
+Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Brunei Darussalam yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `kopikampongayer.bn.to.co`, dengan nilai DNS `v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240=`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `kopikampongayer-bandarseribegawan.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
 
 ## 4. Kunci dan tandatangan (ABIZ 1.1)
 

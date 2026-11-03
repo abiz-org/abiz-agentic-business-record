@@ -20,15 +20,15 @@ The business record is a JSON document that must validate against the [normative
 
 | Field | Notes |
 | --- | --- |
-| `record-version` | Always `abiz1` |
-| `business-name` | The public name, usually as it appears in the business register |
+| `record_version` | Always `abiz1` |
+| `business_name` | The public name, usually as it appears in the business register |
 | `country` | An **assigned** ISO 3166-1 alpha-2 code, in lowercase. `xk` is not accepted under ABIZ 1.1, so a Kosovo business has no valid value here. Do not use another country's code instead: the record would then make a false statement about the business. |
-| `identity-host` | Exactly the DNS `h` value: a hostname with an optional path, without `https://` |
+| `identity_host` | Exactly the DNS `h` value: a hostname with an optional path, without `https://` |
 | `domains` | The domains the record claims, including the one that carries `_abiz` |
 
 ### Optional business key `k`
 
-No business key is possible for Kosovo under ABIZ 1.1. A business key starts with the country code, and `xk` is not a valid one. Leave out `k`, `business-key` and `registration-number`. Do not invent a key.
+No business key is possible for Kosovo under ABIZ 1.1. A business key starts with the country code, and `xk` is not a valid one. Leave out `k`, `business_key` and `registration_number`. Do not invent a key.
 
 ### DNS TXT record and examples
 
@@ -40,7 +40,7 @@ When a conformant record becomes possible, it can be served on any HTTPS host yo
 
 ## 3. Using a provider and MCP
 
-MCP (Model Context Protocol) is an open protocol that lets AI assistants call tools and read data from external servers. A provider can run an MCP server so that an assistant can request a business's public record directly, and a record can list one in the optional `mcp-server-url` field. ABIZ does not require an MCP server, and a tool should not call one automatically just because a record lists it. Until a Kosovo business can publish a conformant record, there is nothing for such a server to serve under ABIZ 1.1.
+MCP (Model Context Protocol) is an open protocol that lets AI assistants call tools and read data from external servers. A provider can run an MCP server so that an assistant can request a business's public record directly, and a record can list one in the optional `mcp_server_url` field. ABIZ does not require an MCP server, and a tool should not call one automatically just because a record lists it. Until a Kosovo business can publish a conformant record, there is nothing for such a server to serve under ABIZ 1.1.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
