@@ -12,7 +12,7 @@ Doar firma, sau cine acționează în numele ei, poate modifica DNS-ul domeniulu
 
 ### Câmpuri obligatorii
 
-Înregistrarea firmei este un document JSON care trebuie să respecte [schema normativă](../../../schemas/abiz-business-record-v1.schema.json). Există cinci câmpuri obligatorii:
+Înregistrarea firmei este un document JSON care trebuie să respecte [schema normativă](../../../schemas/abiz-business-record-v1.1.schema.json). Există cinci câmpuri obligatorii:
 
 | Câmp | Exemplu | Observații |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Publicați exact o înregistrare TXT ABIZ la `_abiz` pe domeniul dumneavoastră,
 _abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1PIOsOH4bQV0C/z0iFwUDukhcEzn54AeST6ZddZ7rKY="
 ```
 
-- `v=abiz1` trebuie să fie primul. `h` este obligatoriu; `k` și `p` sunt opționale.
+- `v=abiz1` trebuie să fie primul. `h` și `p` sunt obligatorii; `k` este opțional.
 - Numele etichetelor se scriu cu litere mici și țin cont de majuscule. Nicio etichetă nu se poate repeta.
 - Se recomandă un TTL de 300 de secunde.
 
-Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o copiați niciodată: publicați propria cheie sau omiteți `p`.
+Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o copiați niciodată: publicați propria cheie. O aserțiune ABIZ 1.1 trebuie să conțină `p`.
 
 ### Înregistrarea firmei (JSON)
 
@@ -102,11 +102,11 @@ De exemplu, un furnizor vă publică înregistrarea la `carpatimobila.ro.to.co` 
 
 ## 4. Chei și semnături (ABIZ 1.1)
 
-ABIZ 1.1 permite publicarea unei chei publice Ed25519 în eticheta DNS `p`. `p` este opțională. Dacă există, valoarea trebuie să fie codificarea base64 standard a cheii de 32 de octeți: 44 de caractere care se termină cu exact un `=`, într-un singur șir DNS. Orice altă valoare, de exemplu un token hexazecimal din ABIZ 1.0 sau o cheie base64url, invalidează întreaga înregistrare.
+ABIZ 1.1 cere o cheie publică Ed25519 în eticheta DNS `p`. `v` și `h` sunt obligatorii. `p` este obligatorie. `k` este opțional. `p` trebuie să fie codificarea base64 standard a cheii de 32 de octeți: 44 de caractere care se termină cu exact un `=`, într-un singur șir DNS. Base64url nu este acceptat. Orice altă valoare, de exemplu un token hexazecimal din ABIZ 1.0, invalidează întreaga înregistrare.
 
-Cheia privată corespunzătoare aparține firmei și nu se publică niciodată. Dacă un furnizor o păstrează pentru dumneavoastră, trebuie să vă permită să o exportați. Un software poate verifica o semnătură făcută cu cheia privată folosind cheia publicată în DNS. ABIZ 1.1 nu definește încă ce octeți acoperă o semnătură a înregistrării firmei.
+Cheia privată corespunzătoare aparține firmei și nu se publică niciodată. Dacă un furnizor o păstrează pentru dumneavoastră, trebuie să vă permită să o exportați. Un software poate verifica o semnătură făcută cu cheia privată folosind cheia publicată în DNS. Semnătura acoperă forma canonică RFC 8785 a înregistrării fără membrul `signature` și se verifică cu `public_key`, care trebuie să fie egal cu `p` (SPEC, secțiunea 4.6).
 
-Pentru a schimba cheia, publicați una nouă în `p`; pentru a o revoca, eliminați `p`. În ABIZ 1.1 cheile retrase nu se publică, nici în DNS, nici în înregistrare. Cheia arată ce cheie a publicat cel care controlează domeniul; nu dovedește identitatea juridică.
+Pentru a schimba cheia, generați o nouă pereche Ed25519, publicați noua cheie publică în aserțiunea DNS sau well-known, semnați din nou înregistrarea cu noua cheie privată și setați `public_key` la același `p`. Țineți cont de memoria cache DNS. Eliminarea doar a lui `p` nu este o revocare validă cât timp aserțiunea ABIZ 1.1 rămâne: pentru a o retrage, eliminați întreaga declarație. În ABIZ 1.1 cheile retrase nu se publică, nici în DNS, nici în înregistrare. Cheia arată ce cheie a publicat cel care controlează domeniul; nu dovedește identitatea juridică.
 
 ## 5. Ce văd instrumentele AI
 
@@ -136,6 +136,6 @@ GDPR se aplică datelor personale din înregistrare, de exemplu numelui unui tit
 ## 7. Mai multe informații
 
 - [Specificația ABIZ (SPEC.md, în engleză)](../../../SPEC.md): sintaxa DNS (secțiunea 3.1.1), cheia `p` (secțiunea 3.3), cheile firmelor (secțiunea 4.2)
-- [Schema JSON normativă](../../../schemas/abiz-business-record-v1.schema.json)
+- [Schema JSON normativă](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validatorul de referință, scripts/validate.py](../../../scripts/validate.py)
 - [Toate ghidurile pentru Europa](index.md)

@@ -12,7 +12,7 @@ Solo la empresa, o quien actúe en su nombre, puede modificar el DNS de su domin
 
 ### Campos obligatorios
 
-La ficha de la empresa es un documento JSON que debe cumplir el [esquema normativo](../../../schemas/abiz-business-record-v1.schema.json). Hay cinco campos obligatorios:
+La ficha de la empresa es un documento JSON que debe cumplir el [esquema normativo](../../../schemas/abiz-business-record-v1.1.schema.json). Hay cinco campos obligatorios:
 
 | Campo | Ejemplo | Notas |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ _abiz.panaderiagarcia.example. 300 IN TXT "v=abiz1;k=es-B12345678;h=panaderiagar
 - Los nombres de las etiquetas van en minúsculas y distinguen mayúsculas y minúsculas. Ninguna etiqueta puede repetirse.
 - Se recomienda un TTL de 300 segundos.
 
-El valor `p` anterior es una clave de ejemplo desechable. No la copie nunca: publique su propia clave u omita `p`.
+El valor `p` anterior es una clave de ejemplo desechable. No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
 ### Ficha de la empresa (JSON)
 
@@ -102,11 +102,11 @@ Por ejemplo, un proveedor puede publicar su ficha en `panaderiagarcia.es.to.co` 
 
 ## 4. Claves y firmas (ABIZ 1.1)
 
-ABIZ 1.1 permite publicar una clave pública Ed25519 en la etiqueta DNS `p`. `p` es opcional. Si aparece, debe ser la codificación base64 estándar de la clave de 32 bytes: 44 caracteres que terminan en un único `=`, en una sola cadena DNS. Cualquier otro valor, como un token hexadecimal de ABIZ 1.0 o una clave en base64url, invalida todo el registro.
+ABIZ 1.1 exige una clave pública Ed25519 en la etiqueta DNS `p`. `v` y `h` son obligatorios. `p` es obligatoria. `k` es opcional. `p` debe ser 32 bytes en base64 estándar: 44 caracteres que terminan en un único `=`, en una sola cadena DNS. Base64url no se acepta. Cualquier otro valor, como un token hexadecimal de ABIZ 1.0, invalida todo el registro.
 
-La clave privada correspondiente pertenece a la empresa y nunca se publica. Si un proveedor la custodia por usted, debe permitirle exportarla. Un software puede comprobar una firma hecha con la clave privada usando la clave publicada en el DNS. ABIZ 1.1 todavía no define qué bytes cubre una firma de la ficha.
+La clave privada correspondiente pertenece a la empresa y nunca se publica. Si un proveedor la custodia por usted, debe permitirle exportarla. Un software puede comprobar una firma hecha con la clave privada usando la clave publicada en el DNS. La firma de la ficha cubre la forma canónica RFC 8785 de la ficha sin `signature`, y `public_key` debe ser igual a `p` (SPEC sección 4.6).
 
-Para cambiar de clave, publique una nueva en `p`; para revocarla, elimine `p`. En ABIZ 1.1 las claves retiradas no se publican, ni en el DNS ni en la ficha. La clave muestra qué clave publicó quien controla el dominio; no acredita la identidad jurídica.
+Para cambiar de clave, genere un nuevo par Ed25519, publique la nueva clave pública en la aserción DNS o well-known, vuelva a firmar la ficha con la nueva clave privada y haga que `public_key` sea ese mismo `p`. Tenga en cuenta la caché del DNS. Quitar solo `p` no es una revocación válida mientras la aserción ABIZ 1.1 siga publicada: para retirarla, elimine la declaración completa. En ABIZ 1.1 las claves retiradas no se publican, ni en el DNS ni en la ficha. La clave muestra qué clave publicó quien controla el dominio; no acredita la identidad jurídica.
 
 ## 5. Qué ven las herramientas de IA
 
@@ -136,6 +136,6 @@ El RGPD se aplica a los datos personales de la ficha, por ejemplo el nombre de u
 ## 7. Más información
 
 - [Especificación ABIZ (SPEC.md, en inglés)](../../../SPEC.md): sintaxis DNS (sección 3.1.1), clave `p` (sección 3.3), claves de empresa (sección 4.2)
-- [Esquema JSON normativo](../../../schemas/abiz-business-record-v1.schema.json)
+- [Esquema JSON normativo](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validador de referencia, scripts/validate.py](../../../scripts/validate.py)
 - [Todas las guías de Europa](index.md)

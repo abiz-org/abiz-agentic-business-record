@@ -12,7 +12,7 @@ Nur das Unternehmen oder jemand in seinem Auftrag kann das DNS seiner Domain än
 
 ### Pflichtfelder
 
-Der Unternehmenseintrag ist ein JSON-Dokument, das dem [normativen Schema](../../../schemas/abiz-business-record-v1.schema.json) entsprechen muss. Fünf Felder sind Pflicht:
+Der Unternehmenseintrag ist ein JSON-Dokument, das dem [normativen Schema](../../../schemas/abiz-business-record-v1.1.schema.json) entsprechen muss. Fünf Felder sind Pflicht:
 
 | Feld | Beispiel | Hinweise |
 | --- | --- | --- |
@@ -44,7 +44,7 @@ Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain
 _abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=pW935lccyPaOHhZlPmEkKyLV7TU98Hc4q8m/8oe9tqI="
 ```
 
-- `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
+- `v=abiz1` muss am Anfang stehen. `h` und `p` sind Pflicht, `k` ist optional.
 - Tag-Namen werden kleingeschrieben und unterscheiden Groß- und Kleinschreibung. Kein Tag darf doppelt vorkommen.
 - Empfohlen wird eine TTL von 300 Sekunden.
 
@@ -102,11 +102,11 @@ Ein Beispiel: Ein Anbieter stellt Ihren Eintrag unter `baeckereimueller.de.to.co
 
 ## 4. Schlüssel und Signaturen (ABIZ 1.1)
 
-Mit ABIZ 1.1 kann ein Unternehmen im DNS-Tag `p` einen öffentlichen Ed25519-Schlüssel veröffentlichen. `p` ist optional. Wenn vorhanden, muss es die Standard-Base64-Kodierung des 32-Byte-Schlüssels sein: 44 Zeichen, am Ende genau ein `=`, in einem einzigen DNS-String. Jeder andere Wert, etwa ein hexadezimales Token aus ABIZ 1.0 oder ein Base64url-Schlüssel, macht den ganzen Eintrag ungültig.
+ABIZ 1.1 verlangt einen öffentlichen Ed25519-Schlüssel im DNS-Tag `p`. `v` und `h` sind Pflicht. `p` ist Pflicht. `k` ist optional. `p` muss 32 Rohbytes in Standard-Base64 sein: 44 Zeichen, am Ende genau ein `=`, in einem einzigen DNS-String. Base64url wird nicht akzeptiert. Jeder andere Wert, etwa ein hexadezimales Token aus ABIZ 1.0, macht den ganzen Eintrag ungültig.
 
-Der zugehörige private Schlüssel gehört dem Unternehmen und wird nie veröffentlicht. Verwahrt ein Anbieter ihn für Sie, muss er Ihnen den Export ermöglichen. Software kann eine mit dem privaten Schlüssel erstellte Signatur gegen den Schlüssel im DNS prüfen. Welche Bytes eine Signatur über den Unternehmenseintrag abdeckt, legt ABIZ 1.1 noch nicht fest.
+Der zugehörige private Schlüssel gehört dem Unternehmen und wird nie veröffentlicht. Verwahrt ein Anbieter ihn für Sie, muss er Ihnen den Export ermöglichen. Software kann eine mit dem privaten Schlüssel erstellte Signatur gegen den Schlüssel im DNS prüfen. Die Signatur deckt die RFC-8785-kanonische Form des Eintrags ohne das Mitglied `signature` ab und wird mit `public_key` geprüft, das gleich `p` sein muss (SPEC Abschnitt 4.6).
 
-Zum Wechseln veröffentlichen Sie einen neuen Schlüssel in `p`, zum Widerrufen entfernen Sie `p`. Ausgemusterte Schlüssel werden in ABIZ 1.1 nicht veröffentlicht, weder im DNS noch im Unternehmenseintrag. Der Schlüssel zeigt, welchen Schlüssel der Inhaber der Domain veröffentlicht hat; eine rechtliche Identität belegt er nicht.
+Zum Wechseln erzeugen Sie ein neues Ed25519-Schlüsselpaar, veröffentlichen den neuen öffentlichen Schlüssel in der DNS- oder Well-known-Assertion, signieren den Eintrag mit dem neuen privaten Schlüssel neu und setzen `public_key` auf dasselbe `p`. Rechnen Sie mit DNS-Cache und Propagation. Nur `p` zu entfernen ist kein gültiger Widerruf, solange die ABIZ-1.1-Assertion bestehen bleibt: Zum Zurückziehen entfernen Sie die gesamte DNS- oder Well-known-Erklärung. Ausgemusterte Schlüssel werden in ABIZ 1.1 nicht veröffentlicht, weder im DNS noch im Unternehmenseintrag. Der Schlüssel zeigt, welchen Schlüssel der Inhaber der Domain veröffentlicht hat; eine rechtliche Identität belegt er nicht.
 
 ## 5. Was KI-Werkzeuge sehen
 
@@ -136,6 +136,6 @@ In Deutschland gilt die DSGVO für personenbezogene Daten in Ihrem Eintrag, etwa
 ## 7. Weiterführende Informationen
 
 - [ABIZ-Spezifikation (SPEC.md, Englisch)](../../../SPEC.md): DNS-Syntax (Abschnitt 3.1.1), Schlüssel `p` (Abschnitt 3.3), Unternehmensschlüssel (Abschnitt 4.2)
-- [Normatives JSON-Schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normatives JSON-Schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Referenz-Validator scripts/validate.py](../../../scripts/validate.py)
 - [Alle Leitfäden für Europa](index.md)

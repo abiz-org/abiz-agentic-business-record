@@ -46,9 +46,9 @@ cn-<registration-number>
 _abiz.qingshantea.example. 300 IN TXT "v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI="
 ```
 
-上面的 `p` 值是为本页生成的一次性示例密钥。切勿复制：请发布您自己的密钥，或省略 `p`。本页中的所有名称、号码和域名均为虚构。
+上面的 `p` 值是为本页生成的一次性示例密钥。切勿复制：请发布您自己的密钥。ABIZ 1.1 声明必须包含 `p`。本页中的所有名称、号码和域名均为虚构。
 
-省略可选的 `k` 和 `p` 标签时，以下写法同样有效：
+省略可选的 `k` 标签时，以下写法同样有效：
 
 ```dns
 _abiz.qingshantea.example. 300 IN TXT "v=abiz1;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI="
@@ -88,10 +88,10 @@ python scripts/validate.py record.json --domain qingshantea.example --dns-value 
 
 ## 4. 密钥与签名（ABIZ 1.1）
 
-ABIZ 1.1 新增了可选的签名密钥。DNS 中的 `p` 标签可以存放 Ed25519 公钥：标准 base64 编码的 44 个字符，以一个 `=` 结尾（SPEC 第 3.3.2 节）。企业或代表企业的服务商保管对应的私钥，可以签署他人用已发布公钥验证的内容。私钥始终归企业所有，托管服务商必须允许企业导出私钥。
+ABIZ 1.1 要求签名密钥。DNS 中的 `p` 标签存放 Ed25519 公钥：32 个原始字节，标准 base64，44 个字符，末尾一个 `=`（SPEC 第 3.3.2 节）。不接受 base64url。企业或代表企业的服务商保管对应的私钥，并用它签署企业记录。私钥始终归企业所有，托管服务商必须允许企业导出私钥。
 
-- `p` 是可选的。一旦出现，必须是有效密钥；任何其他值，例如 ABIZ 1.0 旧的十六进制令牌或 base64url 密钥，都会使整条声明无效。
-- 只发布当前密钥。更换时，在 `p` 中发布新密钥；撤销时，删除 `p`。在 ABIZ 1.1 中，已停用的密钥既不在 DNS 中发布，也不在企业记录中发布。
+- `v` 和 `h` 为必填。`p` 为必填。`k` 为可选。`p` 必须是有效密钥；任何其他值，例如 ABIZ 1.0 旧的十六进制令牌或 base64url 密钥，都会使整条声明无效。
+- 只发布当前密钥。轮换时，生成新的 Ed25519 密钥对，在 DNS 或 well-known 声明中发布新公钥，用新私钥重新签署企业记录，并使 `public_key` 与该 `p` 相同。请考虑 DNS 缓存和传播。在 ABIZ 1.1 声明仍然存在时，仅删除 `p` 不是有效撤销：要撤回声明，须删除完整的 DNS 或 well-known 声明。在 ABIZ 1.1 中，已停用的密钥既不在 DNS 中发布，也不在企业记录中发布。
 - 密钥表明谁控制该域名的 DNS，并不证明法律身份。
 
 ## 5. AI 工具会看到什么
@@ -114,6 +114,6 @@ ABIZ 1.1 新增了可选的签名密钥。DNS 中的 `p` 标签可以存放 Ed25
 ## 7. 延伸阅读
 
 - [ABIZ 规范（SPEC.md，英文）](../../../SPEC.md)
-- [企业记录 JSON Schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [企业记录 JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [参考验证器](../../../scripts/validate.py)
 - [ABIZ 国家和地区指南：亚洲](index.md)

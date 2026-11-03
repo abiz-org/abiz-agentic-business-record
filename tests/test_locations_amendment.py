@@ -16,7 +16,7 @@ from validate import (
     verify_record_signature,
 )
 
-SCHEMA = json.loads((ROOT / "schemas" / "abiz-business-record-v1.schema.json").read_text())
+SCHEMA = json.loads((ROOT / "schemas" / "abiz-business-record-v1.1.schema.json").read_text())
 EXAMPLES = ROOT / "examples" / "locations-and-listings"
 INVALID = EXAMPLES / "invalid"
 TEST_KEY = Ed25519PrivateKey.from_private_bytes(bytes(range(32)))

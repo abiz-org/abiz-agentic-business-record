@@ -12,7 +12,7 @@ Vain yritys tai sen puolesta toimiva taho voi muuttaa verkkotunnuksensa DNS-aset
 
 ### Pakolliset kentät
 
-Yritystietue on JSON-asiakirja, jonka on noudatettava [normatiivista skeemaa](../../../schemas/abiz-business-record-v1.schema.json). Pakollisia kenttiä on viisi:
+Yritystietue on JSON-asiakirja, jonka on noudatettava [normatiivista skeemaa](../../../schemas/abiz-business-record-v1.1.schema.json). Pakollisia kenttiä on viisi:
 
 | Kenttä | Esimerkki | Huomautus |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Julkaiskaa verkkotunnukseenne nimen `_abiz` alle täsmälleen yksi ABIZ TXT -tie
 _abiz.koivudesign.example. 300 IN TXT "v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=LgZsmQI559TbbeVhaW9QGnjQrmFZ2S6pHnwj9OKqw00="
 ```
 
-- `v=abiz1` on oltava ensimmäisenä. `h` on pakollinen; `k` ja `p` ovat vapaaehtoisia.
+- `v=abiz1` on oltava ensimmäisenä. `h` ja `p` ovat pakollisia; `k` on vapaaehtoinen.
 - Tunnisteiden nimet kirjoitetaan pienin kirjaimin, ja kirjainkoolla on merkitystä. Mikään tunniste ei saa esiintyä kahdesti.
 - Suositeltu TTL on 300 sekuntia.
 
-Yllä oleva `p`-arvo on kertakäyttöinen esimerkkiavain. Älkää koskaan kopioiko sitä: julkaiskaa oma avaimenne tai jättäkää `p` pois.
+Yllä oleva `p`-arvo on kertakäyttöinen esimerkkiavain. Älkää koskaan kopioiko sitä: julkaiskaa oma avaimenne. ABIZ 1.1 -väittämän on sisällettävä `p`.
 
 ### Yritystietue (JSON)
 
@@ -102,11 +102,11 @@ Esimerkki: palveluntarjoaja julkaisee tietueenne osoitteessa `koivudesign.fi.to.
 
 ## 4. Avaimet ja allekirjoitukset (ABIZ 1.1)
 
-ABIZ 1.1:ssä yritys voi julkaista julkisen Ed25519-avaimen DNS-tunnisteessa `p`. `p` on vapaaehtoinen. Jos se on mukana, arvon on oltava 32-tavuisen avaimen tavallinen base64-koodaus: 44 merkkiä, joista viimeinen on täsmälleen yksi `=`, yhdessä DNS-merkkijonossa. Mikä tahansa muu arvo, kuten ABIZ 1.0:n heksadesimaalinen tunnus tai base64url-avain, tekee koko tietueesta virheellisen.
+ABIZ 1.1 edellyttää julkisen Ed25519-avaimen DNS-tunnisteessa `p`. `v` ja `h` ovat pakollisia. `p` on pakollinen. `k` on vapaaehtoinen. `p`:n on oltava 32 raakatavua tavallisessa base64-koodauksessa: 44 merkkiä, joista viimeinen on täsmälleen yksi `=`, yhdessä DNS-merkkijonossa. Base64urlia ei hyväksytä. Mikä tahansa muu arvo, kuten ABIZ 1.0:n heksadesimaalinen tunnus, tekee koko tietueesta virheellisen.
 
-Vastaava yksityinen avain kuuluu yritykselle, eikä sitä koskaan julkaista. Jos palveluntarjoaja säilyttää sitä puolestanne, sen on annettava teidän viedä avain itsellenne. Ohjelmisto voi tarkistaa yksityisellä avaimella tehdyn allekirjoituksen DNS:ssä julkaistua avainta vasten. ABIZ 1.1 ei vielä määrittele, mitä tavuja yritystietueen allekirjoitus kattaa.
+Vastaava yksityinen avain kuuluu yritykselle, eikä sitä koskaan julkaista. Jos palveluntarjoaja säilyttää sitä puolestanne, sen on annettava teidän viedä avain itsellenne. Ohjelmisto voi tarkistaa yksityisellä avaimella tehdyn allekirjoituksen DNS:ssä julkaistua avainta vasten. Allekirjoitus kattaa tietueen RFC 8785 -kanonisen muodon ilman jäsentä `signature`, ja se tarkistetaan `public_key`-avaimella, jonka on oltava sama kuin `p` (SPEC kohta 4.6).
 
-Avaimen vaihtamiseksi julkaistaan uusi avain kenttään `p`; avaimen mitätöimiseksi `p` poistetaan. Käytöstä poistettuja avaimia ei ABIZ 1.1:ssä julkaista, ei DNS:ssä eikä tietueessa. Avain osoittaa, minkä avaimen verkkotunnuksen haltija on julkaissut; se ei todista oikeudellista henkilöllisyyttä.
+Avain vaihdetaan luomalla uusi Ed25519-avainpari, julkaisemalla uusi julkinen avain DNS- tai well-known-väittämässä, allekirjoittamalla tietue uudelleen uudella yksityisellä avaimella ja asettamalla `public_key` samaksi `p`:ksi. Ottakaa huomioon DNS-välimuisti. Pelkän `p`:n poistaminen ei ole pätevä mitätöinti, kun ABIZ 1.1 -väittämä jää voimaan: sen vetämiseksi pois poistetaan koko ilmoitus. Käytöstä poistettuja avaimia ei ABIZ 1.1:ssä julkaista, ei DNS:ssä eikä tietueessa. Avain osoittaa, minkä avaimen verkkotunnuksen haltija on julkaissut; se ei todista oikeudellista henkilöllisyyttä.
 
 ## 5. Mitä tekoälytyökalut näkevät
 
@@ -136,6 +136,6 @@ Yleistä tietosuoja-asetusta (GDPR) sovelletaan tietueen henkilötietoihin, esim
 ## 7. Lisätietoa
 
 - [ABIZ-määrittely (SPEC.md, englanniksi)](../../../SPEC.md): DNS-syntaksi (kohta 3.1.1), avain `p` (kohta 3.3), yritysavaimet (kohta 4.2)
-- [Normatiivinen JSON-skeema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normatiivinen JSON-skeema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Viitevalidaattori, scripts/validate.py](../../../scripts/validate.py)
 - [Kaikki Euroopan oppaat](index.md)

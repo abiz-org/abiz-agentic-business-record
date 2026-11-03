@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://abizrecord.org/schema/abiz-well-known-v1.schema.json",
-  "title": "ABIZ well-known file (/.well-known/abiz.json)",
+  "$id": "https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json",
+  "title": "ABIZ 1.1 well-known file (/.well-known/abiz.json)",
   "description": "The ABIZ 1.1 alternative to the _abiz DNS TXT assertion (SPEC section 3.4). It carries the same v, k, h and p values as the TXT record, one JSON string each. Unknown members are ignored. The tag rules of SPEC sections 3.1.1 to 3.3 and 4.2 still apply and are checked by the reference validator. When a valid DNS assertion exists it takes precedence (section 3.4.4).",
   "type": "object",
   "required": ["v", "h", "p"],

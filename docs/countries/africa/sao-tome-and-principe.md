@@ -48,7 +48,7 @@ Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta,
 _abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E="
 ```
 
-O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave ou omita `p`. Todos os nomes, números e domínios desta página são fictícios.
+O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`. Todos os nomes, números e domínios desta página são fictícios.
 
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
@@ -90,9 +90,9 @@ Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo,
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 
-O ABIZ 1.1 acrescenta uma chave de assinatura opcional. A etiqueta DNS `p` pode conter uma chave pública Ed25519: 44 caracteres em base64 padrão, terminados por um único `=` (secção 3.3.2 da SPEC). A empresa, ou um fornecedor em seu nome, guarda a chave privada correspondente e pode assinar conteúdos que outros verificam com a chave publicada. A chave privada pertence sempre à empresa, e um fornecedor de alojamento tem de permitir que a exporte.
+O ABIZ 1.1 exige uma chave de assinatura. A etiqueta DNS `p` contém uma chave pública Ed25519: 32 bytes em bruto, base64 padrão, 44 caracteres, um único `=` final (secção 3.3.2 da SPEC). Base64url não é aceite. A empresa, ou um fornecedor em seu nome, guarda a chave privada correspondente e assina a ficha com ela. A chave privada pertence sempre à empresa, e um fornecedor de alojamento tem de permitir que a exporte.
 
-- A `p` é opcional. Se existir, tem de ser uma chave válida: qualquer outro valor, como um antigo token hexadecimal do ABIZ 1.0 ou uma chave em base64url, torna toda a asserção inválida.
+- `v` e `h` são obrigatórios. `p` é obrigatória. `k` é opcional. `p` tem de ser uma chave válida: qualquer outro valor, como um antigo token hexadecimal do ABIZ 1.0 ou uma chave em base64url, torna toda a asserção inválida.
 - Só se publica a chave atual. Para a substituir, publique a nova chave em `p`; para a revogar, retire `p`. As chaves retiradas não são publicadas no ABIZ 1.1, nem no DNS, nem na ficha.
 - Uma chave mostra quem controla o DNS do domínio. Não prova a identidade jurídica.
 
@@ -116,6 +116,6 @@ Uma ferramenta compatível que leia a sua ficha consegue responder a perguntas c
 ## 7. Leitura adicional
 
 - [Especificação ABIZ (SPEC.md, em inglês)](../../../SPEC.md)
-- [Esquema JSON da ficha de empresa](../../../schemas/abiz-business-record-v1.schema.json)
+- [Esquema JSON da ficha de empresa](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validador de referência](../../../scripts/validate.py)
 - [Guias ABIZ por país: África](index.md)

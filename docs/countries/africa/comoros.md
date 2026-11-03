@@ -48,9 +48,9 @@ Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme com
 _abiz.ylangmoroni.example. 300 IN TXT "v=abiz1;k=km-KMMOR2023B123;h=ylangmoroni.km.to.co;p=MEK3fFqbpEge5oJuCglL2edjY/e6RI2qdE3jmfraIPE="
 ```
 
-La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé ou omettez `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
+La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
 
-Sans les balises facultatives `k` et `p`, ceci est également valide :
+Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
 _abiz.ylangmoroni.example. 300 IN TXT "v=abiz1;h=ylangmoroni.km.to.co;p=MEK3fFqbpEge5oJuCglL2edjY/e6RI2qdE3jmfraIPE="
@@ -90,10 +90,10 @@ Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par
 
 ## 4. Clés et signatures (ABIZ 1.1)
 
-ABIZ 1.1 ajoute une clé de signature facultative. La balise DNS `p` peut contenir une clé publique Ed25519 : 44 caractères en base64 standard, terminés par un seul `=` (section 3.3.2 de la SPEC). L’entreprise, ou un fournisseur agissant pour elle, conserve la clé privée correspondante et peut signer des contenus que d’autres vérifient avec la clé publiée. La clé privée appartient toujours à l’entreprise, et un hébergeur doit lui permettre de l’exporter.
+ABIZ 1.1 exige une clé de signature. La balise DNS `p` contient une clé publique Ed25519 : 32 octets bruts, en base64 standard, 44 caractères, un seul `=` final (section 3.3.2 de la SPEC). Le base64url n’est pas accepté. L’entreprise, ou un fournisseur agissant pour elle, conserve la clé privée correspondante et signe la fiche avec elle. La clé privée appartient toujours à l’entreprise, et un hébergeur doit lui permettre de l’exporter.
 
-- `p` est facultative. Si elle est présente, elle doit être une clé valide : toute autre valeur, comme un ancien jeton hexadécimal ABIZ 1.0 ou une clé en base64url, rend l’assertion entière invalide.
-- Seule la clé en cours est publiée. Pour en changer, publiez la nouvelle clé dans `p` ; pour la révoquer, supprimez `p`. Les clés retirées ne sont pas publiées en ABIZ 1.1, ni dans le DNS, ni dans la fiche.
+- `v` et `h` sont obligatoires. `p` est obligatoire. `k` est facultative. `p` doit être une clé valide : toute autre valeur, comme un ancien jeton hexadécimal ABIZ 1.0 ou une clé en base64url, rend l’assertion entière invalide.
+- Seule la clé en cours est publiée. Pour en changer, générez une nouvelle paire Ed25519, publiez la nouvelle clé publique dans l’assertion DNS ou well-known, resignez la fiche avec la nouvelle clé privée, et faites correspondre `public_key` à ce `p`. Tenez compte du cache et de la propagation DNS. Supprimer seulement `p` n’est pas une révocation valable tant que l’assertion ABIZ 1.1 reste en place : pour la retirer, supprimez toute la déclaration DNS ou well-known. Les clés retirées ne sont pas publiées en ABIZ 1.1, ni dans le DNS, ni dans la fiche.
 - Une clé montre qui contrôle le DNS du domaine. Elle ne prouve pas l’identité juridique.
 
 ## 5. Ce que verront les outils d’IA
@@ -116,6 +116,6 @@ Un outil compatible qui lit votre fiche peut répondre à des questions comme :
 ## 7. Pour aller plus loin
 
 - [Spécification ABIZ (SPEC.md, en anglais)](../../../SPEC.md)
-- [Schéma JSON de la fiche d’entreprise](../../../schemas/abiz-business-record-v1.schema.json)
+- [Schéma JSON de la fiche d’entreprise](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validateur de référence](../../../scripts/validate.py)
 - [Guides ABIZ par pays : Afrique](index.md)

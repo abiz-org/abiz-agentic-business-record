@@ -165,16 +165,16 @@ Een aanbieder kan bijvoorbeeld het record van Bakkerij Paramaribo hosten op `bak
 
 ## 4. Sleutels en handtekeningen (ABIZ 1.1)
 
-- **`p` is optioneel.** Als hij aanwezig is, moet het een openbare Ed25519-sleutel in standaard-base64 zijn: precies 44 tekens, eindigend op één `=`, die decodeert naar 32 bytes (sectie 3.3.2). Elke andere waarde, zoals een oud hexadecimaal ABIZ 1.0-token of een base64url-sleutel, maakt de hele bewering ongeldig. Vervang zo’n waarde door een sleutel of verwijder hem.
-- **Voorbeeld** (voorbeeldsleutel voor eenmalig gebruik; de private sleutel is vernietigd). Kopieer hem nooit: publiceer uw eigen sleutel of laat `p` weg.
+- **`p` is verplicht.** `v` en `h` zijn verplicht; `k` is optioneel. `p` moet een openbare Ed25519-sleutel zijn: 32 ruwe bytes, standaard-base64, precies 44 tekens, eindigend op één `=`. Base64url wordt niet aanvaard (sectie 3.3.2). Elke andere waarde, zoals een oud hexadecimaal ABIZ 1.0-token of een base64url-sleutel, maakt de hele bewering ongeldig.
+- **Voorbeeld** (voorbeeldsleutel voor eenmalig gebruik; de private sleutel is vernietigd). Kopieer hem nooit: publiceer uw eigen sleutel. Een ABIZ 1.1-assertie moet `p` bevatten.
 
   ```dns
   _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY="
   ```
 
 - **De private sleutel is van het bedrijf.** Hij mag nooit in de DNS, in het record of in een openbare repository staan. Een aanbieder mag hem voor u aanmaken en bewaren (gehoste modus), maar moet u hem altijd laten exporteren, bijvoorbeeld als PKCS#8, en zijn kopie op verzoek verwijderen (sectie 3.3.4).
-- **Ondertekenen.** Software kan een losse Ed25519-handtekening controleren met de gepubliceerde sleutel. ABIZ 1.1 legt nog niet vast welke bytes van een record een handtekening dekt; een handtekeningcontrole zegt dus alleen iets over een bericht waarover beide partijen het eens zijn.
-- **Sleutelwissel en ingetrokken sleutels.** Publiceer bij een wissel de nieuwe sleutel in `p`; de oude is niet langer de huidige zodra de TTL van het TXT-record verstreken is. ABIZ 1.1 publiceert geen ingetrokken sleutels: niet in de DNS en niet in het record (een eigenschap `retired_keys` wordt afgewezen).
+- **Ondertekenen.** Software kan een losse Ed25519-handtekening controleren met de gepubliceerde sleutel. De handtekening van het record dekt de RFC 8785-canonieke vorm van het record zonder het lid `signature` en wordt gecontroleerd met `public_key`, dat gelijk moet zijn aan `p` (SPEC sectie 4.6). Een handtekening over een ander bericht zegt alleen iets als beide partijen dat bericht hebben afgesproken.
+- **Sleutelwissel en intrekking.** Maak een nieuw Ed25519-sleutelpaar, publiceer de nieuwe openbare sleutel in de DNS- of well-known-assertie, onderteken het record opnieuw met de nieuwe privésleutel en zet `public_key` op dezelfde `p`. Houd rekening met DNS-cache en propagatie. Alleen `p` verwijderen is geen geldige intrekking zolang de ABIZ 1.1-assertie blijft staan: om haar in te trekken, verwijdert u de volledige verklaring. ABIZ 1.1 publiceert geen ingetrokken sleutels (een eigenschap `retired_keys` wordt afgewezen).
 - **Wat een sleutel bewijst.** Hij laat zien welke sleutel de beheerder van het domein heeft gepubliceerd. Hij ondertekent het TXT-record niet zelf en bewijst geen juridische identiteit. Gebruik DNSSEC als uw DNS-aanbieder dat ondersteunt.
 
 ## 5. Wat AI-tools te zien krijgen
@@ -201,6 +201,6 @@ Ook kan zij melden dat domein en record naar elkaar verwijzen, dat het record aa
 ## 7. Meer lezen
 
 - [ABIZ-specificatie](../../../SPEC.md) (Engels): sectie 3.1.1 (TXT-syntaxis), sectie 3.3 (`p`-sleutels), sectie 4.2 (bedrijfssleutels)
-- [JSON Schema van het record](../../../schemas/abiz-business-record-v1.schema.json)
+- [JSON Schema van het record](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Referentievalidator](../../../scripts/validate.py) en [voorbeelden](../../../examples/)
 - [Alle gidsen voor Zuid-Amerika](index.md)

@@ -7,7 +7,7 @@
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
 **Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
-**Normative schemas:** [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (business record, `$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`) and [`schemas/abiz-well-known-v1.schema.json`](schemas/abiz-well-known-v1.schema.json) (well-known file, `$id` `https://abizrecord.org/schema/abiz-well-known-v1.schema.json`)
+**Normative schemas:** the published ABIZ 1.0 business record is [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). The proposed ABIZ 1.1 business record is [`schemas/abiz-business-record-v1.1.schema.json`](schemas/abiz-business-record-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`). The well-known file, which is part of the 1.1 proposal and did not exist in 1.0, is [`schemas/abiz-well-known-v1.1.schema.json`](schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`). `record_version` and the DNS tag `v` stay `abiz1` in both revisions and do not select the schema.
 
 This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
 
@@ -250,7 +250,7 @@ The file MUST be a UTF-8 JSON object (RFC 8259) with no byte order mark. It carr
 | `p` | MUST | The Ed25519 public key, with the rules of section 3.3.2 |
 | `k` | MAY | The business key, with the rules of section 4.2 |
 
-Each value MUST be exactly what the producer would publish as the corresponding tag value, and MUST satisfy `tag-value` (section 3.1.1): no whitespace, no `;`, not empty. A member whose value is not a string, or does not satisfy its tag rules, makes the file invalid. Consumers MUST ignore unknown members, as they ignore unknown tags. The file MUST validate against [`schemas/abiz-well-known-v1.schema.json`](schemas/abiz-well-known-v1.schema.json) (JSON Schema Draft 2020-12, `$id` `https://abizrecord.org/schema/abiz-well-known-v1.schema.json`); the tag rules of sections 3.1.1 to 3.3 and 4.2 are checked in addition, as for DNS.
+Each value MUST be exactly what the producer would publish as the corresponding tag value, and MUST satisfy `tag-value` (section 3.1.1): no whitespace, no `;`, not empty. A member whose value is not a string, or does not satisfy its tag rules, makes the file invalid. Consumers MUST ignore unknown members, as they ignore unknown tags. The file MUST validate against [`schemas/abiz-well-known-v1.1.schema.json`](schemas/abiz-well-known-v1.1.schema.json) (JSON Schema Draft 2020-12, `$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`); the tag rules of sections 3.1.1 to 3.3 and 4.2 are checked in addition, as for DNS.
 
 The file is a pointer, not the business record. It MUST NOT contain business-record properties in place of `h`; a consumer still fetches the record from `https://<h>` (section 4).
 
@@ -294,11 +294,11 @@ The well-known file shows control of the HTTPS origin at `<domain>`, which is no
 
 ## 4. Published business record and normative schema
 
-The `h` target is the URL `https://<h>`. A consumer fetches the business record from it with `?format=json` (section 4.5) and the header `Accept: application/json`. The JSON representation MUST be a JSON object that validates against [the normative ABIZ schema](schemas/abiz-business-record-v1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.schema.json)) in **JSON Schema Draft 2020-12**. Record conformance is a REQUIRED step for ABIZ conformance; a document that merely parses as JSON does not qualify.
+The `h` target is the URL `https://<h>`. A consumer fetches the business record from it with `?format=json` (section 4.5) and the header `Accept: application/json`. The JSON representation MUST be a JSON object that validates against the schema for the revision being claimed, in **JSON Schema Draft 2020-12**. A published ABIZ 1.0 record validates against [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.schema.json)). A proposed ABIZ 1.1 record validates against [`schemas/abiz-business-record-v1.1.schema.json`](schemas/abiz-business-record-v1.1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json)). `record_version` is `abiz1` in both, and `v=abiz1` is the same wire tag. Neither value selects the schema. The reference validator selects one with `--revision` (`1.0` or `1.1`); when that flag is omitted it reads the nearest `REVISION` file and otherwise uses `1.1`. An unsupported revision is not an invalid signature. A record that fails only because it belongs to the other revision is a schema mismatch, not an invalid signature. Record conformance is a REQUIRED step for ABIZ conformance; a document that merely parses as JSON does not qualify.
 
 The authoritative current key is `p` in the DNS assertion or the well-known file (section 3.4). The record repeats it as `public_key` and carries a `signature` made with the matching private key (section 4.6). The encoding is normative in section 3.3.2: standard base64 of the raw 32-byte Ed25519 public key, the same `p=` encoding DKIM specifies for Ed25519 in RFC 8463 (RFC 4648 section 4, with padding).
 
-ABIZ 1.1 (proposed) renames every record member to snake_case (`record_version`, `business_name`, `identity_host`, `business_key`, `registration_number`, `mcp_server_url`, `logo_url`, `last_updated`) and adds two REQUIRED members, `public_key` and `signature` (section 4.6). The section 4.7 amendment then renames `contact_email` and `contact_phone` to `email` and `phone`, removes root `opening_hours`, nests a location's address and adds the members listed in section 4.3. Hyphenated member names are unknown top-level properties and are rejected. The business-record schema keeps its file name and `$id`. The schema's `$defs` holds the shared definitions of section 4.7 (such as `address`, `opening_hours` and `media_item`) and one more nested definition, `retired_key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
+ABIZ 1.1 (proposed) renames every record member to snake_case (`record_version`, `business_name`, `identity_host`, `business_key`, `registration_number`, `mcp_server_url`, `logo_url`, `last_updated`) and adds two REQUIRED members, `public_key` and `signature` (section 4.6). The section 4.7 amendment then renames `contact_email` and `contact_phone` to `email` and `phone`, removes root `opening_hours`, nests a location's address and adds the members listed in section 4.3. Hyphenated member names are unknown top-level properties and are rejected. The proposed 1.1 business-record schema has its own file and `$id`, `schemas/abiz-business-record-v1.1.schema.json`. The published 1.0 schema stays at `schemas/abiz-business-record-v1.schema.json` with its original `$id`. The 1.1 schema's `$defs` holds the shared definitions of section 4.7 (such as `address`, `opening_hours` and `media_item`) and one more nested definition, `retired_key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
 
 ### 4.1 Required properties
 
@@ -632,7 +632,7 @@ The section 4.7 amendment is a further breaking change of the same kind. A recor
 
 ### 4.7 Location, contact, hours and listing facts (ABIZ 1.1, proposed)
 
-This section is the 2026-11-03 amendment to the ABIZ 1.1 proposal. It belongs to ABIZ 1.1 and does not make a new version. It renames the contact members, replaces the flat location members and the free-text root `opening_hours` with structured members, and adds optional members for listings, tax registrations, media and reviews. The wire version, `record_version`, the schema file and its `$id`, the DNS and well-known tags and the signing rules of section 4.6 do not change. Section 4.7.14 lists the breaking changes.
+This section is the 2026-11-03 amendment to the ABIZ 1.1 proposal. It belongs to ABIZ 1.1 and does not make a new version. It renames the contact members, replaces the flat location members and the free-text root `opening_hours` with structured members, and adds optional members for listings, tax registrations, media and reviews. The wire version and `record_version` stay `abiz1`. The DNS and well-known tags and the signing rules of section 4.6 do not change. This amendment is part of the proposed 1.1 schema identified in section 4. It does not create a third schema, and it does not replace the published 1.0 schema. Section 4.7.14 lists the breaking changes.
 
 #### 4.7.1 General rules
 
@@ -799,7 +799,7 @@ JSON Schema cannot express every rule in this section. A conforming consumer, an
 
 #### 4.7.14 Versioning and migration
 
-This amendment keeps the `abiz1` family: `record_version` stays `abiz1`, `v=abiz1` is unchanged, and the schema keeps its file name and `$id`. Several changes are breaking, and the schema stays strict (`additionalProperties: false`), so:
+This amendment keeps the `abiz1` family: `record_version` stays `abiz1` and `v=abiz1` is unchanged. The amended members belong to the proposed 1.1 schema (`schemas/abiz-business-record-v1.1.schema.json`), which is identified separately from the published 1.0 schema. Several changes are breaking, and the 1.1 schema stays strict (`additionalProperties: false`), so:
 
 - a validator built for the ABIZ 1.1 proposal **before** this amendment rejects an amended record that uses any new member, and the amended schema rejects a record that uses a removed one;
 - a consumer MUST identify the schema revision it validates against when it claims conformance (section 7), and SHOULD report a record that fails only because of a member from a different revision as such, not as a forged record;
@@ -895,7 +895,7 @@ A consumer MAY check registration details against authoritative registries; if i
 | **ABIZ consumer conformant** | Required DNS parsing, safe fetch, schema, semantic and clear status handling | Global adoption or recommendations |
 | **Registry-confirmed** | Independent authoritative register check, separately labelled | Endorsement by ABIZ |
 
-Conformance MUST identify the schema ID and document revision; do not claim `v=abiz1` alone proves that a business is registered or verified.
+Conformance MUST identify the schema `$id` and document revision. Use `https://abizrecord.org/schema/abiz-business-record-v1.schema.json` for the published ABIZ 1.0 contract and `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json` for the proposed ABIZ 1.1 contract. `v=abiz1` and `record_version` do not choose between them. An unsupported revision is not an invalid signature, and a schema mismatch is not an invalid signature. Do not claim `v=abiz1` alone proves that a business is registered or verified. Do not describe ABIZ 1.1 as formally published.
 
 ## 8. Business units and divisions
 

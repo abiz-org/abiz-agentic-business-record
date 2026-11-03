@@ -148,7 +148,7 @@ https://hartleysbakery.example/.well-known/abiz.json
 ```
 
 - **Location.** The file sits on exactly the domain the TXT record would use (`hartleysbakery.example`, not `www.hartleysbakery.example`), over HTTPS on port 443. The name is `abiz.json`, with no underscore.
-- **Content.** A JSON object with the same values as the TXT tags: `v` (always `abiz1`), `h` and `p` are required, `k` is optional and follows the same rules as in section 2. It is a pointer, not the business record; software still fetches the record from `https://<h>`. It validates against [`schemas/abiz-well-known-v1.schema.json`](../../../schemas/abiz-well-known-v1.schema.json).
+- **Content.** A JSON object with the same values as the TXT tags: `v` (always `abiz1`), `h` and `p` are required, `k` is optional and follows the same rules as in section 2. It is a pointer, not the business record; software still fetches the record from `https://<h>`. It validates against [`schemas/abiz-well-known-v1.1.schema.json`](../../../schemas/abiz-well-known-v1.1.schema.json).
 - **Serving.** Status 200 with no redirect, `Content-Type: application/json`, no larger than 65,536 bytes, and preferably `Cache-Control: max-age=300`. Software will not follow a redirect to the file and caches it for at most 300 seconds.
 
 **DNS wins.** Software looks for the `_abiz` TXT record first. It uses the file only when there is no `v=abiz1` TXT record at all. If the DNS lookup fails, or the TXT record is duplicated or malformed, it does not fall back to the file. If both exist and disagree, it uses DNS and ignores the file. If you publish both, keep them identical, and change the TXT record first.
@@ -675,19 +675,19 @@ Notes:
 
 ## 6. The JSON schema and field reference
 
-The normative schema is [`schemas/abiz-business-record-v1.schema.json`](../../../schemas/abiz-business-record-v1.schema.json) in this repository ([raw file](https://raw.githubusercontent.com/abiz-org/abiz-agentic-business-record/main/schemas/abiz-business-record-v1.schema.json)). It uses JSON Schema Draft 2020-12, and its `$id` is:
+The normative schema is [`schemas/abiz-business-record-v1.1.schema.json`](../../../schemas/abiz-business-record-v1.1.schema.json) in this repository ([raw file](https://raw.githubusercontent.com/abiz-org/abiz-agentic-business-record/main/schemas/abiz-business-record-v1.1.schema.json)). It uses JSON Schema Draft 2020-12, and its `$id` is:
 
 ```text
-https://abizrecord.org/schema/abiz-business-record-v1.schema.json
+https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json
 ```
 
-Cite that `$id` and the SPEC revision when you claim conformance (SPEC section 7). The `$id` address serves the same file as the repository copy. The well-known file of section 4 has its own schema, [`schemas/abiz-well-known-v1.schema.json`](../../../schemas/abiz-well-known-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.schema.json`).
+Cite that `$id` and the SPEC revision when you claim conformance (SPEC section 7). The `$id` address serves the same file as the repository copy. The published ABIZ 1.0 schema remains [`schemas/abiz-business-record-v1.schema.json`](../../../schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). This guide demonstrates the proposed 1.1 records. `record_version` is `abiz1` in both revisions; the `$id` selects the schema. The well-known file of section 4 has its own schema, [`schemas/abiz-well-known-v1.1.schema.json`](../../../schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`).
 
 The schema rejects any top-level field not listed below. Beyond the schema, `scripts/validate.py` checks that `country` and the key's country are assigned codes, that `business_key` matches `country` and `registration_number`, that URLs use HTTPS, that `country` is not `kp` (North Korea is not supported, SPEC section 4.2.7), that `signature` verifies with `public_key` over the record (SPEC section 4.6), and, with `--domain` and `--dns-value` or `--well-known` (or just `--p`), that the record and the assertion agree, including that `p` is present and valid and that `public_key` equals it.
 
 The table is generated from the schema file. Types, constraints and required flags come from the schema; descriptions come from the schema where it has one, and otherwise from SPEC section 4. Examples are from example 5b.
 
-<!-- Generated from schemas/abiz-business-record-v1.schema.json. Regenerate rather than edit by hand. -->
+<!-- Generated from schemas/abiz-business-record-v1.1.schema.json. Regenerate rather than edit by hand. -->
 | Field | Type and constraints | Required | Description | UK example |
 | --- | --- | --- | --- | --- |
 | `record_version` | string, always `abiz1` | Yes | Wire protocol family abiz1. Document revisions, including a proposed 1.1, may advance without changing this value. | `"abiz1"` |
@@ -1021,7 +1021,7 @@ UK GDPR and the Data Protection Act 2018 apply to personal data in your record, 
 ## 12. Further reading
 
 - [ABIZ specification (SPEC.md)](../../../SPEC.md): DNS syntax (section 3.1.1), the `p` key (section 3.3), the well-known file (section 3.4), the business record (section 4), the `format` parameter (section 4.5), record signing (section 4.6), producer and consumer rules (sections 5 and 6), business units and divisions (section 8)
-- [Normative JSON Schema](../../../schemas/abiz-business-record-v1.schema.json) (`$id`: [`https://abizrecord.org/schema/abiz-business-record-v1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.schema.json))
-- [Well-known file schema](../../../schemas/abiz-well-known-v1.schema.json) (`$id`: `https://abizrecord.org/schema/abiz-well-known-v1.schema.json`)
+- [Normative JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json) (`$id`: [`https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json))
+- [Well-known file schema](../../../schemas/abiz-well-known-v1.1.schema.json) (`$id`: `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`)
 - [Reference validator, scripts/validate.py](../../../scripts/validate.py)
 - [All European guides](index.md)

@@ -50,9 +50,9 @@ Publish exactly one TXT record at `_abiz` under your domain, in the compact form
 _abiz.yangonlacquer.example. 300 IN TXT "v=abiz1;k=mm-123456789;h=www.yangonlacquer.example/abiz.json;p=L0zj9E3DTHXktDmNfugeD2KYombbAJLykf2/kUJGtZg="
 ```
 
-The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
+The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
 
-Without the optional `k` and `p` tags, this is also valid:
+Without the optional `k` tag, this is also valid:
 
 ```dns
 _abiz.yangonlacquer.example. 300 IN TXT "v=abiz1;h=www.yangonlacquer.example/abiz.json;p=L0zj9E3DTHXktDmNfugeD2KYombbAJLykf2/kUJGtZg="
@@ -92,10 +92,10 @@ Your own server or any compatible provider can host the record. This guide gives
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
-ABIZ 1.1 adds an optional signing key. The DNS `p` tag can carry an Ed25519 public key: 44 characters of standard base64 ending in one `=` (SPEC section 3.3.2). The business, or a provider acting for it, keeps the matching private key and can sign material that others check against the published key. The private key always belongs to the business, and a hosting provider must let the business export it.
+ABIZ 1.1 requires a signing key. The DNS `p` tag carries an Ed25519 public key: 32 raw bytes, standard base64, 44 characters, one trailing `=` (SPEC section 3.3.2). Base64url is not accepted. The business, or a provider acting for it, keeps the matching private key and signs the business record with it. The private key always belongs to the business, and a hosting provider must let the business export it.
 
-- `p` is optional. If it is present it must be a valid key: any other value, such as an old ABIZ 1.0 hexadecimal token or a base64url key, makes the whole assertion invalid.
-- Only the current key is published. To rotate, publish the new key in `p`; to revoke, remove `p`. Retired keys are not published in ABIZ 1.1, neither in DNS nor in the business record.
+- `v` and `h` are required. `p` is required. `k` is optional. `p` must be a valid key: any other value, such as an old ABIZ 1.0 hexadecimal token or a base64url key, makes the whole assertion invalid.
+- Only the current key is published. To rotate, generate a new Ed25519 keypair, publish the new public key in the DNS or well-known assertion, re-sign the business record with the new private key, and set `public_key` to that same `p`. Allow for DNS caching and propagation. Removing only `p` is not valid revocation while an ABIZ 1.1 assertion remains: to withdraw it, remove the complete DNS TXT record or well-known declaration. Retired keys are not published in ABIZ 1.1, neither in DNS nor in the business record.
 - A key shows who controls the domain’s DNS. It does not prove legal identity.
 
 ## 5. What AI tools will see
@@ -118,6 +118,6 @@ A compatible tool that reads your record can answer questions such as:
 ## 7. Further reading
 
 - [ABIZ specification (SPEC.md)](../../../SPEC.md)
-- [Business record JSON Schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Business record JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Reference validator](../../../scripts/validate.py)
 - [ABIZ country guides: Asia](index.md)

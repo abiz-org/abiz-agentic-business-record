@@ -31,7 +31,7 @@ Each guide is written in the country's main business language.
 
 All examples are fictional. Hostnames ending in `.to.co` illustrate one provider's naming scheme; ABIZ does not require any provider.
 
-See also: [SPEC.md](../../../SPEC.md), [JSON Schema](../../../schemas/abiz-business-record-v1.schema.json), [validator](../../../scripts/validate.py).
+See also: [SPEC.md](../../../SPEC.md), [JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json), [validator](../../../scripts/validate.py).
 
 ## Other regions
 

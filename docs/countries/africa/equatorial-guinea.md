@@ -48,7 +48,7 @@ Publique un único registro TXT en `_abiz` bajo su dominio, en forma compacta, s
 _abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E="
 ```
 
-El valor `p` anterior es una clave de ejemplo desechable, generada para esta página. No la copie nunca: publique su propia clave u omita `p`. Todos los nombres, números y dominios de esta página son ficticios.
+El valor `p` anterior es una clave de ejemplo desechable, generada para esta página. No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`. Todos los nombres, números y dominios de esta página son ficticios.
 
 Sin las etiquetas opcionales `k` y `p`, esto también es válido:
 
@@ -92,8 +92,8 @@ Un proveedor puede alojar la ficha y publicar el puntero DNS por usted. Por ejem
 
 ABIZ 1.1 añade una clave de firma opcional. La etiqueta DNS `p` puede contener una clave pública Ed25519: 44 caracteres en base64 estándar que terminan en un único `=` (sección 3.3.2 de la SPEC). La empresa, o un proveedor que actúe en su nombre, guarda la clave privada correspondiente y puede firmar contenidos que otros verifican con la clave publicada. La clave privada pertenece siempre a la empresa, y un proveedor de alojamiento debe permitirle exportarla.
 
-- `p` es opcional. Si aparece, debe ser una clave válida: cualquier otro valor, como un antiguo token hexadecimal de ABIZ 1.0 o una clave en base64url, invalida toda la aserción.
-- Solo se publica la clave vigente. Para cambiarla, publique la nueva clave en `p`; para revocarla, elimine `p`. En ABIZ 1.1 las claves retiradas no se publican, ni en el DNS ni en la ficha.
+- `v` y `h` son obligatorios. `p` es obligatoria. `k` es opcional. `p` debe ser una clave válida de 32 bytes en base64 estándar, 44 caracteres, un único `=` final. Base64url no se acepta. Cualquier otro valor, como un antiguo token hexadecimal de ABIZ 1.0, invalida toda la aserción.
+- Solo se publica la clave vigente. Para cambiarla, genere un nuevo par Ed25519, publique la nueva clave pública, vuelva a firmar la ficha y haga que `public_key` sea ese mismo `p`. Tenga en cuenta la caché del DNS. Quitar solo `p` no es una revocación válida mientras la aserción ABIZ 1.1 siga publicada: para retirarla, elimine la declaración completa. En ABIZ 1.1 las claves retiradas no se publican, ni en el DNS ni en la ficha.
 - Una clave muestra quién controla el DNS del dominio. No prueba la identidad jurídica.
 
 ## 5. Qué verán las herramientas de IA
@@ -116,6 +116,6 @@ Una herramienta compatible que lea su ficha puede responder a preguntas como:
 ## 7. Más información
 
 - [Especificación ABIZ (SPEC.md, en inglés)](../../../SPEC.md)
-- [Esquema JSON de la ficha de empresa](../../../schemas/abiz-business-record-v1.schema.json)
+- [Esquema JSON de la ficha de empresa](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validador de referencia](../../../scripts/validate.py)
 - [Guías ABIZ por país: África](index.md)
