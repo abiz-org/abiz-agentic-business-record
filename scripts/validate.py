@@ -27,6 +27,14 @@ zones are IANA identifiers; opening periods do not overlap (overnight periods
 included); location_id, media id and position, tax registrations and review
 platforms are unique; a rating is within its scale; and no recent_posts member
 appears anywhere, extensions included.
+
+Schema revisions are selected with --revision. 1.0 is the published contract
+(schemas/abiz-business-record-v1.schema.json). 1.1 is the proposal
+(schemas/abiz-business-record-v1.1.schema.json) and is the default. record_version
+and the DNS tag v stay abiz1 in both revisions and do not select the schema.
+An unsupported revision is reported as unsupported. It is not an invalid signature.
+A schema mismatch is not an invalid signature. The nearest REVISION file is used
+when --revision is omitted.
 """
 from __future__ import annotations
 import argparse
@@ -50,8 +58,12 @@ except ImportError:  # pragma: no cover - Python < 3.9
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "schemas" / "abiz-business-record-v1.schema.json"
-WELL_KNOWN_SCHEMA = ROOT / "schemas" / "abiz-well-known-v1.schema.json"
+SCHEMA_REVISION_1_0 = ROOT / "schemas" / "abiz-business-record-v1.schema.json"
+SCHEMA_REVISION_1_1 = ROOT / "schemas" / "abiz-business-record-v1.1.schema.json"
+WELL_KNOWN_SCHEMA = ROOT / "schemas" / "abiz-well-known-v1.1.schema.json"
+# Default path used by the 1.1 proposal checks. The published 1.0 contract is separate.
+SCHEMA = SCHEMA_REVISION_1_1
+SUPPORTED_REVISIONS = ("1.0", "1.1")
 # SPEC.md section 3.4: the well-known file and its limits.
 WELL_KNOWN_PATH = "/.well-known/abiz.json"
 WELL_KNOWN_MAX_BYTES = 65_536
@@ -762,6 +774,90 @@ def _instant(value: str):
     return datetime.fromisoformat(value.replace("Z", "+00:00").replace("z", "+00:00"))
 
 
+class UnsupportedRevision(Exception):
+    """The caller named a schema revision this validator does not implement.
+
+    This is not an invalid signature and not a schema failure.
+    """
+
+
+def infer_revision(path: Path) -> str:
+    """Read the nearest REVISION file, walking from the file's directory toward the repository root."""
+    current = path.resolve().parent
+    root = ROOT.resolve()
+    while True:
+        marker = current / "REVISION"
+        if marker.is_file():
+            return marker.read_text(encoding="utf-8").strip()
+        if current == root or current.parent == current:
+            return "1.1"
+        current = current.parent
+
+
+def dns_tags_v1_0(value: str) -> dict[str, str]:
+    """Published ABIZ 1.0 DNS tag parser: compact form, h required, p not a signing key."""
+    if any(c.isspace() for c in value) or not value.startswith("v=abiz1;"):
+        raise ValueError("DNS assertion must start with v=abiz1; and contain no whitespace")
+    tags = {}
+    for pair in value.split(";"):
+        if "=" not in pair:
+            raise ValueError("Every DNS tag must contain '='")
+        key, item = pair.split("=", 1)
+        if not key or not item or key in tags:
+            raise ValueError("Empty or duplicate DNS tag")
+        tags[key] = item
+    if not tags.get("h"):
+        raise ValueError("Missing h= DNS tag")
+    if identity_parts(tags["h"]) is None:
+        raise ValueError("Invalid DNS h= host/path")
+    return tags
+
+
+def validate_record_v1_0(record: dict, schema: dict, domain=None, dns_value=None) -> list[str]:
+    """Validate a published ABIZ 1.0 business record. There is no record signature."""
+    errors = [f"{'/'.join(map(str, e.path)) or '$'}: {e.message}" for e in
+              Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(record)]
+    if errors:
+        return sorted(errors)
+
+    if identity_parts(record["identity-host"]) is None:
+        errors.append("identity-host is not a valid DNS host / optional path")
+    for item in record["domains"]:
+        if not safe_host(item):
+            errors.append(f"invalid declared domain: {item}")
+    for key in ("website", "logo-url", "mcp-server-url"):
+        if key in record and not check_https(record[key]):
+            errors.append(f"{key} must be an HTTPS URL with a public DNS hostname")
+    for collection in ("services", "links"):
+        for item in record.get(collection, []):
+            if "url" in item and not check_https(item["url"]):
+                errors.append(f"{collection}.url must be a safe HTTPS URL")
+    if "business-key" in record:
+        prefix = record["country"].lower() + "-"
+        if not record["business-key"].startswith(prefix):
+            errors.append("business-key country does not match country")
+        if record["business-key"] != prefix + record["registration-number"]:
+            errors.append("business-key does not match registration-number")
+    if domain:
+        owner = domain.lower().rstrip(".")
+        if not safe_host(owner):
+            errors.append("invalid queried domain")
+        elif owner not in {item.lower().rstrip(".") for item in record["domains"]}:
+            errors.append("DNS owner domain is missing from record.domains")
+    if dns_value:
+        try:
+            tags = dns_tags_v1_0(dns_value)
+            if identity_parts(tags["h"]) != identity_parts(record["identity-host"]):
+                errors.append("DNS h and identity-host do not match")
+            if "business-key" in record and tags.get("k") != record["business-key"]:
+                errors.append("registered business requires matching DNS k")
+            if "business-key" not in record and "k" in tags:
+                errors.append("DNS k is present for record without a business-key")
+        except ValueError as exc:
+            errors.append(str(exc))
+    return errors
+
+
 def validate_record(
     record: dict,
     schema: dict,
@@ -867,7 +963,21 @@ def main():
         "--p-signature",
         help="Standard base64 of the 64-byte Ed25519 signature (requires --dns-value and --p-message)",
     )
+    ap.add_argument(
+        "--revision",
+        help="Business-record schema revision: 1.0 (published) or 1.1 (proposed). "
+        "Default: the nearest REVISION file, otherwise 1.1. record_version and v=abiz1 do not select it. "
+        "An unsupported value is not an invalid signature.",
+    )
     args = ap.parse_args()
+    revision = (args.revision if args.revision is not None else infer_revision(args.json_file)).strip()
+    if revision not in SUPPORTED_REVISIONS:
+        print(
+            f"unsupported schema revision {revision!r}. Supported revisions are 1.0 and 1.1. "
+            "This is not an invalid signature.",
+            file=sys.stderr,
+        )
+        return 2
     has_source = bool(args.dns_value) or args.well_known is not None
     if bool(args.domain) != has_source:
         ap.error("--domain needs --dns-value or --well-known, and they need --domain")
@@ -875,9 +985,18 @@ def main():
         ap.error("--p-message and --p-signature must be supplied together")
     if args.p_signature is not None and not has_source:
         ap.error("--p-message and --p-signature require --domain and --dns-value or --well-known")
+    if revision == "1.0" and (args.well_known is not None or args.p_value is not None or args.p_signature is not None):
+        print(
+            "Invalid: --well-known, --p and detached p signatures belong to the ABIZ 1.1 proposal, "
+            "not the published 1.0 contract. This is not an invalid signature.",
+            file=sys.stderr,
+        )
+        return 1
     try:
-        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-        record = load_json_strict(args.json_file.read_text(encoding="utf-8"))
+        schema_path = SCHEMA_REVISION_1_0 if revision == "1.0" else SCHEMA_REVISION_1_1
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        record_text = args.json_file.read_text(encoding="utf-8")
+        record = json.loads(record_text) if revision == "1.0" else load_json_strict(record_text)
         Draft202012Validator.check_schema(schema)
         well_known = None
         if args.well_known is not None:
@@ -886,6 +1005,26 @@ def main():
                 raise ValueError(f"well-known file is larger than {WELL_KNOWN_MAX_BYTES} bytes")
             well_known = load_json_strict(raw.decode("utf-8"))
         warnings: list[str] = []
+        if revision == "1.0":
+            if is_well_known_document(record):
+                print(
+                    "Invalid: the well-known file is an ABIZ 1.1 proposal and is not part of the "
+                    "published 1.0 contract. This is not an invalid signature.",
+                    file=sys.stderr,
+                )
+                return 1
+            errors = validate_record_v1_0(record, schema, args.domain, args.dns_value)
+            if errors:
+                for error in errors:
+                    print("ERROR:", error, file=sys.stderr)
+                return 1
+            if args.dns_value:
+                print("PASS: ABIZ 1.0 schema + offline DNS/document consistency "
+                      "(not a live DNS or registry check; no record signature in ABIZ 1.0)")
+            else:
+                print("PASS: ABIZ 1.0 record schema and local semantics "
+                      "(DNS not checked; no record signature in ABIZ 1.0)")
+            return 0
         if is_well_known_document(record):
             if has_source or args.p_value is not None:
                 ap.error("a well-known document is checked on its own; omit --domain, --dns-value, --well-known and --p")

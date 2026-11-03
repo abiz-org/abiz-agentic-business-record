@@ -12,7 +12,7 @@ Solo l'impresa, o chi agisce per suo conto, può modificare il DNS del suo domin
 
 ### Campi obbligatori
 
-La scheda dell'impresa è un documento JSON che deve rispettare lo [schema normativo](../../../schemas/abiz-business-record-v1.schema.json). I campi obbligatori sono cinque:
+La scheda dell'impresa è un documento JSON che deve rispettare lo [schema normativo](../../../schemas/abiz-business-record-v1.1.schema.json). I campi obbligatori sono cinque:
 
 | Campo | Esempio | Note |
 | --- | --- | --- |
@@ -36,11 +36,11 @@ Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma co
 _abiz.libreriadelborgo.example. 300 IN TXT "v=abiz1;h=www.libreriadelborgo.example/abiz.json;p=MrwcHkVFm/CET4gGNBY+rz9bpRGUQrpGYQzQf7zcu+o="
 ```
 
-- `v=abiz1` deve venire per primo. `h` è obbligatorio; `k` e `p` sono facoltativi.
+- `v=abiz1` deve venire per primo. `h` e `p` sono obbligatori; `k` è facoltativo.
 - I nomi dei tag sono in minuscolo e distinguono maiuscole e minuscole. Nessun tag può comparire due volte.
 - Si raccomanda un TTL di 300 secondi.
 
-Il valore `p` qui sopra è una chiave d'esempio usa e getta. Non copiatelo mai: pubblicate la vostra chiave oppure omettete `p`.
+Il valore `p` qui sopra è una chiave d'esempio usa e getta. Non copiatelo mai: pubblicate la vostra chiave. Un'asserzione ABIZ 1.1 deve includere `p`.
 
 ### Scheda dell'impresa (JSON)
 
@@ -92,11 +92,11 @@ Per esempio, se pubblicate voi stessi la scheda all'indirizzo `www.libreriadelbo
 
 ## 4. Chiavi e firme (ABIZ 1.1)
 
-ABIZ 1.1 consente di pubblicare una chiave pubblica Ed25519 nel tag DNS `p`. `p` è facoltativo. Se presente, deve essere la codifica base64 standard della chiave di 32 byte: 44 caratteri che terminano con un solo `=`, in un'unica stringa DNS. Qualsiasi altro valore, come un token esadecimale di ABIZ 1.0 o una chiave base64url, rende non valido l'intero record.
+ABIZ 1.1 richiede una chiave pubblica Ed25519 nel tag DNS `p`. `v` e `h` sono obbligatori. `p` è obbligatorio. `k` è facoltativo. `p` deve essere 32 byte grezzi in base64 standard: 44 caratteri che terminano con un solo `=`, in un'unica stringa DNS. Base64url non è accettato. Qualsiasi altro valore, come un token esadecimale di ABIZ 1.0, rende non valido l'intero record.
 
-La chiave privata corrispondente appartiene all'impresa e non viene mai pubblicata. Un fornitore che la custodisce per voi deve permettervi di esportarla. Un software può verificare una firma creata con la chiave privata usando la chiave pubblicata nel DNS. ABIZ 1.1 non stabilisce ancora quali byte copra una firma della scheda.
+La chiave privata corrispondente appartiene all'impresa e non viene mai pubblicata. Un fornitore che la custodisce per voi deve permettervi di esportarla. Un software può verificare una firma creata con la chiave privata usando la chiave pubblicata nel DNS. La firma della scheda copre la forma canonica RFC 8785 della scheda senza il membro `signature` e si verifica con `public_key`, che deve essere uguale a `p` (SPEC sezione 4.6).
 
-Per cambiare chiave pubblicatene una nuova in `p`; per revocarla eliminate `p`. In ABIZ 1.1 le chiavi ritirate non vengono pubblicate, né nel DNS né nella scheda. La chiave mostra quale chiave ha pubblicato chi controlla il dominio; non prova l'identità giuridica.
+Per cambiare chiave generate una nuova coppia Ed25519, pubblicate la nuova chiave pubblica nell'asserzione DNS o well-known, firmate di nuovo la scheda con la nuova chiave privata e impostate `public_key` su quello stesso `p`. Tenete conto della cache DNS. Eliminare solo `p` non è una revoca valida finché l'asserzione ABIZ 1.1 resta pubblicata: per ritirarla, eliminate l'intera dichiarazione. In ABIZ 1.1 le chiavi ritirate non vengono pubblicate, né nel DNS né nella scheda. La chiave mostra quale chiave ha pubblicato chi controlla il dominio; non prova l'identità giuridica.
 
 ## 5. Che cosa vedono gli strumenti di IA
 
@@ -125,6 +125,6 @@ Valutate le norme vaticane applicabili ai dati personali della scheda; se servit
 ## 7. Per approfondire
 
 - [Specifica ABIZ (SPEC.md, in inglese)](../../../SPEC.md): sintassi DNS (sezione 3.1.1), chiave `p` (sezione 3.3), chiavi d'impresa (sezione 4.2)
-- [Schema JSON normativo](../../../schemas/abiz-business-record-v1.schema.json)
+- [Schema JSON normativo](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validatore di riferimento, scripts/validate.py](../../../scripts/validate.py)
 - [Tutte le guide per l'Europa](index.md)

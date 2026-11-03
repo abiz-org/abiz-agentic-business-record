@@ -165,8 +165,8 @@ For example, a provider might host the record for Port Vila Kava Bar at `portvil
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
-- **`p` is optional.** When present, it must be an Ed25519 public key in standard base64: exactly 44 characters, ending in a single `=`, decoding to 32 bytes (section 3.3.2). Any other value, such as an old ABIZ 1.0 hexadecimal token or a base64url key, makes the whole assertion invalid. Replace it with a key or remove it.
-- **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
+- **`p` is required.** `v` and `h` are required; `k` is optional. `p` must be an Ed25519 public key: 32 raw bytes, standard base64, exactly 44 characters, one trailing `=`. Base64url is not accepted (section 3.3.2). Any other value, such as an old ABIZ 1.0 hexadecimal token, makes the whole assertion invalid.
+- **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
   _abiz.portvilakavabar.example. 300 IN TXT "v=abiz1;k=vu-12345;h=portvilakavabar.vu.to.co;p=y0rGdnQeK3Y4Q5qmK43gY31RcNX72kCX3VPcpEoF1Zw="
@@ -174,7 +174,7 @@ For example, a provider might host the record for Port Vila Kava Bar at `portvil
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).
 - **Signing.** Software can check a detached Ed25519 signature against the published key. The business record repeats the key as `public_key` and carries a `signature` over the whole record, made with the private key (SPEC section 4.6). Software verifies the signature and checks that `public_key` equals `p`; a record that fails either check is not verified.
-- **Rotation and retired keys.** To rotate, publish the new key in `p`; the old key stops being current once the TXT TTL has passed. ABIZ 1.1 does not publish retired keys: not in DNS, and not in the record (a `retired_keys` property is rejected).
+- **Rotation and revocation.** Generate a new Ed25519 keypair, publish the new public key in the DNS or well-known assertion, re-sign the business record with the new private key, and set `public_key` to that same `p`. Allow for DNS caching and propagation; the old key stops being current once the TXT TTL has passed. Removing only `p` is not valid revocation while an ABIZ 1.1 assertion remains: to withdraw it, remove the complete DNS TXT record or well-known declaration. ABIZ 1.1 does not publish retired keys (a `retired_keys` property is rejected).
 - **What a key proves.** It shows which key the controller of the domain published. It does not sign the TXT record by itself, and it does not prove legal identity. Use DNSSEC where your DNS host supports it.
 
 ## 5. What AI tools will see
@@ -201,6 +201,6 @@ It can also report that the domain and the record point at each other, that the 
 ## 7. Further reading
 
 - [ABIZ specification](../../../SPEC.md): section 3.1.1 (TXT syntax), section 3.3 (`p` keys), section 4.2 (business keys)
-- [Business record JSON Schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Business record JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Reference validator](../../../scripts/validate.py) and [examples](../../../examples/)
 - [All Oceania guides](index.md)

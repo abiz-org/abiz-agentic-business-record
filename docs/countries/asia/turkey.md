@@ -48,9 +48,9 @@ Alan adınızın altında `_abiz` adıyla yalnızca bir TXT kaydı yayımlayın;
 _abiz.kapadokyaseramik.example. 300 IN TXT "v=abiz1;k=tr-0123456789000015;h=kapadokyaseramik.tr.to.co;p=4ibVnq387H/uJZ4qf/0Sbtb6VHzSdKyNmEqUdg+K450="
 ```
 
-Yukarıdaki `p` değeri bu sayfa için üretilmiş, tek kullanımlık bir örnek anahtardır. Asla kopyalamayın: kendi anahtarınızı yayımlayın ya da `p` etiketini kullanmayın. Bu sayfadaki tüm adlar, numaralar ve alan adları hayalîdir.
+Yukarıdaki `p` değeri bu sayfa için üretilmiş, tek kullanımlık bir örnek anahtardır. Asla kopyalamayın: kendi anahtarınızı yayımlayın. Bir ABIZ 1.1 beyanı `p` içermelidir. Bu sayfadaki tüm adlar, numaralar ve alan adları hayalîdir.
 
-İsteğe bağlı `k` ve `p` etiketleri olmadan da şu kayıt geçerlidir:
+İsteğe bağlı `k` etiketi olmadan da şu kayıt geçerlidir:
 
 ```dns
 _abiz.kapadokyaseramik.example. 300 IN TXT "v=abiz1;h=kapadokyaseramik.tr.to.co;p=4ibVnq387H/uJZ4qf/0Sbtb6VHzSdKyNmEqUdg+K450="
@@ -90,10 +90,10 @@ Bir sağlayıcı kaydı barındırıp DNS işaretçisini sizin adınıza yayıml
 
 ## 4. Anahtarlar ve imzalar (ABIZ 1.1)
 
-ABIZ 1.1 isteğe bağlı bir imza anahtarı ekler. DNS’teki `p` etiketi bir Ed25519 açık anahtarı taşıyabilir: standart base64 ile yazılmış, tek bir `=` ile biten 44 karakter (SPEC bölüm 3.3.2). İşletme ya da onun adına çalışan bir sağlayıcı ilgili özel anahtarı saklar ve başkalarının yayımlanan anahtarla doğrulayabileceği içerikleri imzalayabilir. Özel anahtar her zaman işletmenindir; barındırma sağlayıcısı işletmenin anahtarı dışa aktarmasına izin vermelidir.
+ABIZ 1.1 bir imza anahtarı gerektirir. DNS’teki `p` etiketi bir Ed25519 açık anahtarı taşır: 32 ham bayt, standart base64, 44 karakter, sonda tek bir `=` (SPEC bölüm 3.3.2). Base64url kabul edilmez. İşletme ya da onun adına çalışan bir sağlayıcı ilgili özel anahtarı saklar ve işletme kaydını onunla imzalar. Özel anahtar her zaman işletmenindir; barındırma sağlayıcısı işletmenin anahtarı dışa aktarmasına izin vermelidir.
 
-- `p` isteğe bağlıdır. Varsa geçerli bir anahtar olmalıdır: eski bir ABIZ 1.0 onaltılık belirteci ya da base64url anahtarı gibi başka bir değer, tüm beyanı geçersiz kılar.
-- Yalnızca güncel anahtar yayımlanır. Değiştirmek için yeni anahtarı `p` içinde yayımlayın; iptal etmek için `p`’yi kaldırın. ABIZ 1.1’de emekliye ayrılan anahtarlar ne DNS’te ne de işletme kaydında yayımlanır.
+- `v` ve `h` zorunludur. `p` zorunludur. `k` isteğe bağlıdır. `p` geçerli bir anahtar olmalıdır: eski bir ABIZ 1.0 onaltılık belirteci ya da base64url anahtarı gibi başka bir değer, tüm beyanı geçersiz kılar.
+- Yalnızca güncel anahtar yayımlanır. Döndürmek için yeni bir Ed25519 anahtar çifti üretin, yeni açık anahtarı DNS veya well-known beyanında yayımlayın, kaydı yeni özel anahtarla yeniden imzalayın ve `public_key` değerini aynı `p` yapın. DNS önbelleğini hesaba katın. ABIZ 1.1 beyanı dururken yalnızca `p`’yi kaldırmak geçerli bir iptal değildir: geri çekmek için DNS veya well-known beyanının tamamını kaldırın. ABIZ 1.1’de emekliye ayrılan anahtarlar ne DNS’te ne de işletme kaydında yayımlanır.
 - Anahtar, alan adının DNS’ini kimin denetlediğini gösterir; hukuki kimliği kanıtlamaz.
 
 ## 5. Yapay zekâ araçları neyi görecek
@@ -116,6 +116,6 @@ Kaydınızı okuyan uyumlu bir araç şu gibi sorulara yanıt verebilir:
 ## 7. Ek okumalar
 
 - [ABIZ spesifikasyonu (SPEC.md, İngilizce)](../../../SPEC.md)
-- [İşletme kaydı JSON şeması](../../../schemas/abiz-business-record-v1.schema.json)
+- [İşletme kaydı JSON şeması](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Başvuru doğrulayıcısı](../../../scripts/validate.py)
 - [Ülkelere göre ABIZ rehberleri: Asya](index.md)

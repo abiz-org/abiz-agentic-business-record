@@ -66,7 +66,7 @@ A few countries need care:
 - **Kosovo** uses `XK`, a user-assigned code, so a conformant ABIZ 1.1 record is not yet possible.
 - **Vatican City** has no public business register, so records there omit `k`.
 
-See also the [reference validator](../../../scripts/validate.py) and the [normative JSON Schema](../../../schemas/abiz-business-record-v1.schema.json).
+See also the [reference validator](../../../scripts/validate.py) and the [normative JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json).
 
 ## Other regions
 

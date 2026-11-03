@@ -16,7 +16,7 @@ For a business in Kosovo, this is not yet possible in a conformant way, because 
 
 ### Required fields
 
-The business record is a JSON document that must validate against the [normative schema](../../../schemas/abiz-business-record-v1.schema.json). Five fields are required:
+The business record is a JSON document that must validate against the [normative schema](../../../schemas/abiz-business-record-v1.1.schema.json). Five fields are required:
 
 | Field | Notes |
 | --- | --- |
@@ -32,7 +32,7 @@ No business key is possible for Kosovo under ABIZ 1.1. A business key starts wit
 
 ### DNS TXT record and examples
 
-This page gives no TXT or JSON example, because no example would pass the reference validator. The DNS syntax itself is the same everywhere: exactly one compact record at `_abiz.<your domain>`, starting with `v=abiz1`, with a required `h` and optional `k` and `p`. See section 3.1.1 of the [specification](../../../SPEC.md) and any other country guide in this folder.
+This page gives no TXT or JSON example, because no example would pass the reference validator. The DNS syntax itself is the same everywhere: exactly one compact record at `_abiz.<your domain>`, starting with `v=abiz1`, with required `h` and `p`, and optional `k`. See section 3.1.1 of the [specification](../../../SPEC.md) and any other country guide in this folder.
 
 ### Self-hosted or through a provider
 
@@ -44,7 +44,7 @@ MCP (Model Context Protocol) is an open protocol that lets AI assistants call to
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
-ABIZ 1.1 lets a business publish an Ed25519 public key in the DNS `p` tag. `p` is optional. When present, it must be the standard base64 encoding of the 32-byte public key: 44 characters ending in one `=`, in a single DNS string. The matching private key belongs to the business and is never published. To rotate, publish a new key in `p`; to revoke, remove `p`. Retired keys are not published in ABIZ 1.1. A key shows which key the domain's controller published; it does not prove legal identity. A key alone does not make a record conformant, so it does not solve the country-code problem.
+ABIZ 1.1 requires an Ed25519 public key in the DNS `p` tag. `v` and `h` are required. `p` is required. `k` is optional. `p` must be 32 raw bytes in standard base64: 44 characters ending in one `=`, in a single DNS string. Base64url is not accepted. The matching private key belongs to the business and is never published. To rotate, generate a new Ed25519 keypair, publish the new public key, re-sign the business record, and set `public_key` to that same `p`. Allow for DNS caching and propagation. Removing only `p` is not valid revocation while an ABIZ 1.1 assertion remains: to withdraw it, remove the complete declaration. Retired keys are not published in ABIZ 1.1. A key shows which key the domain's controller published; it does not prove legal identity. A key alone does not make a record conformant, so it does not solve the country-code problem.
 
 ## 5. What AI tools will see
 
@@ -69,6 +69,6 @@ Kosovo's law on the protection of personal data applies to personal data you pub
 ## 7. Further reading
 
 - [ABIZ specification (SPEC.md)](../../../SPEC.md): the `country` field (section 4.1), business keys and the `xk` code (section 4.2.1)
-- [Normative JSON Schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normative JSON Schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Reference validator, scripts/validate.py](../../../scripts/validate.py)
 - [All European guides](index.md)

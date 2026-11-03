@@ -12,7 +12,7 @@ Jen firma, nebo ten, kdo jedná jejím jménem, může měnit DNS své domény. 
 
 ### Povinná pole
 
-Záznam firmy je dokument JSON, který musí odpovídat [normativnímu schématu](../../../schemas/abiz-business-record-v1.schema.json). Povinných polí je pět:
+Záznam firmy je dokument JSON, který musí odpovídat [normativnímu schématu](../../../schemas/abiz-business-record-v1.1.schema.json). Povinných polí je pět:
 
 | Pole | Příklad | Poznámka |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Na své doméně zveřejněte pod `_abiz` právě jeden záznam TXT ABIZ, v komp
 _abiz.pekarnanovak.example. 300 IN TXT "v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=VKJZd2Cpbs7FmfKMlbOvh2lDfkkkQ1txfD/G5O70ASo="
 ```
 
-- `v=abiz1` musí být první. `h` je povinné; `k` a `p` jsou nepovinné.
+- `v=abiz1` musí být první. `h` a `p` jsou povinné; `k` je nepovinné.
 - Názvy značek se píší malými písmeny a rozlišuje se velikost písmen. Žádná značka se nesmí opakovat.
 - Doporučené TTL je 300 sekund.
 
-Hodnota `p` výše je jednorázový ukázkový klíč. Nikdy ji nekopírujte: zveřejněte vlastní klíč, nebo `p` vynechte.
+Hodnota `p` výše je jednorázový ukázkový klíč. Nikdy ji nekopírujte: zveřejněte vlastní klíč. Tvrzení ABIZ 1.1 musí obsahovat `p`.
 
 ### Záznam firmy (JSON)
 
@@ -102,11 +102,11 @@ Příklad: poskytovatel zveřejní váš záznam na adrese `pekarnanovak.cz.to.c
 
 ## 4. Klíče a podpisy (ABIZ 1.1)
 
-ABIZ 1.1 umožňuje zveřejnit veřejný klíč Ed25519 ve značce DNS `p`. `p` je nepovinné. Pokud je uvedeno, musí jít o standardní kódování base64 klíče o 32 bajtech: 44 znaků zakončených právě jedním `=`, v jednom řetězci DNS. Jakákoli jiná hodnota, například šestnáctkový token z ABIZ 1.0 nebo klíč v base64url, činí celý záznam neplatným.
+ABIZ 1.1 vyžaduje veřejný klíč Ed25519 ve značce DNS `p`. `v` a `h` jsou povinné. `p` je povinné. `k` je nepovinné. `p` musí být 32 surových bajtů ve standardním base64: 44 znaků zakončených právě jedním `=`, v jednom řetězci DNS. Base64url se nepřijímá. Jakákoli jiná hodnota, například šestnáctkový token z ABIZ 1.0, činí celý záznam neplatným.
 
 Odpovídající soukromý klíč patří firmě a nikdy se nezveřejňuje. Pokud ho za vás uchovává poskytovatel, musí vám umožnit jeho export. Software může ověřit podpis vytvořený soukromým klíčem pomocí klíče zveřejněného v DNS. ABIZ 1.1 zatím nedefinuje, které bajty podpis záznamu firmy pokrývá.
 
-Klíč vyměníte zveřejněním nového v `p`; zrušíte ho odstraněním `p`. Vyřazené klíče se v ABIZ 1.1 nezveřejňují, ani v DNS, ani v záznamu. Klíč ukazuje, jaký klíč zveřejnil správce domény; neprokazuje právní identitu.
+Klíč vyměníte tak, že vygenerujete nový pár Ed25519, zveřejníte nový veřejný klíč v DNS nebo well-known, znovu podepíšete záznam novým soukromým klíčem a nastavíte `public_key` na stejné `p`. Počítejte s mezipamětí DNS. Odstranit pouze `p` není platné odvolání, dokud tvrzení ABIZ 1.1 zůstává: pro jeho stažení odstraňte celé prohlášení. Vyřazené klíče se v ABIZ 1.1 nezveřejňují, ani v DNS, ani v záznamu. Klíč ukazuje, jaký klíč zveřejnil správce domény; neprokazuje právní identitu.
 
 ## 5. Co vidí nástroje umělé inteligence
 
@@ -136,6 +136,6 @@ Na osobní údaje v záznamu, například jméno živnostníka nebo kontaktní o
 ## 7. Další informace
 
 - [Specifikace ABIZ (SPEC.md, anglicky)](../../../SPEC.md): syntaxe DNS (oddíl 3.1.1), klíč `p` (oddíl 3.3), klíče firem (oddíl 4.2)
-- [Normativní schéma JSON](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normativní schéma JSON](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Referenční validátor, scripts/validate.py](../../../scripts/validate.py)
 - [Všechny průvodce pro Evropu](index.md)

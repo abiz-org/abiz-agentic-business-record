@@ -12,7 +12,7 @@ Alleen het bedrijf, of iemand die het daartoe machtigt, kan de DNS van zijn dome
 
 ### Verplichte velden
 
-Het bedrijfsrecord is een JSON-document dat moet voldoen aan het [normatieve schema](../../../schemas/abiz-business-record-v1.schema.json). Vijf velden zijn verplicht:
+Het bedrijfsrecord is een JSON-document dat moet voldoen aan het [normatieve schema](../../../schemas/abiz-business-record-v1.1.schema.json). Vijf velden zijn verplicht:
 
 | Veld | Voorbeeld | Toelichting |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Publiceer precies één ABIZ-TXT-record onder `_abiz` op uw domein, in de compac
 _abiz.bakkerijpeeters.example. 300 IN TXT "v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=tzht7C39KDuSrkNsoZPU9SXxgeqK3GOWv2UvFpU4IFU="
 ```
 
-- `v=abiz1` moet vooraan staan. `h` is verplicht; `k` en `p` zijn optioneel.
+- `v=abiz1` moet vooraan staan. `h` en `p` zijn verplicht; `k` is optioneel.
 - Tagnamen zijn kleine letters en hoofdlettergevoelig. Een tag mag niet twee keer voorkomen.
 - Een TTL van 300 seconden wordt aanbevolen.
 
-De `p`-waarde hierboven is een wegwerpsleutel als voorbeeld. Neem die nooit over: publiceer uw eigen sleutel of laat `p` weg.
+De `p`-waarde hierboven is een wegwerpsleutel als voorbeeld. Neem die nooit over: publiceer uw eigen sleutel. Een ABIZ 1.1-assertie moet `p` bevatten.
 
 ### Bedrijfsrecord (JSON)
 
@@ -102,11 +102,11 @@ Een voorbeeld: een aanbieder publiceert uw record op `bakkerijpeeters.be.to.co` 
 
 ## 4. Sleutels en handtekeningen (ABIZ 1.1)
 
-Met ABIZ 1.1 kan een bedrijf een openbare Ed25519-sleutel publiceren in de DNS-tag `p`. `p` is optioneel. Als de tag er staat, moet de waarde de standaard-base64-codering van de sleutel van 32 bytes zijn: 44 tekens die eindigen op precies één `=`, in één DNS-string. Elke andere waarde, zoals een hexadecimaal ABIZ 1.0-token of een base64url-sleutel, maakt het hele record ongeldig.
+ABIZ 1.1 vereist een openbare Ed25519-sleutel in de DNS-tag `p`. `v` en `h` zijn verplicht. `p` is verplicht. `k` is optioneel. `p` moet 32 ruwe bytes in standaard-base64 zijn: 44 tekens die eindigen op precies één `=`, in één DNS-string. Base64url wordt niet aanvaard. Elke andere waarde, zoals een hexadecimaal ABIZ 1.0-token, maakt het hele record ongeldig.
 
-De bijbehorende privésleutel is van het bedrijf en wordt nooit gepubliceerd. Bewaart een aanbieder hem voor u, dan moet die u de sleutel laten exporteren. Software kan een handtekening die met de privésleutel is gemaakt, controleren met de sleutel in de DNS. Welke bytes een handtekening over het bedrijfsrecord dekt, legt ABIZ 1.1 nog niet vast.
+De bijbehorende privésleutel is van het bedrijf en wordt nooit gepubliceerd. Bewaart een aanbieder hem voor u, dan moet die u de sleutel laten exporteren. Software kan een handtekening die met de privésleutel is gemaakt, controleren met de sleutel in de DNS. De handtekening dekt de RFC 8785-canonieke vorm van het record zonder het lid `signature` en wordt gecontroleerd met `public_key`, dat gelijk moet zijn aan `p` (SPEC sectie 4.6).
 
-Om te wisselen publiceert u een nieuwe sleutel in `p`; om in te trekken verwijdert u `p`. Afgedankte sleutels worden in ABIZ 1.1 niet gepubliceerd, niet in de DNS en niet in het bedrijfsrecord. De sleutel laat zien welke sleutel de beheerder van het domein heeft gepubliceerd; hij bewijst geen juridische identiteit.
+Om te wisselen maakt u een nieuw Ed25519-sleutelpaar, publiceert u de nieuwe openbare sleutel in de DNS- of well-known-assertie, ondertekent u het record opnieuw met de nieuwe privésleutel en zet u `public_key` op dezelfde `p`. Houd rekening met DNS-cache. Alleen `p` verwijderen is geen geldige intrekking zolang de ABIZ 1.1-assertie blijft staan: om haar in te trekken, verwijdert u de volledige verklaring. Afgedankte sleutels worden in ABIZ 1.1 niet gepubliceerd, niet in de DNS en niet in het bedrijfsrecord. De sleutel laat zien welke sleutel de beheerder van het domein heeft gepubliceerd; hij bewijst geen juridische identiteit.
 
 ## 5. Wat AI-hulpmiddelen zien
 
@@ -136,6 +136,6 @@ De AVG geldt voor persoonsgegevens in uw record, zoals de naam van een eenmansza
 ## 7. Meer informatie
 
 - [ABIZ-specificatie (SPEC.md, Engelstalig)](../../../SPEC.md): DNS-syntaxis (sectie 3.1.1), de sleutel `p` (sectie 3.3), bedrijfssleutels (sectie 4.2)
-- [Normatief JSON-schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normatief JSON-schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Referentievalidator, scripts/validate.py](../../../scripts/validate.py)
 - [Alle Europese handleidingen](index.md)

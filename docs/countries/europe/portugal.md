@@ -12,7 +12,7 @@ Só a empresa, ou quem atue em seu nome, pode alterar o DNS do seu domínio. Ass
 
 ### Campos obrigatórios
 
-O registo da empresa é um documento JSON que tem de cumprir o [esquema normativo](../../../schemas/abiz-business-record-v1.schema.json). Há cinco campos obrigatórios:
+O registo da empresa é um documento JSON que tem de cumprir o [esquema normativo](../../../schemas/abiz-business-record-v1.1.schema.json). Há cinco campos obrigatórios:
 
 | Campo | Exemplo | Notas |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ _abiz.pastelariaribeira.example. 300 IN TXT "v=abiz1;k=pt-512345678;h=pastelaria
 - Os nomes das etiquetas são em minúsculas e distinguem maiúsculas de minúsculas. Nenhuma etiqueta pode repetir-se.
 - Recomenda-se um TTL de 300 segundos.
 
-O valor `p` acima é uma chave de exemplo descartável. Nunca a copie: publique a sua própria chave ou omita `p`.
+O valor `p` acima é uma chave de exemplo descartável. Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`.
 
 ### Registo da empresa (JSON)
 
@@ -102,9 +102,9 @@ Por exemplo, um fornecedor pode disponibilizar o seu registo em `pastelariaribei
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 
-O ABIZ 1.1 permite publicar uma chave pública Ed25519 na etiqueta DNS `p`. `p` é opcional. Se existir, tem de ser a codificação base64 padrão da chave de 32 bytes: 44 caracteres terminados num único `=`, numa só cadeia DNS. Qualquer outro valor, como um token hexadecimal do ABIZ 1.0 ou uma chave em base64url, invalida todo o registo.
+O ABIZ 1.1 exige uma chave pública Ed25519 na etiqueta DNS `p`. `v` e `h` são obrigatórios. `p` é obrigatória. `k` é opcional. `p` tem de ser 32 bytes em base64 padrão: 44 caracteres terminados num único `=`, numa só cadeia DNS. Base64url não é aceite. Qualquer outro valor, como um token hexadecimal do ABIZ 1.0, invalida todo o registo.
 
-A chave privada correspondente pertence à empresa e nunca é publicada. Se um fornecedor a guardar por si, tem de lhe permitir exportá-la. Um software pode verificar uma assinatura feita com a chave privada usando a chave publicada no DNS. O ABIZ 1.1 ainda não define que bytes uma assinatura do registo abrange.
+A chave privada correspondente pertence à empresa e nunca é publicada. Se um fornecedor a guardar por si, tem de lhe permitir exportá-la. Um software pode verificar uma assinatura feita com a chave privada usando a chave publicada no DNS. A assinatura do registo abrange a forma canónica RFC 8785 do registo sem o membro `signature`, e verifica-se com `public_key`, que tem de ser igual a `p` (SPEC secção 4.6).
 
 Para mudar de chave, publique uma nova em `p`; para a revogar, retire `p`. No ABIZ 1.1 as chaves retiradas não são publicadas, nem no DNS nem no registo. A chave mostra que chave publicou quem controla o domínio; não prova a identidade jurídica.
 
@@ -136,6 +136,6 @@ O RGPD aplica-se aos dados pessoais do registo, por exemplo o nome de um empres�
 ## 7. Saber mais
 
 - [Especificação ABIZ (SPEC.md, em inglês)](../../../SPEC.md): sintaxe DNS (secção 3.1.1), chave `p` (secção 3.3), chaves de empresa (secção 4.2)
-- [Esquema JSON normativo](../../../schemas/abiz-business-record-v1.schema.json)
+- [Esquema JSON normativo](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validador de referência, scripts/validate.py](../../../scripts/validate.py)
 - [Todos os guias da Europa](index.md)

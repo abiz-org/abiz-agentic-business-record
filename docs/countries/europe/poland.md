@@ -12,7 +12,7 @@ Tylko firma, albo ktoś działający w jej imieniu, może zmienić DNS swojej do
 
 ### Pola wymagane
 
-Rekord firmy to dokument JSON zgodny z [normatywnym schematem](../../../schemas/abiz-business-record-v1.schema.json). Wymaganych jest pięć pól:
+Rekord firmy to dokument JSON zgodny z [normatywnym schematem](../../../schemas/abiz-business-record-v1.1.schema.json). Wymaganych jest pięć pól:
 
 | Pole | Przykład | Uwagi |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Proszę opublikować dokładnie jeden rekord TXT ABIZ pod `_abiz` w swojej domen
 _abiz.piekarniakowalski.example. 300 IN TXT "v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=zRHp+btvHFPfD7ODoyqksta+TYe59LzCpE7TZmqbLu0="
 ```
 
-- `v=abiz1` musi być pierwsze. `h` jest wymagane; `k` i `p` są opcjonalne.
+- `v=abiz1` musi być pierwsze. `h` i `p` są wymagane; `k` jest opcjonalne.
 - Nazwy znaczników pisze się małymi literami i wielkość liter ma znaczenie. Żaden znacznik nie może się powtórzyć.
 - Zalecany TTL to 300 sekund.
 
-Wartość `p` powyżej to jednorazowy klucz przykładowy. Proszę go nie kopiować: należy opublikować własny klucz albo pominąć `p`.
+Wartość `p` powyżej to jednorazowy klucz przykładowy. Proszę go nie kopiować: należy opublikować własny klucz. Asercja ABIZ 1.1 musi zawierać `p`.
 
 ### Rekord firmy (JSON)
 
@@ -102,11 +102,11 @@ Przykład: dostawca publikuje Państwa rekord pod adresem `piekarniakowalski.pl.
 
 ## 4. Klucze i podpisy (ABIZ 1.1)
 
-ABIZ 1.1 pozwala opublikować klucz publiczny Ed25519 w znaczniku DNS `p`. `p` jest opcjonalne. Jeśli występuje, musi być standardowym kodowaniem base64 klucza o długości 32 bajtów: 44 znaki zakończone dokładnie jednym `=`, w jednym ciągu DNS. Każda inna wartość, np. szesnastkowy token z ABIZ 1.0 albo klucz w base64url, unieważnia cały rekord.
+ABIZ 1.1 wymaga klucza publicznego Ed25519 w znaczniku DNS `p`. `v` i `h` są wymagane. `p` jest wymagane. `k` jest opcjonalne. `p` musi być standardowym kodowaniem base64 klucza o długości 32 bajtów: 44 znaki zakończone dokładnie jednym `=`, w jednym ciągu DNS. Base64url nie jest akceptowane. Każda inna wartość, np. szesnastkowy token z ABIZ 1.0, unieważnia cały rekord.
 
-Odpowiadający mu klucz prywatny należy do firmy i nigdy nie jest publikowany. Jeśli przechowuje go dostawca, musi umożliwić jego eksport. Oprogramowanie może sprawdzić podpis złożony kluczem prywatnym za pomocą klucza opublikowanego w DNS. ABIZ 1.1 nie określa jeszcze, jakie bajty obejmuje podpis rekordu firmy.
+Odpowiadający mu klucz prywatny należy do firmy i nigdy nie jest publikowany. Jeśli przechowuje go dostawca, musi umożliwić jego eksport. Oprogramowanie może sprawdzić podpis złożony kluczem prywatnym za pomocą klucza opublikowanego w DNS. Podpis obejmuje formę kanoniczną RFC 8785 rekordu bez członu `signature` i jest weryfikowany kluczem `public_key`, który musi być równy `p` (SPEC, sekcja 4.6).
 
-Aby wymienić klucz, publikuje się nowy w `p`; aby go unieważnić, usuwa się `p`. W ABIZ 1.1 wycofanych kluczy się nie publikuje, ani w DNS, ani w rekordzie. Klucz pokazuje, jaki klucz opublikował dysponent domeny; nie dowodzi tożsamości prawnej.
+Aby wymienić klucz, należy utworzyć nową parę Ed25519, opublikować nowy klucz publiczny w asercji DNS lub well-known, podpisać rekord ponownie nowym kluczem prywatnym i ustawić `public_key` na to samo `p`. Należy uwzględnić pamięć podręczną DNS. Usunięcie samego `p` nie jest ważnym unieważnieniem, dopóki asercja ABIZ 1.1 pozostaje: aby ją wycofać, należy usunąć całe oświadczenie. W ABIZ 1.1 wycofanych kluczy się nie publikuje, ani w DNS, ani w rekordzie. Klucz pokazuje, jaki klucz opublikował dysponent domeny; nie dowodzi tożsamości prawnej.
 
 ## 5. Co widzą narzędzia AI
 
@@ -136,6 +136,6 @@ RODO obowiązuje dla danych osobowych w rekordzie, np. imienia i nazwiska przeds
 ## 7. Więcej informacji
 
 - [Specyfikacja ABIZ (SPEC.md, po angielsku)](../../../SPEC.md): składnia DNS (sekcja 3.1.1), klucz `p` (sekcja 3.3), klucze firm (sekcja 4.2)
-- [Normatywny schemat JSON](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normatywny schemat JSON](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Walidator referencyjny, scripts/validate.py](../../../scripts/validate.py)
 - [Wszystkie przewodniki dla Europy](index.md)

@@ -46,9 +46,9 @@ Công bố đúng một bản ghi TXT tên `_abiz` dưới tên miền của b�
 _abiz.gombattrang.example. 300 IN TXT "v=abiz1;k=vn-0123456789;h=gombattrang.vn.to.co;p=/bkf1xnx/kbmxmbhuN991xSOnaRAR0GxeqvQ1s1voQc="
 ```
 
-Giá trị `p` ở trên là khóa ví dụ dùng một lần được tạo cho trang này. Tuyệt đối không sao chép: hãy công bố khóa của riêng bạn hoặc bỏ `p`. Mọi tên, số và tên miền trên trang này đều là giả định.
+Giá trị `p` ở trên là khóa ví dụ dùng một lần được tạo cho trang này. Tuyệt đối không sao chép: hãy công bố khóa của riêng bạn. Khai báo ABIZ 1.1 phải có `p`. Mọi tên, số và tên miền trên trang này đều là giả định.
 
-Không có các thẻ tùy chọn `k` và `p`, bản ghi này cũng hợp lệ:
+Không có thẻ tùy chọn `k`, bản ghi này cũng hợp lệ:
 
 ```dns
 _abiz.gombattrang.example. 300 IN TXT "v=abiz1;h=gombattrang.vn.to.co;p=/bkf1xnx/kbmxmbhuN991xSOnaRAR0GxeqvQ1s1voQc="
@@ -88,10 +88,10 @@ Nhà cung cấp có thể lưu trữ hồ sơ và công bố con trỏ DNS thay 
 
 ## 4. Khóa và chữ ký (ABIZ 1.1)
 
-ABIZ 1.1 bổ sung khóa ký tùy chọn. Thẻ DNS `p` có thể chứa khóa công khai Ed25519: 44 ký tự base64 chuẩn, kết thúc bằng một dấu `=` (SPEC mục 3.3.2). Doanh nghiệp, hoặc nhà cung cấp thay mặt doanh nghiệp, giữ khóa bí mật tương ứng và có thể ký nội dung để người khác kiểm tra bằng khóa đã công bố. Khóa bí mật luôn thuộc về doanh nghiệp, và nhà cung cấp lưu trữ phải cho phép doanh nghiệp xuất khóa.
+ABIZ 1.1 yêu cầu khóa ký. Thẻ DNS `p` mang khóa công khai Ed25519: 32 byte thô, base64 chuẩn, 44 ký tự, một dấu `=` ở cuối (SPEC mục 3.3.2). Không chấp nhận base64url. Doanh nghiệp, hoặc nhà cung cấp thay mặt doanh nghiệp, giữ khóa bí mật tương ứng và ký hồ sơ doanh nghiệp bằng khóa đó. Khóa bí mật luôn thuộc về doanh nghiệp, và nhà cung cấp lưu trữ phải cho phép doanh nghiệp xuất khóa.
 
-- `p` là tùy chọn. Nếu có, nó phải là một khóa hợp lệ: mọi giá trị khác, như mã thông báo thập lục phân cũ của ABIZ 1.0 hay khóa base64url, đều làm toàn bộ khai báo mất hiệu lực.
-- Chỉ công bố khóa hiện hành. Để thay khóa, công bố khóa mới trong `p`; để thu hồi, xóa `p`. Trong ABIZ 1.1, khóa đã ngừng dùng không được công bố, cả trong DNS lẫn trong hồ sơ doanh nghiệp.
+- `v` và `h` là bắt buộc. `p` là bắt buộc. `k` là tùy chọn. `p` phải là một khóa hợp lệ: mọi giá trị khác, như mã thông báo thập lục phân cũ của ABIZ 1.0 hay khóa base64url, đều làm toàn bộ khai báo mất hiệu lực.
+- Chỉ công bố khóa hiện hành. Để xoay khóa, tạo cặp khóa Ed25519 mới, công bố khóa công khai mới trong khai báo DNS hoặc well-known, ký lại hồ sơ bằng khóa bí mật mới, và đặt `public_key` trùng `p` đó. Hãy tính đến bộ nhớ đệm DNS. Xóa riêng `p` không phải là thu hồi hợp lệ khi khai báo ABIZ 1.1 vẫn còn: để rút khai báo, hãy xóa toàn bộ khai báo DNS hoặc well-known. Trong ABIZ 1.1, khóa đã ngừng dùng không được công bố, cả trong DNS lẫn trong hồ sơ doanh nghiệp.
 - Khóa cho biết ai kiểm soát DNS của tên miền. Khóa không chứng minh danh tính pháp lý.
 
 ## 5. Công cụ AI sẽ thấy gì
@@ -114,6 +114,6 @@ Một công cụ tương thích đọc hồ sơ của bạn có thể trả lờ
 ## 7. Tài liệu tham khảo
 
 - [Đặc tả ABIZ (SPEC.md, tiếng Anh)](../../../SPEC.md)
-- [JSON Schema của hồ sơ doanh nghiệp](../../../schemas/abiz-business-record-v1.schema.json)
+- [JSON Schema của hồ sơ doanh nghiệp](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Trình xác thực tham chiếu](../../../scripts/validate.py)
 - [Hướng dẫn ABIZ theo quốc gia: Châu Á](index.md)

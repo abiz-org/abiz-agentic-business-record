@@ -12,7 +12,7 @@ Kun virksomheden, eller nogen der handler på dens vegne, kan ændre DNS for den
 
 ### Obligatoriske felter
 
-Virksomhedsposten er et JSON-dokument, der skal overholde det [normative skema](../../../schemas/abiz-business-record-v1.schema.json). Fem felter er obligatoriske:
+Virksomhedsposten er et JSON-dokument, der skal overholde det [normative skema](../../../schemas/abiz-business-record-v1.1.schema.json). Fem felter er obligatoriske:
 
 | Felt | Eksempel | Bemærkning |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Offentliggør præcis én ABIZ TXT-post under `_abiz` på jeres domæne, i kompa
 _abiz.fiskehusetholm.example. 300 IN TXT "v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=aspCxrnYr9RiTS7T/cVsOjbL87o1Qy7Nr0VZzsddZLA="
 ```
 
-- `v=abiz1` skal stå først. `h` er obligatorisk; `k` og `p` er frivillige.
+- `v=abiz1` skal stå først. `h` og `p` er obligatoriske; `k` er frivillig.
 - Tagnavne skrives med små bogstaver og skelner mellem store og små bogstaver. Intet tag må forekomme to gange.
 - En TTL på 300 sekunder anbefales.
 
-`p`-værdien ovenfor er en engangsnøgle til eksemplet. Kopiér den aldrig: offentliggør jeres egen nøgle, eller udelad `p`.
+`p`-værdien ovenfor er en engangsnøgle til eksemplet. Kopiér den aldrig: offentliggør jeres egen nøgle. En ABIZ 1.1-påstand skal indeholde `p`.
 
 ### Virksomhedspost (JSON)
 
@@ -102,11 +102,11 @@ Et eksempel: en udbyder offentliggør jeres post på `fiskehusetholm.dk.to.co` o
 
 ## 4. Nøgler og signaturer (ABIZ 1.1)
 
-Med ABIZ 1.1 kan en virksomhed offentliggøre en offentlig Ed25519-nøgle i DNS-tagget `p`. `p` er frivilligt. Hvis tagget findes, skal værdien være standard-base64 af nøglen på 32 byte: 44 tegn, der slutter med præcis ét `=`, i én DNS-streng. Alle andre værdier, fx et hexadecimalt ABIZ 1.0-token eller en base64url-nøgle, gør hele posten ugyldig.
+ABIZ 1.1 kræver en offentlig Ed25519-nøgle i DNS-tagget `p`. `v` og `h` er obligatoriske. `p` er obligatorisk. `k` er frivillig. `p` skal være 32 rå byte i standard-base64: 44 tegn, der slutter med præcis ét `=`, i én DNS-streng. Base64url accepteres ikke. Alle andre værdier, fx et hexadecimalt ABIZ 1.0-token, gør hele posten ugyldig.
 
-Den tilhørende private nøgle tilhører virksomheden og offentliggøres aldrig. Opbevarer en udbyder den for jer, skal I kunne eksportere den. Software kan kontrollere en signatur, der er lavet med den private nøgle, mod nøglen i DNS. Hvilke byte en signatur over virksomhedsposten dækker, er endnu ikke fastlagt i ABIZ 1.1.
+Den tilhørende private nøgle tilhører virksomheden og offentliggøres aldrig. Opbevarer en udbyder den for jer, skal I kunne eksportere den. Software kan kontrollere en signatur, der er lavet med den private nøgle, mod nøglen i DNS. Signaturen dækker den RFC 8785-kanoniske form af posten uden medlemmet `signature` og kontrolleres med `public_key`, som skal være lig med `p` (SPEC afsnit 4.6).
 
-For at skifte nøgle offentliggør I en ny i `p`; for at tilbagekalde den fjerner I `p`. Udfasede nøgler offentliggøres ikke i ABIZ 1.1, hverken i DNS eller i posten. Nøglen viser, hvilken nøgle domænets indehaver har offentliggjort; den beviser ikke juridisk identitet.
+For at skifte nøgle genererer I et nyt Ed25519-nøglepar, offentliggør den nye offentlige nøgle i DNS- eller well-known-påstanden, underskriver posten igen med den nye private nøgle og sætter `public_key` til samme `p`. Tag højde for DNS-cache. At fjerne kun `p` er ikke en gyldig tilbagekaldelse, så længe ABIZ 1.1-påstanden bliver stående: for at trække den tilbage fjerner I hele erklæringen. Udfasede nøgler offentliggøres ikke i ABIZ 1.1, hverken i DNS eller i posten. Nøglen viser, hvilken nøgle domænets indehaver har offentliggjort; den beviser ikke juridisk identitet.
 
 ## 5. Hvad AI-værktøjer ser
 
@@ -136,6 +136,6 @@ GDPR (databeskyttelsesforordningen) gælder for personoplysninger i posten, fx n
 ## 7. Læs mere
 
 - [ABIZ-specifikationen (SPEC.md, på engelsk)](../../../SPEC.md): DNS-syntaks (afsnit 3.1.1), nøglen `p` (afsnit 3.3), virksomhedsnøgler (afsnit 4.2)
-- [Normativt JSON-skema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normativt JSON-skema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Referencevalidator, scripts/validate.py](../../../scripts/validate.py)
 - [Alle vejledninger for Europa](index.md)

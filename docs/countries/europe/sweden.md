@@ -12,7 +12,7 @@ Bara företaget, eller någon som agerar för det, kan ändra DNS för dess dom�
 
 ### Obligatoriska fält
 
-Företagsposten är ett JSON-dokument som måste följa det [normativa schemat](../../../schemas/abiz-business-record-v1.schema.json). Fem fält är obligatoriska:
+Företagsposten är ett JSON-dokument som måste följa det [normativa schemat](../../../schemas/abiz-business-record-v1.1.schema.json). Fem fält är obligatoriska:
 
 | Fält | Exempel | Kommentar |
 | --- | --- | --- |
@@ -44,11 +44,11 @@ Publicera exakt en ABIZ TXT-post under `_abiz` på er domän, i kompakt form uta
 _abiz.norrlandsnickeri.example. 300 IN TXT "v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=hhlbPtkBmO71FdQEmQUI8BZ1x+p/aA/3YsrKoxhp9Y0="
 ```
 
-- `v=abiz1` måste stå först. `h` är obligatoriskt; `k` och `p` är frivilliga.
+- `v=abiz1` måste stå först. `h` och `p` är obligatoriska; `k` är frivilligt.
 - Taggnamn skrivs med gemener och är skiftlägeskänsliga. Ingen tagg får förekomma två gånger.
 - En TTL på 300 sekunder rekommenderas.
 
-`p`-värdet ovan är en engångsnyckel för exemplet. Kopiera den aldrig: publicera er egen nyckel eller utelämna `p`.
+`p`-värdet ovan är en engångsnyckel för exemplet. Kopiera den aldrig: publicera er egen nyckel. En ABIZ 1.1-försäkran måste innehålla `p`.
 
 ### Företagspost (JSON)
 
@@ -102,11 +102,11 @@ Ett exempel: en leverantör publicerar er post på `norrlandsnickeri.se.to.co` o
 
 ## 4. Nycklar och signaturer (ABIZ 1.1)
 
-ABIZ 1.1 låter ett företag publicera en publik Ed25519-nyckel i DNS-taggen `p`. `p` är frivilligt. Finns taggen måste värdet vara standard-base64 av nyckeln på 32 byte: 44 tecken som slutar med exakt ett `=`, i en enda DNS-sträng. Alla andra värden, till exempel en hexadecimal ABIZ 1.0-token eller en base64url-nyckel, gör hela posten ogiltig.
+ABIZ 1.1 kräver en publik Ed25519-nyckel i DNS-taggen `p`. `v` och `h` är obligatoriska. `p` är obligatoriskt. `k` är frivilligt. `p` måste vara 32 råbyte i standard-base64: 44 tecken som slutar med exakt ett `=`, i en enda DNS-sträng. Base64url accepteras inte. Alla andra värden, till exempel en hexadecimal ABIZ 1.0-token, gör hela posten ogiltig.
 
-Den tillhörande privata nyckeln tillhör företaget och publiceras aldrig. Förvarar en leverantör den åt er måste ni kunna exportera den. Programvara kan kontrollera en signatur som gjorts med den privata nyckeln mot nyckeln i DNS. Vilka byte en signatur över företagsposten omfattar definierar ABIZ 1.1 ännu inte.
+Den tillhörande privata nyckeln tillhör företaget och publiceras aldrig. Förvarar en leverantör den åt er måste ni kunna exportera den. Programvara kan kontrollera en signatur som gjorts med den privata nyckeln mot nyckeln i DNS. Signaturen täcker den RFC 8785-kanoniska formen av posten utan medlemmen `signature` och kontrolleras med `public_key`, som måste vara lika med `p` (SPEC avsnitt 4.6).
 
-För att byta nyckel publicerar ni en ny i `p`; för att återkalla den tar ni bort `p`. Pensionerade nycklar publiceras inte i ABIZ 1.1, varken i DNS eller i posten. Nyckeln visar vilken nyckel domänens innehavare har publicerat; den bevisar inte juridisk identitet.
+För att byta nyckel skapar ni ett nytt Ed25519-nyckelpar, publicerar den nya publika nyckeln i DNS- eller well-known-försäkran, signerar posten på nytt med den nya privata nyckeln och sätter `public_key` till samma `p`. Ta hänsyn till DNS-cache. Att ta bort bara `p` är inte giltigt återkallande så länge ABIZ 1.1-försäkran finns kvar: för att dra tillbaka den tar ni bort hela deklarationen. Pensionerade nycklar publiceras inte i ABIZ 1.1, varken i DNS eller i posten. Nyckeln visar vilken nyckel domänens innehavare har publicerat; den bevisar inte juridisk identitet.
 
 ## 5. Vad AI-verktyg ser
 
@@ -136,6 +136,6 @@ GDPR gäller personuppgifter i posten, till exempel namnet på en enskild närin
 ## 7. Läs mer
 
 - [ABIZ-specifikationen (SPEC.md, på engelska)](../../../SPEC.md): DNS-syntax (avsnitt 3.1.1), nyckeln `p` (avsnitt 3.3), företagsnycklar (avsnitt 4.2)
-- [Normativt JSON-schema](../../../schemas/abiz-business-record-v1.schema.json)
+- [Normativt JSON-schema](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Referensvalidator, scripts/validate.py](../../../scripts/validate.py)
 - [Alla guider för Europa](index.md)

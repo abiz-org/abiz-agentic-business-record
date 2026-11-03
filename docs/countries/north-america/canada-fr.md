@@ -175,15 +175,15 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie du Vieux-P
 
 ## 4. Clés et signatures (ABIZ 1.1)
 
-- **`p` est facultatif.** S’il est présent, ce doit être une clé publique Ed25519 en base64 standard : exactement 44 caractères, terminée par un seul `=`, qui se décode en 32 octets (section 3.3.2). Toute autre valeur, comme un ancien jeton hexadécimal d’ABIZ 1.0 ou une clé en base64url, rend toute l’assertion invalide. Remplacez-la par une clé ou supprimez-la.
-- **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé ou omettez `p`.
+- **`p` est obligatoire.** `v` et `h` sont obligatoires ; `k` est facultative. `p` doit être une clé publique Ed25519 : 32 octets bruts, en base64 standard, exactement 44 caractères, un seul `=` final. Le base64url n’est pas accepté (section 3.3.2). Toute autre valeur, comme un ancien jeton hexadécimal d’ABIZ 1.0, rend toute l’assertion invalide.
+- **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`.
 
   ```dns
   _abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM="
   ```
 
 - **La clé privée appartient à l’entreprise.** Elle ne doit jamais figurer dans le DNS, dans la fiche ni dans un dépôt public. Un fournisseur peut la générer et la conserver pour vous (mode hébergé), mais il doit vous permettre de l’exporter à tout moment, par exemple au format PKCS#8, et supprimer sa copie à votre demande (section 3.3.4).
-- **Signatures.** Un logiciel peut vérifier une signature Ed25519 détachée à l’aide de la clé publiée. ABIZ 1.1 ne définit pas encore quels octets d’une fiche une signature couvre; une vérification de signature n’a donc de sens que pour un message convenu entre les deux parties.
+- **Signatures.** Un logiciel peut vérifier une signature Ed25519 détachée à l’aide de la clé publiée. La signature de la fiche couvre la forme canonique RFC 8785 de la fiche sans le membre `signature`, et se vérifie avec `public_key`, qui doit être égal à `p` (SPEC section 4.6). Une signature sur un autre message n’a de sens que si les deux parties ont convenu de ce message.
 - **Rotation et clés retirées.** Pour changer de clé, publiez la nouvelle dans `p`; l’ancienne cesse d’être la clé courante une fois le TTL de l’enregistrement TXT écoulé. ABIZ 1.1 ne publie pas les clés retirées : ni dans le DNS, ni dans la fiche (une propriété `retired_keys` est rejetée).
 - **Ce que prouve une clé.** Elle indique quelle clé la personne qui contrôle le domaine a publiée. Elle ne signe pas à elle seule l’enregistrement TXT et ne prouve pas l’identité juridique. Utilisez DNSSEC si votre hébergeur DNS le permet.
 
@@ -211,6 +211,6 @@ Il peut aussi indiquer que le domaine et la fiche renvoient l’un à l’autre,
 ## 7. Pour aller plus loin
 
 - [Spécification ABIZ](../../../SPEC.md) (en anglais) : section 3.1.1 (syntaxe TXT), section 3.3 (clés `p`), section 4.2 (clés d’entreprise)
-- [JSON Schema de la fiche](../../../schemas/abiz-business-record-v1.schema.json)
+- [JSON Schema de la fiche](../../../schemas/abiz-business-record-v1.1.schema.json)
 - [Validateur de référence](../../../scripts/validate.py) et [exemples](../../../examples/)
 - [Tous les guides d’Amérique du Nord](index.md)
