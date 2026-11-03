@@ -16,11 +16,19 @@ from validate import (
     parse_business_key,
     dns_tags,
     is_abiz_assertion,
+    resolve_sources,
+    select_representation,
     validate_record,
+    validate_well_known,
+    well_known_tags,
 )
 
 SCHEMA = json.loads((ROOT / "schemas" / "abiz-business-record-v1.schema.json").read_text())
 REG = json.loads((ROOT / "examples" / "registered-us.json").read_text())
+UNIT = json.loads((ROOT / "examples" / "unit-us.json").read_text())
+WK_REG = json.loads((ROOT / "examples" / "well-known-registered-us.json").read_text())
+WK_UNREG = json.loads((ROOT / "examples" / "well-known-unregistered-us.json").read_text())
+WK_SCHEMA = json.loads((ROOT / "schemas" / "abiz-well-known-v1.schema.json").read_text())
 UNREG = json.loads((ROOT / "examples" / "unregistered-us.json").read_text())
 # Throwaway public key from examples/dns-ed25519-p.txt. The private key was not committed.
 P_MESSAGE = b"abiz1.1 p-key test"
@@ -45,17 +53,21 @@ def example_dns() -> str:
     raise AssertionError("examples/dns-ed25519-p.txt has no assertion")
 
 
+# ABIZ 1.1: p is REQUIRED (SPEC 3.2), so every valid assertion below carries the example key.
+P = example_dns().split("p=", 1)[1]
+
+
 class ABIZConformanceTests(unittest.TestCase):
     def test_registered_business_passes(self):
         self.assertEqual(validate_record(REG, SCHEMA), [])
         self.assertEqual(validate_record(REG, SCHEMA,
                          "harbourbikes.example",
-                         "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"), [])
+                         f"v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p={P}"), [])
 
     def test_unregistered_business_passes_without_k_or_mcp(self):
         self.assertEqual(validate_record(UNREG, SCHEMA,
                          "marketstand.example",
-                         "v=abiz1;h=market-stand-repairs-portland.biz.to.co"), [])
+                         f"v=abiz1;h=market-stand-repairs-portland.biz.to.co;p={P}"), [])
 
     def test_invalid_business_record_fails_schema(self):
         bad = json.loads((ROOT / "examples" / "invalid-business-record.json").read_text())
@@ -63,9 +75,9 @@ class ABIZConformanceTests(unittest.TestCase):
 
     def test_cross_record_mismatch_fails(self):
         self.assertTrue(validate_record(REG, SCHEMA, "elsewhere.example",
-                        "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"))
+                        f"v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p={P}"))
         self.assertTrue(validate_record(REG, SCHEMA, "harbourbikes.example",
-                        "v=abiz1;k=us-or-123456;h=wrong.example"))
+                        f"v=abiz1;k=us-or-123456;h=wrong.example;p={P}"))
 
     def test_bad_registry_key_and_insecure_url_fail(self):
         bad = copy.deepcopy(REG)
@@ -101,10 +113,15 @@ class ABIZConformanceTests(unittest.TestCase):
         self.assertEqual(len(key), 32)
         self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", dns), [])
 
-    def test_no_p_passes(self):
-        dns = "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co"
-        self.assertNotIn("p", dns_tags(dns))
-        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", dns), [])
+    def test_no_p_fails(self):
+        # ABIZ 1.1: p is REQUIRED (SPEC 3.2, 3.3.1). These were valid under ABIZ 1.0.
+        for dns in ("v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co",
+                    "v=abiz1; h=harbour-bike-repair.or.us.to.co;",
+                    "v=abiz1;h=harbour-bike-repair.or.us.to.co;x=1"):
+            with self.subTest(dns=dns):
+                with self.assertRaisesRegex(ValueError, "Missing p="):
+                    dns_tags(dns)
+                self.assertTrue(validate_record(REG, SCHEMA, "harbourbikes.example", dns))
 
     def test_p_key_accepts_plus_and_slash(self):
         raw = bytes([255, 239]) + bytes(range(30))
@@ -248,34 +265,34 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
     """ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1."""
 
     HOST = "harbour-bike-repair.or.us.to.co"
-    CANONICAL = {"v": "abiz1", "k": "us-or-123456", "h": HOST}
+    CANONICAL = {"v": "abiz1", "k": "us-or-123456", "h": HOST, "p": P}
 
     def assert_parses(self, value):
         self.assertEqual(dns_tags(value), self.CANONICAL, value)
         self.assertTrue(is_abiz_assertion(value), value)
 
     def test_canonical_1_0_form_still_parses(self):
-        self.assert_parses(f"v=abiz1;k=us-or-123456;h={self.HOST}")
+        self.assert_parses(f"v=abiz1;k=us-or-123456;h={self.HOST};p={P}")
 
     def test_space_after_semicolon(self):
-        self.assert_parses(f"v=abiz1; k=us-or-123456; h={self.HOST}")
+        self.assert_parses(f"v=abiz1; k=us-or-123456; h={self.HOST}; p={P}")
 
     def test_spaces_around_semicolon_and_equals(self):
-        self.assert_parses(f"v = abiz1 ; k = us-or-123456 ; h = {self.HOST}")
+        self.assert_parses(f"v = abiz1 ; k = us-or-123456 ; h = {self.HOST} ; p = {P}")
 
     def test_tabs(self):
-        self.assert_parses(f"v=abiz1;\tk=us-or-123456\t;\th\t=\t{self.HOST}")
+        self.assert_parses(f"v=abiz1;\tk=us-or-123456\t;\th\t=\t{self.HOST}\t;\tp\t=\t{P}")
 
     def test_leading_and_trailing_whitespace(self):
-        self.assert_parses(f"  v=abiz1;k=us-or-123456;h={self.HOST}  ")
+        self.assert_parses(f"  v=abiz1;k=us-or-123456;h={self.HOST};p={P}  ")
 
     def test_single_trailing_semicolon(self):
-        self.assert_parses(f"v=abiz1;k=us-or-123456;h={self.HOST};")
-        self.assert_parses(f"v=abiz1; k=us-or-123456; h={self.HOST} ; ")
+        self.assert_parses(f"v=abiz1;k=us-or-123456;h={self.HOST};p={P};")
+        self.assert_parses(f"v=abiz1; k=us-or-123456; h={self.HOST} ; p={P} ; ")
 
     def test_spaced_record_validates_end_to_end(self):
         self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example",
-                         f"v=abiz1; k=us-or-123456; h={self.HOST};"), [])
+                         f"v=abiz1; k=us-or-123456; h={self.HOST}; p={P};"), [])
 
     def test_p_padding_survives_spaces_around_equals(self):
         key = "oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
@@ -284,7 +301,7 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
         self.assertEqual(len(decode_ed25519_public_key(tags["p"])), 32)
 
     def test_unknown_tags_ignored_even_if_repeated(self):
-        tags = dns_tags(f"v=abiz1; h={self.HOST}; x=1; x=2; Future-Tag=ok")
+        tags = dns_tags(f"v=abiz1; h={self.HOST}; x=1; x=2; Future-Tag=ok; p={P}")
         self.assertEqual(tags["h"], self.HOST)
 
     def test_still_invalid(self):
@@ -341,7 +358,7 @@ class ABIZBusinessKeyTests(unittest.TestCase):
                     "cn-91110000123456789X", "mx-ABC010101AB1", "pr-123456"):
             with self.subTest(key=key):
                 parse_business_key(key)
-                self.assertEqual(dns_tags(f"v=abiz1;k={key};h={self.HOST}")["k"], key)
+                self.assertEqual(dns_tags(f"v=abiz1;k={key};h={self.HOST};p={P}")["k"], key)
 
     def test_invalid_country(self):
         for key in ("uk-01234567", "xk-123", "eu-123", "zz-123", "u1-123", "usa-or-1"):
@@ -382,9 +399,9 @@ class ABIZBusinessKeyTests(unittest.TestCase):
         record = self.record("US-Or-abc123", "ABC123", country="Us")
         self.assertEqual(validate_record(record, SCHEMA), [])
         self.assertEqual(validate_record(record, SCHEMA, "harbourbikes.example",
-                         f"v=abiz1;k=us-or-ABC123;h={self.HOST}"), [])
+                         f"v=abiz1;k=us-or-ABC123;h={self.HOST};p={P}"), [])
         self.assertTrue(validate_record(record, SCHEMA, "harbourbikes.example",
-                        f"v=abiz1;k=us-or-ABC124;h={self.HOST}"))
+                        f"v=abiz1;k=us-or-ABC124;h={self.HOST};p={P}"))
         # Uppercase record country, as in the unregistered example, is still valid.
         self.assertEqual(UNREG["country"], "US")
         self.assertEqual(validate_record(UNREG, SCHEMA), [])
@@ -418,12 +435,12 @@ class ABIZBusinessKeyTests(unittest.TestCase):
     def test_k_is_optional(self):
         # Registration fields in the record do not require k in DNS.
         self.assertIn("business-key", REG)
-        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", f"v=abiz1;h={self.HOST}"), [])
+        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", f"v=abiz1;h={self.HOST};p={P}"), [])
         self.assertEqual(validate_record(UNREG, SCHEMA, "marketstand.example",
-                         "v=abiz1;h=market-stand-repairs-portland.biz.to.co"), [])
+                         f"v=abiz1;h=market-stand-repairs-portland.biz.to.co;p={P}"), [])
         # But k without business-key in the record is a mismatch.
         self.assertTrue(validate_record(UNREG, SCHEMA, "marketstand.example",
-                        "v=abiz1;k=us-or-123456;h=market-stand-repairs-portland.biz.to.co"))
+                        f"v=abiz1;k=us-or-123456;h=market-stand-repairs-portland.biz.to.co;p={P}"))
 
     def test_bundled_iso_data(self):
         data = json.loads((ROOT / "data" / "iso3166.json").read_text(encoding="utf-8"))
@@ -436,3 +453,176 @@ class ABIZBusinessKeyTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ABIZWellKnownTests(unittest.TestCase):
+    """ABIZ 1.1 well-known file, SPEC.md section 3.4."""
+
+    HOST = "harbour-bike-repair.or.us.to.co"
+
+    def test_schema_is_valid_draft_2020_12(self):
+        Draft202012Validator.check_schema(WK_SCHEMA)
+        self.assertEqual(WK_SCHEMA["$id"], "https://abizrecord.org/schema/abiz-well-known-v1.schema.json")
+
+    def test_examples_validate(self):
+        for doc in (WK_REG, WK_UNREG):
+            with self.subTest(doc=doc["h"]):
+                self.assertEqual(validate_well_known(doc, WK_SCHEMA), [])
+
+    def test_example_matches_dns_example(self):
+        self.assertEqual(well_known_tags(WK_REG), dns_tags(example_dns()))
+
+    def test_well_known_alone_validates_record(self):
+        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", well_known=WK_REG), [])
+        self.assertEqual(validate_record(UNREG, SCHEMA, "marketstand.example", well_known=WK_UNREG), [])
+
+    def test_missing_p_or_h_or_bad_v_fails(self):
+        for member in ("p", "h", "v"):
+            doc = {k: v for k, v in WK_REG.items() if k != member}
+            with self.subTest(missing=member):
+                self.assertTrue(validate_well_known(doc, WK_SCHEMA))
+                with self.assertRaises(ValueError):
+                    well_known_tags(doc)
+        for v in ("ABIZ1", "abiz2", 1):
+            with self.subTest(v=v):
+                with self.assertRaises(ValueError):
+                    well_known_tags({**WK_REG, "v": v})
+
+    def test_non_key_p_and_bad_values_fail(self):
+        for bad in ({"p": "ab" * 16}, {"p": P.rstrip("=")}, {"h": "https://" + self.HOST},
+                    {"h": self.HOST + ";x=1"}, {"k": "us-123456"}, {"k": 5}, {"p": " " + P}):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    well_known_tags({**WK_REG, **bad})
+
+    def test_unknown_members_ignored(self):
+        self.assertEqual(well_known_tags({**WK_REG, "future": "ok"}), well_known_tags(WK_REG))
+
+    def test_not_an_object_fails(self):
+        for doc in ([], "v=abiz1", None, 1):
+            with self.subTest(doc=doc):
+                with self.assertRaises(ValueError):
+                    well_known_tags(doc)
+
+
+class ABIZSourcePrecedenceTests(unittest.TestCase):
+    """DNS takes precedence over the well-known file, SPEC.md section 3.4.4."""
+
+    DNS = example_dns()
+
+    def test_dns_only(self):
+        self.assertEqual(resolve_sources([self.DNS], None), (dns_tags(self.DNS), "dns"))
+
+    def test_well_known_only(self):
+        self.assertEqual(resolve_sources(["v=spf1 -all"], WK_REG), (well_known_tags(WK_REG), "well-known"))
+
+    def test_both_agree(self):
+        warnings = []
+        self.assertEqual(resolve_sources([self.DNS], WK_REG, warnings)[1], "dns")
+        self.assertEqual(warnings, [])
+
+    def test_dns_wins_when_they_disagree(self):
+        warnings = []
+        tags, source = resolve_sources([self.DNS], WK_UNREG, warnings)
+        self.assertEqual((tags, source), (dns_tags(self.DNS), "dns"))
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("disagrees", warnings[0])
+        # The record still validates against the DNS assertion, not the file.
+        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", self.DNS, well_known=WK_UNREG), [])
+
+    def test_invalid_file_ignored_when_dns_valid(self):
+        warnings = []
+        self.assertEqual(resolve_sources([self.DNS], {"v": "abiz1"}, warnings)[1], "dns")
+        self.assertIn("ignored", warnings[0])
+
+    def test_no_fallback_when_dns_is_invalid_or_ambiguous_or_unavailable(self):
+        for txt in ([self.DNS, self.DNS], ["v=abiz1;h=" + WK_REG["h"]], ["v=abiz1;h=x.example;p=" + "ab" * 16], None):
+            with self.subTest(txt=txt):
+                with self.assertRaises(ValueError):
+                    resolve_sources(txt, WK_REG)
+
+    def test_nothing_published(self):
+        with self.assertRaisesRegex(ValueError, "No ABIZ assertion"):
+            resolve_sources([], None)
+
+    def test_cli_well_known(self):
+        script = str(ROOT / "scripts" / "validate.py")
+        for args in (
+            [str(ROOT / "examples" / "registered-us.json"), "--domain", "harbourbikes.example",
+             "--well-known", str(ROOT / "examples" / "well-known-registered-us.json")],
+            [str(ROOT / "examples" / "well-known-registered-us.json")],
+        ):
+            with self.subTest(args=args):
+                run = subprocess.run([sys.executable, script, *args], capture_output=True, text=True, check=False)
+                self.assertEqual(run.returncode, 0, run.stderr)
+                self.assertIn("PASS", run.stdout)
+
+
+class ABIZFormatParameterTests(unittest.TestCase):
+    """The record host's format parameter and content negotiation, SPEC.md section 4.5."""
+
+    def test_format_parameter(self):
+        self.assertEqual(select_representation(None), "html")
+        self.assertEqual(select_representation("html", "application/json"), "html")
+        self.assertEqual(select_representation("json", "text/html"), "json")
+        self.assertEqual(select_representation("markdown"), "markdown")
+        self.assertEqual(select_representation("md"), "markdown")  # optional alias
+
+    def test_accept_negotiation_when_format_absent_or_unknown(self):
+        self.assertEqual(select_representation(None, "application/json"), "json")
+        self.assertEqual(select_representation(None, "text/markdown, text/html;q=0.5"), "markdown")
+        self.assertEqual(select_representation(None, "text/html;q=0.9, application/json"), "json")
+        self.assertEqual(select_representation("JSON", "text/markdown"), "markdown")  # case-sensitive value
+        self.assertEqual(select_representation("xml", None), "html")
+        self.assertEqual(select_representation(None, "application/json;q=0"), "html")
+
+
+class ABIZUnitAndCountryTests(unittest.TestCase):
+    """Business units (SPEC.md section 8) and unsupported countries (section 4.2.7)."""
+
+    def test_unit_record_with_path_host(self):
+        dns = "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=" + P
+        self.assertEqual(validate_record(UNIT, SCHEMA), [])
+        self.assertEqual(validate_record(UNIT, SCHEMA, "events.harbourbikes.example", dns), [])
+        # The unit's path is part of h: the bare parent host does not match it.
+        self.assertTrue(validate_record(UNIT, SCHEMA, "events.harbourbikes.example",
+                                        "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=" + P))
+
+    def test_north_korea_is_not_supported(self):
+        record = {"record-version": "abiz1", "business-name": "Example", "country": "kp",
+                  "identity-host": "example.biz.to.co", "domains": ["example.example"]}
+        self.assertTrue(any("not supported" in e for e in validate_record(record, SCHEMA)))
+        self.assertTrue(validate_record({**record, "country": "KP"}, SCHEMA))
+        with self.assertRaisesRegex(ValueError, "not supported"):
+            parse_business_key("kp-123456")
+        located = copy.deepcopy(REG)
+        located["locations"][0]["country"] = "kp"
+        self.assertTrue(any("not supported" in e for e in validate_record(located, SCHEMA)))
+        # South Korea is unaffected.
+        parse_business_key("kr-1234567890")
+
+
+class ABIZDocumentExampleTests(unittest.TestCase):
+    """Every DNS and well-known example in SPEC.md and README.md passes the validator."""
+
+    def test_dns_examples_in_docs_parse(self):
+        import re
+        found = 0
+        for name in ("SPEC.md", "README.md"):
+            text = (ROOT / name).read_text(encoding="utf-8")
+            for value in re.findall(r'IN TXT "([^"]+)"', text):
+                found += 1
+                with self.subTest(doc=name, value=value):
+                    tags = dns_tags(value)
+                    self.assertIn("p", tags)
+        self.assertGreaterEqual(found, 5)
+
+    def test_well_known_examples_in_docs_validate(self):
+        import re
+        text = (ROOT / "SPEC.md").read_text(encoding="utf-8")
+        blocks = [json.loads(b) for b in re.findall(r"```json\n(.*?)```", text, re.S)]
+        docs = [b for b in blocks if isinstance(b, dict) and "v" in b]
+        self.assertTrue(docs)
+        for doc in docs:
+            with self.subTest(doc=doc):
+                self.assertEqual(validate_well_known(doc, WK_SCHEMA), [])
