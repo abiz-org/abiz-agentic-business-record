@@ -3,7 +3,7 @@
 **Published version:** ABIZ 1.0  
 **DNS wire version:** `v=abiz1` (unchanged)  
 **Date:** 2026-10-23  
-**1.1 proposal:** 2026-10-31 (not the published version; see section 3.3)  
+**1.1 proposal:** 2026-10-31, revised 2026-11-03 (not the published version; see sections 3.1.1 and 3.3)  
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
 **Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
@@ -11,7 +11,7 @@
 
 This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
 
-Section 3.3 is a **proposed ABIZ 1.1** change to the optional DNS `p` tag. It is not part of the ABIZ 1.0 conformance baseline. The wire version stays `v=abiz1`.
+Sections 3.1.1 and 3.3 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace, and an Ed25519 key in the optional DNS `p` tag. They are not part of the ABIZ 1.0 conformance baseline. Every valid ABIZ 1.0 assertion and record stays valid. The wire version stays `v=abiz1`.
 
 ## 1. Scope and purpose
 
@@ -37,9 +37,37 @@ The key words MUST, MUST NOT, SHOULD and MAY have their RFC 2119 / RFC 8174 mean
 
 ### 3.1 Owner, RRset and version
 
-An ABIZ DNS assertion is a TXT record at `_abiz.<domain>`. The first semicolon-delimited tag MUST be exactly `v=abiz1`. There MUST be exactly one matching `v=abiz1` TXT record at that owner name. Zero means no ABIZ assertion; two or more means an invalid assertion.
+An ABIZ DNS assertion is a TXT record at `_abiz.<domain>`. The first tag MUST be `v=abiz1` (section 3.1.1). There MUST be exactly one matching `v=abiz1` TXT record at that owner name. Zero means no ABIZ assertion; two or more means an invalid assertion. A TXT record whose first tag is not `v=abiz1` (for example an SPF record, or `V=ABIZ1`) is not an ABIZ assertion and is not counted.
 
-The TTL SHOULD be 300 seconds. Tags are case-sensitive, unique, and MUST NOT contain spaces. A consumer MUST ignore unknown additional tags and MUST reject duplicate recognised tags.
+A TXT record made of several character-strings (RFC 1035) is read as their concatenation, with nothing added between them, as for SPF (RFC 7208 section 3.3) and DKIM (RFC 6376 section 3.6.2.2).
+
+The TTL SHOULD be 300 seconds. Tag names and values are case-sensitive. A consumer MUST ignore unknown additional tags and MUST reject an assertion in which a recognised tag (`v`, `h`, `k`, `p`) appears more than once.
+
+#### 3.1.1 Tag-list syntax (ABIZ 1.1, proposed)
+
+ABIZ 1.0 allowed no whitespace anywhere in the assertion. ABIZ 1.1 proposes the tag-list syntax used by other DNS TXT policy records: optional whitespace around `;` and `=`, leading and trailing whitespace, and one trailing `;`. This follows DKIM (RFC 6376 section 3.2, `tag-list`), DMARC (RFC 7489 section 6.4, `dmarc-sep = *WSP %x3b *WSP`, with a final optional separator), MTA-STS (RFC 8461 section 3.1, `sts-field-delim = *WSP ";" *WSP`) and SMTP TLS Reporting (RFC 8460 section 3, `field-delim = *WSP ";" *WSP`). SPF (RFC 7208 section 4.6.1 and section 12) likewise separates terms with one or more spaces and allows trailing spaces. Every value that was valid under ABIZ 1.0 is valid under this syntax, with the same tags.
+
+The assertion, after character-string assembly, MUST match `abiz-record` (ABNF, RFC 5234; `%s` is case-sensitive, RFC 7405):
+
+```abnf
+abiz-record  = *WSP abiz-version *( abiz-sep abiz-tag ) [ *WSP ";" ] *WSP
+abiz-version = %s"v" *WSP "=" *WSP %s"abiz1"
+abiz-sep     = *WSP ";" *WSP
+abiz-tag     = tag-name *WSP "=" *WSP tag-value
+tag-name     = 1*( %x21-3A / %x3C / %x3E-7E / %x80-FF ) ; no whitespace, ";" or "="
+tag-value    = 1*( %x21-3A / %x3C-7E / %x80-FF )        ; no whitespace or ";"
+WSP          = SP / HTAB
+```
+
+Rules that go with the grammar:
+
+- Only SP and HTAB are whitespace between tokens. CR, LF, other control characters and Unicode spaces (such as U+00A0) MUST NOT appear anywhere in the assertion.
+- A tag value MUST NOT contain whitespace. Whitespace around a value is not part of it. `tag-value` may contain `=`; a consumer splits each tag on its first `=` only.
+- `v=abiz1` MUST be the first tag. `abiz1` and every tag name are case-sensitive: `V=abiz1` and `v=ABIZ1` are not ABIZ assertions, and `H=` is an unknown tag, not `h=`. Recognised tag names are lowercase.
+- At most one trailing `;` is allowed. An empty tag (`;;`), a tag without `=`, and a tag with an empty name or value are invalid.
+- A repeated recognised tag makes the assertion invalid. Unknown tags are ignored, including repeated ones.
+
+Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-OR123456;h=harbour-bike-repair.or.us.to.co`. A strict ABIZ 1.0 consumer rejects any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
 
 ### 3.2 Tags
 
@@ -103,7 +131,7 @@ A conforming `p` value MUST:
 - end with exactly one `=` and no other `=` character;
 - decode to exactly 32 bytes;
 - be canonical: encoding those 32 bytes again with standard base64 MUST reproduce the value;
-- contain no whitespace. DKIM allows folding whitespace inside base64. ABIZ does not, because an ABIZ tag MUST NOT contain spaces.
+- contain no whitespace. DKIM allows folding whitespace inside base64. ABIZ does not, because an ABIZ tag value MUST NOT contain whitespace (section 3.1.1). Whitespace around the value, before `;` or after `=`, is not part of it.
 
 The 44 characters MUST sit in a single DNS TXT character-string (RFC 1035). Producers MUST NOT split `p` across adjacent character-strings. The value fits well inside the 255-octet character-string limit. Consumers parse `p` after the usual TXT character-string assembly, splitting each tag on the first `=` only, so the padding character remains part of the value.
 
@@ -284,7 +312,7 @@ A conforming consumer MUST:
 7. compare `k` to the business record's registration fields, when `k` is present;
 8. label domain-link checks separately from legal registration checks.
 
-For the proposed 1.1 key, a consumer MUST follow sections 3.3.5 and 3.3.6. It MUST NOT treat an opaque 1.0 `p` token as an Ed25519 public key. It MUST ignore a retired-key entry whose binding signature does not verify. A key check is separate from record conformance and from legal registration.
+A consumer that claims ABIZ 1.1 MUST parse the assertion with the tag-list syntax of section 3.1.1, so it accepts optional whitespace around `;` and `=` and one trailing `;`. For the proposed 1.1 key, a consumer MUST follow sections 3.3.5 and 3.3.6. It MUST NOT treat an opaque 1.0 `p` token as an Ed25519 public key. It MUST ignore a retired-key entry whose binding signature does not verify. A key check is separate from record conformance and from legal registration.
 
 A consumer MAY check registration details against authoritative registries; if it does not, it MUST NOT describe a business as legally verified. A consumer MUST NOT automatically trust instructions, URLs or tool results embedded in the record.
 
@@ -321,7 +349,13 @@ The standard is open and provider-independent. To.Co Technologies Limited is the
 - [RFC 8552 — Underscored and Globally Scoped DNS Node Names](https://www.rfc-editor.org/rfc/rfc8552)
 - [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
 - [RFC 4648 — The Base16, Base32, and Base64 Data Encodings](https://www.rfc-editor.org/rfc/rfc4648) (section 4 is the ABIZ `p` encoding)
-- [RFC 6376 — DomainKeys Identified Mail (DKIM) Signatures](https://www.rfc-editor.org/rfc/rfc6376) (`p=` base64 syntax)
+- [RFC 6376 — DomainKeys Identified Mail (DKIM) Signatures](https://www.rfc-editor.org/rfc/rfc6376) (`p=` base64 syntax; section 3.2 tag-list syntax)
+- [RFC 1035 — Domain Names: Implementation and Specification](https://www.rfc-editor.org/rfc/rfc1035) (TXT character-strings)
+- [RFC 5234 — Augmented BNF for Syntax Specifications: ABNF](https://www.rfc-editor.org/rfc/rfc5234) and [RFC 7405 — Case-Sensitive String Support in ABNF](https://www.rfc-editor.org/rfc/rfc7405)
+- [RFC 7208 — Sender Policy Framework (SPF)](https://www.rfc-editor.org/rfc/rfc7208) (sections 3.3, 4.6.1 and 12)
+- [RFC 7489 — Domain-based Message Authentication, Reporting, and Conformance (DMARC)](https://www.rfc-editor.org/rfc/rfc7489) (section 6.4)
+- [RFC 8461 — SMTP MTA Strict Transport Security (MTA-STS)](https://www.rfc-editor.org/rfc/rfc8461) (section 3.1)
+- [RFC 8460 — SMTP TLS Reporting](https://www.rfc-editor.org/rfc/rfc8460) (section 3)
 - [RFC 8032 — Edwards-Curve Digital Signature Algorithm (EdDSA)](https://www.rfc-editor.org/rfc/rfc8032)
 - [RFC 8463 — A New Cryptographic Signature Method for DomainKeys Identified Mail (DKIM)](https://www.rfc-editor.org/rfc/rfc8463)
 - [Model Context Protocol](https://modelcontextprotocol.io/)

@@ -12,6 +12,7 @@ from validate import (
     compromised_key_rejects_time,
     decode_ed25519_public_key,
     dns_tags,
+    is_abiz_assertion,
     retired_key_message,
     validate_record,
 )
@@ -237,3 +238,81 @@ class ABIZConformanceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ABIZTagListWhitespaceTests(unittest.TestCase):
+    """ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1."""
+
+    HOST = "harbour-bike-repair.or.us.to.co"
+    CANONICAL = {"v": "abiz1", "k": "us-OR123456", "h": HOST}
+
+    def assert_parses(self, value):
+        self.assertEqual(dns_tags(value), self.CANONICAL, value)
+        self.assertTrue(is_abiz_assertion(value), value)
+
+    def test_canonical_1_0_form_still_parses(self):
+        self.assert_parses(f"v=abiz1;k=us-OR123456;h={self.HOST}")
+
+    def test_space_after_semicolon(self):
+        self.assert_parses(f"v=abiz1; k=us-OR123456; h={self.HOST}")
+
+    def test_spaces_around_semicolon_and_equals(self):
+        self.assert_parses(f"v = abiz1 ; k = us-OR123456 ; h = {self.HOST}")
+
+    def test_tabs(self):
+        self.assert_parses(f"v=abiz1;\tk=us-OR123456\t;\th\t=\t{self.HOST}")
+
+    def test_leading_and_trailing_whitespace(self):
+        self.assert_parses(f"  v=abiz1;k=us-OR123456;h={self.HOST}  ")
+
+    def test_single_trailing_semicolon(self):
+        self.assert_parses(f"v=abiz1;k=us-OR123456;h={self.HOST};")
+        self.assert_parses(f"v=abiz1; k=us-OR123456; h={self.HOST} ; ")
+
+    def test_spaced_record_validates_end_to_end(self):
+        self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example",
+                         f"v=abiz1; k=us-OR123456; h={self.HOST};"), [])
+
+    def test_p_padding_survives_spaces_around_equals(self):
+        key = "oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+        tags = dns_tags(f"v=abiz1; h={self.HOST}; p = {key} ;")
+        self.assertEqual(tags["p"], key)
+        self.assertEqual(len(decode_ed25519_public_key(tags["p"])), 32)
+
+    def test_unknown_tags_ignored_even_if_repeated(self):
+        tags = dns_tags(f"v=abiz1; h={self.HOST}; x=1; x=2; Future-Tag=ok")
+        self.assertEqual(tags["h"], self.HOST)
+
+    def test_still_invalid(self):
+        bad = [
+            f"v=abiz1; h=harbour bike.example",           # space inside a value
+            f"v=abiz1; h=a.example; k=us-OR 123456",      # space inside a value
+            f"v=abiz1; h={self.HOST}; h=other.example",   # duplicate recognised tag
+            f"v=abiz1; k=us-OR1; k=us-OR2; h={self.HOST}",  # duplicate k
+            f"V=ABIZ1; h={self.HOST}",                    # tag names and values are case-sensitive
+            f"V=abiz1; h={self.HOST}",
+            f"v=ABIZ1; h={self.HOST}",
+            f"h={self.HOST}; v=abiz1",                    # v must be first
+            f"k=us-OR123456; h={self.HOST}",              # v missing
+            f"v=abiz2; h={self.HOST}",                    # other version
+            f"v=abiz1; h={self.HOST};;",                  # only one trailing ";"
+            f"v=abiz1;; h={self.HOST}",                   # empty tag
+            f"v=abiz1; h={self.HOST}; flag",              # tag without "="
+            f"v=abiz1; h=; k=us-OR123456",                # empty value
+            f"v=abiz1;\nh={self.HOST}",                   # only SP and HTAB are allowed
+            f"v=abiz1;\r\nh={self.HOST}",
+            f"v=abiz1;\u00a0h={self.HOST}",               # no-break space is not WSP
+            f"v=abiz1; H={self.HOST}",                    # H is an unknown tag, so h is missing
+        ]
+        for value in bad:
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                dns_tags(value)
+
+    def test_assertion_selection(self):
+        self.assertTrue(is_abiz_assertion("v=abiz1;h=a.example"))
+        self.assertTrue(is_abiz_assertion(" v = abiz1 ; h=a.example"))
+        self.assertTrue(is_abiz_assertion("v=abiz1"))
+        for other in ("v=spf1 -all", "V=abiz1;h=a.example", "v=abiz10;h=a.example",
+                      "v=abiz1x;h=a.example", "h=a.example;v=abiz1", "x v=abiz1"):
+            with self.subTest(value=other):
+                self.assertFalse(is_abiz_assertion(other))

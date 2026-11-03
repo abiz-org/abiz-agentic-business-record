@@ -2,7 +2,10 @@
 
 ## Unreleased — ABIZ 1.1 (proposed)
 
-Proposed redefinition of the optional DNS `p` tag. The published specification remains ABIZ 1.0, and the wire tag remains `v=abiz1`.
+Two proposed changes: a relaxed DNS tag-list syntax, and a redefinition of the optional DNS `p` tag. The published specification remains ABIZ 1.0, and the wire tag remains `v=abiz1`. Both changes are backwards-compatible: every valid ABIZ 1.0 assertion and record stays valid, with the same meaning.
+
+- Tag-list whitespace (section 3.1.1, with ABNF). Optional SP or HTAB is allowed around `;` and `=`, before the first tag and after the last, and one trailing `;` is allowed, as in DKIM (RFC 6376 section 3.2), DMARC (RFC 7489 section 6.4), MTA-STS (RFC 8461 section 3.1) and TLS-RPT (RFC 8460 section 3). Still invalid: whitespace inside a value, CR/LF or other whitespace, a repeated recognised tag, `V=ABIZ1` or any case change, `v=abiz1` not first, `;;`, and a tag without `=`. Unknown tags stay ignored, now including repeated ones. Producers should still publish the compact form, which strict 1.0 consumers require.
+- The reference validator parses the new syntax and adds `is_abiz_assertion()` for selecting the `_abiz` record from the TXT RRset.
 
 - `p`, when a producer opts in, is an Ed25519 public key: 32 bytes, standard base64, 44 characters, one trailing `=` (RFC 8463 and RFC 4648 section 4).
 - Ordinary validation still accepts an opaque 1.0 `p` token. `--check-p-key` opts into the key check. Signature checks need the optional `cryptography` package.

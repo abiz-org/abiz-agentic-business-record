@@ -71,17 +71,43 @@ def identity_parts(value: str):
     return p.hostname.lower().rstrip(".") + (p.path or "")
 
 
+# ABIZ 1.1 (proposed) tag-list grammar, SPEC.md section 3.1.1. Optional SP or HTAB may
+# surround ";" and "=", and may lead or trail the value; one trailing ";" is allowed.
+# Tag names and values contain no whitespace. Every valid ABIZ 1.0 value still parses.
+WSP = " \t"
+RECOGNISED_TAGS = frozenset({"v", "h", "k", "p"})
+ASSERTION_START = re.compile(r"^[ \t]*v[ \t]*=[ \t]*abiz1[ \t]*(?:;|$)")
+
+
+def is_abiz_assertion(value: str) -> bool:
+    """True when a TXT value's first tag is v=abiz1 (section 3.1). Used to select the RRset."""
+    return bool(ASSERTION_START.match(value))
+
+
 def dns_tags(value: str) -> dict[str, str]:
-    if any(c.isspace() for c in value) or not value.startswith("v=abiz1;"):
-        raise ValueError("DNS assertion must start with v=abiz1; and contain no whitespace")
-    tags = {}
-    for pair in value.split(";"):
+    if any(c.isspace() and c not in WSP for c in value):
+        raise ValueError("DNS assertion may contain only SP or HTAB as whitespace")
+    body = value.strip(WSP)
+    if body.endswith(";"):
+        body = body[:-1]  # one optional trailing ";"
+    tags: dict[str, str] = {}
+    for index, raw in enumerate(body.split(";")):
+        pair = raw.strip(WSP)
         if "=" not in pair:
-            raise ValueError("Every DNS tag must contain '='")
+            raise ValueError("Every DNS tag must contain '=' (an empty tag or ';;' is invalid)")
         # Split on the first "=" only. A 1.1 p value ends with base64 padding.
         k, v = pair.split("=", 1)
-        if not k or not v or k in tags:
-            raise ValueError("Empty or duplicate DNS tag")
+        k, v = k.rstrip(WSP), v.lstrip(WSP)
+        if not k or not v:
+            raise ValueError("Empty DNS tag name or value")
+        if any(c.isspace() for c in k) or any(c.isspace() for c in v):
+            raise ValueError("DNS tag names and values must not contain whitespace")
+        if index == 0 and (k, v) != ("v", "abiz1"):
+            raise ValueError("DNS assertion must start with v=abiz1")
+        if k in tags:
+            if k in RECOGNISED_TAGS:
+                raise ValueError(f"Duplicate DNS tag {k}=")
+            continue  # unknown tags are ignored, including repeats
         tags[k] = v
     if not tags.get("h"):
         raise ValueError("Missing h= DNS tag")
