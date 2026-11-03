@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Sierra Leone
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language; Krio is widely spoken.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language; Krio is widely spoken.
 
 ## 1. What this means for a business in Sierra Leone
 

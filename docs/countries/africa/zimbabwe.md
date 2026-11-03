@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Zimbabwe
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Zimbabwe has 16 official languages; English is the main language of business and registration.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Zimbabwe has 16 official languages; English is the main language of business and registration.
 
 ## 1. What this means for a business in Zimbabwe
 

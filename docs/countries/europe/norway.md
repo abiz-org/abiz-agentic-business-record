@@ -1,6 +1,6 @@
 # Bli en agentisk virksomhet med ABIZ i Norge
 
-*En veiledning til ABIZ 1.1 (forslag). [Spesifikasjonen (SPEC.md, på engelsk)](../../../SPEC.md) gjelder: hvis veiledningen og spesifikasjonen er uenige, gjelder spesifikasjonen.* Veiledningen er på bokmål.
+*En veiledning til den publiserte spesifikasjonen ABIZ 1.1. [Spesifikasjonen (SPEC.md, på engelsk)](../../../SPEC.md) gjelder: hvis veiledningen og spesifikasjonen er uenige, gjelder spesifikasjonen.* Veiledningen er på bokmål.
 
 ## 1. Hva dette betyr for en virksomhet i Norge
 

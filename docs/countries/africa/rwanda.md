@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Rwanda
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Kinyarwanda, English, French and Kiswahili are official; English is widely used in business.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Kinyarwanda, English, French and Kiswahili are official; English is widely used in business.
 
 ## 1. What this means for a business in Rwanda
 

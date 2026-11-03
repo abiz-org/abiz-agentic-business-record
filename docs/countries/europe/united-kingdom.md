@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in the United Kingdom
 
-*A guide to ABIZ 1.1 (proposed). [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.*
+*A guide to published ABIZ 1.1. [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.*
 
 **On this page:** 1. What this means · 2. Publishing the DNS record · 3. Serving the business record: the `format` parameter · 4. Without DNS: the well-known file · 5. Full UK examples · 6. The JSON schema and field reference · 7. Business units, groups and brands · 8. Using a provider and MCP · 9. Keys and record signatures · 10. What AI tools will see · 11. Local practical notes · 12. Further reading
 
@@ -690,7 +690,7 @@ The table is generated from the schema file. Types, constraints and required fla
 <!-- Generated from schemas/abiz-business-record-v1.1.schema.json. Regenerate rather than edit by hand. -->
 | Field | Type and constraints | Required | Description | UK example |
 | --- | --- | --- | --- | --- |
-| `record_version` | string, always `abiz1` | Yes | Wire protocol family abiz1. Document revisions, including a proposed 1.1, may advance without changing this value. | `"abiz1"` |
+| `record_version` | string, always `abiz1` | Yes | Wire protocol family abiz1. Document revisions, including published ABIZ 1.1, may advance without changing this value. | `"abiz1"` |
 | `business_name` | string (length 1–240) | Yes | Nonempty public name (SPEC 4.1) | `"Hartley’s Bakery Ltd"` |
 | `country` | string (pattern `^[A-Za-z]{2}$`) | Yes | Assigned ISO 3166-1 alpha-2 country code. Case-insensitive; canonical form is lowercase. The validator checks it against data/iso3166.json. | `"gb"` |
 | `identity_host` | string (pattern `^[A-Za-z0-9][A-Za-z0-9.-]*(?:/[^\s?#]*)?$`; length 4–512) | Yes | DNS h value: lowercase DNS hostname with optional path; never includes https:// | `"hartleysbakery.uk.to.co"` |

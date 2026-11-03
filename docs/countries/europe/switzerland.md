@@ -1,6 +1,6 @@
 # Mit ABIZ zum Agentic Business in der Schweiz
 
-*Ein Leitfaden zu ABIZ 1.1 (Entwurf). Maßgeblich ist die [Spezifikation (SPEC.md, Englisch)](../../../SPEC.md): Weichen dieser Leitfaden und die Spezifikation voneinander ab, gilt die Spezifikation.* Die Schweiz hat vier Landessprachen; dieser Leitfaden ist auf Deutsch, der meistverwendeten Geschäftssprache. Fassungen auf Französisch, Italienisch und Rätoromanisch gibt es noch nicht.
+*Ein Leitfaden zu ABIZ 1.1 (veröffentlichte Spezifikation). Maßgeblich ist die [Spezifikation (SPEC.md, Englisch)](../../../SPEC.md): Weichen dieser Leitfaden und die Spezifikation voneinander ab, gilt die Spezifikation.* Die Schweiz hat vier Landessprachen; dieser Leitfaden ist auf Deutsch, der meistverwendeten Geschäftssprache. Fassungen auf Französisch, Italienisch und Rätoromanisch gibt es noch nicht.
 
 ## 1. Was das für ein Unternehmen in der Schweiz bedeutet
 

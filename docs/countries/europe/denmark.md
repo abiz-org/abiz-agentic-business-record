@@ -1,6 +1,6 @@
 # Bliv en agentisk virksomhed med ABIZ i Danmark
 
-*En vejledning i ABIZ 1.1 (forslag). [Specifikationen (SPEC.md, på engelsk)](../../../SPEC.md) er gældende: hvis vejledningen og specifikationen er uenige, gælder specifikationen.*
+*En vejledning i den offentliggjorte specifikation ABIZ 1.1. [Specifikationen (SPEC.md, på engelsk)](../../../SPEC.md) er gældende: hvis vejledningen og specifikationen er uenige, gælder specifikationen.*
 
 ## 1. Hvad det betyder for en virksomhed i Danmark
 

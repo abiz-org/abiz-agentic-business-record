@@ -1,6 +1,6 @@
 # ABIZ ile Türkiye’de yapay zekâ ajanlarına hazır bir işletme olmak
 
-*ABIZ 1.1 (öneri) için bir rehberdir. Esas metin [spesifikasyondur (SPEC.md, İngilizce)](../../../SPEC.md): bu rehber ile spesifikasyon farklıysa spesifikasyon geçerlidir.*
+*ABIZ 1.1 (yayımlanmış belirtim) için bir rehberdir. Esas metin [spesifikasyondur (SPEC.md, İngilizce)](../../../SPEC.md): bu rehber ile spesifikasyon farklıysa spesifikasyon geçerlidir.*
 
 ## 1. Türkiye’de bir işletme için ne anlama geliyor
 

@@ -1,6 +1,6 @@
 # Diventare un'impresa agentica con ABIZ nella Città del Vaticano
 
-*Una guida ad ABIZ 1.1 (proposta). Il testo di riferimento è la [specifica (SPEC.md, in inglese)](../../../SPEC.md): se questa guida e la specifica non coincidono, vale la specifica.*
+*Una guida alla specifica pubblicata ABIZ 1.1. Il testo di riferimento è la [specifica (SPEC.md, in inglese)](../../../SPEC.md): se questa guida e la specifica non coincidono, vale la specifica.*
 
 ## 1. Che cosa significa per un'impresa nella Città del Vaticano
 

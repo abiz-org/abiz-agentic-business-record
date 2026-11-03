@@ -1,6 +1,6 @@
 # Devenir une entreprise agentique avec ABIZ au Sénégal
 
-*Guide pour ABIZ 1.1 (proposition). La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle ; le wolof est la langue la plus parlée.
+*Guide pour la spécification publiée ABIZ 1.1. La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle ; le wolof est la langue la plus parlée.
 
 ## 1. Ce que cela signifie pour une entreprise au Sénégal
 

@@ -1,6 +1,6 @@
 # Trở thành doanh nghiệp sẵn sàng cho tác tử AI với ABIZ tại Việt Nam
 
-*Hướng dẫn cho ABIZ 1.1 (đề xuất). [Đặc tả (SPEC.md, tiếng Anh)](../../../SPEC.md) là văn bản có giá trị quyết định: nếu hướng dẫn này khác với đặc tả, áp dụng đặc tả.*
+*Hướng dẫn cho ABIZ 1.1 (đặc tả đã công bố). [Đặc tả (SPEC.md, tiếng Anh)](../../../SPEC.md) là văn bản có giá trị quyết định: nếu hướng dẫn này khác với đặc tả, áp dụng đặc tả.*
 
 ## 1. Ý nghĩa đối với doanh nghiệp tại Việt Nam
 

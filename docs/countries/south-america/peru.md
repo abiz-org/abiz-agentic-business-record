@@ -1,6 +1,6 @@
 # Convertirse en un negocio agéntico con ABIZ en el Perú
 
-*Guía de ABIZ 1.1 (propuesta). [SPEC.md](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.*
+*Guía de la especificación publicada ABIZ 1.1. [SPEC.md](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.*
 
 ## 1. Qué significa para una empresa en el Perú
 

@@ -1,6 +1,6 @@
 # Devenir une entreprise agentique avec ABIZ au Niger
 
-*Guide pour ABIZ 1.1 (proposition). La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue des affaires ; le haoussa et le zarma sont très parlés.
+*Guide pour la spécification publiée ABIZ 1.1. La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue des affaires ; le haoussa et le zarma sont très parlés.
 
 ## 1. Ce que cela signifie pour une entreprise au Niger
 

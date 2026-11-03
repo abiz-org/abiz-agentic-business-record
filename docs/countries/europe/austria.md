@@ -1,6 +1,6 @@
 # Mit ABIZ zum Agentic Business in Österreich
 
-*Ein Leitfaden zu ABIZ 1.1 (Entwurf). Maßgeblich ist die [Spezifikation (SPEC.md, Englisch)](../../../SPEC.md): Weichen dieser Leitfaden und die Spezifikation voneinander ab, gilt die Spezifikation.*
+*Ein Leitfaden zu ABIZ 1.1 (veröffentlichte Spezifikation). Maßgeblich ist die [Spezifikation (SPEC.md, Englisch)](../../../SPEC.md): Weichen dieser Leitfaden und die Spezifikation voneinander ab, gilt die Spezifikation.*
 
 ## 1. Was das für ein Unternehmen in Österreich bedeutet
 

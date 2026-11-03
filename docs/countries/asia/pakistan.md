@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Pakistan
 
-*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Urdu and English are official; English is used for company registration.
+*A guide to published ABIZ 1.1. The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Urdu and English are official; English is used for company registration.
 
 ## 1. What this means for a business in Pakistan
 

@@ -1,6 +1,6 @@
 # Becoming an Agentic Business using ABIZ in Bulgaria
 
-*A guide to ABIZ 1.1 (proposed). [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* This first draft is in English; a version in Bulgarian has not been written yet.
+*A guide to published ABIZ 1.1. [SPEC.md](../../../SPEC.md) is the authoritative text: if this guide and the specification differ, the specification applies.* This first draft is in English; a version in Bulgarian has not been written yet.
 
 ## 1. What this means for a business in Bulgaria
 
