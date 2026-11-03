@@ -126,7 +126,9 @@ class ABIZConformanceTests(unittest.TestCase):
         self.assertIn("published ABIZ 1.0", description)
         self.assertNotIn("1.1 public-review", description)
         self.assertEqual(published["$id"], "https://abizrecord.org/schema/abiz-business-record-v1.schema.json")
-        self.assertIn("proposed", SCHEMA["description"].lower())
+        self.assertIn("published ABIZ 1.1", SCHEMA["description"])
+        self.assertNotIn("not a formal publication", SCHEMA["description"])
+        self.assertNotIn("proposed", SCHEMA["title"].lower())
         self.assertEqual(SCHEMA["$id"], "https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json")
 
     def test_p_key_valid_example(self):
