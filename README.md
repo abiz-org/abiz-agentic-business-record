@@ -19,6 +19,7 @@ A business can publish an ABIZ DNS pointer on a domain it controls. The pointer 
 
 Country-specific help for becoming an agentic business with ABIZ:
 
+- [Africa](docs/countries/africa/)
 - [Asia](docs/countries/asia/)
 
 ## How ABIZ works
