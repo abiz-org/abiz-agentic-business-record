@@ -1,0 +1,46 @@
+{
+  "record_version": "abiz1",
+  "business_name": "Wattle Lane Ceramics",
+  "country": "au",
+  "identity_host": "wattlelaneceramics.biz.to.co",
+  "domains": [
+    "wattlelane.example"
+  ],
+  "public_key": "a4mbt1ap1UxmiNWqsXmJPQeDAtFlRl1ZEpEjp0mjrb8=",
+  "description": "Handmade stoneware from a home studio. Visits by appointment; the studio address is given when you book.",
+  "email": "studio@wattlelane.example",
+  "locations": [
+    {
+      "location_id": "studio",
+      "kind": "trading",
+      "name": "Studio",
+      "address": {
+        "locality": "Castlemaine",
+        "region": {
+          "code": "AU-VIC",
+          "name": "Victoria"
+        },
+        "country": {
+          "code": "AU"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Australia/Melbourne",
+        "appointment_only": true,
+        "weekly": [
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "16:00"
+              }
+            ]
+          }
+        ]
+      },
+      "public": false
+    }
+  ],
+  "signature": "QujRBng/esgk6kMhsbq7w0TTPeANI37xI9LJX6Mj9S+8cm4+t7q6boStyh+7ly7zGkwDTYkJ+XE2Z3TW0c0kAw=="
+}

@@ -41,7 +41,7 @@ Nøgler sammenlignes uden forskel på store og små bogstaver, men offentliggør
 Offentliggør præcis én ABIZ TXT-post under `_abiz` på jeres domæne, i kompakt form uden mellemrum:
 
 ```dns
-_abiz.fiskehusetholm.example. 300 IN TXT "v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=FhDBkkVbbAT0jBQstBywifSX0TRXXYvFxk0BJmO1AD0="
+_abiz.fiskehusetholm.example. 300 IN TXT "v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=aspCxrnYr9RiTS7T/cVsOjbL87o1Qy7Nr0VZzsddZLA="
 ```
 
 - `v=abiz1` skal stå først. `h` er obligatorisk; `k` og `p` er frivillige.
@@ -65,25 +65,29 @@ Posten, der leveres på `https://fiskehusetholm.dk.to.co` som `application/json`
   "domains": [
     "fiskehusetholm.example"
   ],
-  "public_key": "FhDBkkVbbAT0jBQstBywifSX0TRXXYvFxk0BJmO1AD0=",
+  "public_key": "aspCxrnYr9RiTS7T/cVsOjbL87o1Qy7Nr0VZzsddZLA=",
   "description": "Fiskehandel i Aarhus.",
   "website": "https://fiskehusetholm.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Aarhus",
-      "country": "dk",
+      "address": {
+        "locality": "Aarhus",
+        "country": {
+          "code": "DK"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "lflZ3Lh3NPfkKKxErN94MmqIh9gtpBRkZ+ANbumMmqQeGTpyfEKklRxFtZ8ZgV5nc240RLPqNfyAbnW9qWf0BQ=="
+  "signature": "/Y9vJkI8MGhCM0fRksIdaihskxrXsE4KDiYD2IecIAD9pBxC56Q/f6Y/EpUOeulqlJa0u1rFKslXgHd7c9ylAQ=="
 }
 ```
 
 Med referencevalidatoren kan I kontrollere posten og DNS-værdien lokalt:
 
 ```sh
-python scripts/validate.py record.json --domain fiskehusetholm.example --dns-value 'v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=FhDBkkVbbAT0jBQstBywifSX0TRXXYvFxk0BJmO1AD0='
+python scripts/validate.py record.json --domain fiskehusetholm.example --dns-value 'v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=aspCxrnYr9RiTS7T/cVsOjbL87o1Qy7Nr0VZzsddZLA='
 ```
 
 ### Selv eller via en udbyder

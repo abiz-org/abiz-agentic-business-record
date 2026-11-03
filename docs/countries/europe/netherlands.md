@@ -41,7 +41,7 @@ Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, m
 Publiceer precies één ABIZ-TXT-record onder `_abiz` op uw domein, in de compacte vorm zonder spaties:
 
 ```dns
-_abiz.fietsenmakerdevries.example. 300 IN TXT "v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=j4I88ldun0pst/oOl5WF+uIVP2hX4szG4S55bSJO8Ug="
+_abiz.fietsenmakerdevries.example. 300 IN TXT "v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=x+SPeLQciIniVjwkcXJeN99mfnW/vOhp3kcyrwnSVmc="
 ```
 
 - `v=abiz1` moet vooraan staan. `h` is verplicht; `k` en `p` zijn optioneel.
@@ -65,25 +65,29 @@ Het record dat op `https://fietsenmakerdevries.nl.to.co` als `application/json` 
   "domains": [
     "fietsenmakerdevries.example"
   ],
-  "public_key": "j4I88ldun0pst/oOl5WF+uIVP2hX4szG4S55bSJO8Ug=",
+  "public_key": "x+SPeLQciIniVjwkcXJeN99mfnW/vOhp3kcyrwnSVmc=",
   "description": "Fietsenmaker in Utrecht.",
   "website": "https://fietsenmakerdevries.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Utrecht",
-      "country": "nl",
+      "address": {
+        "locality": "Utrecht",
+        "country": {
+          "code": "NL"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "TVF7OIemkJHIt3a0U8ye6riP7nNiJ2Su6oN02fGIxS4Bvbf1jeGSzSrtwrvEDUeujj92+7WX9WohryZTNEC2Aw=="
+  "signature": "ceK909Yq+2fW0PDmoE7Yr5NCdlh8KzEm9xdrDtnO9SrNvgoXTQ4exuzaAm5dhd65y6njeXyQ7DBNRzMn0rO6Ag=="
 }
 ```
 
 Met de referentievalidator controleert u record en DNS-waarde lokaal:
 
 ```sh
-python scripts/validate.py record.json --domain fietsenmakerdevries.example --dns-value 'v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=j4I88ldun0pst/oOl5WF+uIVP2hX4szG4S55bSJO8Ug='
+python scripts/validate.py record.json --domain fietsenmakerdevries.example --dns-value 'v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=x+SPeLQciIniVjwkcXJeN99mfnW/vOhp3kcyrwnSVmc='
 ```
 
 ### Zelf hosten of via een aanbieder

@@ -1,0 +1,71 @@
+{
+  "record_version": "abiz1",
+  "business_name": "Bücherwurm Antiquariat Müller",
+  "country": "de",
+  "identity_host": "buecherwurm-mueller.biz.to.co",
+  "domains": [
+    "buecherwurm.example"
+  ],
+  "public_key": "OvMnNT5gZsQNN8fNZI6OvaeFzhCYccSUfNhHhjEpuk8=",
+  "description": "Antiquarische Bücher, nur im Versand. Kein Ladengeschäft.",
+  "website": "https://buecherwurm.example",
+  "email": "kontakt@buecherwurm.example",
+  "phone": "+493012345678",
+  "social_profiles": {
+    "instagram": "https://www.instagram.com/buecherwurm.example",
+    "youtube": "https://www.youtube.com/@buecherwurm-example"
+  },
+  "categories": {
+    "primary": {
+      "taxonomy": "nace_rev2",
+      "id": "47.79",
+      "name": "Einzelhandel mit Antiquitäten und Gebrauchtwaren"
+    },
+    "additional": [
+      {
+        "taxonomy": "nace_rev2",
+        "id": "47.91",
+        "name": "Versand- und Internet-Einzelhandel"
+      }
+    ]
+  },
+  "media": [
+    {
+      "id": "logo",
+      "kind": "logo",
+      "url": "https://buecherwurm.example/media/logo.svg",
+      "content_type": "image/svg+xml",
+      "alt_text": "Bücherwurm logo",
+      "position": 1
+    },
+    {
+      "id": "shelves",
+      "kind": "cover",
+      "url": "https://buecherwurm.example/media/regale.webp",
+      "content_type": "image/webp",
+      "width": 1600,
+      "height": 900,
+      "caption": "Unser Lager in Berlin",
+      "alt_text": "Holzregale voller alter Bücher",
+      "position": 2,
+      "updated_at": "2026-10-01T08:00:00Z"
+    },
+    {
+      "id": "divider",
+      "kind": "image",
+      "url": "https://buecherwurm.example/media/ornament.png",
+      "content_type": "image/png",
+      "decorative": true,
+      "position": 3
+    },
+    {
+      "id": "tour",
+      "kind": "video",
+      "url": "https://buecherwurm.example/media/rundgang.mp4",
+      "content_type": "video/mp4"
+    }
+  ],
+  "operational_status": "open",
+  "last_updated": "2026-11-03T09:00:00Z",
+  "signature": "wWUUHGKCOCJgI98XkObzRuhQoWBg8U5M/S7TIn+YI6W8CT43d2UbPznM0sNjCrZSVBcDEKtkwRi1S0gkfwHfCQ=="
+}

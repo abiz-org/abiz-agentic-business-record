@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk="
+_abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=qAinYSmwCM5pVYfl7HyfN59lY9//cQySA+O0zEq0JvI="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -63,21 +63,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "kauricoastbakery.example"
   ],
-  "public_key": "pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk=",
+  "public_key": "qAinYSmwCM5pVYfl7HyfN59lY9//cQySA+O0zEq0JvI=",
   "description": "Pies, sourdough and kūmara bread.",
   "website": "https://kauricoastbakery.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Dargaville",
-      "country": "nz",
+      "address": {
+        "locality": "Dargaville",
+        "country": {
+          "code": "NZ"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Pacific/Auckland",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "06:30",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "06:30",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "06:30",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "06:30",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "06:30",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "06:30",
+                "closes": "16:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 06:30-16:00"
-  ],
-  "signature": "qLuF+C0MhhPxN7VZziO/7C/a2qYQD9wJOCqbY51ynmB+8DrGsxedJKDa4kHD6mQaHNypk5Gr1zXQ/JK6oD5XDg=="
+  "signature": "bCmQI7xTta8w7XPQRshNwlF05HzwFIsxgoNsYyEs0i1NGJz4RP0aewE+eDKr8PCBfJbGrP6OXCmCMHM8cnD6Cg=="
 }
 ```
 
@@ -90,7 +154,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain kauricoastbakery.example \
-  --dns-value 'v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk='
+  --dns-value 'v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=qAinYSmwCM5pVYfl7HyfN59lY9//cQySA+O0zEq0JvI='
 ```
 
 ## 3. Using a provider and MCP
@@ -107,7 +171,7 @@ To see how one provider describes this for New Zealand businesses, see [ABIZ rec
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=pRNWYg4E0jx65MgwQdU7lJWQgcFgh6HGeOavgDc9RUk="
+  _abiz.kauricoastbakery.example. 300 IN TXT "v=abiz1;k=nz-1234567;h=kauricoastbakery.nz.to.co;p=qAinYSmwCM5pVYfl7HyfN59lY9//cQySA+O0zEq0JvI="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.elaiourgeiokritis.example. 300 IN TXT "v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=E6xL8LcKv3RqGKkxRQEr8c+8qdZJE3wO10ZF6Rieo6U="
+_abiz.elaiourgeiokritis.example. 300 IN TXT "v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=gKHkKJuzfOKOvMN8YY7ej46KbVPWAP7qLbn+5pD+rl4="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://elaiourgeiokritis.gr.to.co`, as `application/json`
   "domains": [
     "elaiourgeiokritis.example"
   ],
-  "public_key": "E6xL8LcKv3RqGKkxRQEr8c+8qdZJE3wO10ZF6Rieo6U=",
+  "public_key": "gKHkKJuzfOKOvMN8YY7ej46KbVPWAP7qLbn+5pD+rl4=",
   "description": "Olive mill in Heraklion.",
   "website": "https://elaiourgeiokritis.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Heraklion",
-      "country": "gr",
+      "address": {
+        "locality": "Heraklion",
+        "country": {
+          "code": "GR"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "B1cbPPBblYSt6TWoKS9SdK8VRdyJs2nO/uxxdHe60/agGo4evPh9lbNOG4qTJdNbgUH7/k4/3idWqwCpRBj/AA=="
+  "signature": "crqOG6TqdAjjC1UUksYZzzZ+hRLfe0Y0eody9wdYm0q0rXz9Sw9AtkiQgySIYJ453kucE9eXSBsb4bRfjfrVAg=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain elaiourgeiokritis.example --dns-value 'v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=E6xL8LcKv3RqGKkxRQEr8c+8qdZJE3wO10ZF6Rieo6U='
+python scripts/validate.py record.json --domain elaiourgeiokritis.example --dns-value 'v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=gKHkKJuzfOKOvMN8YY7ej46KbVPWAP7qLbn+5pD+rl4='
 ```
 
 ### Self-hosted or through a provider

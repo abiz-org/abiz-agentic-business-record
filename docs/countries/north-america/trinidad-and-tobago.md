@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=ow8Bdw/tRNkUT/jT4lze0JY/qx1BhfvHyOb2DcnhCdY="
+_abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -63,22 +63,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "steelpanworkshop.example"
   ],
-  "public_key": "ow8Bdw/tRNkUT/jT4lze0JY/qx1BhfvHyOb2DcnhCdY=",
+  "public_key": "iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q=",
   "description": "Steelpan making, tuning and lessons.",
   "website": "https://steelpanworkshop.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Port of Spain",
-      "country": "tt",
+      "address": {
+        "locality": "Port of Spain",
+        "country": {
+          "code": "TT"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Port_of_Spain",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "14:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 09:00-17:00",
-    "Sa 10:00-14:00"
-  ],
-  "signature": "CWz3SxD9S8mfuXHIzf/afYkjGpvCmBke4BLbYgW+5eRiE3QhA5OYUJd6VyJEWusB8eVcVq/vfbRHXmd8SoBbBw=="
+  "signature": "LrbSBZgaojjsnxJLJQPaLAW7SwhA1Eq/T68+JEiot67Ov81ygyHUZed6yPqMHXDeXP/ubFp37nH1yLr+Sli6DQ=="
 }
 ```
 
@@ -91,7 +154,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain steelpanworkshop.example \
-  --dns-value 'v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=ow8Bdw/tRNkUT/jT4lze0JY/qx1BhfvHyOb2DcnhCdY='
+  --dns-value 'v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q='
 ```
 
 ## 3. Using a provider and MCP
@@ -106,7 +169,7 @@ For example, a provider might host the record for Steelpan Workshop at `steelpan
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=ow8Bdw/tRNkUT/jT4lze0JY/qx1BhfvHyOb2DcnhCdY="
+  _abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

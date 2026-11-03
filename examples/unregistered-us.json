@@ -6,7 +6,7 @@
   "domains": [
     "marketstand.example"
   ],
-  "public_key": "HKmFn2cg/6EXCYZ75lHdr7S7vfq1GUfodvTyb6pl5Uc=",
+  "public_key": "zc6S6bKXaZXO7NCI+fjtgMWLdbdEeavjVvydQsoQCJ0=",
   "services": [
     {
       "name": "Small appliance repairs"
@@ -14,11 +14,18 @@
   ],
   "locations": [
     {
-      "city": "Portland",
-      "region": "Oregon",
-      "country": "US"
+      "address": {
+        "locality": "Portland",
+        "region": {
+          "code": "US-OR",
+          "name": "Oregon"
+        },
+        "country": {
+          "code": "US"
+        }
+      }
     }
   ],
   "website": "https://marketstand.example",
-  "signature": "icIxxjas7GIlcYcG1sY6b431rnIdZMikCZU2/ciQ4m27AgI9lZk6vgBk+MagZn5R3M/d+TpFfMVG0g1hEL5aCg=="
+  "signature": "cgbqS3tAawDzTQaH355zfaS/gmyLJRs6H4xn3+FCFNPAE5OQ5qpAMLqfe0MEnPMXMCMlmluXdrdrY2zN0fFJBw=="
 }

@@ -33,7 +33,7 @@ Nella Città del Vaticano non esiste un registro pubblico nazionale delle impres
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.libreriadelborgo.example. 300 IN TXT "v=abiz1;h=www.libreriadelborgo.example/abiz.json;p=x0y7OJ74xAdD6Yih0hFlcxLzUQtkaiwI4KmK5+c+SXc="
+_abiz.libreriadelborgo.example. 300 IN TXT "v=abiz1;h=www.libreriadelborgo.example/abiz.json;p=MrwcHkVFm/CET4gGNBY+rz9bpRGUQrpGYQzQf7zcu+o="
 ```
 
 - `v=abiz1` deve venire per primo. `h` è obbligatorio; `k` e `p` sono facoltativi.
@@ -55,25 +55,29 @@ La scheda servita all'indirizzo `https://www.libreriadelborgo.example/abiz.json`
   "domains": [
     "libreriadelborgo.example"
   ],
-  "public_key": "x0y7OJ74xAdD6Yih0hFlcxLzUQtkaiwI4KmK5+c+SXc=",
+  "public_key": "MrwcHkVFm/CET4gGNBY+rz9bpRGUQrpGYQzQf7zcu+o=",
   "description": "Libreria nella Città del Vaticano.",
   "website": "https://libreriadelborgo.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Città del Vaticano",
-      "country": "va",
+      "address": {
+        "locality": "Città del Vaticano",
+        "country": {
+          "code": "VA"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "RsINX+KMRIWBESyn093avC1P6r3N3vcHnGiqECVckaltE7cjzBGnXTk6T0eLJeuGGjf9/rLknNz5GZ/DyZ76Bw=="
+  "signature": "Djo3OE7peBFn+O+jG6jO1FasDPKJSGrE2E7Idvv6XGMInWlWFkqAlqx6q8yEESg1p5c0g9xB+NdElIocgwHFBw=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain libreriadelborgo.example --dns-value 'v=abiz1;h=www.libreriadelborgo.example/abiz.json;p=x0y7OJ74xAdD6Yih0hFlcxLzUQtkaiwI4KmK5+c+SXc='
+python scripts/validate.py record.json --domain libreriadelborgo.example --dns-value 'v=abiz1;h=www.libreriadelborgo.example/abiz.json;p=MrwcHkVFm/CET4gGNBY+rz9bpRGUQrpGYQzQf7zcu+o='
 ```
 
 ### In proprio o tramite un fornitore

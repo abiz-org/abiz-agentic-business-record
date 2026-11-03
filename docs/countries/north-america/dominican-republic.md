@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=bXadLhi/1L95GWA0U/hWEMv3/McifHJ1PhAxv4GYbNM="
+_abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -53,22 +53,90 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "panaderialaesquina.example"
   ],
-  "public_key": "bXadLhi/1L95GWA0U/hWEMv3/McifHJ1PhAxv4GYbNM=",
+  "public_key": "+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg=",
   "description": "Pan criollo, bizcochos y café.",
   "website": "https://panaderialaesquina.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Santo Domingo",
-      "country": "do",
+      "address": {
+        "locality": "Santo Domingo",
+        "country": {
+          "code": "DO"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Santo_Domingo",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "13:00"
+              }
+            ]
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 06:00-20:00",
-    "Su 07:00-13:00"
-  ],
-  "signature": "hdqC08Y6XY38HtHvpmK/3TRZD7FXJb83YELWLaaiymCTcOvMQvt5uPVTZKcARfmQbEcQmHfDUJ2t0OkScwluDg=="
+  "signature": "ollzonMIYoiRFhOse+xK9Gy1xXrtt5qGcaoTXaHocfvItfectJQOMpLRbNdjzoi+ybZp/0dj7F7K8vMciWKVCQ=="
 }
 ```
 
@@ -81,7 +149,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain panaderialaesquina.example \
-  --dns-value 'v=abiz1;h=panaderialaesquina.do.to.co;p=bXadLhi/1L95GWA0U/hWEMv3/McifHJ1PhAxv4GYbNM='
+  --dns-value 'v=abiz1;h=panaderialaesquina.do.to.co;p=+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg='
 ```
 
 ## 3. Proveedores y MCP
@@ -96,7 +164,7 @@ Por ejemplo, un proveedor puede alojar el registro de Panadería La Esquina en `
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=bXadLhi/1L95GWA0U/hWEMv3/McifHJ1PhAxv4GYbNM="
+  _abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

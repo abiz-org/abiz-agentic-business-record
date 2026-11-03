@@ -39,7 +39,7 @@ Se incluir `business_key` e `registration_number` no registro, inclua os dois, e
 Publique exatamente um registro TXT que comece com `v=abiz1` em `_abiz.` seguido do seu domínio. Use a forma compacta, sem espaços (seção 3.1.1), e um TTL de 300 segundos:
 
 ```dns
-_abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=irWAuPC//tp0qy9oFjazZEN5WP9NHZ8HllpGs0qIbtA="
+_abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw="
 ```
 
 Uma empresa sem número de registro, ou que prefira não publicá-lo, simplesmente omite `k`:
@@ -63,23 +63,94 @@ Este exemplo é fictício. Ele passa no validador de referência.
   "domains": [
     "padariapaodemel.example"
   ],
-  "public_key": "irWAuPC//tp0qy9oFjazZEN5WP9NHZ8HllpGs0qIbtA=",
+  "public_key": "niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw=",
   "description": "Padaria artesanal no bairro de Pinheiros.",
   "website": "https://padariapaodemel.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "São Paulo",
-      "region": "SP",
-      "country": "br",
+      "address": {
+        "locality": "São Paulo",
+        "region": {
+          "code": "BR-SP",
+          "name": "São Paulo"
+        },
+        "country": {
+          "code": "BR"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Sao_Paulo",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "13:00"
+              }
+            ]
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 06:00-20:00",
-    "Su 07:00-13:00"
-  ],
-  "signature": "1jg0nCAcDGdqOsUxKMYD2PIJCDZ7eznz4FzhzSNcJfZhyi3J9tPSgs75EGxu2yilptc1SJh1dCi0vqcSrY34Ag=="
+  "signature": "Uvv94nEZZt/UXrCavZRlibG/0v4n1k9517OK1dudBCgv7DleMAbudcxPtGtc6GNirQ08cifrEyiRfvYH4a10Dg=="
 }
 ```
 
@@ -92,7 +163,7 @@ Antes de publicar, verifique o registro e o valor DNS com o validador de referê
 ```sh
 python scripts/validate.py record.json \
   --domain padariapaodemel.example \
-  --dns-value 'v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=irWAuPC//tp0qy9oFjazZEN5WP9NHZ8HllpGs0qIbtA='
+  --dns-value 'v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw='
 ```
 
 ## 3. Provedores e MCP
@@ -107,7 +178,7 @@ Por exemplo, um provedor pode hospedar o registro da Padaria Pão de Mel em `pad
 - **Exemplo** (a chave é um exemplo descartável; a chave privada correspondente foi descartada). Nunca a copie: publique a sua própria chave ou omita `p`.
 
   ```dns
-  _abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=irWAuPC//tp0qy9oFjazZEN5WP9NHZ8HllpGs0qIbtA="
+  _abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw="
   ```
 
 - **A chave privada pertence à empresa.** Ela nunca deve aparecer no DNS, no registro nem num repositório público. Um provedor pode gerá-la e guardá-la por você (modo hospedado), mas deve permitir que você a exporte a qualquer momento, por exemplo em PKCS#8, e apagar a cópia dele quando você pedir (seção 3.3.4).

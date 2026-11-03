@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.uhrenatelierkeller.example. 300 IN TXT "v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=vpxtL/8E6+OOV84xCVpeQ2FHmPD1DN+QYSzpTi7ZD2I="
+_abiz.uhrenatelierkeller.example. 300 IN TXT "v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=5NEGT89sUhadAeardUi+JnqvqLgy8M4Q1qffKx4qeUA="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -65,25 +65,29 @@ Der Eintrag, der unter `https://uhrenatelierkeller.ch.to.co` als `application/js
   "domains": [
     "uhrenatelierkeller.example"
   ],
-  "public_key": "vpxtL/8E6+OOV84xCVpeQ2FHmPD1DN+QYSzpTi7ZD2I=",
+  "public_key": "5NEGT89sUhadAeardUi+JnqvqLgy8M4Q1qffKx4qeUA=",
   "description": "Uhrenatelier in Zürich.",
   "website": "https://uhrenatelierkeller.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Zürich",
-      "country": "ch",
+      "address": {
+        "locality": "Zürich",
+        "country": {
+          "code": "CH"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "1NH1w32NlsqSUw6payHsShOtGYJ5UgUwbo/WTiowqkVc686D1VRi9+la9xpHDIU3FhuOOtSacXVLLFwSA2MlBA=="
+  "signature": "gF0uF8DE2IALxhYQi2KDGzHj0FIbhXhHoyDL3C6g5YwN036RhJRGUfi+y7898+La5tz6/63bMj9XhG86GRDmBw=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain uhrenatelierkeller.example --dns-value 'v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=vpxtL/8E6+OOV84xCVpeQ2FHmPD1DN+QYSzpTi7ZD2I='
+python scripts/validate.py record.json --domain uhrenatelierkeller.example --dns-value 'v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=5NEGT89sUhadAeardUi+JnqvqLgy8M4Q1qffKx4qeUA='
 ```
 
 ### Selbst hosten oder über einen Anbieter

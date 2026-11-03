@@ -41,7 +41,7 @@ Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate 
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.titanoceramiche.example. 300 IN TXT "v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=LNzo6azZH0JdDc8KMUz6EOYlL6aIYroP6z4Xhsiq6X8="
+_abiz.titanoceramiche.example. 300 IN TXT "v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=ZkadQfgoS5g6YKYkNavD+5MrKELf9qGUyBsuvfLZ+Tg="
 ```
 
 - `v=abiz1` deve venire per primo. `h` è obbligatorio; `k` e `p` sono facoltativi.
@@ -65,25 +65,29 @@ La scheda servita all'indirizzo `https://titanoceramiche.sm.to.co` come `applica
   "domains": [
     "titanoceramiche.example"
   ],
-  "public_key": "LNzo6azZH0JdDc8KMUz6EOYlL6aIYroP6z4Xhsiq6X8=",
+  "public_key": "ZkadQfgoS5g6YKYkNavD+5MrKELf9qGUyBsuvfLZ+Tg=",
   "description": "Laboratorio di ceramica a Borgo Maggiore.",
   "website": "https://titanoceramiche.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Borgo Maggiore",
-      "country": "sm",
+      "address": {
+        "locality": "Borgo Maggiore",
+        "country": {
+          "code": "SM"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "u241LUx4DFaDhll1FYr+Nt/eh4BuX2Z2l/DVxYyelEVKDl1KPGO8SNeslBdluTPYIb6N8hvU1U97FNH3E34cDQ=="
+  "signature": "EsejFz4qh+JrDQ4+RjEiWOe30e9Mz36Cn37lNnzo1g3XtKDH4S0l2VrhSF4h/5qUGmxQXHPHlYbudzAAtX9OCw=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain titanoceramiche.example --dns-value 'v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=LNzo6azZH0JdDc8KMUz6EOYlL6aIYroP6z4Xhsiq6X8='
+python scripts/validate.py record.json --domain titanoceramiche.example --dns-value 'v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=ZkadQfgoS5g6YKYkNavD+5MrKELf9qGUyBsuvfLZ+Tg='
 ```
 
 ### In proprio o tramite un fornitore

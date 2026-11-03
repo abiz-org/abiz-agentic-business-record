@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.saaremaapuit.example. 300 IN TXT "v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=5Yml2duovLmqxpDHrlfGuPAQMx45FwN/kZ6BuFCHeFk="
+_abiz.saaremaapuit.example. 300 IN TXT "v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=7BJo7KsQHcijXmn0Oz4QZbMYmY6TJnClbf/yx7y7A44="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://saaremaapuit.ee.to.co`, as `application/json`:
   "domains": [
     "saaremaapuit.example"
   ],
-  "public_key": "5Yml2duovLmqxpDHrlfGuPAQMx45FwN/kZ6BuFCHeFk=",
+  "public_key": "7BJo7KsQHcijXmn0Oz4QZbMYmY6TJnClbf/yx7y7A44=",
   "description": "Timber workshop on Saaremaa.",
   "website": "https://saaremaapuit.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Kuressaare",
-      "country": "ee",
+      "address": {
+        "locality": "Kuressaare",
+        "country": {
+          "code": "EE"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "BWG4Qzci0uqUOroD+GfX9xbBcxE4Ws07QC4p0FuPizjKvGwmtZEzIkGtK+gIXsSfgs7c7WX4oaHC3xLYuBaJBw=="
+  "signature": "hdauw6Y/+qlD9O6sAbCaUpt43WSqC1RqnCLgG+valM2zTzPAxkNPiKYh1kjnU1gKOwdDnTXrq8OHVFGSnjr7CA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain saaremaapuit.example --dns-value 'v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=5Yml2duovLmqxpDHrlfGuPAQMx45FwN/kZ6BuFCHeFk='
+python scripts/validate.py record.json --domain saaremaapuit.example --dns-value 'v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=7BJo7KsQHcijXmn0Oz4QZbMYmY6TJnClbf/yx7y7A44='
 ```
 
 ### Self-hosted or through a provider

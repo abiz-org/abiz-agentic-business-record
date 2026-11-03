@@ -41,7 +41,7 @@ Las claves se comparan sin distinguir mayúsculas y minúsculas, pero publique l
 Publique un único registro TXT de ABIZ en `_abiz` de su dominio, en forma compacta y sin espacios:
 
 ```dns
-_abiz.panaderiagarcia.example. 300 IN TXT "v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=m5bgVeuA5CDbNwdgDOYQMTpeJPT+mLsFF+aLgGEWVC0="
+_abiz.panaderiagarcia.example. 300 IN TXT "v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=RIUMCp8r9lDTD/7HW+7qEr5VaUUCOiLr4aUwGyS+kYU="
 ```
 
 - `v=abiz1` debe ir primero. `h` es obligatorio; `k` y `p` son opcionales.
@@ -65,25 +65,29 @@ La ficha que se sirve en `https://panaderiagarcia.es.to.co` como `application/js
   "domains": [
     "panaderiagarcia.example"
   ],
-  "public_key": "m5bgVeuA5CDbNwdgDOYQMTpeJPT+mLsFF+aLgGEWVC0=",
+  "public_key": "RIUMCp8r9lDTD/7HW+7qEr5VaUUCOiLr4aUwGyS+kYU=",
   "description": "Panadería artesana en Valencia.",
   "website": "https://panaderiagarcia.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Valencia",
-      "country": "es",
+      "address": {
+        "locality": "Valencia",
+        "country": {
+          "code": "ES"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "b3hnuG+pAeSUKdR6mfuKW/crEODBfWaR02nm3Elvtph+3gwk7F8L+FcMZwDCBGW9gEZERFEFJ1Prse8pxdeMCQ=="
+  "signature": "gi3veEw/8DVI1Np6UjXPmVFfuNCtbPz9p9tKNZ9tMwGi1CBy2TeN7Xw6I6cc1veDFemyhS0cpKRbjpa+1bAoBA=="
 }
 ```
 
 Con el validador de referencia puede comprobar en local la ficha y el valor DNS:
 
 ```sh
-python scripts/validate.py record.json --domain panaderiagarcia.example --dns-value 'v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=m5bgVeuA5CDbNwdgDOYQMTpeJPT+mLsFF+aLgGEWVC0='
+python scripts/validate.py record.json --domain panaderiagarcia.example --dns-value 'v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=RIUMCp8r9lDTD/7HW+7qEr5VaUUCOiLr4aUwGyS+kYU='
 ```
 
 ### Por su cuenta o con un proveedor

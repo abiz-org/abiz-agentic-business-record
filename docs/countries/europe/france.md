@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.boulangeriemartin.example. 300 IN TXT "v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=szgBK4fodd9feDENFfCEOR2lYzofU2yQkWlngD6cZBE="
+_abiz.boulangeriemartin.example. 300 IN TXT "v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=RvoPOjuuV9jqdn3+BVdq72bAF5C52Mfsv+SAHe8Qfow="
 ```
 
 - `v=abiz1` doit venir en premier. `h` est obligatoire ; `k` et `p` sont facultatifs.
@@ -65,25 +65,29 @@ La fiche servie à l'adresse `https://boulangeriemartin.fr.to.co`, au format `ap
   "domains": [
     "boulangeriemartin.example"
   ],
-  "public_key": "szgBK4fodd9feDENFfCEOR2lYzofU2yQkWlngD6cZBE=",
+  "public_key": "RvoPOjuuV9jqdn3+BVdq72bAF5C52Mfsv+SAHe8Qfow=",
   "description": "Boulangerie artisanale à Lyon.",
   "website": "https://boulangeriemartin.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Lyon",
-      "country": "fr",
+      "address": {
+        "locality": "Lyon",
+        "country": {
+          "code": "FR"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "0NieNEPwb56cgaQDC3gHAJK3u8UPuUEEh1YFk2ojg543JY0Z292kMu8FtBJDYHMcl0oy/2AWTeVSM+YZMPKrCg=="
+  "signature": "psMj75tYWYdZ/CZh1E0DOphLOvYcEP/bSW3hEvcOnMd/PY9cM09ZIhxp6kogZ9ezosDTsVSjMY5xmaEg/q/YCg=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain boulangeriemartin.example --dns-value 'v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=szgBK4fodd9feDENFfCEOR2lYzofU2yQkWlngD6cZBE='
+python scripts/validate.py record.json --domain boulangeriemartin.example --dns-value 'v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=RvoPOjuuV9jqdn3+BVdq72bAF5C52Mfsv+SAHe8Qfow='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur

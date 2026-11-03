@@ -1,0 +1,14 @@
+{
+  "record_version": "abiz1",
+  "business_name": "Café Lumière SARL",
+  "country": "fr",
+  "business_key": "fr-123456789",
+  "registration_number": "123456789",
+  "identity_host": "cafelumiere.fr.to.co",
+  "domains": [
+    "cafelumiere.example"
+  ],
+  "public_key": "vn/11MtLUfHv82429l3ucz74T2c8QeTc37VW3eWHC8Y=",
+  "last_updated": "2026-11-03T09:00:00Z",
+  "signature": "v2njmnSY2AM23h/7H0hoTh5NSX/87vIbLrAYFwvNyeJnLnRYYD3IUgofDvDxvCP07O62r5ypx2i8yipTXp6sDg=="
+}

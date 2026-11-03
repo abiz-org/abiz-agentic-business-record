@@ -1,0 +1,80 @@
+{
+  "record_version": "abiz1",
+  "business_name": "The Tidy Teapot",
+  "country": "gb",
+  "identity_host": "thetidyteapot.biz.to.co",
+  "domains": [
+    "tidyteapot.example"
+  ],
+  "public_key": "zO7AEoSwH8/8t43mjvFGyQETuaysg8C6H0MW8ACkyYA=",
+  "website": "https://tidyteapot.example",
+  "review_summaries": [
+    {
+      "platform": "google_business_profile",
+      "rating": 4.6,
+      "rating_scale": 5,
+      "review_count": 83,
+      "source_url": "https://listings.example.com/google/tidy-teapot-york",
+      "observed_at": "2026-11-03T08:00:00Z"
+    }
+  ],
+  "locations": [
+    {
+      "location_id": "york",
+      "kind": "trading",
+      "name": "The Tidy Teapot, York",
+      "address": {
+        "street_lines": [
+          "7 Example Gate"
+        ],
+        "locality": "York",
+        "postal_code": "YO1 7XX",
+        "country": {
+          "code": "GB"
+        }
+      },
+      "categories": {
+        "primary": {
+          "taxonomy": "uk_sic_2007",
+          "id": "56102",
+          "name": "Unlicensed restaurants and cafes"
+        }
+      },
+      "external_listings": [
+        {
+          "platform": "google_business_profile",
+          "public_url": "https://listings.example.com/google/tidy-teapot-york",
+          "external_id": "tidy-teapot-york-0001",
+          "observed_at": "2026-11-03T08:00:00Z",
+          "claimed_by_business": true
+        },
+        {
+          "platform": "apple_maps",
+          "public_url": "https://listings.example.com/apple/tidy-teapot-york",
+          "observed_at": "2026-11-03T08:00:00Z"
+        }
+      ],
+      "review_summaries": [
+        {
+          "platform": "google_business_profile",
+          "rating": 4.6,
+          "rating_scale": 5,
+          "review_count": 83,
+          "source_url": "https://listings.example.com/google/tidy-teapot-york",
+          "observed_at": "2026-11-03T08:00:00Z"
+        },
+        {
+          "platform": "apple_maps",
+          "rating": 92,
+          "rating_scale": 100,
+          "review_count": 41,
+          "source_url": "https://listings.example.com/apple/tidy-teapot-york",
+          "observed_at": "2026-11-03T08:00:00Z"
+        }
+      ],
+      "public": true
+    }
+  ],
+  "last_updated": "2026-11-03T09:00:00Z",
+  "signature": "8+48UTqd+br1cIlcJbvYKo633wW0iq5tKamp6IFFzThNEEjk15vQqaaGlSNI4ViVpkIYsYEy3xXth/7nXqjBBg=="
+}

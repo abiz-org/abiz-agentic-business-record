@@ -39,7 +39,7 @@ Neemt u `business_key` en `registration_number` op in het record, neem dan beide
 Publiceer precies één TXT-record dat begint met `v=abiz1` op `_abiz.` gevolgd door uw domein. Gebruik de compacte vorm zonder spaties (sectie 3.1.1) en een TTL van 300 seconden:
 
 ```dns
-_abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw="
+_abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY="
 ```
 
 Een bedrijf zonder inschrijvingsnummer, of dat het liever niet publiceert, laat `k` gewoon weg:
@@ -63,21 +63,85 @@ Dit voorbeeld is fictief. Het slaagt voor de referentievalidator.
   "domains": [
     "bakkerijparamaribo.example"
   ],
-  "public_key": "/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw=",
+  "public_key": "mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY=",
   "description": "Ambachtelijke bakkerij in het centrum van Paramaribo.",
   "website": "https://bakkerijparamaribo.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Paramaribo",
-      "country": "sr",
+      "address": {
+        "locality": "Paramaribo",
+        "country": {
+          "code": "SR"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Paramaribo",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 06:00-18:00"
-  ],
-  "signature": "bXAuNPbMu6vAZQ0Pth3bhkFyYhRZPcsbDSFWutt+60GPeC8rSUAaiaeObYIe/bSTcVtQ6I0qlRnXH0ciXFOPDQ=="
+  "signature": "W+2wg5dfRuMqiphL6yK2qNlg2pQ8SenwAeZwtUoojJeo5VtV+YgYVMtchQgThMY9AGNIheCGg9S1k1Z55vFoBg=="
 }
 ```
 
@@ -90,7 +154,7 @@ Controleer het record en de DNS-waarde vóór publicatie met de referentievalida
 ```sh
 python scripts/validate.py record.json \
   --domain bakkerijparamaribo.example \
-  --dns-value 'v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw='
+  --dns-value 'v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY='
 ```
 
 ## 3. Aanbieders en MCP
@@ -105,7 +169,7 @@ Een aanbieder kan bijvoorbeeld het record van Bakkerij Paramaribo hosten op `bak
 - **Voorbeeld** (voorbeeldsleutel voor eenmalig gebruik; de private sleutel is vernietigd). Kopieer hem nooit: publiceer uw eigen sleutel of laat `p` weg.
 
   ```dns
-  _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=/MazopUr46VXAGEcFr4B3NLtGPxsl5lKaERihR+41Gw="
+  _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY="
   ```
 
 - **De private sleutel is van het bedrijf.** Hij mag nooit in de DNS, in het record of in een openbare repository staan. Een aanbieder mag hem voor u aanmaken en bewaren (gehoste modus), maar moet u hem altijd laten exporteren, bijvoorbeeld als PKCS#8, en zijn kopie op verzoek verwijderen (sectie 3.3.4).

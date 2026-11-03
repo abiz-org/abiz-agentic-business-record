@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=F+QD3YhImQVUmtfNSAqcAiYSTUg6kcIBqCcNeBrklgg="
+_abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=pW935lccyPaOHhZlPmEkKyLV7TU98Hc4q8m/8oe9tqI="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -65,25 +65,29 @@ Der Eintrag, der unter `https://baeckereimueller.de.to.co` als `application/json
   "domains": [
     "baeckereimueller.example"
   ],
-  "public_key": "F+QD3YhImQVUmtfNSAqcAiYSTUg6kcIBqCcNeBrklgg=",
+  "public_key": "pW935lccyPaOHhZlPmEkKyLV7TU98Hc4q8m/8oe9tqI=",
   "description": "Handwerksbäckerei in Hamburg.",
   "website": "https://baeckereimueller.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Hamburg",
-      "country": "de",
+      "address": {
+        "locality": "Hamburg",
+        "country": {
+          "code": "DE"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "R4gmgzlCdmmzetLkPtZLFxUOOe+svi97Tf24sk1JjO1JoLfdg6htDHSdT+aI7K0/K9jkx7ilxrnYHnYj+AkrDQ=="
+  "signature": "XiSQHvu1s9j7zZtTAdyy5/B7uyXPYhUExaFIqF/5b5R8lSQGsUUVekfnbZHS+55gmwCu13MF1SKIWHUxqB0QAg=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain baeckereimueller.example --dns-value 'v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=F+QD3YhImQVUmtfNSAqcAiYSTUg6kcIBqCcNeBrklgg='
+python scripts/validate.py record.json --domain baeckereimueller.example --dns-value 'v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=pW935lccyPaOHhZlPmEkKyLV7TU98Hc4q8m/8oe9tqI='
 ```
 
 ### Selbst hosten oder über einen Anbieter

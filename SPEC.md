@@ -3,7 +3,7 @@
 **Published version:** ABIZ 1.0  
 **DNS wire version:** `v=abiz1` (unchanged)  
 **Date:** 2026-10-23  
-**1.1 proposal:** 2026-10-31, revised 2026-11-03, amended 2026-11-03 twice (not the published version; see sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6 and 8)  
+**1.1 proposal:** 2026-10-31, revised 2026-11-03, amended 2026-11-03 three times (not the published version; see sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6, 4.7 and 8)  
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
 **Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
@@ -11,7 +11,7 @@
 
 This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
 
-Sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6 and 8 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace; a REQUIRED Ed25519 key in the DNS `p` tag; snake_case member names throughout the business record; REQUIRED `public_key` and `signature` members that sign the business record with the `p` key (section 4.6); a well-known file, `https://<domain>/.well-known/abiz.json`, as an alternative to the DNS record; a `format` query parameter (`html`, `markdown`, `json`) at the record host; a defined business-key grammar with country, subdivision and registration-number rules, with `k` optional for every business; record hosts given as bare hostnames, with paths reserved for business units and divisions; and no support for North Korea (`kp`). They are not part of the ABIZ 1.0 conformance baseline. The whitespace change, the well-known file, the `format` parameter and optional `k` are backwards-compatible for consumers. The `p`, business-key, snake_case and record-signature changes are deliberately not: an assertion without `p`, or with a non-key `p`, is invalid (section 3.3.7), existing keys must be re-expressed (section 4.2.5), and every business record must be republished with snake_case member names, `public_key` and a valid `signature` (section 4.6.7). The wire version stays `v=abiz1`.
+Sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6, 4.7 and 8 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace; a REQUIRED Ed25519 key in the DNS `p` tag; snake_case member names throughout the business record; REQUIRED `public_key` and `signature` members that sign the business record with the `p` key (section 4.6); a well-known file, `https://<domain>/.well-known/abiz.json`, as an alternative to the DNS record; a `format` query parameter (`html`, `markdown`, `json`) at the record host; a defined business-key grammar with country, subdivision and registration-number rules, with `k` optional for every business; record hosts given as bare hostnames, with paths reserved for business units and divisions; no support for North Korea (`kp`); and structured location, contact, hours and listing facts (section 4.7). They are not part of the ABIZ 1.0 conformance baseline. The whitespace change, the well-known file, the `format` parameter and optional `k` are backwards-compatible for consumers. The `p`, business-key, snake_case and record-signature changes are deliberately not: an assertion without `p`, or with a non-key `p`, is invalid (section 3.3.7), existing keys must be re-expressed (section 4.2.5), and every business record must be republished with snake_case member names, `public_key` and a valid `signature` (section 4.6.7). The section 4.7 amendment is breaking too: `email` and `phone` replace `contact_email` and `contact_phone`, root `opening_hours` is replaced by structured hours in each location, and a location's address is nested (section 4.7.14). The wire version stays `v=abiz1`.
 
 ## 1. Scope and purpose
 
@@ -69,7 +69,7 @@ Rules that go with the grammar:
 - At most one trailing `;` is allowed. An empty tag (`;;`), a tag without `=`, and a tag with an empty name or value are invalid.
 - A repeated recognised tag makes the assertion invalid. Unknown tags are ignored, including repeated ones.
 
-Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=`. A strict ABIZ 1.0 consumer rejects any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
+Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=`. A strict ABIZ 1.0 consumer rejects any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
 
 ### 3.2 Tags
 
@@ -85,13 +85,13 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 **Example — registered business (US):**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
 ```
 
 **Example — unregistered business (US):**
 
 ```dns
-_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.biz.to.co;p=HKmFn2cg/6EXCYZ75lHdr7S7vfq1GUfodvTyb6pl5Uc="
+_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.biz.to.co;p=zc6S6bKXaZXO7NCI+fjtgMWLdbdEeavjVvydQsoQCJ0="
 ```
 
 Both are illustrative, invented businesses, and each `p` is a throwaway Ed25519 public key whose private key is not in the repository. These entries demonstrate alternatives on **different DNS owners**. A business MUST NOT publish both as independent matching assertions at one owner name.
@@ -101,7 +101,7 @@ These hostnames are examples of to.co's country-based registered-company hostnam
 **Example — the same registered business, without `k`:**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
 ```
 
 `k` is optional; `h` and `p` are not. See `examples/dns-ed25519-p.txt` and section 3.3. An assertion such as `v=abiz1;h=harbour-bike-repair.or.us.to.co`, valid under ABIZ 1.0, is invalid under ABIZ 1.1 because it has no `p`.
@@ -261,7 +261,7 @@ Example, matching the registered DNS example in section 3.2 (`examples/well-know
   "v": "abiz1",
   "k": "us-or-123456",
   "h": "harbour-bike-repair.or.us.to.co",
-  "p": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
+  "p": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
 }
 ```
 
@@ -298,7 +298,7 @@ The `h` target is the URL `https://<h>`. A consumer fetches the business record 
 
 The authoritative current key is `p` in the DNS assertion or the well-known file (section 3.4). The record repeats it as `public_key` and carries a `signature` made with the matching private key (section 4.6). The encoding is normative in section 3.3.2: standard base64 of the raw 32-byte Ed25519 public key, the same `p=` encoding DKIM specifies for Ed25519 in RFC 8463 (RFC 4648 section 4, with padding).
 
-ABIZ 1.1 (proposed) renames every record member to snake_case (`record_version`, `business_name`, `identity_host`, `business_key`, `registration_number`, `mcp_server_url`, `contact_email`, `contact_phone`, `logo_url`, `last_updated`, `opening_hours`, `locations[].postal_code`) and adds two REQUIRED members, `public_key` and `signature` (section 4.6). Hyphenated member names are unknown top-level properties and are rejected. The business-record schema keeps its file name and `$id`. The schema's `$defs` holds a nested definition, `retired_key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
+ABIZ 1.1 (proposed) renames every record member to snake_case (`record_version`, `business_name`, `identity_host`, `business_key`, `registration_number`, `mcp_server_url`, `logo_url`, `last_updated`) and adds two REQUIRED members, `public_key` and `signature` (section 4.6). The section 4.7 amendment then renames `contact_email` and `contact_phone` to `email` and `phone`, removes root `opening_hours`, nests a location's address and adds the members listed in section 4.3. Hyphenated member names are unknown top-level properties and are rejected. The business-record schema keeps its file name and `$id`. The schema's `$defs` holds the shared definitions of section 4.7 (such as `address`, `opening_hours` and `media_item`) and one more nested definition, `retired_key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
 
 ### 4.1 Required properties
 
@@ -376,7 +376,7 @@ Leading zeros and letter prefixes are part of the number and MUST be kept: `0123
 
 #### 4.2.4 Case and comparison
 
-Case is not significant anywhere in a business key, nor in the record's `country` and `locations[].country`. Consumers MUST compare country codes, subdivision codes, registration numbers and whole business keys case-insensitively (ASCII case folding). `US-OR-123456`, `us-or-123456` and `us-OR-123456` are the same key.
+Case is not significant anywhere in a business key, nor in the record's `country`. The ISO 3166 codes of section 4.7 (`address.country.code`, `address.region.code`, service-area codes and tax `jurisdiction`) are written in uppercase, as ISO 3166 writes them, and the schema requires that; a consumer compares them with `country` and `business_key` case-insensitively. Consumers MUST compare country codes, subdivision codes, registration numbers and whole business keys case-insensitively (ASCII case folding). `US-OR-123456`, `us-or-123456` and `us-OR-123456` are the same key.
 
 Producers SHOULD publish the canonical form: country and subdivision in lowercase, registration number in uppercase, for example `us-or-123456`, `ca-bc-BC0578072`, `de-K1101RHRB12345`. Record `country` SHOULD also be lowercase.
 
@@ -390,11 +390,11 @@ This is a breaking change for keys. ABIZ 1.0 allowed `.`, `_` and `-` inside the
 
 #### 4.2.7 Unsupported country: North Korea (ABIZ 1.1, proposed)
 
-ABIZ does not support businesses in North Korea (the Democratic People's Republic of Korea, ISO 3166-1 `kp`). A business record whose `country`, or any `locations[].country`, is `kp` (in any case) is invalid, and so is a business key whose country is `kp`. Producers MUST NOT publish such a record or key, and consumers MUST reject it. South Korea (`kr`) is unaffected.
+ABIZ does not support businesses in North Korea (the Democratic People's Republic of Korea, ISO 3166-1 `kp`). A business record whose `country`, any `locations[].address.country.code`, service-area code or tax `jurisdiction` is `kp` (in any case) is invalid, and so is a business key whose country is `kp`. Producers MUST NOT publish such a record or key, and consumers MUST reject it. South Korea (`kr`) is unaffected.
 
 ### 4.3 Optional useful facts
 
-The schema defines optional `description`, `website`, `contact_email`, `contact_phone`, `logo_url`, `last_updated`, `services`, `locations`, `opening_hours` and `links`. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record.
+The schema defines optional `description`, `website`, `email`, `phone`, `logo_url`, `blog_url`, `rss_url`, `last_updated`, `services`, `locations`, `tax_registrations`, `social_profiles`, `categories`, `media`, `review_summaries`, `operational_status` and `links`. Section 4.7 sets out the rules for them and for the members of a location. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record (section 4.7.6.2). A record MUST NOT contain `recent_posts` (section 4.7.12).
 
 Implementations MAY add namespaced values inside `extensions` (reverse-domain keys). Member names inside an extension are defined by its owner; snake_case is RECOMMENDED, and the examples in this repository use it (for example `"to.co": {"badge": "registered", "business_pass": true}`). Extensions are covered by the record signature. Unknown top-level properties MUST be rejected. Extensions MUST NOT override the meaning of mandatory fields.
 
@@ -407,6 +407,8 @@ Schema validation does **not** check the following. The reference validator chec
 - whether `identity_host` matches a fetched DNS or well-known `h` value, or whether the two sources agree (section 3.4.4);
 - whether `business_key` matches `k` and `country`, or uses an assigned country and subdivision code (section 4.2);
 - whether `signature` verifies, or whether `public_key` equals `p` (section 4.6.4);
+- the rules of section 4.7.13: safe URLs, assigned codes, time zones, overlapping hours, repeated identifiers, ratings within their scale and the `recent_posts` ban anywhere;
+- whether a tax registration, listing or review summary is genuine or current;
 - whether a registration number is real;
 - whether URLs are reachable;
 - whether the business is genuine.
@@ -456,12 +458,12 @@ In summary, RFC 8785 serialises with no insignificant whitespace, sorts object m
 - The record MUST be valid I-JSON (RFC 7493): no duplicate member names, no lone surrogates, and numbers that fit an IEEE 754 double. A consumer MUST reject a record that is not, before verifying.
 - The served JSON need not be in canonical form. Member order, indentation and whitespace in the served document do not affect the signature, because the consumer canonicalises what it parsed.
 - No Unicode normalisation is applied. Producers SHOULD write text in NFC before signing; a consumer MUST NOT normalise it before verifying.
-- A producer MUST NOT sign a record that contains a number that cannot be represented exactly as a double. The base schema has no numeric members; this matters only for extensions.
+- A producer MUST NOT sign a record that contains a number that cannot be represented exactly as a double. Since the section 4.7 amendment the base schema has numeric members: `geo` coordinates, ratings, counts, radii, media dimensions and positions. They are serialised with the RFC 8785 number rules (section 3.2.2.3), so `51.4550` becomes `51.455` and `5.0` becomes `5`. Producers SHOULD write coordinates with no more than seven decimal places.
 
 `examples/registered-us.signing-input.txt` is the signing input of `examples/registered-us.json`, as a test vector:
 
 ```text
-{"business_key":"us-or-123456","business_name":"Harbour Bike Repair LLC","country":"us","description":"Bicycle repair and maintenance in Portland.","domains":["harbourbikes.example"],"identity_host":"harbour-bike-repair.or.us.to.co","last_updated":"2026-11-03T09:00:00Z","locations":[{"city":"Portland","country":"us","kind":"trading","public":true,"region":"Oregon"}],"opening_hours":["Mo-Fr 09:00-17:00"],"public_key":"bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=","record_version":"abiz1","registration_number":"123456","services":[{"name":"Bicycle servicing"},{"name":"Wheel repairs"}],"website":"https://harbourbikes.example"}
+{"business_key":"us-or-123456","business_name":"Harbour Bike Repair LLC","country":"us","description":"Bicycle repair and maintenance in Portland.","domains":["harbourbikes.example"],"identity_host":"harbour-bike-repair.or.us.to.co","last_updated":"2026-11-03T09:00:00Z","locations":[{"address":{"country":{"code":"US"},"locality":"Portland","region":{"code":"US-OR","name":"Oregon"}},"kind":"trading","opening_hours":{"time_zone":"America/Los_Angeles","weekly":[{"day":"monday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"tuesday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"wednesday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"thursday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"friday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"saturday","periods":[]},{"day":"sunday","periods":[]}]},"public":true}],"public_key":"6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=","record_version":"abiz1","registration_number":"123456","services":[{"name":"Bicycle servicing"},{"name":"Wheel repairs"}],"website":"https://harbourbikes.example"}
 ```
 
 #### 4.6.3 Producing a signature
@@ -521,6 +523,8 @@ Until cached TXT records expire, some consumers still hold the old `p` and will 
 
 This is a breaking change for business records. A record without `public_key` or `signature`, or one that still uses the hyphenated ABIZ 1.0 member names (`record-version`, `business-name` and so on), fails the ABIZ 1.1 schema. Producers MUST republish every record with snake_case names, `public_key` and a valid signature. A consumer MAY, for a transition period it announces, also read hyphenated names, but it MUST NOT report such a record as ABIZ 1.1 conformant or as verified.
 
+The section 4.7 amendment is a further breaking change of the same kind. A record that still has `contact_email`, `contact_phone`, root `opening_hours` or a flat location fails the amended schema, and an amended record fails a validator built before the amendment. Producers MUST migrate as section 4.7.14 sets out and re-sign every migrated record. The key and `p` do not change because of the migration.
+
 #### 4.6.8 Example
 
 `examples/registered-us.json`, signed with the throwaway key of the registered DNS example in section 3.2 (the private key was discarded and is not in this repository):
@@ -536,7 +540,7 @@ This is a breaking change for business records. A record without `public_key` or
   "domains": [
     "harbourbikes.example"
   ],
-  "public_key": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=",
+  "public_key": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=",
   "description": "Bicycle repair and maintenance in Portland.",
   "website": "https://harbourbikes.example",
   "services": [
@@ -550,19 +554,300 @@ This is a breaking change for business records. A record without `public_key` or
   "locations": [
     {
       "kind": "trading",
-      "city": "Portland",
-      "region": "Oregon",
-      "country": "us",
+      "address": {
+        "locality": "Portland",
+        "region": {
+          "code": "US-OR",
+          "name": "Oregon"
+        },
+        "country": {
+          "code": "US"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Los_Angeles",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": []
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 09:00-17:00"
-  ],
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "tp0XN8oWyi/OoJhVyHhCfHqJk7PHgfO1K6ZkMYaPSEuL8m+BauS6ZSwCFygRyQrwsCX1qoy3l/zin16LkriPBg=="
+  "signature": "tcf4loWK5IQq4wt9MFXswxUBHXHfPhkHf4puoHC1VeliwTLNHWQd75kf5CnCFvEui546QU/t7QWIRHEoX7etAA=="
 }
 ```
+
+### 4.7 Location, contact, hours and listing facts (ABIZ 1.1, proposed)
+
+This section is the 2026-11-03 amendment to the ABIZ 1.1 proposal. It belongs to ABIZ 1.1 and does not make a new version. It renames the contact members, replaces the flat location members and the free-text root `opening_hours` with structured members, and adds optional members for listings, tax registrations, media and reviews. The wire version, `record_version`, the schema file and its `$id`, the DNS and well-known tags and the signing rules of section 4.6 do not change. Section 4.7.14 lists the breaking changes.
+
+#### 4.7.1 General rules
+
+- Every member in this section is OPTIONAL unless this section says otherwise. A producer MUST omit a value it does not know or has not checked. It MUST NOT publish an empty string, an empty object or an invented placeholder in its place.
+- Every URL member (`website`, `logo_url`, `mcp_server_url`, `blog_url`, `rss_url`, `services[].url`, `links[].url`, social profile URLs, `media[].url`, `external_listings[].public_url`, `review_summaries[].source_url`, and a URL `taxonomy` or `verification_source`) MUST be an absolute `https` URL of at most 2048 characters, with a public DNS host name, no user name or password, no fragment and no port other than 443. A producer MUST NOT rewrite an `http` resource into an `https` URL that does not exist; it omits the member instead.
+- A signed record shows what the holder of the `p` key published (section 4.6.6). It does not prove company ownership, tax standing, the authenticity of reviews or a physical address. A consumer MUST distinguish **business-claimed** facts (everything in the record) from facts it has **verified** itself or that come from a named check, such as a tax registration's `verification_source` (section 4.7.4). It MUST NOT present a claimed fact as verified.
+- A location's values are its own (section 4.7.6.3). Nothing is inherited between the business level and a location.
+
+#### 4.7.2 Email and telephone
+
+`email` is a public, customer-facing email address of the business, at most 320 characters, in the `email` format. A producer MUST include it only when it has authority to publish it. A verified address is not consent to publish it. `phone` is the primary public, customer-facing telephone number, at most 64 characters. E.164 form (for example `+441174960142`) is RECOMMENDED where it can be produced without losing a correctly formatted local number. A record does not claim that a number is reachable from every country. Other kinds of number (fax, text phone, mobile) are out of scope, and a producer MUST NOT put one in `phone` unless it is the primary customer number.
+
+`email` and `phone` replace the earlier `contact_email` and `contact_phone`, which are no longer allowed.
+
+#### 4.7.3 Blog and RSS feed
+
+`blog_url` is the canonical URL of a public index of the business's articles or news. `rss_url` is the canonical URL of a public **RSS 2.0** feed. An Atom feed or JSON Feed is not an RSS feed and MUST NOT be given as `rss_url`. Either member may appear without the other. A producer MUST NOT invent either.
+
+A record MUST NOT contain the posts themselves (section 4.7.12). Publishing, editing or deleting a post changes the blog or feed, not the record, and does not need a new signature. Only a change to `blog_url` or `rss_url`, or to another record member, does. A consumer SHOULD fetch a feed separately and asynchronously, and MUST NOT make resolution of the record depend on it.
+
+#### 4.7.4 Tax registrations
+
+`tax_registrations` is an array of at most 20 tax registrations. Each item has these members:
+
+| Member | Required | Meaning |
+| --- | --- | --- |
+| `jurisdiction` | Yes | The authority's country, as an uppercase ISO 3166-1 alpha-2 code, or an ISO 3166-2 code for a subdivision's authority (for example `US-WA`). An EU VAT number uses its member state's code. |
+| `scheme` | Yes | The type of registration: `vat`, `gst`, `sales_tax` or `other`. It is not a claim that the business is tax-compliant. |
+| `number` | Yes | The number as the authority publishes it, 1–100 characters. |
+| `verified_at` | Yes | The UTC date and time of the most recent successful check of this exact number with the authority. |
+| `verification_source` | Yes | Who checked it: a short lowercase token naming the authority's checking service (for example `vies` or `hmrc_vat`) or the HTTPS URL of that service. |
+| `verification_expires_at` | No | When the claim must be checked again or withdrawn. It MUST be later than `verified_at`. |
+
+A producer MUST publish an item only when all of these are true: the most recent check of the current `jurisdiction`, `scheme` and `number` was positive; the business has expressly consented to publishing it; and `verification_expires_at`, if present, has not passed. A pending, failed, unavailable or expired check, or a check of an earlier number, MUST NOT be published. When consent is withdrawn, the number changes or the registration stops being valid, the producer MUST remove the item and re-sign the record (examples `verified-vat-fr.json` and `vat-withdrawn-fr.json`). A record MUST NOT contain the authority's full response, a registered tax address or any credential used to make the check. A tax registration is separate from the business registration of section 4.2. A consumer that relies on a tax registration SHOULD check it with the authority itself.
+
+#### 4.7.5 Social profiles, categories, services and links
+
+`social_profiles` is an object whose keys name a network and whose values are HTTPS URLs of the business's public profile. The keys allowed are `linkedin`, `x`, `instagram`, `facebook`, `youtube`, `tiktok`, `pinterest`, `vimeo`, `snapchat` and `clubhouse`. Any other key is rejected; a later revision of this specification adds keys.
+
+`categories` has an optional `primary` category and up to nine `additional` ones. Each category is `{ "taxonomy", "id", "name"? }`. `taxonomy` and `id` together identify the category; `name` is an optional display label in any language and is never an identifier. `taxonomy` is either a token from the table below or an HTTPS URI that identifies a published category list, such as a listing provider's. A producer MUST NOT invent a universal category identifier, and a consumer MUST NOT treat identifiers from different taxonomies as interchangeable.
+
+| Token | Taxonomy |
+| --- | --- |
+| `isic_rev4`, `isic_rev5` | UN International Standard Industrial Classification, revision 4 or 5 |
+| `nace_rev2`, `nace_rev2_1` | EU statistical classification of economic activities, NACE Rev. 2 or Rev. 2.1 |
+| `naics_2022` | North American Industry Classification System, 2022 |
+| `uk_sic_2007` | UK Standard Industrial Classification of economic activities 2007 |
+| `anzsic_2006` | Australian and New Zealand Standard Industrial Classification 2006 |
+
+`services` and `links` are unchanged, except that their URLs are limited to 2048 characters like every other URL. Services remain business-wide.
+
+#### 4.7.6 Locations
+
+`locations` lists up to 100 places of business. A business without a public place of business, such as an online-only business, MAY omit `locations` (example `online-only-de.json`). Each location is an object with these members, all optional: `location_id`, `kind`, `name`, `description`, `address`, `geo`, `website`, `email`, `phone`, `logo_url`, `social_profiles`, `categories`, `opening_hours`, `service_areas`, `external_listings`, `review_summaries`, `operational_status` and `public`. A location has no `media` member.
+
+##### 4.7.6.1 Identity, kind and visibility
+
+- `location_id` is a stable public identifier for the location: lowercase letters, digits and hyphens, 1–100 characters, unique within `locations`. A producer SHOULD keep it unchanged when other details of the location change, and MUST NOT reuse it for a different place. It is not an internal database key and not an ABIZ record host.
+- `kind` is `registered-office`, `trading` or `other`. A registered office is the address on the business register; a trading location is a place where the business deals with customers; `other` is any other place, such as a market stall or a depot.
+- `name` (at most 180 characters) is the location's own display name, and may differ from `business_name`. `description` (at most 2000 characters) is a public description of the location, not private notes.
+- `public: true` means that the business presents the location as a place customers or visitors can go. It is **not** consent to publish any detail of the location: a detail that is not to be published is left out, whatever `public` says.
+
+##### 4.7.6.2 Address, geography and privacy
+
+`address` has these members:
+
+- `street_lines`: one to three non-empty street lines. If present, `locality` MUST be present too.
+- `locality`: the city, town or village.
+- `postal_code`: the postal code.
+- `region`: `{ "code"?, "name"? }`, with at least one member. `code` is a complete uppercase ISO 3166-2 code (for example `GB-ENG`, `US-VT`) whose country part MUST equal `country.code`. A producer MUST publish a code only when it has checked it; a raw state or province abbreviation is not an ISO 3166-2 code until it has been mapped. `name` is a human-readable label.
+- `country`: REQUIRED in an address. `{ "code", "name"? }`, where `code` is an uppercase, assigned ISO 3166-1 alpha-2 code and is authoritative. `name` is an optional, locale-dependent label, never used in place of `code`.
+
+`geo` is `{ "latitude", "longitude" }`, WGS 84 decimal degrees, latitude between −90 and 90 and longitude between −180 and 180. Both members are REQUIRED together. `geo` gives the location of the premises and MUST NOT be given unless `address.street_lines` is published.
+
+Privacy rules:
+
+- The business controls which details of a location are published. A registered office's address follows the law on what the register shows.
+- A producer MUST omit a private personal address, or any part of an address the business has not approved for display. It omits the street, postal code and coordinates, rather than marking them private. A location may consist of only a locality and country, or only a country (example `private-trading-address-au.json`).
+- A hidden address MUST NOT leak through another member: not through `geo`, not through a service-area circle centred on the premises (section 4.7.7), not through media metadata (section 4.7.9) and not through a listing URL that has not been approved for display.
+- A producer MUST NOT add precision it does not have, for example by geocoding a locality and publishing the result as `geo`.
+
+##### 4.7.6.3 Location contact details and profiles
+
+`website`, `email`, `phone`, `logo_url`, `social_profiles` and `categories` of a location follow the rules for the business-level members of the same names. They belong to that location. A location's values are **not inherited** from the business level, and the business-level values are not inherited from a location: a consumer MUST NOT treat a business-level `phone` as the phone number of a location that has none. A producer MUST NOT copy a business-level value into a location in the signed record unless that value is the location's own. A tool MAY offer the owner a business-level default when the owner edits a location, as long as the owner confirms it.
+
+##### 4.7.6.4 Opening hours
+
+`opening_hours` belongs to a location. It is an object with these members:
+
+- `time_zone` (REQUIRED): an IANA time zone identifier, for example `Europe/London`. All times are local times in this zone, so a change to or from summer time needs no edit. A producer MUST NOT guess the zone from the country alone where the country has more than one zone.
+- `weekly`: up to seven entries `{ "day", "periods" }`, at most one for each `day` (`monday` to `sunday`).
+- `exceptions`: up to 100 entries `{ "date", "periods" }` for dated exceptions, at most one per `date` (`YYYY-MM-DD`, a local date). An exception replaces the weekly hours for that whole date. Producers SHOULD publish only exceptions for today or later.
+- `appointment_only`: `true` when visits are by appointment only. Any periods are then the hours in which appointments are offered.
+
+At least one of `weekly`, `exceptions` and `appointment_only` MUST be present. `periods` is an array of up to four `{ "opens", "closes" }` objects with 24-hour local times `HH:MM`. `closes` may be `24:00`, the end of the day. A `closes` earlier than `opens` means the period ends on the next day (overnight). `opens` and `closes` MUST NOT be equal. Periods MUST be listed in order of `opens` and MUST NOT overlap, and an overnight period MUST NOT overlap the first period of the next day (a Sunday overnight period runs into Monday). The meaning of each case is fixed:
+
+| Case | Written as |
+| --- | --- |
+| Hours not known | The day is absent from `weekly` (or `opening_hours` is absent) |
+| Closed all day | `"periods": []` |
+| Split hours | Two to four periods, for example `08:00–12:30` and `13:30–18:00` |
+| Overnight | One period whose `closes` is earlier than `opens`, for example `19:00–01:00` |
+| Open 24 hours | One period `00:00–24:00` |
+| Closed on a date | An exception with `"periods": []` |
+
+A missing day MUST NOT be read as closed. Hours MUST NOT be used to say that a location is closed for a period of time or for good; `operational_status` says that (section 4.7.8). Root `opening_hours` is no longer allowed.
+
+#### 4.7.7 Service areas
+
+`locations[].service_areas` lists up to 50 areas that the location serves, for a business that goes to its customers. Each area has exactly one of these shapes:
+
+| Shape | Members | Meaning |
+| --- | --- | --- |
+| Coded area | `code` | An uppercase ISO 3166-1 alpha-2 country code (`IE`) or ISO 3166-2 subdivision code (`US-VT`) |
+| Postal code | `postal_code`, `country` | A full postal code, or a published outward or prefix code (`BS1`), in the country with that ISO 3166-1 code |
+| Circle | `center` (`geo`), `radius_m` | A circle with a radius of 1 to 500 000 metres |
+
+No other shape is allowed; GeoJSON and provider-specific area identifiers are not. A circle's `center` MUST be a coarse point, such as a town centre. It MUST NOT be the coordinates of an address that is not published. A service area does not need a published address (example `service-area-us.json`).
+
+#### 4.7.8 Operational status
+
+`operational_status`, at the business level and per location, is `open`, `temporarily_closed`, `permanently_closed` or `unknown`. A business-level value applies to the business as a whole; a location's value applies to that location only. A consumer MUST NOT work out a closure from one day's hours, and MUST NOT treat a missing `operational_status` as `open` or as closed. A temporary closure SHOULD be explained in the location's `description` (example `temporary-closure-ie.json`).
+
+#### 4.7.9 Media
+
+`media` is a business-level array of at most 10 curated public media items. It is a selection for the record, not a limit on the business's own gallery or on what it uploads elsewhere. Each item has:
+
+- `id` (REQUIRED): a slug, unique within `media`;
+- `kind` (REQUIRED): `logo`, `cover`, `image` or `video`;
+- `url` (REQUIRED): HTTPS URL of the file;
+- `content_type` (REQUIRED): for an image, `image/jpeg`, `image/png`, `image/webp`, `image/gif`, `image/avif` or `image/svg+xml`; for a video, `video/mp4` or `video/webm`.
+
+An image item MAY also have `width` and `height` in pixels (RECOMMENDED when known), `caption`, `alt_text`, `decorative`, `position` (1–10, unique within `media`, the display order) and `updated_at`. An image that conveys information MUST have `alt_text`; an image that is only decorative has `"decorative": true` and no `alt_text`. A video item has only `id`, `kind`, `url` and `content_type` in this revision. A producer MUST publish only media it has the right to publish, MUST NOT publish unpublished or private media, and MUST remove location and other private metadata (such as EXIF GPS data) from the files it links to.
+
+#### 4.7.10 Review summaries
+
+`review_summaries`, at the business level and per location, lists up to 20 aggregate ratings, at most one per `platform`. Each item has `platform`, `rating`, `rating_scale` (the best possible rating, for example `5`), `review_count`, `source_url` (a public page that shows the summary) and `observed_at`; all are REQUIRED. `rating` MUST NOT exceed `rating_scale`.
+
+Each platform's summary stands alone. A record MUST NOT contain a rating combined across platforms, reviewer names or profiles, the text of reviews, replies or moderation data. A producer MUST omit a summary that the platform's terms or licence do not allow it to republish. Because ratings change often, a producer MAY update them on a schedule rather than after every review; each update is a change to the record and needs a new signature. A consumer SHOULD show `observed_at` with the rating.
+
+#### 4.7.11 External listings and platform names
+
+`locations[].external_listings` lists up to 20 public listings of the location on other platforms, such as maps and directories. Each item has `platform` and `public_url` (REQUIRED), and optionally `external_id` (the platform's public identifier for the listing), `observed_at` (when the publisher last saw the listing at that URL) and `claimed_by_business`.
+
+`public_url` MUST be the listing's real public URL, as the platform publishes it. A producer MUST NOT build it from an opaque identifier. `claimed_by_business: true` is the business's statement that it controls the listing on that platform; when it is absent or `false`, the listing was found, not claimed. Neither is a statement by the platform. A record MUST NOT contain access tokens, account identifiers, permission scopes, change logs or synchronisation state for a platform.
+
+A `platform` value, in `external_listings` and in `review_summaries`, is either a registered token or a reverse-domain name controlled by the platform's operator (for example `com.example.maps`). The registered tokens are `google_business_profile` and `apple_maps`; a later revision may register more. ABIZ does not depend on any platform: a record that names none is fully conformant (example `blog-rss-only-nz.json`).
+
+#### 4.7.12 Prohibited members
+
+A record MUST NOT contain a `recent_posts` member, or any copy of posts, excerpts, article bodies or a selection of recent items, at any level, inside `extensions` included. The schema rejects `recent_posts` at the top level and in a location, and the reference validator rejects it anywhere. `blog_url` and `rss_url` (section 4.7.3) are the way to point to posts.
+
+#### 4.7.13 Checks beyond the schema
+
+JSON Schema cannot express every rule in this section. A conforming consumer, and the reference validator `scripts/validate.py`, MUST also check:
+
+- that every URL meets section 4.7.1;
+- that `address.country.code`, service-area codes and `tax_registrations[].jurisdiction` are assigned ISO 3166-1 codes, not `kp` (section 4.2.7), and that a region or subdivision code belongs to its country (the reference validator checks that a code is assigned for `us`, `ca` and `ae`, whose subdivisions are in `data/iso3166.json`, and checks only the form and the country part elsewhere);
+- that `time_zone` is a known IANA time zone;
+- that periods are in order, do not overlap within a day, and that an overnight period does not overlap the next day's periods;
+- that `weekly` days, exception dates, `location_id` values, media `id` and `position` values, review platforms and tax registrations are not repeated;
+- that a rating does not exceed its scale, and that `verification_expires_at` is later than `verified_at`;
+- that no `recent_posts` member appears anywhere.
+
+#### 4.7.14 Versioning and migration
+
+This amendment keeps the `abiz1` family: `record_version` stays `abiz1`, `v=abiz1` is unchanged, and the schema keeps its file name and `$id`. Several changes are breaking, and the schema stays strict (`additionalProperties: false`), so:
+
+- a validator built for the ABIZ 1.1 proposal **before** this amendment rejects an amended record that uses any new member, and the amended schema rejects a record that uses a removed one;
+- a consumer MUST identify the schema revision it validates against when it claims conformance (section 7), and SHOULD report a record that fails only because of a member from a different revision as such, not as a forged record;
+- a producer MUST NOT serve amended records to consumers that it knows validate against the earlier revision, and SHOULD move to the amended form once and in one step, rather than publish a mixture;
+- a producer MUST re-sign every record it migrates. The signing rules (section 4.6) are unchanged, so a migrated record signed with the current key verifies against the same `p`; the DNS assertion and well-known file need no change.
+
+| Before the amendment | After the amendment |
+| --- | --- |
+| `contact_email` | `email` |
+| `contact_phone` | `phone` |
+| root `opening_hours` (list of text lines) | `locations[].opening_hours` (structured, with `time_zone`); a business with no location has no hours |
+| `locations[].street` | `locations[].address.street_lines` (array of one to three lines) |
+| `locations[].city` (required) | `locations[].address.locality` (optional; required with `street_lines`) |
+| `locations[].region` (text) | `locations[].address.region` (`{ "code"?, "name"? }`) |
+| `locations[].postal_code` | `locations[].address.postal_code` |
+| `locations[].country` (required, any case) | `locations[].address.country.code` (required in an address, uppercase) |
+
+A producer migrating text hours SHOULD convert them only when they are unambiguous, and otherwise leave the location's hours out until the business confirms them. Rolling back means publishing a record in the earlier form, re-signed; it is not possible to publish both forms at once at one record host.
+
+A location object, for illustration (from `examples/locations-and-listings/multi-location-gb.json`, shortened):
+
+```json
+{
+  "location_id": "bristol-clifton",
+  "kind": "trading",
+  "name": "Clifton Shop",
+  "address": {
+    "street_lines": ["14 Example Street"],
+    "locality": "Bristol",
+    "postal_code": "BS8 2XX",
+    "region": { "code": "GB-ENG", "name": "England" },
+    "country": { "code": "GB", "name": "United Kingdom" }
+  },
+  "geo": { "latitude": 51.455, "longitude": -2.6175 },
+  "phone": "+441179460001",
+  "opening_hours": {
+    "time_zone": "Europe/London",
+    "weekly": [
+      { "day": "monday", "periods": [{ "opens": "08:00", "closes": "12:30" }, { "opens": "13:30", "closes": "18:00" }] },
+      { "day": "sunday", "periods": [] }
+    ],
+    "exceptions": [{ "date": "2026-12-25", "periods": [] }]
+  },
+  "public": true
+}
+```
+
+`examples/locations-and-listings/` has signed records for each case in this section: a minimal registered business, an online-only business, several locations, a private trading address, a service-area business, a location open 24 hours, a temporary closure, a verified VAT registration and the same record after it is withdrawn, public listing links, and a business with only a blog and feed. `dns-assertions.txt` there gives each record's DNS assertion, and `invalid/` holds records that each break one rule.
 
 ## 5. Producer requirements
 
@@ -575,7 +860,8 @@ A conforming producer MUST:
 5. ensure its `domains` array declares the domain at which the DNS assertion or well-known file was published;
 6. ensure `identity_host` matches `h` exactly after canonical hostname normalization;
 7. ensure DNS `k`, if present, equals the document `business_key` (section 4.2.4), and that `business_key` and `registration_number` follow sections 4.2.1 to 4.2.3;
-8. set `public_key` to the `p` it publishes and sign the record as section 4.6.3 sets out, re-signing after every change to the record and every key rotation.
+8. set `public_key` to the `p` it publishes and sign the record as section 4.6.3 sets out, re-signing after every change to the record and every key rotation;
+9. publish location, contact, hours, tax, media, review and listing facts only as section 4.7 allows, omitting private or unchecked details.
 
 `p` MUST be an Ed25519 public key as specified in section 3.3, and a producer MUST NOT publish the private key. A producer that still publishes an assertion without `p`, or with a non-key ABIZ 1.0 `p` token, MUST republish it with a key (section 3.3.7). A producer that rotates a key MUST follow section 3.3.6 and MUST NOT put the old key in DNS or in the well-known file.
 
@@ -593,7 +879,8 @@ A conforming consumer MUST:
 6. verify its `identity_host` and `domains` match the assertion (DNS or well-known file) and queried domain;
 7. when `k` is present, check it against section 4.2.1 and compare it case-insensitively to the record's `business_key`; reject the assertion if the record has no `business_key`;
 8. verify `signature` with `public_key` and check that `public_key` equals `p`, as section 4.6.4 sets out, and treat a record that fails either check as not verified;
-9. label domain-link checks separately from legal registration checks.
+9. apply the checks of section 4.7.13, keep location values apart from business-level values (section 4.7.6.3), and present business-claimed facts as claimed, not verified (section 4.7.1);
+10. label domain-link checks separately from legal registration checks.
 
 A consumer that claims ABIZ 1.1 MUST parse the assertion with the tag-list syntax of section 3.1.1, so it accepts optional whitespace around `;` and `=` and one trailing `;`. It MUST reject an assertion without `p`, or whose `p` is not a valid key under section 3.3.2, including an ABIZ 1.0 hexadecimal token or a base64url value, and MUST follow sections 3.3.5 and 3.3.6. It MUST reject a record or key for `kp` (section 4.2.7). A key check is separate from record conformance and from legal registration.
 
@@ -621,7 +908,7 @@ _abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery
 A business unit or division (a branch, a brand, a department, an events arm) MAY have its own business record. Its record host MAY then be a path on the parent's host (ABIZ 1.1, proposed):
 
 ```dns
-_abiz.events.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
+_abiz.events.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
 ```
 
 Rules for a path-based record host:
@@ -638,7 +925,7 @@ A parent business MAY list units and their domains in an implementation-specific
 
 DNS assertions and well-known files are public and not authenticated by default. A well-known file shows control of a web origin, not of a DNS zone (section 3.4.5). Producers SHOULD use DNSSEC where available; consumers SHOULD verify DNSSEC where supported. DNS control alone does not prove business ownership. An Ed25519 public key in `p` does not change that. It shows which key the domain controller published. It does not sign the TXT record by itself, and it does not prove legal identity. The record signature (section 4.6) binds the business record to that key; section 4.6.6 sets out what it does and does not protect. A non-key `p` value is invalid under ABIZ 1.1 (section 3.3.7) and MUST NOT be presented as a cryptographic identity. The private key is the business's property and MUST be protected. In hosted mode a provider MAY hold that key and sign for the business. It MUST follow the export and deletion rules in section 3.3.4. Holding the key does not transfer ownership. Consumers MUST implement SSRF safeguards, HTTPS-only target handling, host/redirect validation, content size/time limits and output escaping, for both the well-known file and the record host. A consumer that shows the HTML or Markdown representation MUST treat it as untrusted content. MCP endpoints MUST not be called automatically solely because they appear in a record.
 
-A publisher MUST consider personal data and only publish intentionally public facts. A domain claim MUST NOT be presented as a legal verification badge.
+A publisher MUST consider personal data and only publish intentionally public facts. A hidden address MUST NOT reach the record through coordinates, service areas, media metadata or listing links (section 4.7.6.2), and a tax registration needs the business's express consent (section 4.7.4). A domain claim MUST NOT be presented as a legal verification badge.
 
 ## 10. IANA and governance
 

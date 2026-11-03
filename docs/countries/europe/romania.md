@@ -41,7 +41,7 @@ Cheile se compară fără a ține cont de majuscule, dar publicați forma canoni
 Publicați exact o înregistrare TXT ABIZ la `_abiz` pe domeniul dumneavoastră, în forma compactă, fără spații:
 
 ```dns
-_abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=URw9Jme7dri8/dB8HzlCC9Vpv/cFiJINcQl0QX8rVzU="
+_abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1PIOsOH4bQV0C/z0iFwUDukhcEzn54AeST6ZddZ7rKY="
 ```
 
 - `v=abiz1` trebuie să fie primul. `h` este obligatoriu; `k` și `p` sunt opționale.
@@ -65,25 +65,29 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
   "domains": [
     "carpatimobila.example"
   ],
-  "public_key": "URw9Jme7dri8/dB8HzlCC9Vpv/cFiJINcQl0QX8rVzU=",
+  "public_key": "1PIOsOH4bQV0C/z0iFwUDukhcEzn54AeST6ZddZ7rKY=",
   "description": "Atelier de mobilă din Cluj-Napoca.",
   "website": "https://carpatimobila.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Cluj-Napoca",
-      "country": "ro",
+      "address": {
+        "locality": "Cluj-Napoca",
+        "country": {
+          "code": "RO"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "+J2Q2JECgvj5r9PxmVHqhA95QOPkSZEQ9oUM4tsmdp1kL9CnxV38zbhda00qJDjnMyIBodUVq6W9I0oSE1EnDA=="
+  "signature": "pmL+Dpye2wCHWFD61QI8Qfu/tWcnPesgn5RTtyvov+Wv0XDUNm+FrV/6NXagqX7o/+zmfyYgh1dP+rDFOFuzCA=="
 }
 ```
 
 Cu validatorul de referință puteți verifica local înregistrarea și valoarea DNS:
 
 ```sh
-python scripts/validate.py record.json --domain carpatimobila.example --dns-value 'v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=URw9Jme7dri8/dB8HzlCC9Vpv/cFiJINcQl0QX8rVzU='
+python scripts/validate.py record.json --domain carpatimobila.example --dns-value 'v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1PIOsOH4bQV0C/z0iFwUDukhcEzn54AeST6ZddZ7rKY='
 ```
 
 ### Găzduire proprie sau printr-un furnizor

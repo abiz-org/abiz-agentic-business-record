@@ -1,0 +1,107 @@
+{
+  "record_version": "abiz1",
+  "business_name": "Green Mountain Mobile Bike Repair LLC",
+  "country": "us",
+  "business_key": "us-vt-0123456",
+  "registration_number": "0123456",
+  "identity_host": "greenmountainbikes.vt.us.to.co",
+  "domains": [
+    "greenmountainbikes.example"
+  ],
+  "public_key": "1MtmvijI6RcUXbrmb9N/nbrSzmaG3hMGyv/gH+eK5qQ=",
+  "description": "We come to you: mobile bicycle repair across northern Vermont and Hanover, New Hampshire.",
+  "phone": "+18025550100",
+  "locations": [
+    {
+      "location_id": "mobile-service",
+      "kind": "trading",
+      "name": "Mobile workshop",
+      "address": {
+        "locality": "Burlington",
+        "region": {
+          "code": "US-VT",
+          "name": "Vermont"
+        },
+        "country": {
+          "code": "US"
+        }
+      },
+      "service_areas": [
+        {
+          "code": "US-VT"
+        },
+        {
+          "postal_code": "03755",
+          "country": "US"
+        },
+        {
+          "center": {
+            "latitude": 44.48,
+            "longitude": -73.21
+          },
+          "radius_m": 40000
+        }
+      ],
+      "opening_hours": {
+        "time_zone": "America/New_York",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": []
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
+      "public": false
+    }
+  ],
+  "signature": "iS3HYXoeF5iPkjcV/2rj0EfBzLa2SMgE0dobQ4M0pHAPY7K1ZI/+w5/08EJ9cMLKIxisFiTh3aoZQAeScMkLDA=="
+}

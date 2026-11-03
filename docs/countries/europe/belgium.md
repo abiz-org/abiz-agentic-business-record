@@ -41,7 +41,7 @@ Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, m
 Publiceer precies één ABIZ-TXT-record onder `_abiz` op uw domein, in de compacte vorm zonder spaties:
 
 ```dns
-_abiz.bakkerijpeeters.example. 300 IN TXT "v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=6AlcxbHbjCjF8g/lr38ut46/Wx/lKPK6lOtCNhJ+iMA="
+_abiz.bakkerijpeeters.example. 300 IN TXT "v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=tzht7C39KDuSrkNsoZPU9SXxgeqK3GOWv2UvFpU4IFU="
 ```
 
 - `v=abiz1` moet vooraan staan. `h` is verplicht; `k` en `p` zijn optioneel.
@@ -65,25 +65,29 @@ Het record dat op `https://bakkerijpeeters.be.to.co` als `application/json` word
   "domains": [
     "bakkerijpeeters.example"
   ],
-  "public_key": "6AlcxbHbjCjF8g/lr38ut46/Wx/lKPK6lOtCNhJ+iMA=",
+  "public_key": "tzht7C39KDuSrkNsoZPU9SXxgeqK3GOWv2UvFpU4IFU=",
   "description": "Ambachtelijke bakkerij in Gent.",
   "website": "https://bakkerijpeeters.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Gent",
-      "country": "be",
+      "address": {
+        "locality": "Gent",
+        "country": {
+          "code": "BE"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "PNNPq2uqJdjyRv4DalrJzL0pOSujkQLWPrucYPwm/2XTyXHDArK2Thav0xEjl9RDQs1fbQtheiiTlh6TkK9FDQ=="
+  "signature": "WRrXAMfnSKhdgW91i6Ct7wptPc7hv7/mZg9OhZdd1bRbZthcq8HOJFHmgO1o7cxQvc0QXphdT6M8yglAtMHJDw=="
 }
 ```
 
 Met de referentievalidator controleert u record en DNS-waarde lokaal:
 
 ```sh
-python scripts/validate.py record.json --domain bakkerijpeeters.example --dns-value 'v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=6AlcxbHbjCjF8g/lr38ut46/Wx/lKPK6lOtCNhJ+iMA='
+python scripts/validate.py record.json --domain bakkerijpeeters.example --dns-value 'v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=tzht7C39KDuSrkNsoZPU9SXxgeqK3GOWv2UvFpU4IFU='
 ```
 
 ### Zelf hosten of via een aanbieder

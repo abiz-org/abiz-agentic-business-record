@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.essequibotours.example. 300 IN TXT "v=abiz1;k=gy-12345;h=essequiborivertours.gy.to.co;p=B8HwD86oGGbD1DkD2oKRxJLBp9UiWbD/66u/H1FahPo="
+_abiz.essequibotours.example. 300 IN TXT "v=abiz1;k=gy-12345;h=essequiborivertours.gy.to.co;p=UD7QaNoyyxoIUpU/yL0aqpKDUH4A1yqMbNf5LNVSR6w="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -63,21 +63,85 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "essequibotours.example"
   ],
-  "public_key": "B8HwD86oGGbD1DkD2oKRxJLBp9UiWbD/66u/H1FahPo=",
+  "public_key": "UD7QaNoyyxoIUpU/yL0aqpKDUH4A1yqMbNf5LNVSR6w=",
   "description": "River and rainforest tours from Georgetown.",
   "website": "https://essequibotours.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Georgetown",
-      "country": "gy",
+      "address": {
+        "locality": "Georgetown",
+        "country": {
+          "code": "GY"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Guyana",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 08:00-17:00"
-  ],
-  "signature": "tPp/B7gJcQu20S1JywNfmV1h2YqTU8wXcDa7J1+zntUZC8p/1Tk2Px2uCYMiAS/KRT+vG8RLauLY+10aYTgRDQ=="
+  "signature": "N3fv4tPGzrql4yRzZ+XoxV6ufiaNJMgO9c8B6DTaMrDsAwBJhh9AC57AkKYxFtTqxsW4LH3KGRKV+2smDbXzDQ=="
 }
 ```
 
@@ -90,7 +154,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain essequibotours.example \
-  --dns-value 'v=abiz1;k=gy-12345;h=essequiborivertours.gy.to.co;p=B8HwD86oGGbD1DkD2oKRxJLBp9UiWbD/66u/H1FahPo='
+  --dns-value 'v=abiz1;k=gy-12345;h=essequiborivertours.gy.to.co;p=UD7QaNoyyxoIUpU/yL0aqpKDUH4A1yqMbNf5LNVSR6w='
 ```
 
 ## 3. Using a provider and MCP
@@ -105,7 +169,7 @@ For example, a provider might host the record for Essequibo River Tours at `esse
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.essequibotours.example. 300 IN TXT "v=abiz1;k=gy-12345;h=essequiborivertours.gy.to.co;p=B8HwD86oGGbD1DkD2oKRxJLBp9UiWbD/66u/H1FahPo="
+  _abiz.essequibotours.example. 300 IN TXT "v=abiz1;k=gy-12345;h=essequiborivertours.gy.to.co;p=UD7QaNoyyxoIUpU/yL0aqpKDUH4A1yqMbNf5LNVSR6w="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

@@ -41,7 +41,7 @@ Nycklar jämförs utan hänsyn till versaler och gemener, men publicera den kano
 Publicera exakt en ABIZ TXT-post under `_abiz` på er domän, i kompakt form utan mellanslag:
 
 ```dns
-_abiz.norrlandsnickeri.example. 300 IN TXT "v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=Kl78D64jUhT9LXboNzLyfnQK/3BIeYpDMvCGw8cl+G0="
+_abiz.norrlandsnickeri.example. 300 IN TXT "v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=hhlbPtkBmO71FdQEmQUI8BZ1x+p/aA/3YsrKoxhp9Y0="
 ```
 
 - `v=abiz1` måste stå först. `h` är obligatoriskt; `k` och `p` är frivilliga.
@@ -65,25 +65,29 @@ Posten som levereras på `https://norrlandsnickeri.se.to.co` som `application/js
   "domains": [
     "norrlandsnickeri.example"
   ],
-  "public_key": "Kl78D64jUhT9LXboNzLyfnQK/3BIeYpDMvCGw8cl+G0=",
+  "public_key": "hhlbPtkBmO71FdQEmQUI8BZ1x+p/aA/3YsrKoxhp9Y0=",
   "description": "Snickeri i Umeå.",
   "website": "https://norrlandsnickeri.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Umeå",
-      "country": "se",
+      "address": {
+        "locality": "Umeå",
+        "country": {
+          "code": "SE"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "VobK27NXkTs0GFk+OoEk3ehnU9hsx/8GDVJzzdPHIuyZccVgxBWCnmvWOq+caFIFVzzk0+EvHkVjxC78XGwPCw=="
+  "signature": "HbDGT1JfYKW0HkQAET8DAGhZfbho06nxVskrmIdvvMnTxVddw3pH2ssMuQErj0obcrit0Jt7LU8PThZVyfEDCg=="
 }
 ```
 
 Med referensvalideraren kan ni kontrollera posten och DNS-värdet lokalt:
 
 ```sh
-python scripts/validate.py record.json --domain norrlandsnickeri.example --dns-value 'v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=Kl78D64jUhT9LXboNzLyfnQK/3BIeYpDMvCGw8cl+G0='
+python scripts/validate.py record.json --domain norrlandsnickeri.example --dns-value 'v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=hhlbPtkBmO71FdQEmQUI8BZ1x+p/aA/3YsrKoxhp9Y0='
 ```
 
 ### Egen drift eller via leverantör

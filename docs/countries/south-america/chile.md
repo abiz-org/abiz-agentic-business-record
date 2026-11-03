@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.pastelerialosandes.example. 300 IN TXT "v=abiz1;h=pastelerialosandes.cl.to.co;p=SwFy5z8o0n2+9Iuy6Yyo8Rj7lwdIdnm2+3B+e0tUJqs="
+_abiz.pastelerialosandes.example. 300 IN TXT "v=abiz1;h=pastelerialosandes.cl.to.co;p=cIh4xklUAk4cDd33cEN+/9Tul5Eb3wfDjQtVeMZfmPI="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -53,21 +53,85 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "pastelerialosandes.example"
   ],
-  "public_key": "SwFy5z8o0n2+9Iuy6Yyo8Rj7lwdIdnm2+3B+e0tUJqs=",
+  "public_key": "cIh4xklUAk4cDd33cEN+/9Tul5Eb3wfDjQtVeMZfmPI=",
   "description": "Pastelería y cafetería en Providencia.",
   "website": "https://pastelerialosandes.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Santiago",
-      "country": "cl",
+      "address": {
+        "locality": "Santiago",
+        "country": {
+          "code": "CL"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Santiago",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "20:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 08:00-20:00"
-  ],
-  "signature": "yZHFYwErxH1Cl3QHtN+QcngnA7UrH9S9TVP9Zvy9TdOVig7IQGf2JplVeVftczb25l3gVT0Fxcaee6eG5UwoBw=="
+  "signature": "NNQ3BnwhLy/T8Q/p7wFYL/H3tOFGXfiSgcKtUDWfNO7VybbwgYbvrwCjf0e7y4vzH4J6BMgGl1vd/h4fOealBA=="
 }
 ```
 
@@ -80,7 +144,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain pastelerialosandes.example \
-  --dns-value 'v=abiz1;h=pastelerialosandes.cl.to.co;p=SwFy5z8o0n2+9Iuy6Yyo8Rj7lwdIdnm2+3B+e0tUJqs='
+  --dns-value 'v=abiz1;h=pastelerialosandes.cl.to.co;p=cIh4xklUAk4cDd33cEN+/9Tul5Eb3wfDjQtVeMZfmPI='
 ```
 
 ## 3. Proveedores y MCP
@@ -95,7 +159,7 @@ Por ejemplo, un proveedor puede alojar el registro de Pastelería Los Andes en `
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.pastelerialosandes.example. 300 IN TXT "v=abiz1;h=pastelerialosandes.cl.to.co;p=SwFy5z8o0n2+9Iuy6Yyo8Rj7lwdIdnm2+3B+e0tUJqs="
+  _abiz.pastelerialosandes.example. 300 IN TXT "v=abiz1;h=pastelerialosandes.cl.to.co;p=cIh4xklUAk4cDd33cEN+/9Tul5Eb3wfDjQtVeMZfmPI="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

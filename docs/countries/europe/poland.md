@@ -41,7 +41,7 @@ Klucze porównuje się bez rozróżniania wielkości liter, ale proszę publikow
 Proszę opublikować dokładnie jeden rekord TXT ABIZ pod `_abiz` w swojej domenie, w postaci zwartej, bez spacji:
 
 ```dns
-_abiz.piekarniakowalski.example. 300 IN TXT "v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=R1xb/hAMVTqr+f73Uslvmdx9b2MvAfuLLJj1Rpnbixk="
+_abiz.piekarniakowalski.example. 300 IN TXT "v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=zRHp+btvHFPfD7ODoyqksta+TYe59LzCpE7TZmqbLu0="
 ```
 
 - `v=abiz1` musi być pierwsze. `h` jest wymagane; `k` i `p` są opcjonalne.
@@ -65,25 +65,29 @@ Rekord udostępniany pod `https://piekarniakowalski.pl.to.co` jako `application/
   "domains": [
     "piekarniakowalski.example"
   ],
-  "public_key": "R1xb/hAMVTqr+f73Uslvmdx9b2MvAfuLLJj1Rpnbixk=",
+  "public_key": "zRHp+btvHFPfD7ODoyqksta+TYe59LzCpE7TZmqbLu0=",
   "description": "Rzemieślnicza piekarnia w Krakowie.",
   "website": "https://piekarniakowalski.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Kraków",
-      "country": "pl",
+      "address": {
+        "locality": "Kraków",
+        "country": {
+          "code": "PL"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "/dWv2NARt1FKomO4s5nNZ/SxGuqXeAS8PKl0lYlGNms7b4uBfzYjBVIB0dXZTqAgFI+/30CKtR4q3yehDsVYCQ=="
+  "signature": "04T24v6SiCOskvxyktUNTYy3lpfBqyuqonfiuC5EhOo0KmsB37FNS8l8/fA44M8puFMuP4Jifo9dSr/pFt4dCA=="
 }
 ```
 
 Walidatorem referencyjnym można lokalnie sprawdzić rekord i wartość DNS:
 
 ```sh
-python scripts/validate.py record.json --domain piekarniakowalski.example --dns-value 'v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=R1xb/hAMVTqr+f73Uslvmdx9b2MvAfuLLJj1Rpnbixk='
+python scripts/validate.py record.json --domain piekarniakowalski.example --dns-value 'v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=zRHp+btvHFPfD7ODoyqksta+TYe59LzCpE7TZmqbLu0='
 ```
 
 ### Samodzielnie lub przez dostawcę

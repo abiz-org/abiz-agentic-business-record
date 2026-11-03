@@ -18,6 +18,15 @@ always verifies it, and checks public_key against the DNS or well-known p
 which is in requirements-dev.txt:
 
     python -m pip install -r requirements-dev.txt
+
+ABIZ 1.1, 2026-11-03 location, contact, hours and listing amendment (SPEC
+section 4.7): after the schema passes, the validator also checks what JSON
+Schema cannot express: every URL is a safe HTTPS URL; address, region,
+service-area and tax jurisdiction codes are assigned and consistent; time
+zones are IANA identifiers; opening periods do not overlap (overnight periods
+included); location_id, media id and position, tax registrations and review
+platforms are unique; a rating is within its scale; and no recent_posts member
+appears anywhere, extensions included.
 """
 from __future__ import annotations
 import argparse
@@ -32,6 +41,11 @@ import unicodedata
 from pathlib import Path
 from decimal import Decimal
 from urllib.parse import urlsplit
+
+try:
+    from zoneinfo import available_timezones
+except ImportError:  # pragma: no cover - Python < 3.9
+    available_timezones = None
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -66,6 +80,22 @@ HOST = re.compile(r"^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$")
 P_KEY_RE = re.compile(r"^[A-Za-z0-9+/]{43}=$")
 # 64-byte Ed25519 signature: 86 alphabet chars + "==".
 P_SIG_RE = re.compile(r"^[A-Za-z0-9+/]{86}==$")
+# SPEC.md section 4.7: limits that JSON Schema states but the validator also relies on.
+URL_MAX = 2048
+DAYS = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+PROHIBITED_MEMBERS = frozenset({"recent_posts"})
+_TIME_ZONES: frozenset[str] | None = None
+
+
+def known_time_zones() -> frozenset[str]:
+    """IANA time zone names known to this Python (empty when no tz database is installed)."""
+    global _TIME_ZONES
+    if _TIME_ZONES is None:
+        try:
+            _TIME_ZONES = frozenset(available_timezones()) if available_timezones else frozenset()
+        except Exception:  # pragma: no cover - broken tz installation
+            _TIME_ZONES = frozenset()
+    return _TIME_ZONES
 
 
 def safe_host(value: str) -> bool:
@@ -92,6 +122,11 @@ def check_https(value: str) -> bool:
                 parsed.fragment == "" and parsed.port in (None, 443))
     except ValueError:
         return False
+
+
+def check_url(value: str) -> bool:
+    """SPEC section 4.7.1: HTTPS, public DNS host, no credentials, at most 2048 characters."""
+    return isinstance(value, str) and len(value) <= URL_MAX and check_https(value)
 
 
 def identity_parts(value: str):
@@ -510,6 +545,223 @@ def is_well_known_document(document: object) -> bool:
     return isinstance(document, dict) and "v" in document and "record_version" not in document
 
 
+def _minutes(value: str) -> int:
+    hours, minutes = value.split(":")
+    return int(hours) * 60 + int(minutes)
+
+
+def _period_spans(periods: list[dict], day_index: int | None) -> list[tuple[int, int]]:
+    """Turn periods into [start, end) minute spans. day_index places them on a weekly timeline."""
+    base = 0 if day_index is None else day_index * 1440
+    spans = []
+    for period in periods:
+        opens, closes = _minutes(period["opens"]), _minutes(period["closes"])
+        if closes == opens:
+            raise ValueError(f"period {period['opens']}-{period['closes']} opens and closes at the same time")
+        if closes < opens:
+            closes += 1440  # closes the next day (overnight)
+        spans.append((base + opens, base + closes))
+    return spans
+
+
+def _overlaps(spans: list[tuple[int, int]], wrap: int | None = None) -> bool:
+    spans = sorted(spans)
+    if wrap is not None:
+        # A Sunday overnight period continues into Monday: compare it with Monday too.
+        spans = spans + [(s + wrap, e + wrap) for s, e in spans if s < 1440]
+        spans.sort()
+    return any(spans[i + 1][0] < spans[i][1] for i in range(len(spans) - 1))
+
+
+def check_opening_hours(hours: dict, where: str) -> list[str]:
+    """SPEC section 4.7.6.4: time zone, ordered and non-overlapping periods, unique days and dates."""
+    errors = []
+    zones = known_time_zones()
+    if zones and hours["time_zone"] not in zones:
+        errors.append(f"{where}.time_zone {hours['time_zone']!r} is not an IANA time zone")
+    weekly_spans = []
+    seen_days = set()
+    for entry in hours.get("weekly", []):
+        day = entry["day"]
+        if day in seen_days:
+            errors.append(f"{where}.weekly lists {day} more than once")
+            continue
+        seen_days.add(day)
+        periods = entry["periods"]
+        if [p["opens"] for p in periods] != sorted(p["opens"] for p in periods):
+            errors.append(f"{where}.weekly {day}: periods are not in order of opens")
+        try:
+            spans = _period_spans(periods, DAYS.index(day))
+        except ValueError as exc:
+            errors.append(f"{where}.weekly {day}: {exc}")
+            continue
+        if _overlaps(spans):
+            errors.append(f"{where}.weekly {day}: periods overlap")
+        weekly_spans.extend(spans)
+    if not any("periods overlap" in e for e in errors) and _overlaps(weekly_spans, wrap=7 * 1440):
+        errors.append(f"{where}.weekly: an overnight period overlaps the next day's hours")
+    seen_dates = set()
+    for entry in hours.get("exceptions", []):
+        date = entry["date"]
+        if date in seen_dates:
+            errors.append(f"{where}.exceptions lists {date} more than once")
+            continue
+        seen_dates.add(date)
+        periods = entry["periods"]
+        if [p["opens"] for p in periods] != sorted(p["opens"] for p in periods):
+            errors.append(f"{where}.exceptions {date}: periods are not in order of opens")
+        try:
+            if _overlaps(_period_spans(periods, None)):
+                errors.append(f"{where}.exceptions {date}: periods overlap")
+        except ValueError as exc:
+            errors.append(f"{where}.exceptions {date}: {exc}")
+    return errors
+
+
+def check_region_code(code: str, country: str) -> str | None:
+    """Return an error for an ISO 3166-2 code that does not belong to country, else None.
+
+    data/iso3166.json lists subdivisions only for the countries whose business
+    key uses them (us, ca, ae); for those the code must be assigned. Elsewhere
+    the validator checks the form and the country part only.
+    """
+    prefix, _, sub = code.partition("-")
+    if prefix.lower() != country.lower():
+        return f"region code {code!r} does not belong to country {country!r}"
+    known = SUBDIVISIONS.get(country.lower())
+    if known is not None and sub.lower() not in known:
+        return f"region code {code!r} is not an assigned ISO 3166-2 code"
+    return None
+
+
+def _check_code(code: str, where: str) -> list[str]:
+    """A country (XX) or subdivision (XX-YYY) code, uppercase in the schema."""
+    country = code.split("-", 1)[0]
+    try:
+        check_country(country)
+    except ValueError as exc:
+        return [f"{where}: {exc}"]
+    if "-" in code:
+        problem = check_region_code(code, country)
+        if problem:
+            return [f"{where}: {problem}"]
+    return []
+
+
+def _find_prohibited(value: object, path: str) -> list[str]:
+    found = []
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in PROHIBITED_MEMBERS:
+                found.append(f"{path}/{key}: recent_posts is prohibited (SPEC section 4.7.12)")
+            found.extend(_find_prohibited(item, f"{path}/{key}"))
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            found.extend(_find_prohibited(item, f"{path}/{index}"))
+    return found
+
+
+def _check_listing_members(holder: dict, where: str) -> list[str]:
+    errors = []
+    for name, url in holder.get("social_profiles", {}).items():
+        if not check_url(url):
+            errors.append(f"{where}social_profiles.{name} must be a safe HTTPS URL")
+    for listing in holder.get("external_listings", []):
+        if not check_url(listing["public_url"]):
+            errors.append(f"{where}external_listings.public_url must be a safe HTTPS URL")
+    platforms = set()
+    for summary in holder.get("review_summaries", []):
+        if summary["rating"] > summary["rating_scale"]:
+            errors.append(f"{where}review_summaries: rating {summary['rating']} exceeds rating_scale {summary['rating_scale']}")
+        if summary["platform"] in platforms:
+            errors.append(f"{where}review_summaries: more than one summary for {summary['platform']}")
+        platforms.add(summary["platform"])
+        if not check_url(summary["source_url"]):
+            errors.append(f"{where}review_summaries.source_url must be a safe HTTPS URL")
+    categories = holder.get("categories", {})
+    for category in ([categories["primary"]] if "primary" in categories else []) + categories.get("additional", []):
+        if category["taxonomy"].startswith("https:") and not check_url(category["taxonomy"]):
+            errors.append(f"{where}categories.taxonomy must be a registered token or a safe HTTPS URI")
+    return errors
+
+
+def check_amended_members(record: dict) -> list[str]:
+    """SPEC section 4.7 checks that JSON Schema cannot express. Call only after the schema passes."""
+    errors = _find_prohibited(record, "$")
+    for k in ("website", "logo_url", "mcp_server_url", "blog_url", "rss_url"):
+        if k in record and not check_url(record[k]):
+            errors.append(f"{k} must be an HTTPS URL with a public DNS hostname")
+    for collection in ("services", "links"):
+        for item in record.get(collection, []):
+            if "url" in item and not check_url(item["url"]):
+                errors.append(f"{collection}.url must be a safe HTTPS URL")
+    errors.extend(_check_listing_members(record, ""))
+
+    seen_ids = set()
+    for index, location in enumerate(record.get("locations", [])):
+        where = f"locations/{index}"
+        location_id = location.get("location_id")
+        if location_id is not None:
+            if location_id in seen_ids:
+                errors.append(f"{where}: location_id {location_id!r} is not unique")
+            seen_ids.add(location_id)
+        address = location.get("address")
+        if address:
+            country = address["country"]["code"]
+            try:
+                check_country(country)
+            except ValueError as exc:
+                errors.append(f"{where}.address: {exc}")
+            else:
+                region = address.get("region", {})
+                if "code" in region:
+                    problem = check_region_code(region["code"], country)
+                    if problem:
+                        errors.append(f"{where}.address: {problem}")
+        for k in ("website", "logo_url"):
+            if k in location and not check_url(location[k]):
+                errors.append(f"{where}.{k} must be a safe HTTPS URL")
+        errors.extend(_check_listing_members(location, f"{where}."))
+        if "opening_hours" in location:
+            errors.extend(check_opening_hours(location["opening_hours"], f"{where}.opening_hours"))
+        for area in location.get("service_areas", []):
+            if "code" in area:
+                errors.extend(_check_code(area["code"], f"{where}.service_areas"))
+            elif "country" in area:
+                errors.extend(_check_code(area["country"], f"{where}.service_areas"))
+
+    seen_tax = set()
+    for item in record.get("tax_registrations", []):
+        errors.extend(_check_code(item["jurisdiction"], "tax_registrations.jurisdiction"))
+        key = (item["jurisdiction"], item["scheme"], item["number"])
+        if key in seen_tax:
+            errors.append(f"tax_registrations: {item['scheme']} {item['number']} is listed more than once")
+        seen_tax.add(key)
+        source = item["verification_source"]
+        if source.startswith("https:") and not check_url(source):
+            errors.append("tax_registrations.verification_source must be a token or a safe HTTPS URL")
+        if "verification_expires_at" in item and _instant(item["verification_expires_at"]) <= _instant(item["verified_at"]):
+            errors.append("tax_registrations: verification_expires_at must be later than verified_at")
+
+    media_ids, positions = set(), set()
+    for item in record.get("media", []):
+        if item["id"] in media_ids:
+            errors.append(f"media: id {item['id']!r} is not unique")
+        media_ids.add(item["id"])
+        if "position" in item:
+            if item["position"] in positions:
+                errors.append(f"media: position {item['position']} is used more than once")
+            positions.add(item["position"])
+        if not check_url(item["url"]):
+            errors.append("media.url must be a safe HTTPS URL")
+    return errors
+
+
+def _instant(value: str):
+    from datetime import datetime
+    return datetime.fromisoformat(value.replace("Z", "+00:00").replace("z", "+00:00"))
+
+
 def validate_record(
     record: dict,
     schema: dict,
@@ -537,22 +789,11 @@ def validate_record(
     for d in record["domains"]:
         if not safe_host(d):
             errors.append(f"invalid declared domain: {d}")
-    for k in ("website", "logo_url", "mcp_server_url"):
-        if k in record and not check_https(record[k]):
-            errors.append(f"{k} must be an HTTPS URL with a public DNS hostname")
-    for collection in ("services", "links"):
-        for item in record.get(collection, []):
-            if "url" in item and not check_https(item["url"]):
-                errors.append(f"{collection}.url must be a safe HTTPS URL")
+    errors.extend(check_amended_members(record))
     try:
         check_country(record["country"])
     except ValueError as exc:
         errors.append(str(exc))
-    for location in record.get("locations", []):
-        try:
-            check_country(location["country"])
-        except ValueError as exc:
-            errors.append(f"locations: {exc}")
     if "business_key" in record:
         try:
             country, _, number = parse_business_key(record["business_key"])

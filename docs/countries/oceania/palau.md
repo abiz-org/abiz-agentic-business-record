@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.rockislandsdivetours.example. 300 IN TXT "v=abiz1;k=pw-12345;h=rockislandsdivetours.pw.to.co;p=j9JNx7bs+RNAppG+obXBUQx46xw4YzQP7AjwtdfHikI="
+_abiz.rockislandsdivetours.example. 300 IN TXT "v=abiz1;k=pw-12345;h=rockislandsdivetours.pw.to.co;p=hQwWc0hO9pFlY31cqbfDxF6NZm++a+6bgu2sPX8fDJ0="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -63,21 +63,90 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "rockislandsdivetours.example"
   ],
-  "public_key": "j9JNx7bs+RNAppG+obXBUQx46xw4YzQP7AjwtdfHikI=",
+  "public_key": "hQwWc0hO9pFlY31cqbfDxF6NZm++a+6bgu2sPX8fDJ0=",
   "description": "Dive and snorkel trips to the Rock Islands.",
   "website": "https://rockislandsdivetours.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Koror",
-      "country": "pw",
+      "address": {
+        "locality": "Koror",
+        "country": {
+          "code": "PW"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "Pacific/Palau",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "17:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": [
+              {
+                "opens": "07:30",
+                "closes": "17:00"
+              }
+            ]
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Su 07:30-17:00"
-  ],
-  "signature": "CcQAjj1yKxtKg6+SunD2l7JLg6++ReS0Dx11OV3hvXwu3bLj+UeZu4F3vVt//s80LQsKB0Og+n7xIM/7/8SwAg=="
+  "signature": "PKtweKwMyZHDxeWGAOVh9aQyYl7wrYV9LnngND/P16zpPKdcAv0DS0m4srJ0q5YVs6xBdukOZAMb4w0sqnKyAA=="
 }
 ```
 
@@ -90,7 +159,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain rockislandsdivetours.example \
-  --dns-value 'v=abiz1;k=pw-12345;h=rockislandsdivetours.pw.to.co;p=j9JNx7bs+RNAppG+obXBUQx46xw4YzQP7AjwtdfHikI='
+  --dns-value 'v=abiz1;k=pw-12345;h=rockislandsdivetours.pw.to.co;p=hQwWc0hO9pFlY31cqbfDxF6NZm++a+6bgu2sPX8fDJ0='
 ```
 
 ## 3. Using a provider and MCP
@@ -105,7 +174,7 @@ For example, a provider might host the record for Rock Islands Dive Tours at `ro
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.rockislandsdivetours.example. 300 IN TXT "v=abiz1;k=pw-12345;h=rockislandsdivetours.pw.to.co;p=j9JNx7bs+RNAppG+obXBUQx46xw4YzQP7AjwtdfHikI="
+  _abiz.rockislandsdivetours.example. 300 IN TXT "v=abiz1;k=pw-12345;h=rockislandsdivetours.pw.to.co;p=hQwWc0hO9pFlY31cqbfDxF6NZm++a+6bgu2sPX8fDJ0="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

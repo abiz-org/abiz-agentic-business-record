@@ -41,7 +41,7 @@
 Опублікуйте на своєму домені під `_abiz` рівно один запис TXT ABIZ у компактній формі без пробілів:
 
 ```dns
-_abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=x9WxLMbcEacHVqEiZ7dnO/JkGZDiwz5K5mgEpPEZ4h8="
+_abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=/IkZz7XBtov6fx81z0DW5LiNGkkpCGEaIXqb//OeLLY="
 ```
 
 - `v=abiz1` має стояти першим. `h` обов'язковий; `k` і `p` необов'язкові.
@@ -65,25 +65,29 @@ _abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.u
   "domains": [
     "karpatskyimed.example"
   ],
-  "public_key": "x9WxLMbcEacHVqEiZ7dnO/JkGZDiwz5K5mgEpPEZ4h8=",
+  "public_key": "/IkZz7XBtov6fx81z0DW5LiNGkkpCGEaIXqb//OeLLY=",
   "description": "Пасіка та продаж меду у Львові.",
   "website": "https://karpatskyimed.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Львів",
-      "country": "ua",
+      "address": {
+        "locality": "Львів",
+        "country": {
+          "code": "UA"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "mpkqyINrsBM6X3waKLbkAnALL68SsKiECGCq5PQ4ydHVflzxEOszmtO/6nAtB59t/7/TgHGNEs9wibOI3zQ8Cg=="
+  "signature": "6dY6xNELL5z9B1qIb/TnjTy9aoqY29cEtdTp1v9QWTZzCWPnLTfJ10jyOi2qAYXzdEPzsTd3spCMJjDXsIbzAg=="
 }
 ```
 
 Еталонним валідатором можна перевірити запис і значення DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain karpatskyimed.example --dns-value 'v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=x9WxLMbcEacHVqEiZ7dnO/JkGZDiwz5K5mgEpPEZ4h8='
+python scripts/validate.py record.json --domain karpatskyimed.example --dns-value 'v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=/IkZz7XBtov6fx81z0DW5LiNGkkpCGEaIXqb//OeLLY='
 ```
 
 ### Самостійно або через постачальника

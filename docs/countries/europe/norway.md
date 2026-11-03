@@ -41,7 +41,7 @@ Nøkler sammenlignes uten forskjell på store og små bokstaver, men publiser de
 Publiser nøyaktig én ABIZ TXT-post under `_abiz` på domenet deres, i kompakt form uten mellomrom:
 
 ```dns
-_abiz.nordlysfisk.example. 300 IN TXT "v=abiz1;k=no-123456789;h=nordlysfisk.no.to.co;p=peuHh9ARKe2MGwz/iXh/xr9mLeB6+Zierct3DEAT1uw="
+_abiz.nordlysfisk.example. 300 IN TXT "v=abiz1;k=no-123456789;h=nordlysfisk.no.to.co;p=Kg9CppHmag96YAPGVhabCCEg7ChoBBJmuqjr+NYSLAM="
 ```
 
 - `v=abiz1` må stå først. `h` er obligatorisk; `k` og `p` er valgfrie.
@@ -65,25 +65,29 @@ Posten som leveres på `https://nordlysfisk.no.to.co` som `application/json`:
   "domains": [
     "nordlysfisk.example"
   ],
-  "public_key": "peuHh9ARKe2MGwz/iXh/xr9mLeB6+Zierct3DEAT1uw=",
+  "public_key": "Kg9CppHmag96YAPGVhabCCEg7ChoBBJmuqjr+NYSLAM=",
   "description": "Fiskeforretning i Bergen.",
   "website": "https://nordlysfisk.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Bergen",
-      "country": "no",
+      "address": {
+        "locality": "Bergen",
+        "country": {
+          "code": "NO"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "nuZCknnfVjav0y6TKGyOS09mpD3EXjIm8Yj4XIgoOUd6vzmhnjFMlB50H89A/gBQu54EGNLO3LZ7fzc1zhKRCQ=="
+  "signature": "o3Jf9hxtObdvw0LqOCs9FxgfnU6lwcdyKjeHKOBpXHmfvqIRLkR3TY20E+t023mse9PG9/Pt5ndYbC/QrF3ZCQ=="
 }
 ```
 
 Med referansevalidatoren kan dere kontrollere posten og DNS-verdien lokalt:
 
 ```sh
-python scripts/validate.py record.json --domain nordlysfisk.example --dns-value 'v=abiz1;k=no-123456789;h=nordlysfisk.no.to.co;p=peuHh9ARKe2MGwz/iXh/xr9mLeB6+Zierct3DEAT1uw='
+python scripts/validate.py record.json --domain nordlysfisk.example --dns-value 'v=abiz1;k=no-123456789;h=nordlysfisk.no.to.co;p=Kg9CppHmag96YAPGVhabCCEg7ChoBBJmuqjr+NYSLAM='
 ```
 
 ### Selv eller via en leverandør

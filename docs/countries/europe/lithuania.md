@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.nemunoduona.example. 300 IN TXT "v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=ipSeYy62dvk1qqmTc5Fk0Jn9qPzB1L/pAOWkkFadbxY="
+_abiz.nemunoduona.example. 300 IN TXT "v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=CeW+AO7+A82ik86/q1+r8dOhRB0E4kXQnwoWtAJBhVc="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://nemunoduona.lt.to.co`, as `application/json`:
   "domains": [
     "nemunoduona.example"
   ],
-  "public_key": "ipSeYy62dvk1qqmTc5Fk0Jn9qPzB1L/pAOWkkFadbxY=",
+  "public_key": "CeW+AO7+A82ik86/q1+r8dOhRB0E4kXQnwoWtAJBhVc=",
   "description": "Bakery in Kaunas.",
   "website": "https://nemunoduona.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Kaunas",
-      "country": "lt",
+      "address": {
+        "locality": "Kaunas",
+        "country": {
+          "code": "LT"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "f0Gzg6cwI3+JokTPx/cMwQH9RCRDsu/swO/GK0sAB1jEPv4EryZ8Z2do04XNWFSny7fUQHy5mb00D1o+/8foAA=="
+  "signature": "/SB2O+r5kSsVwqfXdt+TcyNRhHMgEWhQ7u7WvtMnx/Tcy+n2NDSnDk9v1ZZ23F/1IkjIX1zTFKJJMpz1RbasAg=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain nemunoduona.example --dns-value 'v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=ipSeYy62dvk1qqmTc5Fk0Jn9qPzB1L/pAOWkkFadbxY='
+python scripts/validate.py record.json --domain nemunoduona.example --dns-value 'v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=CeW+AO7+A82ik86/q1+r8dOhRB0E4kXQnwoWtAJBhVc='
 ```
 
 ### Self-hosted or through a provider

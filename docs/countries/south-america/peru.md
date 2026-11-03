@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.textilescusco.example. 300 IN TXT "v=abiz1;h=textilescusco.pe.to.co;p=hNtXVajHbb6rHLo5RiHPFN/aBj6Nqr+We7DCHLKplJc="
+_abiz.textilescusco.example. 300 IN TXT "v=abiz1;h=textilescusco.pe.to.co;p=CDLU5yK2CDWJiZd/TIWgjWQ330sktrB3B3lxOmQtAaQ="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -53,21 +53,85 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "textilescusco.example"
   ],
-  "public_key": "hNtXVajHbb6rHLo5RiHPFN/aBj6Nqr+We7DCHLKplJc=",
+  "public_key": "CDLU5yK2CDWJiZd/TIWgjWQ330sktrB3B3lxOmQtAaQ=",
   "description": "Textiles andinos tejidos a mano.",
   "website": "https://textilescusco.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Cusco",
-      "country": "pe",
+      "address": {
+        "locality": "Cusco",
+        "country": {
+          "code": "PE"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Lima",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "09:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 09:00-19:00"
-  ],
-  "signature": "Dy9CutcYJ++hl0bU7kJKdEo5ozpTz/mpHcSFsOmOTbLoN50rwIkLEYeBv8AkEBURkYLOiWPpNQ1PAB9In2/bDA=="
+  "signature": "3hzmYJIVM5EBZNaxDS6g1xYLndXV3E3jk/nw+Xb0JpJ1ugFyXAOqikrWAfjy9AbHlSM05wLAXS8hBL89RlteBw=="
 }
 ```
 
@@ -80,7 +144,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain textilescusco.example \
-  --dns-value 'v=abiz1;h=textilescusco.pe.to.co;p=hNtXVajHbb6rHLo5RiHPFN/aBj6Nqr+We7DCHLKplJc='
+  --dns-value 'v=abiz1;h=textilescusco.pe.to.co;p=CDLU5yK2CDWJiZd/TIWgjWQ330sktrB3B3lxOmQtAaQ='
 ```
 
 ## 3. Proveedores y MCP
@@ -95,7 +159,7 @@ Por ejemplo, un proveedor puede alojar el registro de Textiles Cusco en `textile
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.textilescusco.example. 300 IN TXT "v=abiz1;h=textilescusco.pe.to.co;p=hNtXVajHbb6rHLo5RiHPFN/aBj6Nqr+We7DCHLKplJc="
+  _abiz.textilescusco.example. 300 IN TXT "v=abiz1;h=textilescusco.pe.to.co;p=CDLU5yK2CDWJiZd/TIWgjWQ330sktrB3B3lxOmQtAaQ="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

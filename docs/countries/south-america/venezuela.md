@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.panaderialacandelaria.example. 300 IN TXT "v=abiz1;h=www.panaderialacandelaria.example/abiz.json;p=DC7uZHUqt+1M67tTaaUQ9b8l6BxJasLzdawtIT78O5k="
+_abiz.panaderialacandelaria.example. 300 IN TXT "v=abiz1;h=www.panaderialacandelaria.example/abiz.json;p=v8Ggu5ha9uyzh1NTF+AJS+GDSRBxJLRTzfElFl/h8TM="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -53,21 +53,85 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "panaderialacandelaria.example"
   ],
-  "public_key": "DC7uZHUqt+1M67tTaaUQ9b8l6BxJasLzdawtIT78O5k=",
+  "public_key": "v8Ggu5ha9uyzh1NTF+AJS+GDSRBxJLRTzfElFl/h8TM=",
   "description": "Panadería y pastelería en La Candelaria.",
   "website": "https://panaderialacandelaria.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Caracas",
-      "country": "ve",
+      "address": {
+        "locality": "Caracas",
+        "country": {
+          "code": "VE"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Caracas",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "06:00",
+                "closes": "19:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Sa 06:00-19:00"
-  ],
-  "signature": "r9QtmEIdCUNCeahRCaEkYUrcYxJD767TX7kbqPXkiP86oqEJ/Z5HCJDahsZTHr4IierlWM01eaSBWGzvAgJgDA=="
+  "signature": "3rM6ZFthCd0JshY40rZBm1QkZqAzQop5SE2Gz+E3k5xFn2aRRuJzvyb5BQ6VFzL/1WJSR+3mSyGbH4RRKEx0Ag=="
 }
 ```
 
@@ -80,7 +144,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain panaderialacandelaria.example \
-  --dns-value 'v=abiz1;h=www.panaderialacandelaria.example/abiz.json;p=DC7uZHUqt+1M67tTaaUQ9b8l6BxJasLzdawtIT78O5k='
+  --dns-value 'v=abiz1;h=www.panaderialacandelaria.example/abiz.json;p=v8Ggu5ha9uyzh1NTF+AJS+GDSRBxJLRTzfElFl/h8TM='
 ```
 
 ## 3. Proveedores y MCP
@@ -95,7 +159,7 @@ Por ejemplo, un proveedor puede alojar el registro en `www.panaderialacandelaria
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.panaderialacandelaria.example. 300 IN TXT "v=abiz1;h=www.panaderialacandelaria.example/abiz.json;p=DC7uZHUqt+1M67tTaaUQ9b8l6BxJasLzdawtIT78O5k="
+  _abiz.panaderialacandelaria.example. 300 IN TXT "v=abiz1;h=www.panaderialacandelaria.example/abiz.json;p=v8Ggu5ha9uyzh1NTF+AJS+GDSRBxJLRTzfElFl/h8TM="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

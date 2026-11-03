@@ -41,7 +41,7 @@ Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate 
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.pasticceriarossi.example. 300 IN TXT "v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=LXPN+pikbyuLSzyG6Qhanxy0kETdQuyTbway/QSu6I4="
+_abiz.pasticceriarossi.example. 300 IN TXT "v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=A/me2pbHmvH7XDzBvJiJ6JyS59Xead4G//iE7NFMNwE="
 ```
 
 - `v=abiz1` deve venire per primo. `h` è obbligatorio; `k` e `p` sono facoltativi.
@@ -65,25 +65,29 @@ La scheda servita all'indirizzo `https://pasticceriarossi.it.to.co` come `applic
   "domains": [
     "pasticceriarossi.example"
   ],
-  "public_key": "LXPN+pikbyuLSzyG6Qhanxy0kETdQuyTbway/QSu6I4=",
+  "public_key": "A/me2pbHmvH7XDzBvJiJ6JyS59Xead4G//iE7NFMNwE=",
   "description": "Pasticceria artigianale a Bologna.",
   "website": "https://pasticceriarossi.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Bologna",
-      "country": "it",
+      "address": {
+        "locality": "Bologna",
+        "country": {
+          "code": "IT"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "AOW4C0TkKrXltHWAcgup8Yg3Ns+d7hW9zmbnyTt4+xWn4AN/UqQuCzhq3SItX4qg5ykUNGEBwEXICzhw8JDAAw=="
+  "signature": "vtMqgEv/X1GW98TV3mx1b2oh9jL4/L9+1pJ2iuIkdUyt3YclQei2HR3mBzLdNzMHNhNYVLy21uto8MoFDlHEAw=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain pasticceriarossi.example --dns-value 'v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=LXPN+pikbyuLSzyG6Qhanxy0kETdQuyTbway/QSu6I4='
+python scripts/validate.py record.json --domain pasticceriarossi.example --dns-value 'v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=A/me2pbHmvH7XDzBvJiJ6JyS59Xead4G//iE7NFMNwE='
 ```
 
 ### In proprio o tramite un fornitore

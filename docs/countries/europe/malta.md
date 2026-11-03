@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.gozoseasalt.example. 300 IN TXT "v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=L9PPdt1YxdlPfELrRGuMVD3W3PFCHJ1EizurneQojjc="
+_abiz.gozoseasalt.example. 300 IN TXT "v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=xbEFxaFe2tpfwySl1jC5KdWMmZNzOVG7szpYjvZQv2U="
 ```
 
 - `v=abiz1` must come first. `h` is required; `k` and `p` are optional.
@@ -65,25 +65,29 @@ The record served at `https://gozoseasalt.mt.to.co`, as `application/json`:
   "domains": [
     "gozoseasalt.example"
   ],
-  "public_key": "L9PPdt1YxdlPfELrRGuMVD3W3PFCHJ1EizurneQojjc=",
+  "public_key": "xbEFxaFe2tpfwySl1jC5KdWMmZNzOVG7szpYjvZQv2U=",
   "description": "Sea salt producer on Gozo.",
   "website": "https://gozoseasalt.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Victoria",
-      "country": "mt",
+      "address": {
+        "locality": "Victoria",
+        "country": {
+          "code": "MT"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "Tz/bq6QpIoJ3rEmkHMTHAUtIi2L7M9XnS+MfH+QewKqM670eHTmJmU6wD6B/r+dV6BSDLvJxry2ZoZtAzYA+Cw=="
+  "signature": "Fy7B1P2Mxfje7Fe8mGt5Un0DtoWKzWtHPmU6vNLw2TpGSf/dTeEHeahLQ4O/TNxo+bQL138BfNEDNjVWGt6TBQ=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain gozoseasalt.example --dns-value 'v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=L9PPdt1YxdlPfELrRGuMVD3W3PFCHJ1EizurneQojjc='
+python scripts/validate.py record.json --domain gozoseasalt.example --dns-value 'v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=xbEFxaFe2tpfwySl1jC5KdWMmZNzOVG7szpYjvZQv2U='
 ```
 
 ### Self-hosted or through a provider

@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=S00+/Rbh30T6au7oMaQ+2VF88mt99zjrov+3YtatDxc="
+_abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -63,22 +63,85 @@ Este ejemplo es ficticio. Supera el validador de referencia.
   "domains": [
     "transportescanal.example"
   ],
-  "public_key": "S00+/Rbh30T6au7oMaQ+2VF88mt99zjrov+3YtatDxc=",
+  "public_key": "bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA=",
   "description": "Mudanzas y transporte de carga ligera.",
   "website": "https://transportescanal.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Ciudad de Panamá",
-      "country": "pa",
+      "address": {
+        "locality": "Ciudad de Panamá",
+        "country": {
+          "code": "PA"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Panama",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "07:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "08:00",
+                "closes": "12:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Mo-Fr 07:00-18:00",
-    "Sa 08:00-12:00"
-  ],
-  "signature": "RQIeQSHeR0Sa+jYiej7Sc5eG3X93p3+qIMZKCkKaQUx5G2nSOOIzJlQNTzFsOX4+SBVHOQSDhQvLF5wPINeLCQ=="
+  "signature": "GPKtWTnSCEXuDmpTwJISPsnrn4GqIw5pHpdpu3qouCglRkdYz7vVxX1oGGwaFzONKZ8FLRhoWB0MqL5nbac+BQ=="
 }
 ```
 
@@ -91,7 +154,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain transportescanal.example \
-  --dns-value 'v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=S00+/Rbh30T6au7oMaQ+2VF88mt99zjrov+3YtatDxc='
+  --dns-value 'v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA='
 ```
 
 ## 3. Proveedores y MCP
@@ -106,7 +169,7 @@ Por ejemplo, un proveedor puede alojar el registro de Transportes Canal en `tran
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave u omita `p`.
 
   ```dns
-  _abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=S00+/Rbh30T6au7oMaQ+2VF88mt99zjrov+3YtatDxc="
+  _abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

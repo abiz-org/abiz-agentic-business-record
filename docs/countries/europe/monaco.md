@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.rivierayachting.example. 300 IN TXT "v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=s14psRKLLuzjbq2fWsqvDMJ2L8/gPgXaunvTJwaL/h0="
+_abiz.rivierayachting.example. 300 IN TXT "v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=ALvkwEs8/MU73gYkmjN9N6MUQAVMZiV1JuIU3kLoMfg="
 ```
 
 - `v=abiz1` doit venir en premier. `h` est obligatoire ; `k` et `p` sont facultatifs.
@@ -65,25 +65,29 @@ La fiche servie à l'adresse `https://rivierayachting.mc.to.co`, au format `appl
   "domains": [
     "rivierayachting.example"
   ],
-  "public_key": "s14psRKLLuzjbq2fWsqvDMJ2L8/gPgXaunvTJwaL/h0=",
+  "public_key": "ALvkwEs8/MU73gYkmjN9N6MUQAVMZiV1JuIU3kLoMfg=",
   "description": "Services nautiques à Monaco.",
   "website": "https://rivierayachting.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Monaco",
-      "country": "mc",
+      "address": {
+        "locality": "Monaco",
+        "country": {
+          "code": "MC"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "vmPPxHoaJ6gMUpSyN2O7lfDzGI97239GxbDVaA8lD5+P7azFwQlCPgmb9pf+hXGa2aaiDZrnt9ZGMzTT3xe6AQ=="
+  "signature": "wjYRrbI8rzFxg8xKo0r+mqt0wKOGwXa1qCzJJPWcPYK886F4i9D1cqiyOabsiNHz1GFlIraxgeils191x2WpBQ=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain rivierayachting.example --dns-value 'v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=s14psRKLLuzjbq2fWsqvDMJ2L8/gPgXaunvTJwaL/h0='
+python scripts/validate.py record.json --domain rivierayachting.example --dns-value 'v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=ALvkwEs8/MU73gYkmjN9N6MUQAVMZiV1JuIU3kLoMfg='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur

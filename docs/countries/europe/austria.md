@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.tischlereigruber.example. 300 IN TXT "v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=jmHW7wMj+crN3bqhGUneCwKuobWHHzabi8t8Uvgz9aw="
+_abiz.tischlereigruber.example. 300 IN TXT "v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=aVJPXi80B4ympmTmnEsyjDKiU2NfUOsEDF6IybfUCxs="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` ist Pflicht, `k` und `p` sind optional.
@@ -65,25 +65,29 @@ Der Eintrag, der unter `https://tischlereigruber.at.to.co` als `application/json
   "domains": [
     "tischlereigruber.example"
   ],
-  "public_key": "jmHW7wMj+crN3bqhGUneCwKuobWHHzabi8t8Uvgz9aw=",
+  "public_key": "aVJPXi80B4ympmTmnEsyjDKiU2NfUOsEDF6IybfUCxs=",
   "description": "Tischlerei in Graz.",
   "website": "https://tischlereigruber.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Graz",
-      "country": "at",
+      "address": {
+        "locality": "Graz",
+        "country": {
+          "code": "AT"
+        }
+      },
       "public": true
     }
   ],
-  "signature": "n4HOouHSOqB1FVpYdG23Ev10FTJKlFCds86e5b/AoBQ7Au6wnCpe2trGf7BJ1YuAUmNYYRQFVJIyiZY1O59XCg=="
+  "signature": "e+NCmxy6Rju3eRfdx2mQrBktGjWyL0RzTcRqtPSyr742WCNxqTZAmS3c04+d2o4DqmZF7AaLyMKg1rmGUcVLCQ=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain tischlereigruber.example --dns-value 'v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=jmHW7wMj+crN3bqhGUneCwKuobWHHzabi8t8Uvgz9aw='
+python scripts/validate.py record.json --domain tischlereigruber.example --dns-value 'v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=aVJPXi80B4ympmTmnEsyjDKiU2NfUOsEDF6IybfUCxs='
 ```
 
 ### Selbst hosten oder über einen Anbieter

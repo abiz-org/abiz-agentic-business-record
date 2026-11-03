@@ -45,7 +45,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.mapleridgecycles.example. 300 IN TXT "v=abiz1;k=ca-on-1234567;h=mapleridgecycles.on.ca.to.co;p=kSPVor1HFl4si/NOnCw7HBLSG3OTXOhUMLgPDIRQTHo="
+_abiz.mapleridgecycles.example. 300 IN TXT "v=abiz1;k=ca-on-1234567;h=mapleridgecycles.on.ca.to.co;p=tlJEgfs0MPGxd6p4dzvqIc0/7zsrMjFjPeXzb3BKDiU="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -69,22 +69,84 @@ This example is fictional. It passes the reference validator.
   "domains": [
     "mapleridgecycles.example"
   ],
-  "public_key": "kSPVor1HFl4si/NOnCw7HBLSG3OTXOhUMLgPDIRQTHo=",
+  "public_key": "tlJEgfs0MPGxd6p4dzvqIc0/7zsrMjFjPeXzb3BKDiU=",
   "description": "Bicycle sales, repairs and winter tune-ups.",
   "website": "https://mapleridgecycles.example",
   "locations": [
     {
       "kind": "trading",
-      "city": "Ottawa",
-      "region": "ON",
-      "country": "ca",
+      "address": {
+        "locality": "Ottawa",
+        "region": {
+          "code": "CA-ON",
+          "name": "Ontario"
+        },
+        "country": {
+          "code": "CA"
+        }
+      },
+      "opening_hours": {
+        "time_zone": "America/Toronto",
+        "weekly": [
+          {
+            "day": "monday",
+            "periods": []
+          },
+          {
+            "day": "tuesday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "wednesday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "thursday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "friday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "saturday",
+            "periods": [
+              {
+                "opens": "10:00",
+                "closes": "18:00"
+              }
+            ]
+          },
+          {
+            "day": "sunday",
+            "periods": []
+          }
+        ]
+      },
       "public": true
     }
   ],
-  "opening_hours": [
-    "Tu-Sa 10:00-18:00"
-  ],
-  "signature": "AyaLgBkY08ZL+CXlYH4kTRTd7VOxd797kSQl3C18kwFN1ybGr/Gb9yQH4mb/N358dSEVz0TBuApDX3Gvh3EhBg=="
+  "signature": "mtXjPfADPjB3pUXwNyfFMWkbEqUl5DYaJJY+DK0C53nDwEI8yXKOFO11zkZb49To8AAtUfy17RdD6nCdba2KDg=="
 }
 ```
 
@@ -97,7 +159,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain mapleridgecycles.example \
-  --dns-value 'v=abiz1;k=ca-on-1234567;h=mapleridgecycles.on.ca.to.co;p=kSPVor1HFl4si/NOnCw7HBLSG3OTXOhUMLgPDIRQTHo='
+  --dns-value 'v=abiz1;k=ca-on-1234567;h=mapleridgecycles.on.ca.to.co;p=tlJEgfs0MPGxd6p4dzvqIc0/7zsrMjFjPeXzb3BKDiU='
 ```
 
 ## 3. Using a provider and MCP
@@ -114,7 +176,7 @@ To see how one provider describes this for Canadian businesses, see [ABIZ record
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key or leave `p` out.
 
   ```dns
-  _abiz.mapleridgecycles.example. 300 IN TXT "v=abiz1;k=ca-on-1234567;h=mapleridgecycles.on.ca.to.co;p=kSPVor1HFl4si/NOnCw7HBLSG3OTXOhUMLgPDIRQTHo="
+  _abiz.mapleridgecycles.example. 300 IN TXT "v=abiz1;k=ca-on-1234567;h=mapleridgecycles.on.ca.to.co;p=tlJEgfs0MPGxd6p4dzvqIc0/7zsrMjFjPeXzb3BKDiU="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).
