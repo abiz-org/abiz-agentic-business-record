@@ -1,3 +1,3 @@
-# Optional. Required only to verify an Ed25519 signature with --p-message and --p-signature.
-# Decoding p and checking that it is 32 bytes uses the Python standard library.
+# Kept for compatibility. cryptography is now in requirements-dev.txt, because
+# the validator always verifies the record signature (SPEC section 4.6).
 cryptography>=41,<50

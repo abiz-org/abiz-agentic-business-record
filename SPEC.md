@@ -3,7 +3,7 @@
 **Published version:** ABIZ 1.0  
 **DNS wire version:** `v=abiz1` (unchanged)  
 **Date:** 2026-10-23  
-**1.1 proposal:** 2026-10-31, revised 2026-11-03, amended 2026-11-03 (not the published version; see sections 3.1.1, 3.3, 3.4, 4.2, 4.5 and 8)  
+**1.1 proposal:** 2026-10-31, revised 2026-11-03, amended 2026-11-03 twice (not the published version; see sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6 and 8)  
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
 **Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
@@ -11,7 +11,7 @@
 
 This is the **ABIZ 1.0 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.
 
-Sections 3.1.1, 3.3, 3.4, 4.2, 4.5 and 8 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace; a REQUIRED Ed25519 key in the DNS `p` tag; a well-known file, `https://<domain>/.well-known/abiz.json`, as an alternative to the DNS record; a `format` query parameter (`html`, `markdown`, `json`) at the record host; a defined business-key grammar with country, subdivision and registration-number rules, with `k` optional for every business; record hosts given as bare hostnames, with paths reserved for business units and divisions; and no support for North Korea (`kp`). They are not part of the ABIZ 1.0 conformance baseline. The whitespace change, the well-known file, the `format` parameter and optional `k` are backwards-compatible for consumers. The `p` and business-key changes are deliberately not: an assertion without `p`, or with a non-key `p`, is invalid (section 3.3.7), and existing keys must be re-expressed (section 4.2.5). The wire version stays `v=abiz1`.
+Sections 3.1.1, 3.3, 3.4, 4, 4.2, 4.5, 4.6 and 8 are **proposed ABIZ 1.1** changes: a relaxed tag-list syntax that accepts optional whitespace; a REQUIRED Ed25519 key in the DNS `p` tag; snake_case member names throughout the business record; REQUIRED `public_key` and `signature` members that sign the business record with the `p` key (section 4.6); a well-known file, `https://<domain>/.well-known/abiz.json`, as an alternative to the DNS record; a `format` query parameter (`html`, `markdown`, `json`) at the record host; a defined business-key grammar with country, subdivision and registration-number rules, with `k` optional for every business; record hosts given as bare hostnames, with paths reserved for business units and divisions; and no support for North Korea (`kp`). They are not part of the ABIZ 1.0 conformance baseline. The whitespace change, the well-known file, the `format` parameter and optional `k` are backwards-compatible for consumers. The `p`, business-key, snake_case and record-signature changes are deliberately not: an assertion without `p`, or with a non-key `p`, is invalid (section 3.3.7), existing keys must be re-expressed (section 4.2.5), and every business record must be republished with snake_case member names, `public_key` and a valid `signature` (section 4.6.7). The wire version stays `v=abiz1`.
 
 ## 1. Scope and purpose
 
@@ -69,7 +69,7 @@ Rules that go with the grammar:
 - At most one trailing `;` is allowed. An empty tag (`;;`), a tag without `=`, and a tag with an empty name or value are invalid.
 - A repeated recognised tag makes the assertion invalid. Unknown tags are ignored, including repeated ones.
 
-Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ=`. A strict ABIZ 1.0 consumer rejects any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
+Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=`. A strict ABIZ 1.0 consumer rejects any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
 
 ### 3.2 Tags
 
@@ -77,7 +77,7 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 | --- | --- | --- |
 | `v=abiz1` | MUST | Wire protocol family; always first |
 | `h=<record-host>` | MUST | HTTPS hostname of the public business record, without URL scheme. A bare hostname SHOULD be used; a path is for a business unit or division only (section 8). No query, fragment, port or user information |
-| `k=<business-key>` | MAY | Optional for every business, registered or not. When present, MUST follow section 4.2.1 and MUST equal the record's `business-key`, compared case-insensitively (section 4.2.4). Registration fields in the record do not require `k` |
+| `k=<business-key>` | MAY | Optional for every business, registered or not. When present, MUST follow section 4.2.1 and MUST equal the record's `business_key`, compared case-insensitively (section 4.2.4). Registration fields in the record do not require `k` |
 | `p=<public-key>` | MUST | REQUIRED in ABIZ 1.1 (proposed). MUST be an Ed25519 public key in standard base64, 44 characters (section 3.3.2). An assertion without `p`, or with any other value, is invalid. ABIZ 1.0 made `p` optional and allowed an opaque provider token. Not a password and not proof of legal identity |
 
 `h` MAY refer to a record hosted by an independent service. A producer need not own the host serving the record; it MUST control the queried DNS domain and have permission for the published record.
@@ -85,13 +85,13 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 **Example — registered business (US):**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
 ```
 
 **Example — unregistered business (US):**
 
 ```dns
-_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.biz.to.co;p=Tsm/xWh0gGtkjIe1choYo3zCLCt/0OTX46QLuWBzGJI="
+_abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.biz.to.co;p=HKmFn2cg/6EXCYZ75lHdr7S7vfq1GUfodvTyb6pl5Uc="
 ```
 
 Both are illustrative, invented businesses, and each `p` is a throwaway Ed25519 public key whose private key is not in the repository. These entries demonstrate alternatives on **different DNS owners**. A business MUST NOT publish both as independent matching assertions at one owner name.
@@ -101,7 +101,7 @@ These hostnames are examples of to.co's country-based registered-company hostnam
 **Example — the same registered business, without `k`:**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
 ```
 
 `k` is optional; `h` and `p` are not. See `examples/dns-ed25519-p.txt` and section 3.3. An assertion such as `v=abiz1;h=harbour-bike-repair.or.us.to.co`, valid under ABIZ 1.0, is invalid under ABIZ 1.1 because it has no `p`.
@@ -118,9 +118,11 @@ ABIZ 1.1 makes that tag a persistent signing identity. The business, or a provid
 
 `p` is REQUIRED, for registered and unregistered businesses alike. An assertion without `p` is invalid, exactly as one without `h`. An assertion with `p` is valid only when `p` is a key that matches section 3.3.2. A consumer always has a key to check a signature against, and no consumer has to handle a second kind of assertion without a signer.
 
+The business record repeats the key as `public_key` and is signed with the matching private key (section 4.6), so a consumer can check that the record it fetched from `h` was published by the holder of the key the domain names.
+
 Publishing the key shows that the controller of the domain put that public key in DNS. It does not authenticate the TXT record. It does not prove that a registered business owns the domain. Section 9 still applies: DNS assertions are public and unauthenticated by default, and DNS control alone does not prove business ownership. Producers and consumers SHOULD still use DNSSEC where they can. DNSSEC authenticates the DNS data. The key names a signer the domain controller published.
 
-`p` is carried only by the pointer: the DNS assertion, or the well-known file (section 3.4), which repeats the same value. The business record does not contain the current key or any previous key (section 4).
+The authoritative copy of the key is the pointer: the DNS assertion, or the well-known file (section 3.4), which repeats the same value. The business record carries the current key as `public_key`, which MUST equal `p` (section 4.6.4). It does not carry any previous key.
 
 #### 3.3.2 Key encoding
 
@@ -190,19 +192,19 @@ When the business changes provider, it MAY publish the same `p` through the new 
 
 **Signatures.** A detached signature is the raw 64-byte Ed25519 signature (RFC 8032, PureEd25519, with no pre-hash), encoded in the same standard base64 (88 characters, including the final `==`). The message is the raw octets the producer and consumer agreed. ABIZ does not take DKIM's header canonicalisation or SHA-256 body hash from RFC 8463. Only the public-key encoding is shared with that RFC. Verification succeeds only when RFC 8032 verification succeeds for that key, message and signature.
 
-ABIZ 1.1 does not define which octets a business-record signature covers. Until that is specified, a signature check is only meaningful for a message both sides already agreed. The reference validator can check such a pair with `--p-message` (UTF-8 text) and `--p-signature` (the 88-character standard base64 signature). Signature verification needs the optional `cryptography` package; without it, the format check still runs and the signature check fails with an error that names the missing dependency.
+ABIZ 1.1 defines one such message: the business-record signature of section 4.6, whose message is the RFC 8785 canonical form of the record without its `signature` member. Any other detached signature is meaningful only for a message both sides already agreed. The reference validator can check such a pair with `--p-message` (UTF-8 text) and `--p-signature` (the 88-character standard base64 signature). Signature verification needs the `cryptography` package (in `requirements-dev.txt`); without it, the `p` format check still runs, and every signature check, including the record signature, fails with an error that names the missing dependency.
 
 **Wire version.** This proposal does not change `v=abiz1`. A strict ABIZ 1.0 consumer that treats `p` as opaque still accepts a 1.1 key, because a key is a valid 1.0 token, so every valid 1.1 assertion is a valid 1.0 assertion. The reverse does not hold: a 1.1 consumer rejects a missing or non-key `p` (section 3.3.7).
 
 #### 3.3.6 Rotation and revocation
 
-The current signing key is only the `p` tag in DNS. Producers MUST NOT publish previous keys in DNS, and the business record does not carry them. `_abiz` stays limited to the current key.
+The current signing key is the `p` tag in DNS (or the well-known file), repeated as the record's `public_key`. Producers MUST NOT publish previous keys in DNS, and the business record does not carry them. `_abiz` stays limited to the current key.
 
-**Rotation.** The producer generates a new keypair and publishes the new public key as DNS `p`. The TTL SHOULD remain 300 seconds (section 3.1). Once the TXT TTL has passed, consumers MUST NOT keep treating the replaced `p` as the current key.
+**Rotation.** The producer generates a new keypair and publishes the new public key as DNS `p`. The TTL SHOULD remain 300 seconds (section 3.1). At the same time it re-signs the business record with the new private key, with `public_key` set to the new key (section 4.6.5). Once the TXT TTL has passed, consumers MUST NOT keep treating the replaced `p` as the current key, and a record signed with the replaced key no longer verifies against `p`.
 
 **Revocation.** Because `p` is required, a business that withdraws a key while keeping its ABIZ assertion MUST rotate to a new key. Removing `p` alone makes the assertion invalid. Removing the whole assertion (and any well-known file, section 3.4) withdraws the key and the ABIZ pointer together once the TXT TTL, or the file's cache lifetime, has passed.
 
-ABIZ 1.1 does not define a published list of retired keys. The schema reserves the shape of a retired-key entry as a nested definition, `$defs/retired-key` (section 4). It is not a record property, and a business record that contains `retired-keys` or any other unknown top-level property MUST be rejected. A later revision, or another document that references the definition, may use that shape.
+ABIZ 1.1 does not define a published list of retired keys. The schema reserves the shape of a retired-key entry as a nested definition, `$defs/retired_key` (section 4). It is not a record property, and a business record that contains `retired_keys` or any other unknown top-level property MUST be rejected. A later revision, or another document that references the definition, may use that shape.
 
 #### 3.3.7 Migration of existing `p` values
 
@@ -213,17 +215,15 @@ All existing assertions are upgraded by this revision. Under ABIZ 1.1 an asserti
 
 Producers MUST publish `p` as an Ed25519 public key (section 3.3.3). Removing a non-key `p` is no longer enough. Producers SHOULD do this before consumers move to 1.1: an assertion with a valid `p` is valid under both ABIZ 1.0 and 1.1.
 
-This is a deliberate breaking change for assertions without a key. The business-key rules of section 4.2 are the other one (section 4.2.5), and dropping support for `kp` (section 4.2.7) a third. Every other ABIZ 1.0 record stays valid under ABIZ 1.1, with the same meaning. The whitespace relaxation of section 3.1.1, the well-known file of section 3.4 and the `format` parameter of section 4.5 only add accepted forms.
+This is a deliberate breaking change for assertions without a key. The others are the business-key rules of section 4.2 (section 4.2.5), dropping support for `kp` (section 4.2.7), and the snake_case member names and required record signature of the business record (section 4.6.7). Every other ABIZ 1.0 assertion stays valid under ABIZ 1.1, with the same meaning. The whitespace relaxation of section 3.1.1, the well-known file of section 3.4 and the `format` parameter of section 4.5 only add accepted forms.
 
 #### 3.3.8 Unresolved points
 
 This proposal does not decide the following. They are recorded so implementers do not treat silence as a decision:
 
-- whether a record host stores a copy of the public key;
-- whether, and where, a later revision publishes retired keys using `$defs/retired-key`, and how long entries would be kept;
-- which octets a signature over the business record would cover.
+- whether, and where, a later revision publishes retired keys using `$defs/retired_key`, and how long entries would be kept;
 
-Decided in this revision: `p` uses standard base64 (RFC 4648 section 4, RFC 8463), not base64url; from ABIZ 1.1 `p` is REQUIRED for every assertion, registered or not; and a missing or non-key `p` is invalid.
+Decided in this revision: `p` uses standard base64 (RFC 4648 section 4, RFC 8463), not base64url; from ABIZ 1.1 `p` is REQUIRED for every assertion, registered or not; a missing or non-key `p` is invalid; the business record carries a copy of the key as `public_key`; and a record signature covers the RFC 8785 canonical form of the record without `signature` (section 4.6).
 
 ### 3.4 Well-known file (ABIZ 1.1, proposed)
 
@@ -261,7 +261,7 @@ Example, matching the registered DNS example in section 3.2 (`examples/well-know
   "v": "abiz1",
   "k": "us-or-123456",
   "h": "harbour-bike-repair.or.us.to.co",
-  "p": "oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+  "p": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
 }
 ```
 
@@ -296,25 +296,27 @@ The well-known file shows control of the HTTPS origin at `<domain>`, which is no
 
 The `h` target is the URL `https://<h>`. A consumer fetches the business record from it with `?format=json` (section 4.5) and the header `Accept: application/json`. The JSON representation MUST be a JSON object that validates against [the normative ABIZ schema](schemas/abiz-business-record-v1.schema.json) (`$id` [`https://abizrecord.org/schema/abiz-business-record-v1.schema.json`](https://abizrecord.org/schema/abiz-business-record-v1.schema.json)) in **JSON Schema Draft 2020-12**. Record conformance is a REQUIRED step for ABIZ conformance; a document that merely parses as JSON does not qualify.
 
-The schema does not define the current key. That value exists only as `p` in the DNS assertion or the well-known file (section 3.4), and its encoding is normative in section 3.3.2: standard base64 of the raw 32-byte Ed25519 public key, the same `p=` encoding DKIM specifies for Ed25519 in RFC 8463 (RFC 4648 section 4, with padding).
+The authoritative current key is `p` in the DNS assertion or the well-known file (section 3.4). The record repeats it as `public_key` and carries a `signature` made with the matching private key (section 4.6). The encoding is normative in section 3.3.2: standard base64 of the raw 32-byte Ed25519 public key, the same `p=` encoding DKIM specifies for Ed25519 in RFC 8463 (RFC 4648 section 4, with padding).
 
-ABIZ 1.1 (proposed) adds no record property, and the business-record schema keeps its `$id`. The schema's `$defs` holds a nested definition, `retired-key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
+ABIZ 1.1 (proposed) renames every record member to snake_case (`record_version`, `business_name`, `identity_host`, `business_key`, `registration_number`, `mcp_server_url`, `contact_email`, `contact_phone`, `logo_url`, `last_updated`, `opening_hours`, `locations[].postal_code`) and adds two REQUIRED members, `public_key` and `signature` (section 4.6). Hyphenated member names are unknown top-level properties and are rejected. The business-record schema keeps its file name and `$id`. The schema's `$defs` holds a nested definition, `retired_key`, that reserves the shape of a retired Ed25519 key entry (section 3.3.6). No record property refers to it, so a business record cannot carry it.
 
 ### 4.1 Required properties
 
-- `record-version` = `abiz1`
-- `business-name`: nonempty public name
+- `record_version` = `abiz1`
+- `business_name`: nonempty public name
 - `country`: assigned ISO 3166-1 alpha-2 country code, case-insensitive, canonically lowercase (section 4.2.4); not `kp` (section 4.2.7)
-- `identity-host`: the record host, matching `h` exactly (a bare hostname, or a hostname and path for a unit, section 8)
+- `identity_host`: the record host, matching `h` exactly (a bare hostname, or a hostname and path for a unit, section 8)
 - `domains`: array of business-controlled domain names this record claims
+- `public_key`: the Ed25519 public key, equal to `p` (section 4.6.1)
+- `signature`: the Ed25519 signature over the record (section 4.6)
 
 ### 4.2 Registration and MCP
 
-`business-key` and `registration-number` are OPTIONAL, for registered and unregistered businesses alike. If either is present, both MUST be present. The country part of `business-key` MUST equal the record's `country`, and its registration-number part MUST equal `registration-number`, both compared case-insensitively. Including these fields in the record does not require `k` in DNS. If the DNS assertion contains `k`, `k` MUST equal `business-key` (section 4.2.4).
+`business_key` and `registration_number` are OPTIONAL, for registered and unregistered businesses alike. If either is present, both MUST be present. The country part of `business_key` MUST equal the record's `country`, and its registration-number part MUST equal `registration_number`, both compared case-insensitively. Including these fields in the record does not require `k` in DNS. If the DNS assertion contains `k`, `k` MUST equal `business_key` (section 4.2.4).
 
 #### 4.2.1 Business key grammar (ABIZ 1.1, proposed)
 
-The business key, used as DNS `k` and record `business-key`, has this ABNF (RFC 5234; quoted strings are case-insensitive, and `ALPHA` covers both cases):
+The business key, used as DNS `k` and record `business_key`, has this ABNF (RFC 5234; quoted strings are case-insensitive, and `ALPHA` covers both cases):
 
 ```abnf
 business-key = country "-" [ subdivision "-" ] reg-number
@@ -361,7 +363,7 @@ A country with only subdivision-level registers that is not in the first table c
 
 ABIZ cannot check a registration number against each register's format. It defines only the character set and a normalisation.
 
-`registration-number`, and the `reg-number` part of the key, MUST be one or more ASCII letters and digits (`A–Z`, `a–z`, `0–9`). Spaces and all other characters are invalid. A consumer MUST NOT normalise a received value; it MUST reject one that is not ASCII alphanumeric.
+`registration_number`, and the `reg-number` part of the key, MUST be one or more ASCII letters and digits (`A–Z`, `a–z`, `0–9`). Spaces and all other characters are invalid. A consumer MUST NOT normalise a received value; it MUST reject one that is not ASCII alphanumeric.
 
 A producer derives the value from the number as the register issues it:
 
@@ -380,11 +382,11 @@ Producers SHOULD publish the canonical form: country and subdivision in lowercas
 
 #### 4.2.5 Migration of existing keys
 
-This is a breaking change for keys. ABIZ 1.0 allowed `.`, `_` and `-` inside the number and had no subdivision rule, so some 1.0 keys are invalid or ambiguous under 1.1. Producers MUST re-express existing `k` and `business-key` values in the section 4.2.1 form. For example, the 1.0 example key `us-OR123456` becomes `us-or-123456`, with `registration-number` `123456`.
+This is a breaking change for keys. ABIZ 1.0 allowed `.`, `_` and `-` inside the number and had no subdivision rule, so some 1.0 keys are invalid or ambiguous under 1.1. Producers MUST re-express existing `k` and `business_key` values in the section 4.2.1 form. For example, the 1.0 example key `us-OR123456` becomes `us-or-123456`, with `registration_number` `123456`.
 
 #### 4.2.6 MCP
 
-`mcp-server-url` is OPTIONAL. If present it MUST be a valid HTTPS URL, but ABIZ does not assert that the endpoint is open, safe, available or authenticated. Consumers MUST apply appropriate access controls before using any linked agent endpoint.
+`mcp_server_url` is OPTIONAL. If present it MUST be a valid HTTPS URL, but ABIZ does not assert that the endpoint is open, safe, available or authenticated. Consumers MUST apply appropriate access controls before using any linked agent endpoint.
 
 #### 4.2.7 Unsupported country: North Korea (ABIZ 1.1, proposed)
 
@@ -392,18 +394,19 @@ ABIZ does not support businesses in North Korea (the Democratic People's Republi
 
 ### 4.3 Optional useful facts
 
-The schema defines optional `description`, `website`, `contact-email`, `contact-phone`, `logo-url`, `last-updated`, `services`, `locations`, `opening-hours` and `links`. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record.
+The schema defines optional `description`, `website`, `contact_email`, `contact_phone`, `logo_url`, `last_updated`, `services`, `locations`, `opening_hours` and `links`. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record.
 
-Implementations MAY add namespaced values inside `extensions` (reverse-domain keys). Unknown top-level properties MUST be rejected. Extensions MUST NOT override the meaning of mandatory fields.
+Implementations MAY add namespaced values inside `extensions` (reverse-domain keys). Member names inside an extension are defined by its owner; snake_case is RECOMMENDED, and the examples in this repository use it (for example `"to.co": {"badge": "registered", "business_pass": true}`). Extensions are covered by the record signature. Unknown top-level properties MUST be rejected. Extensions MUST NOT override the meaning of mandatory fields.
 
 ### 4.4 Independent semantic checks
 
 A Draft 2020-12 structural validator MUST evaluate required properties, types, constraints and dependencies; an implementation MUST also enforce HTTPS URLs and `format` constraints explicitly. Some Draft 2020-12 validators treat `format` as an annotation by default.
 
-Schema validation does **not** check:
+Schema validation does **not** check the following. The reference validator checks the signature items locally:
 - whether a business actually controls a domain;
-- whether `identity-host` matches a fetched DNS or well-known `h` value, or whether the two sources agree (section 3.4.4);
-- whether `business-key` matches `k` and `country`, or uses an assigned country and subdivision code (section 4.2);
+- whether `identity_host` matches a fetched DNS or well-known `h` value, or whether the two sources agree (section 3.4.4);
+- whether `business_key` matches `k` and `country`, or uses an assigned country and subdivision code (section 4.2);
+- whether `signature` verifies, or whether `public_key` equals `p` (section 4.6.4);
 - whether a registration number is real;
 - whether URLs are reachable;
 - whether the business is genuine.
@@ -431,6 +434,136 @@ Rules:
 
 A consumer MUST request JSON with `Accept: application/json` and SHOULD also add `format=json`. It MUST check that the response media type is `application/json` before parsing.
 
+### 4.6 Record signing: `public_key` and `signature` (ABIZ 1.1, proposed)
+
+Every business record MUST carry the business's public key and a signature over the record. Together with `p`, they let a consumer check that the record served at `https://<h>` was published by the holder of the key that the domain names, and that it has not been changed since it was signed.
+
+#### 4.6.1 Members
+
+| Member | Required | Value |
+| --- | --- | --- |
+| `public_key` | MUST | The Ed25519 public key, encoded exactly as `p` (section 3.3.2): standard base64 of the raw 32 bytes, 44 characters, one trailing `=`. It MUST equal the `p` value of the DNS assertion or well-known file that points to this record. |
+| `signature` | MUST | The PureEd25519 signature (RFC 8032, no pre-hash) of the signing input (section 4.6.2), as standard base64 of the raw 64 bytes: 88 characters, ending `==`. |
+
+`public_key` is a copy, for convenience and for detecting a mismatch. The authoritative key is always `p`. `last_updated` stays optional, but a producer SHOULD include it, and it is covered by the signature (section 4.6.6). A record without either member, or with a value of the wrong form, fails the schema.
+
+#### 4.6.2 Signing input
+
+The signing input is the UTF-8 encoding of the **JSON Canonicalization Scheme** (JCS, RFC 8785) serialisation of the whole business record **with the `signature` member removed**. Every other member is covered, including `public_key`, `last_updated` and everything inside `extensions`. Only the top-level `signature` member is removed; a member called `signature` inside an extension is signed like any other.
+
+In summary, RFC 8785 serialises with no insignificant whitespace, sorts object members by the UTF-16 code units of their names, writes strings with only `"`, `\` and U+0000 to U+001F escaped (as `\b`, `\t`, `\n`, `\f`, `\r` or lowercase `\u00xx`) and all other characters as UTF-8, and writes numbers as ECMAScript does. RFC 8785 is normative; this summary is not.
+
+- The record MUST be valid I-JSON (RFC 7493): no duplicate member names, no lone surrogates, and numbers that fit an IEEE 754 double. A consumer MUST reject a record that is not, before verifying.
+- The served JSON need not be in canonical form. Member order, indentation and whitespace in the served document do not affect the signature, because the consumer canonicalises what it parsed.
+- No Unicode normalisation is applied. Producers SHOULD write text in NFC before signing; a consumer MUST NOT normalise it before verifying.
+- A producer MUST NOT sign a record that contains a number that cannot be represented exactly as a double. The base schema has no numeric members; this matters only for extensions.
+
+`examples/registered-us.signing-input.txt` is the signing input of `examples/registered-us.json`, as a test vector:
+
+```text
+{"business_key":"us-or-123456","business_name":"Harbour Bike Repair LLC","country":"us","description":"Bicycle repair and maintenance in Portland.","domains":["harbourbikes.example"],"identity_host":"harbour-bike-repair.or.us.to.co","last_updated":"2026-11-03T09:00:00Z","locations":[{"city":"Portland","country":"us","kind":"trading","public":true,"region":"Oregon"}],"opening_hours":["Mo-Fr 09:00-17:00"],"public_key":"bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=","record_version":"abiz1","registration_number":"123456","services":[{"name":"Bicycle servicing"},{"name":"Wheel repairs"}],"website":"https://harbourbikes.example"}
+```
+
+#### 4.6.3 Producing a signature
+
+1. Build the complete record, including `public_key` set to the current `p` and, preferably, `last_updated`. Leave out `signature`, or remove an old one.
+2. Validate it against the schema (apart from `signature`) and section 4.
+3. Compute the signing input (section 4.6.2) and sign it with the Ed25519 private key that matches `p`.
+4. Add `signature`, the standard base64 of the 64-byte result. Producers SHOULD place it last, so that it is easy to see.
+5. Publish. Any later change to the record, however small, needs a new signature.
+
+```python
+import base64
+from validate import signing_input  # scripts/validate.py; any RFC 8785 implementation is acceptable
+
+record["public_key"] = p_value
+record.pop("signature", None)
+record["signature"] = base64.b64encode(private_key.sign(signing_input(record))).decode("ascii")
+```
+
+The reference validator provides `sign_record()` for producers. In hosted mode (section 3.3.4) the provider signs for the business with the business's key.
+
+#### 4.6.4 Verification
+
+A consumer verifies a fetched record as follows. Steps 1 to 4 need only the record; step 5 needs the pointer.
+
+1. Parse the JSON representation as I-JSON (section 4.6.2), rejecting duplicate member names, and validate it against the schema.
+2. Decode `public_key` with the rules of section 3.3.2 and `signature` as 64 bytes of canonical standard base64. A value that does not decode is a failure.
+3. Remove the top-level `signature` member from the parsed object and compute the signing input (section 4.6.2).
+4. Verify the signature with RFC 8032 PureEd25519 verification, using `public_key`, the signing input and the decoded signature.
+5. Compare `public_key` with `p` from the assertion the consumer used (DNS, or the well-known file under section 3.4.4). Both are canonical, so the comparison is an exact string comparison.
+
+If step 1 to 4 fails, or either member is missing, the record is **not verified**. If step 5 fails, the consumer MUST reject the record's identity claim: it MUST NOT treat the record as published by the business that controls the domain, even when the signature itself is valid. A consumer MUST NOT accept a record signed with a key that is not the domain's current `p`, and MUST NOT fall back to an unsigned interpretation of the record. It SHOULD report which check failed (missing member, bad encoding, signature does not verify, or `public_key` does not match `p`).
+
+A consumer that shows a record that is not verified, for example to explain an error, MUST label it as not verified. The reference validator performs steps 1 to 4 for every record and step 5 when it is given `--dns-value`, `--well-known` or `--p`.
+
+#### 4.6.5 Key rotation
+
+The record is signed with the same key that DNS publishes, so a rotation (section 3.3.6) changes both:
+
+1. Generate the new keypair.
+2. Re-sign the record with the new private key, with `public_key` set to the new key and `last_updated` set to the time of the change.
+3. Publish the new `p` (and update the well-known file, if there is one) and the re-signed record as close together as possible.
+
+Until cached TXT records expire, some consumers still hold the old `p` and will see a `public_key` mismatch, or the reverse. The TXT TTL SHOULD therefore stay at 300 seconds (section 3.1). A consumer that finds a mismatch SHOULD query DNS again once the cached TTL has passed, and fetch the record again, before reporting a failure. It MUST NOT accept the mismatch in the meantime. A producer MUST NOT keep serving a record signed with a key it has withdrawn, and to revoke a compromised key it rotates as section 3.3.6 says; old records signed with that key then stop verifying against `p`.
+
+#### 4.6.6 Security considerations
+
+- **What the signature shows.** It shows that the holder of the private key for `p` published these record contents. Combined with section 3.4.4 it links the record to whoever controls the domain's DNS (or, for the well-known file, its web origin). It does not prove legal identity, does not make a registration number genuine, and does not protect against a party who controls the domain's DNS and its own key. Section 9 applies.
+- **What it does not cover.** Only the JSON representation is signed. The HTML and Markdown representations (section 4.5) and HTTP headers are not, and a consumer MUST NOT treat them as verified. The DNS assertion is not signed by this mechanism; DNSSEC remains the way to authenticate it.
+- **Replay.** A validly signed but older record stays valid for as long as its key is the current `p`. Producers SHOULD include `last_updated` and update it whenever they re-sign. A consumer that has seen a record with a later `last_updated` for the same key MAY reject an older one. Rotating the key invalidates every record signed with the old key.
+- **Canonicalisation.** A consumer MUST canonicalise exactly as RFC 8785 specifies. A serialiser that sorts by code points instead of UTF-16 code units, escapes non-ASCII characters, or formats numbers differently produces different octets, and signatures will fail to verify. A parser that silently accepts duplicate member names lets two consumers see different records under one signature, which is why section 4.6.2 forbids them.
+- **Signature checks.** Implementations MUST use RFC 8032 verification, which rejects a non-canonical `S`, and SHOULD use a maintained library. They MUST NOT verify over the raw HTTP body, or over a re-serialisation that is not RFC 8785.
+- **Key protection.** Whoever holds the private key can sign any record for the domain. Section 3.3.4 applies to hosted mode. A business that suspects compromise MUST rotate (section 4.6.5).
+- **Size.** Canonicalisation works on the parsed document. Consumers SHOULD apply the size limits of section 6 before parsing.
+
+#### 4.6.7 Migration
+
+This is a breaking change for business records. A record without `public_key` or `signature`, or one that still uses the hyphenated ABIZ 1.0 member names (`record-version`, `business-name` and so on), fails the ABIZ 1.1 schema. Producers MUST republish every record with snake_case names, `public_key` and a valid signature. A consumer MAY, for a transition period it announces, also read hyphenated names, but it MUST NOT report such a record as ABIZ 1.1 conformant or as verified.
+
+#### 4.6.8 Example
+
+`examples/registered-us.json`, signed with the throwaway key of the registered DNS example in section 3.2 (the private key was discarded and is not in this repository):
+
+```json
+{
+  "record_version": "abiz1",
+  "business_name": "Harbour Bike Repair LLC",
+  "country": "us",
+  "business_key": "us-or-123456",
+  "registration_number": "123456",
+  "identity_host": "harbour-bike-repair.or.us.to.co",
+  "domains": [
+    "harbourbikes.example"
+  ],
+  "public_key": "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo=",
+  "description": "Bicycle repair and maintenance in Portland.",
+  "website": "https://harbourbikes.example",
+  "services": [
+    {
+      "name": "Bicycle servicing"
+    },
+    {
+      "name": "Wheel repairs"
+    }
+  ],
+  "locations": [
+    {
+      "kind": "trading",
+      "city": "Portland",
+      "region": "Oregon",
+      "country": "us",
+      "public": true
+    }
+  ],
+  "opening_hours": [
+    "Mo-Fr 09:00-17:00"
+  ],
+  "last_updated": "2026-11-03T09:00:00Z",
+  "signature": "tp0XN8oWyi/OoJhVyHhCfHqJk7PHgfO1K6ZkMYaPSEuL8m+BauS6ZSwCFygRyQrwsCX1qoy3l/zin16LkriPBg=="
+}
+```
+
 ## 5. Producer requirements
 
 A conforming producer MUST:
@@ -440,8 +573,9 @@ A conforming producer MUST:
 3. serve the business record at `https://<h>`, supporting the `format` parameter and content negotiation of section 4.5, with the JSON representation being the business record;
 4. validate the object against the normative schema **before** publishing and whenever updated;
 5. ensure its `domains` array declares the domain at which the DNS assertion or well-known file was published;
-6. ensure `identity-host` matches `h` exactly after canonical hostname normalization;
-7. ensure DNS `k`, if present, equals the document `business-key` (section 4.2.4), and that `business-key` and `registration-number` follow sections 4.2.1 to 4.2.3.
+6. ensure `identity_host` matches `h` exactly after canonical hostname normalization;
+7. ensure DNS `k`, if present, equals the document `business_key` (section 4.2.4), and that `business_key` and `registration_number` follow sections 4.2.1 to 4.2.3;
+8. set `public_key` to the `p` it publishes and sign the record as section 4.6.3 sets out, re-signing after every change to the record and every key rotation.
 
 `p` MUST be an Ed25519 public key as specified in section 3.3, and a producer MUST NOT publish the private key. A producer that still publishes an assertion without `p`, or with a non-key ABIZ 1.0 `p` token, MUST republish it with a key (section 3.3.7). A producer that rotates a key MUST follow section 3.3.6 and MUST NOT put the old key in DNS or in the well-known file.
 
@@ -456,9 +590,10 @@ A conforming consumer MUST:
 3. fetch `https://<h>` safely: TLS verification, disallow private/loopback/link-local addresses and unsafe redirects, limit size and timeouts;
 4. request JSON with `Accept: application/json` (and SHOULD add `format=json`, section 4.5), check the media type, and parse it without executing scripts;
 5. validate it against the exact normative schema (and required format checks);
-6. verify its `identity-host` and `domains` match the assertion (DNS or well-known file) and queried domain;
-7. when `k` is present, check it against section 4.2.1 and compare it case-insensitively to the record's `business-key`; reject the assertion if the record has no `business-key`;
-8. label domain-link checks separately from legal registration checks.
+6. verify its `identity_host` and `domains` match the assertion (DNS or well-known file) and queried domain;
+7. when `k` is present, check it against section 4.2.1 and compare it case-insensitively to the record's `business_key`; reject the assertion if the record has no `business_key`;
+8. verify `signature` with `public_key` and check that `public_key` equals `p`, as section 4.6.4 sets out, and treat a record that fails either check as not verified;
+9. label domain-link checks separately from legal registration checks.
 
 A consumer that claims ABIZ 1.1 MUST parse the assertion with the tag-list syntax of section 3.1.1, so it accepts optional whitespace around `;` and `=` and one trailing `;`. It MUST reject an assertion without `p`, or whose `p` is not a valid key under section 3.3.2, including an ABIZ 1.0 hexadecimal token or a base64url value, and MUST follow sections 3.3.5 and 3.3.6. It MUST reject a record or key for `kp` (section 4.2.7). A key check is separate from record conformance and from legal registration.
 
@@ -468,8 +603,8 @@ A consumer MAY check registration details against authoritative registries; if i
 
 | Claim | Minimum requirement | What it does NOT establish |
 | --- | --- | --- |
-| **ABIZ record conformant** | Draft 2020-12 schema and local semantic validation | Domain control or registered business identity |
-| **ABIZ publisher conformant** | Record conformant + valid DNS assertion or well-known file + correct domain/record linkage + HTML, Markdown and JSON representations with the `format` parameter (section 4.5) | Legal identity, customer trust or AI visibility |
+| **ABIZ record conformant** | Draft 2020-12 schema, local semantic validation and a `signature` that verifies with `public_key` (section 4.6) | Domain control or registered business identity |
+| **ABIZ publisher conformant** | Record conformant + valid DNS assertion or well-known file + correct domain/record linkage, including `public_key` equal to `p` + HTML, Markdown and JSON representations with the `format` parameter (section 4.5) | Legal identity, customer trust or AI visibility |
 | **ABIZ consumer conformant** | Required DNS parsing, safe fetch, schema, semantic and clear status handling | Global adoption or recommendations |
 | **Registry-confirmed** | Independent authoritative register check, separately labelled | Endorsement by ABIZ |
 
@@ -486,22 +621,22 @@ _abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery
 A business unit or division (a branch, a brand, a department, an events arm) MAY have its own business record. Its record host MAY then be a path on the parent's host (ABIZ 1.1, proposed):
 
 ```dns
-_abiz.events.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+_abiz.events.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
 ```
 
 Rules for a path-based record host:
 
-- The path is part of `h`, and the unit record's `identity-host` MUST equal it exactly, path included (`examples/unit-us.json`). `h=harbour-bike-repair.or.us.to.co` does not match a record whose `identity-host` is `harbour-bike-repair.or.us.to.co/events`.
+- The path is part of `h`, and the unit record's `identity_host` MUST equal it exactly, path included (`examples/unit-us.json`). `h=harbour-bike-repair.or.us.to.co` does not match a record whose `identity_host` is `harbour-bike-repair.or.us.to.co/events`.
 - The path MUST NOT contain a query, a fragment, or `.` or `..` segments. It is compared case-sensitively.
 - The host MUST serve the unit's record at `https://<h>` with the representations and `format` parameter of section 4.5, for example `https://harbour-bike-repair.or.us.to.co/events?format=json`.
-- The unit's record is a business record in its own right. Its `domains` list the domains the unit's own assertion is published at. A unit of a registered business MAY carry the parent's `business-key` and `registration-number` when it has no registration of its own.
+- The unit's record is a business record in its own right. Its `domains` list the domains the unit's own assertion is published at. A unit of a registered business MAY carry the parent's `business_key` and `registration_number` when it has no registration of its own.
 - The unit SHOULD publish its own assertion, in DNS or a well-known file, on a domain it uses, for example `_abiz.events.harbourbikes.example`.
 
 A parent business MAY list units and their domains in an implementation-specific extension, in `links`, or in separate business records. A consumer MUST NOT treat a parent assertion alone as proof that a unit is controlled, and MUST NOT treat a path under a parent's host as proof that the parent vouches for the unit. A stronger claim requires the unit's own ABIZ pointer and a consistent back-reference. Unit relationships are not defined by the base schema in ABIZ 1.0 or 1.1.
 
 ## 9. Security and privacy
 
-DNS assertions and well-known files are public and not authenticated by default. A well-known file shows control of a web origin, not of a DNS zone (section 3.4.5). Producers SHOULD use DNSSEC where available; consumers SHOULD verify DNSSEC where supported. DNS control alone does not prove business ownership. An Ed25519 public key in `p` does not change that. It shows which key the domain controller published. It does not sign the TXT record by itself, and it does not prove legal identity. A non-key `p` value is invalid under ABIZ 1.1 (section 3.3.7) and MUST NOT be presented as a cryptographic identity. The private key is the business's property and MUST be protected. In hosted mode a provider MAY hold that key and sign for the business. It MUST follow the export and deletion rules in section 3.3.4. Holding the key does not transfer ownership. Consumers MUST implement SSRF safeguards, HTTPS-only target handling, host/redirect validation, content size/time limits and output escaping, for both the well-known file and the record host. A consumer that shows the HTML or Markdown representation MUST treat it as untrusted content. MCP endpoints MUST not be called automatically solely because they appear in a record.
+DNS assertions and well-known files are public and not authenticated by default. A well-known file shows control of a web origin, not of a DNS zone (section 3.4.5). Producers SHOULD use DNSSEC where available; consumers SHOULD verify DNSSEC where supported. DNS control alone does not prove business ownership. An Ed25519 public key in `p` does not change that. It shows which key the domain controller published. It does not sign the TXT record by itself, and it does not prove legal identity. The record signature (section 4.6) binds the business record to that key; section 4.6.6 sets out what it does and does not protect. A non-key `p` value is invalid under ABIZ 1.1 (section 3.3.7) and MUST NOT be presented as a cryptographic identity. The private key is the business's property and MUST be protected. In hosted mode a provider MAY hold that key and sign for the business. It MUST follow the export and deletion rules in section 3.3.4. Holding the key does not transfer ownership. Consumers MUST implement SSRF safeguards, HTTPS-only target handling, host/redirect validation, content size/time limits and output escaping, for both the well-known file and the record host. A consumer that shows the HTML or Markdown representation MUST treat it as untrusted content. MCP endpoints MUST not be called automatically solely because they appear in a record.
 
 A publisher MUST consider personal data and only publish intentionally public facts. A domain claim MUST NOT be presented as a legal verification badge.
 
@@ -517,6 +652,8 @@ The standard is open and provider-independent. To.Co Technologies Limited is the
 - [RFC 8552 — Underscored and Globally Scoped DNS Node Names](https://www.rfc-editor.org/rfc/rfc8552)
 - [RFC 8615 — Well-Known Uniform Resource Identifiers (URIs)](https://www.rfc-editor.org/rfc/rfc8615) (section 3.4)
 - [RFC 8259 — The JavaScript Object Notation (JSON) Data Interchange Format](https://www.rfc-editor.org/rfc/rfc8259)
+- [RFC 8785 — JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785) (section 4.6.2)
+- [RFC 7493 — The I-JSON Message Format](https://www.rfc-editor.org/rfc/rfc7493) (section 4.6.2)
 - [RFC 9110 — HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110) (section 12.5.1, `Accept`) and [RFC 9111 — HTTP Caching](https://www.rfc-editor.org/rfc/rfc9111)
 - [RFC 7763 — The text/markdown Media Type](https://www.rfc-editor.org/rfc/rfc7763)
 - [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
@@ -535,7 +672,7 @@ The standard is open and provider-independent. To.Co Technologies Limited is the
 
 ## 12. Interoperability
 
-ABIZ 1.1 (proposed) encodes the DNS `p` tag as standard base64 with padding, matching the Ed25519 public key in DKIM (RFC 8463). That is a 44-character encoding of 32 bytes. ABIZ shares that public-key encoding only. Signature checks use PureEd25519 over the agreed message octets (section 3.3.5). See section 3.3.2.
+ABIZ 1.1 (proposed) encodes the DNS `p` tag as standard base64 with padding, matching the Ed25519 public key in DKIM (RFC 8463). That is a 44-character encoding of 32 bytes. ABIZ shares that public-key encoding only. Signature checks use PureEd25519 over the RFC 8785 canonical record (section 4.6) or another agreed message (section 3.3.5). See section 3.3.2.
 
 [draft-morrison-mcp-dns-discovery](https://datatracker.ietf.org/doc/draft-morrison-mcp-dns-discovery/) also puts Ed25519 public keys in DNS TXT records. The current draft name is unchanged. Revision 09 (21 October 2026) is the revision consulted for this text; the datatracker link above tracks later revisions. In that draft, `_mcp` and `_alter` carry the key as `pk=ed25519:` followed by unpadded base64url (RFC 4648 section 5). A 32-byte key is then 43 characters, not 44. ABIZ MUST NOT be read as using that encoding. A consumer MUST NOT treat an ABIZ `p` value as that draft's `pk` value, or the reverse, without decoding and encoding again.
 

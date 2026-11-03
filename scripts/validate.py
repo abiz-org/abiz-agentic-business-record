@@ -8,11 +8,16 @@ standard base64 (44 characters, one "="). A missing p, or any other p value,
 including an ABIZ 1.0 hex token or base64url, makes the assertion invalid.
 The same tags may instead come from https://<domain>/.well-known/abiz.json
 (SPEC section 3.4); a DNS assertion takes precedence over that file.
-The key format check uses the standard library. Verifying an optional
-detached signature (--p-message / --p-signature) imports the optional
-cryptography package on demand:
+The key format check uses the standard library.
 
-    python -m pip install -r requirements-p-key.txt
+ABIZ 1.1: every business record carries public_key and signature (SPEC
+section 4.6). signature is a PureEd25519 signature over the RFC 8785 (JCS)
+canonical form of the record without its signature member; the validator
+always verifies it, and checks public_key against the DNS or well-known p
+(or a p supplied with --p). Verification needs the cryptography package,
+which is in requirements-dev.txt:
+
+    python -m pip install -r requirements-dev.txt
 """
 from __future__ import annotations
 import argparse
@@ -20,10 +25,12 @@ import base64
 import binascii
 import ipaddress
 import json
+import math
 import re
 import sys
 import unicodedata
 from pathlib import Path
+from decimal import Decimal
 from urllib.parse import urlsplit
 
 from jsonschema import Draft202012Validator, FormatChecker
@@ -256,6 +263,136 @@ def check_p_signature(tags: dict[str, str], message: bytes, signature: str) -> b
     return key
 
 
+# ---------------------------------------------------------------------------
+# Record signing, SPEC.md section 4.6: RFC 8785 JSON Canonicalization Scheme.
+# ---------------------------------------------------------------------------
+SIGNATURE_MEMBER = "signature"
+PUBLIC_KEY_MEMBER = "public_key"
+
+
+def _jcs_number(value: float | int) -> str:
+    """Serialise a number as ECMAScript Number.prototype.toString does (RFC 8785 section 3.2.2.3)."""
+    if isinstance(value, int):
+        if abs(value) > 2**53:
+            raise ValueError("JCS: integer outside the IEEE 754 double safe range")
+        value = float(value)
+    if math.isnan(value) or math.isinf(value):
+        raise ValueError("JCS: NaN and Infinity are not valid JSON numbers")
+    if value == 0:
+        return "0"
+    sign = "-" if value < 0 else ""
+    # repr() gives the shortest digits that round-trip, as ECMAScript requires.
+    digits_tuple = Decimal(repr(abs(value))).as_tuple()
+    digits = "".join(map(str, digits_tuple.digits)).rstrip("0") or "0"
+    exponent = digits_tuple.exponent + (len(digits_tuple.digits) - len(digits))
+    k, n = len(digits), len(digits) + exponent
+    if k <= n <= 21:
+        text = digits + "0" * (n - k)
+    elif 0 < n <= 21:
+        text = digits[:n] + "." + digits[n:]
+    elif -6 < n <= 0:
+        text = "0." + "0" * (-n) + digits
+    else:
+        e = n - 1
+        text = digits[0] + ("." + digits[1:] if k > 1 else "") + "e" + ("+" if e >= 0 else "-") + str(abs(e))
+    return sign + text
+
+
+def _jcs_string(value: str) -> str:
+    if any(0xD800 <= ord(c) <= 0xDFFF for c in value):
+        raise ValueError("JCS: lone surrogate in string")
+    # ensure_ascii=False matches RFC 8785 section 3.2.2.2: only '"', '\' and
+    # U+0000..U+001F are escaped, using \b \t \n \f \r or lowercase \u00xx.
+    return json.dumps(value, ensure_ascii=False)
+
+
+def jcs_canonicalize(value: object) -> str:
+    """Return the RFC 8785 canonical JSON text of a parsed JSON value."""
+    if value is None:
+        return "null"
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    if isinstance(value, (int, float)):
+        return _jcs_number(value)
+    if isinstance(value, str):
+        return _jcs_string(value)
+    if isinstance(value, (list, tuple)):
+        return "[" + ",".join(jcs_canonicalize(v) for v in value) + "]"
+    if isinstance(value, dict):
+        for key in value:
+            if not isinstance(key, str):
+                raise ValueError("JCS: object member names must be strings")
+        # Members sorted by their UTF-16 code units (RFC 8785 section 3.2.3).
+        ordered = sorted(value.items(), key=lambda kv: kv[0].encode("utf-16-be"))
+        return "{" + ",".join(_jcs_string(k) + ":" + jcs_canonicalize(v) for k, v in ordered) + "}"
+    raise ValueError(f"JCS: unsupported value of type {type(value).__name__}")
+
+
+def signing_input(record: dict) -> bytes:
+    """The octets a record signature covers: UTF-8 JCS of the record without "signature"."""
+    if not isinstance(record, dict):
+        raise ValueError("business record must be a JSON object")
+    unsigned = {k: v for k, v in record.items() if k != SIGNATURE_MEMBER}
+    return jcs_canonicalize(unsigned).encode("utf-8")
+
+
+def sign_record(record: dict, private_key) -> dict:
+    """Producer helper: return a copy of record with public_key and signature set.
+
+    private_key is a cryptography Ed25519PrivateKey. Any existing signature is replaced.
+    """
+    from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+
+    raw = private_key.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)
+    signed = {k: v for k, v in record.items() if k != SIGNATURE_MEMBER}
+    signed[PUBLIC_KEY_MEMBER] = base64.b64encode(raw).decode("ascii")
+    signed[SIGNATURE_MEMBER] = base64.b64encode(private_key.sign(signing_input(signed))).decode("ascii")
+    return signed
+
+
+def verify_record_signature(record: dict) -> bytes:
+    """Verify record["signature"] with record["public_key"] (SPEC section 4.6.4, steps 1 to 4).
+
+    Returns the 32-byte public key. Raises ValueError (not verified) or
+    RuntimeError (cryptography is not installed).
+    """
+    for member in (PUBLIC_KEY_MEMBER, SIGNATURE_MEMBER):
+        if not isinstance(record.get(member), str):
+            raise ValueError(f"record {member} is missing: the record is not verified")
+    key = _decode_standard_base64(record[PUBLIC_KEY_MEMBER], P_KEY_RE, "public_key (Ed25519 public key)", 32)
+    signature = _decode_standard_base64(record[SIGNATURE_MEMBER], P_SIG_RE, "signature (Ed25519 signature)", 64)
+    try:
+        verify_ed25519_signature(key, signing_input(record), signature)
+    except ValueError as exc:
+        raise ValueError("record signature did not verify with public_key: the record is not verified") from exc
+    return key
+
+
+def check_public_key_matches_p(record: dict, p_value: str) -> None:
+    """SPEC section 4.6.4 step 5: public_key MUST equal the pointer's p."""
+    decode_ed25519_public_key(p_value)
+    if record.get(PUBLIC_KEY_MEMBER) != p_value:
+        raise ValueError("record public_key does not match p: the identity claim is rejected")
+
+
+def _reject_duplicate_members(pairs):
+    out = {}
+    for key, value in pairs:
+        if key in out:
+            raise ValueError(f"duplicate JSON member {key!r} (SPEC section 4.6.2)")
+        out[key] = value
+    return out
+
+
+def load_json_strict(text: str) -> object:
+    """Parse JSON as SPEC section 4.6.2 requires: I-JSON, no duplicate member names."""
+    def bad_constant(name):
+        raise ValueError(f"{name} is not valid JSON")
+    return json.loads(text, object_pairs_hook=_reject_duplicate_members, parse_constant=bad_constant)
+
+
 def well_known_tags(document: object) -> dict[str, str]:
     """Read the tags of a /.well-known/abiz.json document (SPEC section 3.4).
 
@@ -369,8 +506,8 @@ def validate_well_known(document: object, schema: dict | None = None) -> list[st
 
 
 def is_well_known_document(document: object) -> bool:
-    """A JSON file with "v" and no "record-version" is a well-known document, not a business record."""
-    return isinstance(document, dict) and "v" in document and "record-version" not in document
+    """A JSON file with "v" and no "record_version" is a well-known document, not a business record."""
+    return isinstance(document, dict) and "v" in document and "record_version" not in document
 
 
 def validate_record(
@@ -383,18 +520,24 @@ def validate_record(
     p_signature: str | None = None,
     well_known: object | None = None,
     warnings: list[str] | None = None,
+    p_value: str | None = None,
 ) -> list[str]:
+    """Validate a business record. Returns a list of errors (empty when it passes).
+
+    The record signature is always verified (SPEC section 4.6). public_key is
+    compared with p from dns_value or well_known, or with p_value when given.
+    """
     errors = [f"{'/'.join(map(str, e.path)) or '$'}: {e.message}" for e in
               Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(record)]
     if errors:
         return sorted(errors)
 
-    if identity_parts(record["identity-host"]) is None:
-        errors.append("identity-host is not a valid DNS host / optional path")
+    if identity_parts(record["identity_host"]) is None:
+        errors.append("identity_host is not a valid DNS host / optional path")
     for d in record["domains"]:
         if not safe_host(d):
             errors.append(f"invalid declared domain: {d}")
-    for k in ("website", "logo-url", "mcp-server-url"):
+    for k in ("website", "logo_url", "mcp_server_url"):
         if k in record and not check_https(record[k]):
             errors.append(f"{k} must be an HTTPS URL with a public DNS hostname")
     for collection in ("services", "links"):
@@ -410,13 +553,13 @@ def validate_record(
             check_country(location["country"])
         except ValueError as exc:
             errors.append(f"locations: {exc}")
-    if "business-key" in record:
+    if "business_key" in record:
         try:
-            country, _, number = parse_business_key(record["business-key"])
+            country, _, number = parse_business_key(record["business_key"])
             if country != record["country"].lower():
-                errors.append("business-key country does not match country")
-            if number != record["registration-number"].upper():
-                errors.append("business-key does not match registration-number")
+                errors.append("business_key country does not match country")
+            if number != record["registration_number"].upper():
+                errors.append("business_key does not match registration_number")
         except ValueError as exc:
             errors.append(str(exc))
     if domain:
@@ -425,20 +568,31 @@ def validate_record(
             errors.append("invalid queried domain")
         elif d not in {x.lower().rstrip(".") for x in record["domains"]}:
             errors.append("DNS owner domain is missing from record.domains")
+    try:
+        verify_record_signature(record)
+    except (ValueError, RuntimeError) as exc:
+        errors.append(str(exc))
+    if p_value is not None:
+        try:
+            check_public_key_matches_p(record, p_value)
+        except ValueError as exc:
+            errors.append(str(exc))
     if (p_message is None) != (p_signature is None):
         errors.append("p signature verification needs both a message and a signature")
     if dns_value or well_known is not None:
         try:
             tags, _source = resolve_sources([dns_value] if dns_value else [], well_known, warnings)
-            if identity_parts(tags["h"]) != identity_parts(record["identity-host"]):
-                errors.append("DNS h and identity-host do not match")
-            # k is optional (SPEC section 3.2). When present it must equal business-key,
+            if identity_parts(tags["h"]) != identity_parts(record["identity_host"]):
+                errors.append("DNS h and identity_host do not match")
+            # k is optional (SPEC section 3.2). When present it must equal business_key,
             # compared case-insensitively (section 4.2.4).
             if "k" in tags:
-                if "business-key" not in record:
-                    errors.append("DNS k is present for record without a business-key")
-                elif tags["k"].lower() != record["business-key"].lower():
-                    errors.append("DNS k does not match business-key")
+                if "business_key" not in record:
+                    errors.append("DNS k is present for record without a business_key")
+                elif tags["k"].lower() != record["business_key"].lower():
+                    errors.append("DNS k does not match business_key")
+            if record.get(PUBLIC_KEY_MEMBER) != tags["p"]:
+                errors.append("record public_key does not match p: the identity claim is rejected")
             if p_message is not None and p_signature is not None:
                 check_p_signature(tags, p_message, p_signature)
         except (ValueError, RuntimeError) as exc:
@@ -459,6 +613,12 @@ def main():
         help="Local copy of https://<domain>/.well-known/abiz.json (SPEC section 3.4); DNS wins if both are given",
     )
     ap.add_argument(
+        "--p",
+        dest="p_value",
+        help="An Ed25519 p value (44-character standard base64) to compare with the record's public_key, "
+        "for example one read from DNS by other means",
+    )
+    ap.add_argument(
         "--p-message",
         help="UTF-8 message for an optional PureEd25519 check (requires --dns-value and --p-signature)",
     )
@@ -476,18 +636,18 @@ def main():
         ap.error("--p-message and --p-signature require --domain and --dns-value or --well-known")
     try:
         schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-        record = json.loads(args.json_file.read_text(encoding="utf-8"))
+        record = load_json_strict(args.json_file.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
         well_known = None
         if args.well_known is not None:
             raw = args.well_known.read_bytes()
             if len(raw) > WELL_KNOWN_MAX_BYTES:
                 raise ValueError(f"well-known file is larger than {WELL_KNOWN_MAX_BYTES} bytes")
-            well_known = json.loads(raw.decode("utf-8"))
+            well_known = load_json_strict(raw.decode("utf-8"))
         warnings: list[str] = []
         if is_well_known_document(record):
-            if has_source:
-                ap.error("a well-known document is checked on its own; omit --domain, --dns-value and --well-known")
+            if has_source or args.p_value is not None:
+                ap.error("a well-known document is checked on its own; omit --domain, --dns-value, --well-known and --p")
             errors = validate_well_known(record)
             for error in errors:
                 print("ERROR:", error, file=sys.stderr)
@@ -503,6 +663,7 @@ def main():
             p_signature=args.p_signature,
             well_known=well_known,
             warnings=warnings,
+            p_value=args.p_value,
         )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"Invalid: {exc}", file=sys.stderr)
@@ -514,11 +675,15 @@ def main():
             print("ERROR:", error, file=sys.stderr)
         return 1
     if args.p_signature is not None:
-        print("PASS: schema + offline DNS/document consistency; Ed25519 signature matches p")
+        print("PASS: schema + record signature + offline DNS/document consistency; detached Ed25519 signature matches p")
     elif has_source:
-        print("PASS: schema + offline DNS/document consistency (not a live DNS or registry check)")
+        print("PASS: schema + record signature + offline DNS/document consistency; public_key matches p "
+              "(not a live DNS or registry check)")
+    elif args.p_value is not None:
+        print("PASS: schema + record signature; public_key matches the supplied p (DNS not checked)")
     else:
-        print("PASS: ABIZ record schema and local semantics (DNS not checked)")
+        print("PASS: ABIZ record schema, local semantics and record signature; "
+              "public_key not checked against DNS p, so the identity claim is unconfirmed")
     return 0
 
 

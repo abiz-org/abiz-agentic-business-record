@@ -11,6 +11,12 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from jsonschema import Draft202012Validator, FormatChecker
 from validate import (
     canonical_business_key,
+    check_public_key_matches_p,
+    jcs_canonicalize,
+    load_json_strict,
+    sign_record,
+    signing_input,
+    verify_record_signature,
     decode_ed25519_public_key,
     normalise_registration_number,
     parse_business_key,
@@ -33,16 +39,16 @@ UNREG = json.loads((ROOT / "examples" / "unregistered-us.json").read_text())
 # Throwaway public key from examples/dns-ed25519-p.txt. The private key was not committed.
 P_MESSAGE = b"abiz1.1 p-key test"
 P_SIGNATURE = (
-    "K8z1ImVMyYZF7tGBnyaL4fhI3WAnCTo1EKHS77J+uLCet14Sbg629QmXc1e6rIjn"
-    "3KtZdXgKNtuakuTLmruKAg=="
+    "qyKerWm4IqgOEeKqK67muf7CDIoU9PxzGz2KCTjSgg/XBtg43YiQHo/QzX/avaSMTc/G"
+    "0UxL5kV8uc3VA6OABg=="
 )
-# Shape of $defs/retired-key. Not a record property; the signature is a placeholder.
+# Shape of $defs/retired_key. Not a record property; the signature is a placeholder.
 RETIRED_KEY_ENTRY = {
-    "public-key": "CtW5mtOK/a36noCey4n3kQDYbl498nnTnArU5MPs+gs=",
-    "valid-from": "2025-01-01T00:00:00Z",
-    "retired-at": "2026-10-01T00:00:00Z",
+    "public_key": "CtW5mtOK/a36noCey4n3kQDYbl498nnTnArU5MPs+gs=",
+    "valid_from": "2025-01-01T00:00:00Z",
+    "retired_at": "2026-10-01T00:00:00Z",
     "reason": "rotated",
-    "binding-signature": P_SIGNATURE,
+    "binding_signature": P_SIGNATURE,
 }
 
 
@@ -55,6 +61,22 @@ def example_dns() -> str:
 
 # ABIZ 1.1: p is REQUIRED (SPEC 3.2), so every valid assertion below carries the example key.
 P = example_dns().split("p=", 1)[1]
+# Key of the unregistered example (examples/well-known-unregistered-us.json).
+MP = WK_UNREG["p"]
+
+try:
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    # TEST-ONLY key with a fixed, public seed, used to re-sign records that a test changes.
+    # Never use it for a real record: anyone can sign with it.
+    TEST_KEY = Ed25519PrivateKey.from_private_bytes(bytes(range(32)))
+    TEST_P = sign_record({}, TEST_KEY)["public_key"]
+except ImportError:  # pragma: no cover - cryptography is in requirements-dev.txt
+    TEST_KEY = TEST_P = None
+
+
+def resign(record: dict) -> dict:
+    """Re-sign a changed record with the test-only key, so a test checks only what it changed."""
+    return sign_record(record, TEST_KEY)
 
 
 class ABIZConformanceTests(unittest.TestCase):
@@ -67,7 +89,7 @@ class ABIZConformanceTests(unittest.TestCase):
     def test_unregistered_business_passes_without_k_or_mcp(self):
         self.assertEqual(validate_record(UNREG, SCHEMA,
                          "marketstand.example",
-                         f"v=abiz1;h=market-stand-repairs-portland.biz.to.co;p={P}"), [])
+                         f"v=abiz1;h=market-stand-repairs-portland.biz.to.co;p={MP}"), [])
 
     def test_invalid_business_record_fails_schema(self):
         bad = json.loads((ROOT / "examples" / "invalid-business-record.json").read_text())
@@ -81,7 +103,7 @@ class ABIZConformanceTests(unittest.TestCase):
 
     def test_bad_registry_key_and_insecure_url_fail(self):
         bad = copy.deepcopy(REG)
-        bad["business-key"] = "gb-123456"
+        bad["business_key"] = "gb-123456"
         bad["website"] = "http://example.com"
         self.assertTrue(validate_record(bad, SCHEMA))
 
@@ -95,7 +117,7 @@ class ABIZConformanceTests(unittest.TestCase):
 
     def test_unknown_top_level_property_fails(self):
         bad = copy.deepcopy(REG)
-        bad["made-up-field"] = "value"
+        bad["made_up_field"] = "value"
         self.assertTrue(validate_record(bad, SCHEMA))
 
     def test_schema_description_matches_published_1_0(self):
@@ -239,25 +261,25 @@ class ABIZConformanceTests(unittest.TestCase):
 
     def test_top_level_retired_keys_fails(self):
         bad = copy.deepcopy(REG)
-        bad["retired-keys"] = [RETIRED_KEY_ENTRY]
+        bad["retired_keys"] = [RETIRED_KEY_ENTRY]
         errors = validate_record(bad, SCHEMA)
-        self.assertTrue(any("retired-keys" in e for e in errors), errors)
-        self.assertNotIn("retired-keys", SCHEMA["properties"])
+        self.assertTrue(any("retired_keys" in e for e in errors), errors)
+        self.assertNotIn("retired_keys", SCHEMA["properties"])
 
     def test_nested_retired_key_definition_validates(self):
-        nested = {"$ref": "#/$defs/retired-key", "$defs": SCHEMA["$defs"]}
+        nested = {"$ref": "#/$defs/retired_key", "$defs": SCHEMA["$defs"]}
         validator = Draft202012Validator(nested, format_checker=FormatChecker())
         self.assertEqual(list(validator.iter_errors(RETIRED_KEY_ENTRY)), [])
         for change in (
-            {"public-key": "not-a-key"},
-            {"public-key": base64.b64encode(b"\x11" * 31).decode("ascii")},
+            {"public_key": "not-a-key"},
+            {"public_key": base64.b64encode(b"\x11" * 31).decode("ascii")},
             {"reason": "lost"},
             {"extra": "x"},
         ):
             with self.subTest(change=change):
                 self.assertTrue(list(validator.iter_errors({**RETIRED_KEY_ENTRY, **change})))
         missing = dict(RETIRED_KEY_ENTRY)
-        del missing["binding-signature"]
+        del missing["binding_signature"]
         self.assertTrue(list(validator.iter_errors(missing)))
 
 
@@ -295,7 +317,7 @@ class ABIZTagListWhitespaceTests(unittest.TestCase):
                          f"v=abiz1; k=us-or-123456; h={self.HOST}; p={P};"), [])
 
     def test_p_padding_survives_spaces_around_equals(self):
-        key = "oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+        key = "bknJGPICOYXD4VJvtV+2rL8q+LjfgoPFJEDFvEB6iQo="
         tags = dns_tags(f"v=abiz1; h={self.HOST}; p = {key} ;")
         self.assertEqual(tags["p"], key)
         self.assertEqual(len(decode_ed25519_public_key(tags["p"])), 32)
@@ -346,9 +368,9 @@ class ABIZBusinessKeyTests(unittest.TestCase):
 
     def record(self, key, number, country="us"):
         r = copy.deepcopy(REG)
-        r["country"], r["business-key"], r["registration-number"] = country, key, number
+        r["country"], r["business_key"], r["registration_number"] = country, key, number
         r["locations"][0]["country"] = country
-        return r
+        return resign(r)
 
     def test_valid_keys_per_country(self):
         for key in ("us-or-123456", "us-dc-A1", "ca-on-1001216372", "ca-bc-BC0578072",
@@ -366,7 +388,7 @@ class ABIZBusinessKeyTests(unittest.TestCase):
                 parse_business_key(key)
         bad = copy.deepcopy(REG)
         bad["country"] = "UK"
-        bad["business-key"], bad["registration-number"] = "uk-123456", "123456"
+        bad["business_key"], bad["registration_number"] = "uk-123456", "123456"
         self.assertTrue(validate_record(bad, SCHEMA))
         bad = copy.deepcopy(UNREG)
         bad["locations"][0]["country"] = "ZZ"
@@ -399,9 +421,9 @@ class ABIZBusinessKeyTests(unittest.TestCase):
         record = self.record("US-Or-abc123", "ABC123", country="Us")
         self.assertEqual(validate_record(record, SCHEMA), [])
         self.assertEqual(validate_record(record, SCHEMA, "harbourbikes.example",
-                         f"v=abiz1;k=us-or-ABC123;h={self.HOST};p={P}"), [])
+                         f"v=abiz1;k=us-or-ABC123;h={self.HOST};p={TEST_P}"), [])
         self.assertTrue(validate_record(record, SCHEMA, "harbourbikes.example",
-                        f"v=abiz1;k=us-or-ABC124;h={self.HOST};p={P}"))
+                        f"v=abiz1;k=us-or-ABC124;h={self.HOST};p={TEST_P}"))
         # Uppercase record country, as in the unregistered example, is still valid.
         self.assertEqual(UNREG["country"], "US")
         self.assertEqual(validate_record(UNREG, SCHEMA), [])
@@ -434,13 +456,14 @@ class ABIZBusinessKeyTests(unittest.TestCase):
 
     def test_k_is_optional(self):
         # Registration fields in the record do not require k in DNS.
-        self.assertIn("business-key", REG)
+        self.assertIn("business_key", REG)
         self.assertEqual(validate_record(REG, SCHEMA, "harbourbikes.example", f"v=abiz1;h={self.HOST};p={P}"), [])
         self.assertEqual(validate_record(UNREG, SCHEMA, "marketstand.example",
-                         f"v=abiz1;h=market-stand-repairs-portland.biz.to.co;p={P}"), [])
-        # But k without business-key in the record is a mismatch.
-        self.assertTrue(validate_record(UNREG, SCHEMA, "marketstand.example",
-                        f"v=abiz1;k=us-or-123456;h=market-stand-repairs-portland.biz.to.co;p={P}"))
+                         f"v=abiz1;h=market-stand-repairs-portland.biz.to.co;p={MP}"), [])
+        # But k without business_key in the record is a mismatch.
+        errors = validate_record(UNREG, SCHEMA, "marketstand.example",
+                                 f"v=abiz1;k=us-or-123456;h=market-stand-repairs-portland.biz.to.co;p={MP}")
+        self.assertEqual(errors, ["DNS k is present for record without a business_key"])
 
     def test_bundled_iso_data(self):
         data = json.loads((ROOT / "data" / "iso3166.json").read_text(encoding="utf-8"))
@@ -450,9 +473,6 @@ class ABIZBusinessKeyTests(unittest.TestCase):
         self.assertEqual(len(data["subdivisions"]["ae"]), 7)
         self.assertIn("pycountry 26.2.16", data["source"])
 
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class ABIZWellKnownTests(unittest.TestCase):
@@ -589,15 +609,15 @@ class ABIZUnitAndCountryTests(unittest.TestCase):
                                         "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=" + P))
 
     def test_north_korea_is_not_supported(self):
-        record = {"record-version": "abiz1", "business-name": "Example", "country": "kp",
-                  "identity-host": "example.biz.to.co", "domains": ["example.example"]}
+        record = resign({"record_version": "abiz1", "business_name": "Example", "country": "kp",
+                         "identity_host": "example.biz.to.co", "domains": ["example.example"]})
         self.assertTrue(any("not supported" in e for e in validate_record(record, SCHEMA)))
-        self.assertTrue(validate_record({**record, "country": "KP"}, SCHEMA))
+        self.assertTrue(validate_record(resign({**record, "country": "KP"}), SCHEMA))
         with self.assertRaisesRegex(ValueError, "not supported"):
             parse_business_key("kp-123456")
         located = copy.deepcopy(REG)
         located["locations"][0]["country"] = "kp"
-        self.assertTrue(any("not supported" in e for e in validate_record(located, SCHEMA)))
+        self.assertTrue(any("not supported" in e for e in validate_record(resign(located), SCHEMA)))
         # South Korea is unaffected.
         parse_business_key("kr-1234567890")
 
@@ -626,3 +646,117 @@ class ABIZDocumentExampleTests(unittest.TestCase):
         for doc in docs:
             with self.subTest(doc=doc):
                 self.assertEqual(validate_well_known(doc, WK_SCHEMA), [])
+
+
+    def test_record_examples_in_docs_validate(self):
+        import re
+        found = 0
+        for name in ("SPEC.md", "README.md"):
+            text = (ROOT / name).read_text(encoding="utf-8")
+            for block in re.findall(r"```json\n(.*?)```", text, re.S):
+                doc = load_json_strict(block)
+                if isinstance(doc, dict) and "record_version" in doc:
+                    found += 1
+                    with self.subTest(doc=name, record=doc["business_name"]):
+                        self.assertEqual(validate_record(doc, SCHEMA), [])
+        self.assertGreaterEqual(found, 1)
+
+    def test_no_hyphenated_member_names_in_docs(self):
+        import re
+        for name in ("SPEC.md", "README.md"):
+            text = (ROOT / name).read_text(encoding="utf-8")
+            for block in re.findall(r"```json\n(.*?)```", text, re.S):
+                self.assertFalse(re.search(r'"[a-z]+-[a-z-]+"\s*:', block), block[:120])
+
+class ABIZRecordSigningTests(unittest.TestCase):
+    """public_key and signature in the business record, SPEC.md section 4.6."""
+
+    def test_examples_are_signed_and_verify(self):
+        for name, record, p in (("registered", REG, P), ("unit", UNIT, P), ("unregistered", UNREG, MP)):
+            with self.subTest(example=name):
+                self.assertEqual(verify_record_signature(record), base64.b64decode(record["public_key"]))
+                check_public_key_matches_p(record, p)
+                self.assertEqual(list(record)[-1], "signature")
+
+    def test_signing_input_test_vector(self):
+        vector = (ROOT / "examples" / "registered-us.signing-input.txt").read_bytes()
+        self.assertEqual(signing_input(REG), vector)
+        self.assertNotIn(b'"signature"', vector)
+        self.assertIn(b'"public_key"', vector)
+        # Member order and whitespace in the served JSON do not matter.
+        shuffled = dict(reversed(list(REG.items())))
+        self.assertEqual(signing_input(shuffled), vector)
+        self.assertEqual(validate_record(shuffled, SCHEMA), [])
+
+    def test_missing_public_key_or_signature_fails(self):
+        for member in ("public_key", "signature"):
+            with self.subTest(missing=member):
+                record = {k: v for k, v in REG.items() if k != member}
+                errors = validate_record(record, SCHEMA)
+                self.assertTrue(any(member in e for e in errors), errors)
+
+    def test_tampered_record_fails(self):
+        for change in ({"business_name": "Harbour Bike Repair Ltd"}, {"last_updated": "2026-11-04T09:00:00Z"},
+                       {"extensions": {"example.test": {"note": "added"}}}, {"public_key": TEST_P}):
+            with self.subTest(change=change):
+                errors = validate_record({**REG, **change}, SCHEMA)
+                self.assertTrue(any("did not verify" in e for e in errors), errors)
+
+    def test_bad_signature_encoding_fails(self):
+        sig = REG["signature"]
+        for bad in (sig[:-2], sig.replace("+", "-").replace("/", "_"), "A" * 88, sig[:-3] + "A=="):
+            with self.subTest(bad=bad):
+                self.assertTrue(validate_record({**REG, "signature": bad}, SCHEMA))
+
+    def test_public_key_must_match_p(self):
+        # Validly signed with another key, but DNS p names the example key: identity claim rejected.
+        other = resign(REG)
+        self.assertEqual(validate_record(other, SCHEMA), [])
+        errors = validate_record(other, SCHEMA, "harbourbikes.example", example_dns())
+        self.assertEqual(errors, ["record public_key does not match p: the identity claim is rejected"])
+        errors = validate_record(other, SCHEMA, "harbourbikes.example", well_known=WK_REG)
+        self.assertEqual(errors, ["record public_key does not match p: the identity claim is rejected"])
+        self.assertTrue(validate_record(REG, SCHEMA, p_value=TEST_P))
+        self.assertEqual(validate_record(REG, SCHEMA, p_value=P), [])
+
+    def test_sign_record_round_trip(self):
+        record = resign({k: v for k, v in UNREG.items() if k not in ("public_key", "signature")})
+        self.assertEqual(record["public_key"], TEST_P)
+        self.assertEqual(validate_record(record, SCHEMA, p_value=TEST_P), [])
+
+    def test_jcs_rfc8785_vectors(self):
+        # RFC 8785 section 3.2.2 and appendix B examples.
+        self.assertEqual(jcs_canonicalize({"b": 1, "a": [True, None, "x"]}), '{"a":[true,null,"x"],"b":1}')
+        self.assertEqual(jcs_canonicalize("\u20ac$\u000f\nA'B\"\\\\\"/"), '"€$\\u000f\\nA\'B\\"\\\\\\\\\\"/"')
+        numbers = [0.0, -0.0, 1e21, 1e-7, 333333333.3333333, 1e+30, 4.5, 2e-3, 0.000001, 1e23, 9007199254740992]
+        self.assertEqual([jcs_canonicalize(n) for n in numbers],
+                         ["0", "0", "1e+21", "1e-7", "333333333.3333333", "1e+30", "4.5", "0.002", "0.000001",
+                          "1e+23", "9007199254740992"])
+        # Sorting is by UTF-16 code units, not code points (RFC 8785 section 3.2.3).
+        self.assertEqual(jcs_canonicalize({"\U0001F600": 1, "\uFB33": 2}), '{"\U0001F600":1,"\uFB33":2}')
+        for bad in (float("nan"), float("inf"), "\ud800", 2**60):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                jcs_canonicalize(bad)
+
+    def test_duplicate_members_rejected(self):
+        text = (ROOT / "examples" / "registered-us.json").read_text(encoding="utf-8")
+        self.assertEqual(load_json_strict(text), REG)
+        with self.assertRaises(ValueError):
+            load_json_strict('{"business_name": "A", "business_name": "B"}')
+
+    def test_cli_signature_checks(self):
+        script = str(ROOT / "scripts" / "validate.py")
+        reg = str(ROOT / "examples" / "registered-us.json")
+        alone = subprocess.run([sys.executable, script, reg], capture_output=True, text=True, check=False)
+        self.assertEqual(alone.returncode, 0, alone.stderr)
+        self.assertIn("record signature", alone.stdout)
+        self.assertIn("identity claim is unconfirmed", alone.stdout)
+        ok = subprocess.run([sys.executable, script, reg, "--p", P], capture_output=True, text=True, check=False)
+        self.assertEqual(ok.returncode, 0, ok.stderr)
+        bad = subprocess.run([sys.executable, script, reg, "--p", MP], capture_output=True, text=True, check=False)
+        self.assertEqual(bad.returncode, 1)
+        self.assertIn("public_key does not match p", bad.stderr)
+
+
+if __name__ == "__main__":
+    unittest.main()
