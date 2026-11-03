@@ -1,5 +1,7 @@
 # Becoming an Agentic Business using ABIZ in Uganda
 
+*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English and Kiswahili are official; English is used for registration.
+
 ## 1. What this means for a business in Uganda
 
 AI assistants are now often asked questions such as ‘what is this company’s real website?’ or ‘who runs this shop?’. ABIZ (Agentic Business Record) is an open standard that lets a business in Uganda publish its public facts once, in a form those tools can read: a short DNS TXT record on a domain the business controls, pointing to a JSON business record served over HTTPS. Because the pointer sits in the business’s own DNS, a tool can tell that the record was published by whoever controls that domain, instead of relying on an unofficial directory or a guess.
@@ -15,22 +17,8 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record-version` | `abiz1` |
 | `business-name` | the public name customers know, for example `Jinja Rafting Supplies` |
 | `country` | `ug`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `www.jinjarafting.example/abiz`, which must match `h` in DNS exactly |
+| `identity-host` | `jinjarafting.ug.to.co`, which must match `h` in DNS exactly |
 | `domains` | `["jinjarafting.example"]`, which must include the domain that carries `_abiz` |
-
-A minimal record:
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Jinja Rafting Supplies",
-  "country": "ug",
-  "identity-host": "www.jinjarafting.example/abiz",
-  "domains": [
-    "jinjarafting.example"
-  ]
-}
-```
 
 ### Optional business key `k`
 
@@ -48,6 +36,28 @@ Uganda uses no subdivision: do not add a region, province or city code. SPEC sec
 
 **Worked example (fictional):** `80020001234567` becomes `80020001234567`, so `k=ug-80020001234567`. In the record: `"business-key": "ug-80020001234567"` and `"registration-number": "80020001234567"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
 
+**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
+
+**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business-key` and `registration-number`; the record is still valid.
+
+### DNS TXT record
+
+Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
+
+```dns
+_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=Vj5gJuqr2HdyjoIwxGMLWzE/AqLXCHg8DuYa9yZ0x0c="
+```
+
+The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
+
+Without the optional `k` and `p` tags, this is also valid:
+
+```dns
+_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;h=jinjarafting.ug.to.co"
+```
+
+The business record served as `application/json` at `https://jinjarafting.ug.to.co`:
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ Uganda uses no subdivision: do not add a region, province or city code. SPEC sec
   "country": "ug",
   "business-key": "ug-80020001234567",
   "registration-number": "80020001234567",
-  "identity-host": "www.jinjarafting.example/abiz",
+  "identity-host": "jinjarafting.ug.to.co",
   "domains": [
     "jinjarafting.example"
   ]
 }
 ```
 
-**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
-
-### DNS TXT record
-
-Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
-
-```dns
-_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;k=ug-80020001234567;h=www.jinjarafting.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Without the optional `k` and `p` tags, this is also valid:
-
-```dns
-_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;h=www.jinjarafting.example/abiz"
-```
-
-All names and numbers on this page are fictional. The `p` value is the throwaway example key from the specification, not a real key.
-
-You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
-
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain jinjarafting.example --dns-value "v=abiz1;k=ug-80020001234567;h=www.jinjarafting.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain jinjarafting.example --dns-value 'v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=Vj5gJuqr2HdyjoIwxGMLWzE/AqLXCHg8DuYa9yZ0x0c='
 ```
+
+You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
@@ -118,7 +110,6 @@ A compatible tool that reads your record can answer questions such as:
 - **Register:** Uganda Registration Services Bureau (URSB). Official website: <https://ursb.go.ug>.
 - **Adding the TXT record:** in the DNS settings of your registrar or DNS host, add a TXT record with the name `_abiz` (some panels want the full name, `_abiz.yourdomain.co.ug`), the value shown above and a TTL of 300 seconds. Domains under `.co.ug` work in the same way as `.com` or any other domain. Keep the value in one piece where possible, and never split `p`.
 - **Privacy:** Data Protection and Privacy Act, 2019. An ABIZ record is public. Publish only business facts you are happy to share, and leave out private home addresses and personal phone numbers (SPEC section 4.3).
-- **Languages:** English and Kiswahili are official; English is used for registration.
 
 ## 7. Further reading
 

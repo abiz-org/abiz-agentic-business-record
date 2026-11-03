@@ -1,5 +1,7 @@
 # Becoming an Agentic Business using ABIZ in Botswana
 
+*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language and the language of registration; Setswana is the national language.
+
 ## 1. What this means for a business in Botswana
 
 AI assistants are now often asked questions such as ‘what is this company’s real website?’ or ‘who runs this shop?’. ABIZ (Agentic Business Record) is an open standard that lets a business in Botswana publish its public facts once, in a form those tools can read: a short DNS TXT record on a domain the business controls, pointing to a JSON business record served over HTTPS. Because the pointer sits in the business’s own DNS, a tool can tell that the record was published by whoever controls that domain, instead of relying on an unofficial directory or a guess.
@@ -15,22 +17,8 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record-version` | `abiz1` |
 | `business-name` | the public name customers know, for example `Kgosi Mechanics` |
 | `country` | `bw`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `www.kgosimechanics.example/abiz`, which must match `h` in DNS exactly |
+| `identity-host` | `kgosimechanics.bw.to.co`, which must match `h` in DNS exactly |
 | `domains` | `["kgosimechanics.example"]`, which must include the domain that carries `_abiz` |
-
-A minimal record:
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Kgosi Mechanics",
-  "country": "bw",
-  "identity-host": "www.kgosimechanics.example/abiz",
-  "domains": [
-    "kgosimechanics.example"
-  ]
-}
-```
 
 ### Optional business key `k`
 
@@ -48,6 +36,28 @@ Botswana uses no subdivision: do not add a region, province or city code. SPEC s
 
 **Worked example (fictional):** `BW00001234567` becomes `BW00001234567`, so `k=bw-BW00001234567`. In the record: `"business-key": "bw-BW00001234567"` and `"registration-number": "BW00001234567"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
 
+**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
+
+**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business-key` and `registration-number`; the record is still valid.
+
+### DNS TXT record
+
+Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
+
+```dns
+_abiz.kgosimechanics.example. 300 IN TXT "v=abiz1;k=bw-BW00001234567;h=kgosimechanics.bw.to.co;p=IqzdKTHk3ykuIm3g7iagUTY9HWBWp/0Iu6vs50p2wS4="
+```
+
+The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
+
+Without the optional `k` and `p` tags, this is also valid:
+
+```dns
+_abiz.kgosimechanics.example. 300 IN TXT "v=abiz1;h=kgosimechanics.bw.to.co"
+```
+
+The business record served as `application/json` at `https://kgosimechanics.bw.to.co`:
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ Botswana uses no subdivision: do not add a region, province or city code. SPEC s
   "country": "bw",
   "business-key": "bw-BW00001234567",
   "registration-number": "BW00001234567",
-  "identity-host": "www.kgosimechanics.example/abiz",
+  "identity-host": "kgosimechanics.bw.to.co",
   "domains": [
     "kgosimechanics.example"
   ]
 }
 ```
 
-**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
-
-### DNS TXT record
-
-Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
-
-```dns
-_abiz.kgosimechanics.example. 300 IN TXT "v=abiz1;k=bw-BW00001234567;h=www.kgosimechanics.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Without the optional `k` and `p` tags, this is also valid:
-
-```dns
-_abiz.kgosimechanics.example. 300 IN TXT "v=abiz1;h=www.kgosimechanics.example/abiz"
-```
-
-All names and numbers on this page are fictional. The `p` value is the throwaway example key from the specification, not a real key.
-
-You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
-
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain kgosimechanics.example --dns-value "v=abiz1;k=bw-BW00001234567;h=www.kgosimechanics.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain kgosimechanics.example --dns-value 'v=abiz1;k=bw-BW00001234567;h=kgosimechanics.bw.to.co;p=IqzdKTHk3ykuIm3g7iagUTY9HWBWp/0Iu6vs50p2wS4='
 ```
+
+You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
@@ -118,7 +110,6 @@ A compatible tool that reads your record can answer questions such as:
 - **Register:** Companies and Intellectual Property Authority (CIPA). Official website: <https://www.cipa.co.bw>.
 - **Adding the TXT record:** in the DNS settings of your registrar or DNS host, add a TXT record with the name `_abiz` (some panels want the full name, `_abiz.yourdomain.co.bw`), the value shown above and a TTL of 300 seconds. Domains under `.co.bw` work in the same way as `.com` or any other domain. Keep the value in one piece where possible, and never split `p`.
 - **Privacy:** Botswana’s Data Protection Act. An ABIZ record is public. Publish only business facts you are happy to share, and leave out private home addresses and personal phone numbers (SPEC section 4.3).
-- **Languages:** English is the official language and the language of registration; Setswana is the national language.
 
 ## 7. Further reading
 

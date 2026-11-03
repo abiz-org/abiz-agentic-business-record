@@ -1,5 +1,7 @@
 # Becoming an Agentic Business using ABIZ in Lesotho
 
+*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Sesotho and English are official; English is used for company registration.
+
 ## 1. What this means for a business in Lesotho
 
 AI assistants are now often asked questions such as ‘what is this company’s real website?’ or ‘who runs this shop?’. ABIZ (Agentic Business Record) is an open standard that lets a business in Lesotho publish its public facts once, in a form those tools can read: a short DNS TXT record on a domain the business controls, pointing to a JSON business record served over HTTPS. Because the pointer sits in the business’s own DNS, a tool can tell that the record was published by whoever controls that domain, instead of relying on an unofficial directory or a guess.
@@ -15,22 +17,8 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record-version` | `abiz1` |
 | `business-name` | the public name customers know, for example `Maluti Weavers` |
 | `country` | `ls`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `www.malutiweavers.example/abiz`, which must match `h` in DNS exactly |
+| `identity-host` | `malutiweavers.ls.to.co`, which must match `h` in DNS exactly |
 | `domains` | `["malutiweavers.example"]`, which must include the domain that carries `_abiz` |
-
-A minimal record:
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Maluti Weavers",
-  "country": "ls",
-  "identity-host": "www.malutiweavers.example/abiz",
-  "domains": [
-    "malutiweavers.example"
-  ]
-}
-```
 
 ### Optional business key `k`
 
@@ -48,6 +36,28 @@ Lesotho uses no subdivision: do not add a region, province or city code. SPEC se
 
 **Worked example (fictional):** `2023/1234` becomes `20231234`, so `k=ls-20231234`. In the record: `"business-key": "ls-20231234"` and `"registration-number": "20231234"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
 
+**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
+
+**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business-key` and `registration-number`; the record is still valid.
+
+### DNS TXT record
+
+Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
+
+```dns
+_abiz.malutiweavers.example. 300 IN TXT "v=abiz1;k=ls-20231234;h=malutiweavers.ls.to.co;p=JJIDJbAmYAATIsQO3bUGrx3kQLrf6ynKMDYlLJ/X868="
+```
+
+The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
+
+Without the optional `k` and `p` tags, this is also valid:
+
+```dns
+_abiz.malutiweavers.example. 300 IN TXT "v=abiz1;h=malutiweavers.ls.to.co"
+```
+
+The business record served as `application/json` at `https://malutiweavers.ls.to.co`:
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ Lesotho uses no subdivision: do not add a region, province or city code. SPEC se
   "country": "ls",
   "business-key": "ls-20231234",
   "registration-number": "20231234",
-  "identity-host": "www.malutiweavers.example/abiz",
+  "identity-host": "malutiweavers.ls.to.co",
   "domains": [
     "malutiweavers.example"
   ]
 }
 ```
 
-**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
-
-### DNS TXT record
-
-Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
-
-```dns
-_abiz.malutiweavers.example. 300 IN TXT "v=abiz1;k=ls-20231234;h=www.malutiweavers.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Without the optional `k` and `p` tags, this is also valid:
-
-```dns
-_abiz.malutiweavers.example. 300 IN TXT "v=abiz1;h=www.malutiweavers.example/abiz"
-```
-
-All names and numbers on this page are fictional. The `p` value is the throwaway example key from the specification, not a real key.
-
-You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
-
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain malutiweavers.example --dns-value "v=abiz1;k=ls-20231234;h=www.malutiweavers.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain malutiweavers.example --dns-value 'v=abiz1;k=ls-20231234;h=malutiweavers.ls.to.co;p=JJIDJbAmYAATIsQO3bUGrx3kQLrf6ynKMDYlLJ/X868='
 ```
+
+You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
@@ -118,7 +110,6 @@ A compatible tool that reads your record can answer questions such as:
 - **Register:** Registrar of Companies, via the One-Stop Business Facilitation Centre. We have not listed a website because we could not confirm an official address that loads.
 - **Adding the TXT record:** in the DNS settings of your registrar or DNS host, add a TXT record with the name `_abiz` (some panels want the full name, `_abiz.yourdomain.co.ls`), the value shown above and a TTL of 300 seconds. Domains under `.co.ls` work in the same way as `.com` or any other domain. Keep the value in one piece where possible, and never split `p`.
 - **Privacy:** Data Protection Act, 2011. An ABIZ record is public. Publish only business facts you are happy to share, and leave out private home addresses and personal phone numbers (SPEC section 4.3).
-- **Languages:** Sesotho and English are official; English is used for company registration.
 
 ## 7. Further reading
 

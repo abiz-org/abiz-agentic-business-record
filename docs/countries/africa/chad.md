@@ -1,5 +1,7 @@
 # Devenir une entreprise agentique avec ABIZ au Tchad
 
+*Guide pour ABIZ 1.1 (proposition). La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français et l’arabe sont langues officielles. Ce guide est en français.
+
 ## 1. Ce que cela signifie pour une entreprise au Tchad
 
 On demande désormais souvent aux assistants d’IA « quel est le vrai site de cette société ? » ou « qui exploite ce commerce ? ». ABIZ (Agentic Business Record) est une norme ouverte qui permet à une entreprise établie au Tchad de publier une seule fois ses informations publiques, sous une forme que ces outils savent lire : un court enregistrement DNS TXT sur un domaine que l’entreprise contrôle, qui pointe vers une fiche d’entreprise JSON servie en HTTPS. Comme ce pointeur se trouve dans le DNS de l’entreprise elle-même, un outil peut constater que la fiche a été publiée par la personne qui contrôle ce domaine, au lieu de se fier à un annuaire non officiel ou à une supposition.
@@ -15,22 +17,8 @@ Toute fiche d’entreprise contient ces cinq champs (section 4.1 de la SPEC) :
 | `record-version` | `abiz1` |
 | `business-name` | le nom public que connaissent les clients, par exemple `Garage du Chari` |
 | `country` | `td`, le code ISO 3166-1 alpha-2, en minuscules |
-| `identity-host` | `www.garageduchari.example/abiz`, qui doit correspondre exactement à `h` dans le DNS |
+| `identity-host` | `garageduchari.td.to.co`, qui doit correspondre exactement à `h` dans le DNS |
 | `domains` | `["garageduchari.example"]`, qui doit inclure le domaine portant `_abiz` |
-
-Une fiche minimale :
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Garage du Chari",
-  "country": "td",
-  "identity-host": "www.garageduchari.example/abiz",
-  "domains": [
-    "garageduchari.example"
-  ]
-}
-```
 
 ### Clé d’entreprise facultative `k`
 
@@ -48,6 +36,28 @@ Le Tchad n’utilise pas de subdivision : n’ajoutez ni code de région, ni cod
 
 **Exemple (fictif) :** `TC/NDJ/2023/B/123` devient `TCNDJ2023B123`, donc `k=td-TCNDJ2023B123`. Dans la fiche : `"business-key": "td-TCNDJ2023B123"` et `"registration-number": "TCNDJ2023B123"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
 
+**À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
+
+**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business-key` et `registration-number` ; la fiche reste valide.
+
+### Enregistrement DNS TXT
+
+Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
+
+```dns
+_abiz.garageduchari.example. 300 IN TXT "v=abiz1;k=td-TCNDJ2023B123;h=garageduchari.td.to.co;p=9enKxzwe0rduTfw/YqBbEc0UBv8ITChngmfbR+iOItM="
+```
+
+La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé ou omettez `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
+
+Sans les balises facultatives `k` et `p`, ceci est également valide :
+
+```dns
+_abiz.garageduchari.example. 300 IN TXT "v=abiz1;h=garageduchari.td.to.co"
+```
+
+La fiche d’entreprise servie en `application/json` à l’adresse `https://garageduchari.td.to.co` :
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ Le Tchad n’utilise pas de subdivision : n’ajoutez ni code de région, ni cod
   "country": "td",
   "business-key": "td-TCNDJ2023B123",
   "registration-number": "TCNDJ2023B123",
-  "identity-host": "www.garageduchari.example/abiz",
+  "identity-host": "garageduchari.td.to.co",
   "domains": [
     "garageduchari.example"
   ]
 }
 ```
 
-**À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
-
-### Enregistrement DNS TXT
-
-Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
-
-```dns
-_abiz.garageduchari.example. 300 IN TXT "v=abiz1;k=td-TCNDJ2023B123;h=www.garageduchari.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Sans les balises facultatives `k` et `p`, ceci est également valide :
-
-```dns
-_abiz.garageduchari.example. 300 IN TXT "v=abiz1;h=www.garageduchari.example/abiz"
-```
-
-Tous les noms et numéros de cette page sont fictifs. La valeur `p` est la clé d’exemple jetable de la spécification, pas une vraie clé.
-
-Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
-
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain garageduchari.example --dns-value "v=abiz1;k=td-TCNDJ2023B123;h=www.garageduchari.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain garageduchari.example --dns-value 'v=abiz1;k=td-TCNDJ2023B123;h=garageduchari.td.to.co;p=9enKxzwe0rduTfw/YqBbEc0UBv8ITChngmfbR+iOItM='
 ```
+
+Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
 
 ## 3. Passer par un fournisseur et MCP
 
@@ -118,7 +110,6 @@ Un outil compatible qui lit votre fiche peut répondre à des questions comme :
 - **Registre :** le Registre du commerce et du crédit mobilier (RCCM), tenu par les greffes des tribunaux ; l’Agence nationale des investissements et des exportations (ANIE) sert de guichet unique. Nous n’indiquons pas de site, faute d’avoir pu confirmer une adresse officielle qui fonctionne.
 - **Ajouter l’enregistrement TXT :** dans les réglages DNS de votre bureau d’enregistrement ou de votre hébergeur DNS, ajoutez un enregistrement TXT nommé `_abiz` (certaines interfaces demandent le nom complet, `_abiz.votredomaine.td`), avec la valeur ci-dessus et une durée de vie (TTL) de 300 secondes. Les domaines en `.td` fonctionnent comme les `.com` ou tout autre domaine. Gardez la valeur d’un seul tenant si possible, et ne coupez jamais `p`.
 - **Données personnelles :** Vérifiez les règles de protection des données applicables au Tchad avant de publier des données personnelles. Une fiche ABIZ est publique. Ne publiez que des informations professionnelles que vous acceptez de partager, et omettez les adresses personnelles et les numéros de téléphone privés (section 4.3 de la SPEC).
-- **Langues :** Le français et l’arabe sont langues officielles. Ce guide est en français.
 
 ## 7. Pour aller plus loin
 

@@ -1,5 +1,7 @@
 # Becoming an Agentic Business using ABIZ in The Gambia
 
+*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* English is the official language and the language of registration.
+
 ## 1. What this means for a business in The Gambia
 
 AI assistants are now often asked questions such as ‘what is this company’s real website?’ or ‘who runs this shop?’. ABIZ (Agentic Business Record) is an open standard that lets a business in The Gambia publish its public facts once, in a form those tools can read: a short DNS TXT record on a domain the business controls, pointing to a JSON business record served over HTTPS. Because the pointer sits in the business’s own DNS, a tool can tell that the record was published by whoever controls that domain, instead of relying on an unofficial directory or a guess.
@@ -15,22 +17,8 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record-version` | `abiz1` |
 | `business-name` | the public name customers know, for example `Banjul Fabrics` |
 | `country` | `gm`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `www.banjulfabrics.example/abiz`, which must match `h` in DNS exactly |
+| `identity-host` | `banjulfabrics.gm.to.co`, which must match `h` in DNS exactly |
 | `domains` | `["banjulfabrics.example"]`, which must include the domain that carries `_abiz` |
-
-A minimal record:
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Banjul Fabrics",
-  "country": "gm",
-  "identity-host": "www.banjulfabrics.example/abiz",
-  "domains": [
-    "banjulfabrics.example"
-  ]
-}
-```
 
 ### Optional business key `k`
 
@@ -48,6 +36,28 @@ The Gambia uses no subdivision: do not add a region, province or city code. SPEC
 
 **Worked example (fictional):** `C/2023/12345` becomes `C202312345`, so `k=gm-C202312345`. In the record: `"business-key": "gm-C202312345"` and `"registration-number": "C202312345"`. Keys are compared case-insensitively; the canonical form has a lowercase country code and an uppercase number.
 
+**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
+
+**Sole traders:** if the only number you have is a personal one, such as a national identity number or a personal tax number, do not publish `k`. Leave out `k`, `business-key` and `registration-number`; the record is still valid.
+
+### DNS TXT record
+
+Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
+
+```dns
+_abiz.banjulfabrics.example. 300 IN TXT "v=abiz1;k=gm-C202312345;h=banjulfabrics.gm.to.co;p=z4si3KVYFtIsQ5HoYNose/AF/gMmnpUeP13i1inung8="
+```
+
+The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
+
+Without the optional `k` and `p` tags, this is also valid:
+
+```dns
+_abiz.banjulfabrics.example. 300 IN TXT "v=abiz1;h=banjulfabrics.gm.to.co"
+```
+
+The business record served as `application/json` at `https://banjulfabrics.gm.to.co`:
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ The Gambia uses no subdivision: do not add a region, province or city code. SPEC
   "country": "gm",
   "business-key": "gm-C202312345",
   "registration-number": "C202312345",
-  "identity-host": "www.banjulfabrics.example/abiz",
+  "identity-host": "banjulfabrics.gm.to.co",
   "domains": [
     "banjulfabrics.example"
   ]
 }
 ```
 
-**Please check:** we could not confirm the exact format of this number from an official source, so the example is illustrative only. Use the number exactly as it appears on your official registration document. If it is not clear which number identifies your business nationally, leave `k` out until you are sure.
-
-### DNS TXT record
-
-Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
-
-```dns
-_abiz.banjulfabrics.example. 300 IN TXT "v=abiz1;k=gm-C202312345;h=www.banjulfabrics.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Without the optional `k` and `p` tags, this is also valid:
-
-```dns
-_abiz.banjulfabrics.example. 300 IN TXT "v=abiz1;h=www.banjulfabrics.example/abiz"
-```
-
-All names and numbers on this page are fictional. The `p` value is the throwaway example key from the specification, not a real key.
-
-You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
-
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain banjulfabrics.example --dns-value "v=abiz1;k=gm-C202312345;h=www.banjulfabrics.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain banjulfabrics.example --dns-value 'v=abiz1;k=gm-C202312345;h=banjulfabrics.gm.to.co;p=z4si3KVYFtIsQ5HoYNose/AF/gMmnpUeP13i1inung8='
 ```
+
+You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
@@ -118,7 +110,6 @@ A compatible tool that reads your record can answer questions such as:
 - **Register:** Registrar of Companies, through the Single Window Business Registration office. We have not listed a website because we could not confirm an official address that loads.
 - **Adding the TXT record:** in the DNS settings of your registrar or DNS host, add a TXT record with the name `_abiz` (some panels want the full name, `_abiz.yourdomain.gm`), the value shown above and a TTL of 300 seconds. Domains under `.gm` work in the same way as `.com` or any other domain. Keep the value in one piece where possible, and never split `p`.
 - **Privacy:** Check the data-protection rules that apply in The Gambia before you publish personal data. An ABIZ record is public. Publish only business facts you are happy to share, and leave out private home addresses and personal phone numbers (SPEC section 4.3).
-- **Languages:** English is the official language and the language of registration.
 
 ## 7. Further reading
 

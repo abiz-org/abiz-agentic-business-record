@@ -1,60 +1,64 @@
-# ABIZ country guides: Africa
+# Agentic business records in Africa
 
-These guides explain how a business in each African country can publish an ABIZ (Agentic Business Record): a DNS TXT pointer on its own domain that leads to a public JSON business record, so that compatible AI tools can find and check its public facts. Each guide follows [ABIZ 1.1](../../../SPEC.md) and covers the required fields, the optional business key `k` for that country, an example DNS record, the optional Ed25519 key in `p`, and local practical notes.
+These guides explain, country by country, how a business in Africa can publish an agentic business record (ABIZ): a DNS TXT record on its own domain that points to a public JSON record of its business facts, so that compatible AI tools can find and check them. They follow ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is the authoritative text: if a guide and the specification differ, the specification applies.
 
-Pages are in the country’s main official or business language where we could write it well; otherwise they are in English. All names and numbers in the examples are fictional. ABIZ does not prove legal registration and is not an endorsement. Where we could not confirm a register’s number format or website, the page says so.
+Pages are written in the country's main business language where we could do so to a good standard; the others are in English for now. All example businesses, numbers, domains and keys are fictional. Never copy an example `p` value.
 
-- [Algeria](algeria.md) (Arabic)
-- [Angola](angola.md) (Portuguese)
-- [Benin](benin.md) (French)
-- [Botswana](botswana.md) (English)
-- [Burkina Faso](burkina-faso.md) (French)
-- [Burundi](burundi.md) (French)
-- [Cabo Verde](cabo-verde.md) (Portuguese)
-- [Cameroon](cameroon.md) (French)
-- [Central African Republic](central-african-republic.md) (French)
-- [Chad](chad.md) (French)
-- [Comoros](comoros.md) (French)
-- [Congo (Republic)](congo-republic.md) (French)
-- [Congo (Democratic Republic)](congo-democratic-republic.md) (French)
-- [Côte d’Ivoire](cote-divoire.md) (French)
-- [Djibouti](djibouti.md) (French)
-- [Egypt](egypt.md) (Arabic)
-- [Equatorial Guinea](equatorial-guinea.md) (Spanish)
-- [Eritrea](eritrea.md) (English)
-- [Eswatini](eswatini.md) (English)
-- [Ethiopia](ethiopia.md) (English)
-- [Gabon](gabon.md) (French)
-- [Gambia](gambia.md) (English)
-- [Ghana](ghana.md) (English)
-- [Guinea](guinea.md) (French)
-- [Guinea-Bissau](guinea-bissau.md) (Portuguese)
-- [Kenya](kenya.md) (English)
-- [Lesotho](lesotho.md) (English)
-- [Liberia](liberia.md) (English)
-- [Libya](libya.md) (Arabic)
-- [Madagascar](madagascar.md) (French)
-- [Malawi](malawi.md) (English)
-- [Mali](mali.md) (French)
-- [Mauritania](mauritania.md) (Arabic)
-- [Mauritius](mauritius.md) (English)
-- [Morocco](morocco.md) (Arabic)
-- [Mozambique](mozambique.md) (Portuguese)
-- [Namibia](namibia.md) (English)
-- [Niger](niger.md) (French)
-- [Nigeria](nigeria.md) (English)
-- [Rwanda](rwanda.md) (English)
-- [São Tomé and Príncipe](sao-tome-and-principe.md) (Portuguese)
-- [Senegal](senegal.md) (French)
-- [Seychelles](seychelles.md) (English)
-- [Sierra Leone](sierra-leone.md) (English)
-- [Somalia](somalia.md) (English)
-- [South Africa](south-africa.md) (English)
-- [South Sudan](south-sudan.md) (English)
-- [Sudan](sudan.md) (Arabic)
-- [Tanzania](tanzania.md) (English)
-- [Togo](togo.md) (French)
-- [Tunisia](tunisia.md) (Arabic)
-- [Uganda](uganda.md) (English)
-- [Zambia](zambia.md) (English)
-- [Zimbabwe](zimbabwe.md) (English)
+Countries under sanctions or with a high-risk environment have no to.co example; their pages show a self-hosted record only. ABIZ does not prove legal registration and is not an endorsement.
+
+| Country | Language |
+| --- | --- |
+| [Algeria](algeria.md) | العربية |
+| [Angola](angola.md) | Português |
+| [Benin](benin.md) | Français |
+| [Botswana](botswana.md) | English |
+| [Burkina Faso](burkina-faso.md) | Français |
+| [Burundi](burundi.md) | Français |
+| [Cabo Verde](cabo-verde.md) | Português |
+| [Cameroon](cameroon.md) | Français |
+| [Central African Republic](central-african-republic.md) | Français |
+| [Chad](chad.md) | Français |
+| [Comoros](comoros.md) | Français |
+| [Congo (Democratic Republic)](congo-democratic-republic.md) | Français |
+| [Congo (Republic)](congo-republic.md) | Français |
+| [Côte d’Ivoire](cote-divoire.md) | Français |
+| [Djibouti](djibouti.md) | Français |
+| [Egypt](egypt.md) | العربية |
+| [Equatorial Guinea](equatorial-guinea.md) | Español |
+| [Eritrea](eritrea.md) | English |
+| [Eswatini](eswatini.md) | English |
+| [Ethiopia](ethiopia.md) | English |
+| [Gabon](gabon.md) | Français |
+| [Gambia](gambia.md) | English |
+| [Ghana](ghana.md) | English |
+| [Guinea](guinea.md) | Français |
+| [Guinea-Bissau](guinea-bissau.md) | Português |
+| [Kenya](kenya.md) | English |
+| [Lesotho](lesotho.md) | English |
+| [Liberia](liberia.md) | English |
+| [Libya](libya.md) | العربية |
+| [Madagascar](madagascar.md) | Français |
+| [Malawi](malawi.md) | English |
+| [Mali](mali.md) | Français |
+| [Mauritania](mauritania.md) | العربية |
+| [Mauritius](mauritius.md) | English |
+| [Morocco](morocco.md) | العربية |
+| [Mozambique](mozambique.md) | Português |
+| [Namibia](namibia.md) | English |
+| [Niger](niger.md) | Français |
+| [Nigeria](nigeria.md) | English |
+| [Rwanda](rwanda.md) | English |
+| [São Tomé and Príncipe](sao-tome-and-principe.md) | Português |
+| [Senegal](senegal.md) | Français |
+| [Seychelles](seychelles.md) | English |
+| [Sierra Leone](sierra-leone.md) | English |
+| [Somalia](somalia.md) | English |
+| [South Africa](south-africa.md) | English |
+| [South Sudan](south-sudan.md) | English |
+| [Sudan](sudan.md) | العربية |
+| [Tanzania](tanzania.md) | English |
+| [Togo](togo.md) | Français |
+| [Tunisia](tunisia.md) | العربية |
+| [Uganda](uganda.md) | English |
+| [Zambia](zambia.md) | English |
+| [Zimbabwe](zimbabwe.md) | English |

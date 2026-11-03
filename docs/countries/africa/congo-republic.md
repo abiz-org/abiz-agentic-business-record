@@ -1,5 +1,7 @@
 # Devenir une entreprise agentique avec ABIZ en République du Congo
 
+*Guide pour ABIZ 1.1 (proposition). La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle ; le lingala et le kituba sont langues nationales.
+
 ## 1. Ce que cela signifie pour une entreprise en République du Congo
 
 On demande désormais souvent aux assistants d’IA « quel est le vrai site de cette société ? » ou « qui exploite ce commerce ? ». ABIZ (Agentic Business Record) est une norme ouverte qui permet à une entreprise établie en République du Congo de publier une seule fois ses informations publiques, sous une forme que ces outils savent lire : un court enregistrement DNS TXT sur un domaine que l’entreprise contrôle, qui pointe vers une fiche d’entreprise JSON servie en HTTPS. Comme ce pointeur se trouve dans le DNS de l’entreprise elle-même, un outil peut constater que la fiche a été publiée par la personne qui contrôle ce domaine, au lieu de se fier à un annuaire non officiel ou à une supposition.
@@ -15,22 +17,8 @@ Toute fiche d’entreprise contient ces cinq champs (section 4.1 de la SPEC) :
 | `record-version` | `abiz1` |
 | `business-name` | le nom public que connaissent les clients, par exemple `Pêcherie de la Pointe` |
 | `country` | `cg`, le code ISO 3166-1 alpha-2, en minuscules |
-| `identity-host` | `www.pecheriepointe.example/abiz`, qui doit correspondre exactement à `h` dans le DNS |
+| `identity-host` | `pecheriepointe.cg.to.co`, qui doit correspondre exactement à `h` dans le DNS |
 | `domains` | `["pecheriepointe.example"]`, qui doit inclure le domaine portant `_abiz` |
-
-Une fiche minimale :
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Pêcherie de la Pointe",
-  "country": "cg",
-  "identity-host": "www.pecheriepointe.example/abiz",
-  "domains": [
-    "pecheriepointe.example"
-  ]
-}
-```
 
 ### Clé d’entreprise facultative `k`
 
@@ -48,6 +36,28 @@ La République du Congo n’utilise pas de subdivision : n’ajoutez ni code de 
 
 **Exemple (fictif) :** `CG/BZV/23 B 12345` devient `CGBZV23B12345`, donc `k=cg-CGBZV23B12345`. Dans la fiche : `"business-key": "cg-CGBZV23B12345"` et `"registration-number": "CGBZV23B12345"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
 
+**À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
+
+**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business-key` et `registration-number` ; la fiche reste valide.
+
+### Enregistrement DNS TXT
+
+Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
+
+```dns
+_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=anTndmw7bMIHHbKW4xpfr58LV9pv+tGAHfA3jDvezeY="
+```
+
+La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé ou omettez `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
+
+Sans les balises facultatives `k` et `p`, ceci est également valide :
+
+```dns
+_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;h=pecheriepointe.cg.to.co"
+```
+
+La fiche d’entreprise servie en `application/json` à l’adresse `https://pecheriepointe.cg.to.co` :
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ La République du Congo n’utilise pas de subdivision : n’ajoutez ni code de 
   "country": "cg",
   "business-key": "cg-CGBZV23B12345",
   "registration-number": "CGBZV23B12345",
-  "identity-host": "www.pecheriepointe.example/abiz",
+  "identity-host": "pecheriepointe.cg.to.co",
   "domains": [
     "pecheriepointe.example"
   ]
 }
 ```
 
-**À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
-
-### Enregistrement DNS TXT
-
-Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
-
-```dns
-_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;k=cg-CGBZV23B12345;h=www.pecheriepointe.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Sans les balises facultatives `k` et `p`, ceci est également valide :
-
-```dns
-_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;h=www.pecheriepointe.example/abiz"
-```
-
-Tous les noms et numéros de cette page sont fictifs. La valeur `p` est la clé d’exemple jetable de la spécification, pas une vraie clé.
-
-Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
-
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain pecheriepointe.example --dns-value "v=abiz1;k=cg-CGBZV23B12345;h=www.pecheriepointe.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain pecheriepointe.example --dns-value 'v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=anTndmw7bMIHHbKW4xpfr58LV9pv+tGAHfA3jDvezeY='
 ```
+
+Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
 
 ## 3. Passer par un fournisseur et MCP
 
@@ -118,7 +110,6 @@ Un outil compatible qui lit votre fiche peut répondre à des questions comme :
 - **Registre :** le Registre du commerce et du crédit mobilier (RCCM), tenu par les greffes des tribunaux de commerce ; l’Agence congolaise pour la création des entreprises (ACPCE) sert de guichet unique. Site officiel : <https://acpce.cg>.
 - **Ajouter l’enregistrement TXT :** dans les réglages DNS de votre bureau d’enregistrement ou de votre hébergeur DNS, ajoutez un enregistrement TXT nommé `_abiz` (certaines interfaces demandent le nom complet, `_abiz.votredomaine.cg`), avec la valeur ci-dessus et une durée de vie (TTL) de 300 secondes. Les domaines en `.cg` fonctionnent comme les `.com` ou tout autre domaine. Gardez la valeur d’un seul tenant si possible, et ne coupez jamais `p`.
 - **Données personnelles :** Vérifiez les règles de protection des données applicables en République du Congo avant de publier des données personnelles. Une fiche ABIZ est publique. Ne publiez que des informations professionnelles que vous acceptez de partager, et omettez les adresses personnelles et les numéros de téléphone privés (section 4.3 de la SPEC).
-- **Langues :** Le français est la langue officielle ; le lingala et le kituba sont langues nationales.
 
 ## 7. Pour aller plus loin
 

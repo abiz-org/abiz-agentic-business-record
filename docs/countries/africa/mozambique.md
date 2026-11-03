@@ -1,5 +1,7 @@
 # Tornar-se uma empresa agêntica com o ABIZ em Moçambique
 
+*Guia para o ABIZ 1.1 (proposta). A [especificação (SPEC.md, em inglês)](../../../SPEC.md) é o texto de referência: se este guia e a especificação divergirem, aplica-se a especificação.* O português é a língua oficial e a língua dos negócios.
+
 ## 1. O que isto significa para uma empresa em Moçambique
 
 Os assistentes de IA recebem cada vez mais perguntas como «qual é o verdadeiro site desta empresa?» ou «quem explora esta loja?». O ABIZ (Agentic Business Record) é uma norma aberta que permite a uma empresa em Moçambique publicar uma única vez os seus dados públicos, numa forma que essas ferramentas sabem ler: um pequeno registo DNS TXT num domínio que a empresa controla, que aponta para uma ficha de empresa em JSON servida por HTTPS. Como esse ponteiro está no DNS da própria empresa, uma ferramenta consegue verificar que a ficha foi publicada por quem controla o domínio, em vez de depender de um diretório não oficial ou de uma suposição.
@@ -15,22 +17,8 @@ Todas as fichas de empresa têm estes cinco campos (secção 4.1 da SPEC):
 | `record-version` | `abiz1` |
 | `business-name` | o nome público que os clientes conhecem, por exemplo `Cajuaria Maputo` |
 | `country` | `mz`, o código ISO 3166-1 alfa-2, em minúsculas |
-| `identity-host` | `www.cajuariamaputo.example/abiz`, que tem de coincidir exatamente com `h` no DNS |
+| `identity-host` | `cajuariamaputo.mz.to.co`, que tem de coincidir exatamente com `h` no DNS |
 | `domains` | `["cajuariamaputo.example"]`, que tem de incluir o domínio onde está `_abiz` |
-
-Uma ficha mínima:
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Cajuaria Maputo",
-  "country": "mz",
-  "identity-host": "www.cajuariamaputo.example/abiz",
-  "domains": [
-    "cajuariamaputo.example"
-  ]
-}
-```
 
 ### Chave de empresa opcional `k`
 
@@ -48,6 +36,28 @@ Moçambique não usa subdivisão: não acrescente código de região, província
 
 **Exemplo (fictício):** `101234567` passa a `101234567`, logo `k=mz-101234567`. Na ficha: `"business-key": "mz-101234567"` e `"registration-number": "101234567"`. As chaves comparam-se sem distinguir maiúsculas de minúsculas; a forma canónica tem o código do país em minúsculas e o número em maiúsculas.
 
+**Confirme:** não conseguimos confirmar o formato exato deste número numa fonte oficial, pelo que o exemplo é apenas ilustrativo. Use o número tal como consta do seu documento oficial de registo. Se não for claro qual o número que identifica a empresa a nível nacional, não publique `k` até ter a certeza.
+
+**Empresários em nome individual:** se o único número que tem é pessoal, como o número do bilhete de identidade ou um número fiscal pessoal, não publique `k`. Omita `k`, `business-key` e `registration-number`; o registo continua válido.
+
+### Registo DNS TXT
+
+Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
+
+```dns
+_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=bbv79Qms/verDYm0eSOfR4ANync2cHULrRAfXqSOD6U="
+```
+
+O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave ou omita `p`. Todos os nomes, números e domínios desta página são fictícios.
+
+Sem as etiquetas opcionais `k` e `p`, isto também é válido:
+
+```dns
+_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;h=cajuariamaputo.mz.to.co"
+```
+
+O registo da empresa servido como `application/json` em `https://cajuariamaputo.mz.to.co`:
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ Moçambique não usa subdivisão: não acrescente código de região, província
   "country": "mz",
   "business-key": "mz-101234567",
   "registration-number": "101234567",
-  "identity-host": "www.cajuariamaputo.example/abiz",
+  "identity-host": "cajuariamaputo.mz.to.co",
   "domains": [
     "cajuariamaputo.example"
   ]
 }
 ```
 
-**Confirme:** não conseguimos confirmar o formato exato deste número numa fonte oficial, pelo que o exemplo é apenas ilustrativo. Use o número tal como consta do seu documento oficial de registo. Se não for claro qual o número que identifica a empresa a nível nacional, não publique `k` até ter a certeza.
-
-### Registo DNS TXT
-
-Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
-
-```dns
-_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;k=mz-101234567;h=www.cajuariamaputo.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Sem as etiquetas opcionais `k` e `p`, isto também é válido:
-
-```dns
-_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;h=www.cajuariamaputo.example/abiz"
-```
-
-Todos os nomes e números desta página são fictícios. O valor `p` é a chave de exemplo descartável da especificação, não uma chave real.
-
-Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
-
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain cajuariamaputo.example --dns-value "v=abiz1;k=mz-101234567;h=www.cajuariamaputo.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain cajuariamaputo.example --dns-value 'v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=bbv79Qms/verDYm0eSOfR4ANync2cHULrRAfXqSOD6U='
 ```
+
+Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
 
 ## 3. Usar um fornecedor e o MCP
 
@@ -118,7 +110,6 @@ Uma ferramenta compatível que leia a sua ficha consegue responder a perguntas c
 - **Registo:** Conservatória do Registo de Entidades Legais. Não indicamos um site porque não conseguimos confirmar um endereço oficial que funcione.
 - **Acrescentar o registo TXT:** nas definições DNS do seu registador ou fornecedor de DNS, acrescente um registo TXT com o nome `_abiz` (alguns painéis pedem o nome completo, `_abiz.oseudominio.co.mz`), o valor acima e um TTL de 300 segundos. Os domínios `.co.mz` funcionam como `.com` ou qualquer outro domínio. Mantenha o valor inteiro sempre que possível e nunca divida `p`.
 - **Proteção de dados:** Verifique as regras de proteção de dados aplicáveis em Moçambique antes de publicar dados pessoais. Uma ficha ABIZ é pública. Publique apenas informação empresarial que aceite partilhar e omita moradas pessoais e números de telefone privados (secção 4.3 da SPEC).
-- **Línguas:** O português é a língua oficial e a língua dos negócios.
 
 ## 7. Leitura adicional
 

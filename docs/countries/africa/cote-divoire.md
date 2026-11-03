@@ -1,5 +1,7 @@
 # Devenir une entreprise agentique avec ABIZ en Côte d’Ivoire
 
+*Guide pour ABIZ 1.1 (proposition). La [spécification (SPEC.md, en anglais)](../../../SPEC.md) fait foi : si ce guide et la spécification diffèrent, c’est la spécification qui s’applique.* Le français est la langue officielle et la langue des affaires.
+
 ## 1. Ce que cela signifie pour une entreprise en Côte d’Ivoire
 
 On demande désormais souvent aux assistants d’IA « quel est le vrai site de cette société ? » ou « qui exploite ce commerce ? ». ABIZ (Agentic Business Record) est une norme ouverte qui permet à une entreprise établie en Côte d’Ivoire de publier une seule fois ses informations publiques, sous une forme que ces outils savent lire : un court enregistrement DNS TXT sur un domaine que l’entreprise contrôle, qui pointe vers une fiche d’entreprise JSON servie en HTTPS. Comme ce pointeur se trouve dans le DNS de l’entreprise elle-même, un outil peut constater que la fiche a été publiée par la personne qui contrôle ce domaine, au lieu de se fier à un annuaire non officiel ou à une supposition.
@@ -15,22 +17,8 @@ Toute fiche d’entreprise contient ces cinq champs (section 4.1 de la SPEC) :
 | `record-version` | `abiz1` |
 | `business-name` | le nom public que connaissent les clients, par exemple `Attiéké de la Lagune` |
 | `country` | `ci`, le code ISO 3166-1 alpha-2, en minuscules |
-| `identity-host` | `www.attiekelagune.example/abiz`, qui doit correspondre exactement à `h` dans le DNS |
+| `identity-host` | `attiekelagune.ci.to.co`, qui doit correspondre exactement à `h` dans le DNS |
 | `domains` | `["attiekelagune.example"]`, qui doit inclure le domaine portant `_abiz` |
-
-Une fiche minimale :
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Attiéké de la Lagune",
-  "country": "ci",
-  "identity-host": "www.attiekelagune.example/abiz",
-  "domains": [
-    "attiekelagune.example"
-  ]
-}
-```
 
 ### Clé d’entreprise facultative `k`
 
@@ -48,6 +36,28 @@ La Côte d’Ivoire n’utilise pas de subdivision : n’ajoutez ni code de rég
 
 **Exemple (fictif) :** `CI-ABJ-03-2023-B12-01234` devient `CIABJ032023B1201234`, donc `k=ci-CIABJ032023B1201234`. Dans la fiche : `"business-key": "ci-CIABJ032023B1201234"` et `"registration-number": "CIABJ032023B1201234"`. Les clés se comparent sans tenir compte de la casse ; la forme canonique a le code pays en minuscules et le numéro en majuscules.
 
+**À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
+
+**Entrepreneurs individuels :** si le seul numéro dont vous disposez est un numéro personnel, comme un numéro d’identité nationale ou un identifiant fiscal personnel, ne publiez pas `k`. Omettez `k`, `business-key` et `registration-number` ; la fiche reste valide.
+
+### Enregistrement DNS TXT
+
+Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
+
+```dns
+_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=k31TEfyioPuzYsqDw1mTybCB9LK01Tn/a3Vi4gm4G7Y="
+```
+
+La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé ou omettez `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
+
+Sans les balises facultatives `k` et `p`, ceci est également valide :
+
+```dns
+_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;h=attiekelagune.ci.to.co"
+```
+
+La fiche d’entreprise servie en `application/json` à l’adresse `https://attiekelagune.ci.to.co` :
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ La Côte d’Ivoire n’utilise pas de subdivision : n’ajoutez ni code de rég
   "country": "ci",
   "business-key": "ci-CIABJ032023B1201234",
   "registration-number": "CIABJ032023B1201234",
-  "identity-host": "www.attiekelagune.example/abiz",
+  "identity-host": "attiekelagune.ci.to.co",
   "domains": [
     "attiekelagune.example"
   ]
 }
 ```
 
-**À vérifier :** nous n’avons pas pu confirmer le format exact de ce numéro auprès d’une source officielle ; l’exemple n’est donc qu’indicatif. Utilisez le numéro tel qu’il figure sur votre document d’immatriculation officiel. S’il n’est pas clair quel numéro identifie votre entreprise au niveau national, n’indiquez pas `k` tant que vous n’en êtes pas sûr.
-
-### Enregistrement DNS TXT
-
-Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
-
-```dns
-_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;k=ci-CIABJ032023B1201234;h=www.attiekelagune.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Sans les balises facultatives `k` et `p`, ceci est également valide :
-
-```dns
-_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;h=www.attiekelagune.example/abiz"
-```
-
-Tous les noms et numéros de cette page sont fictifs. La valeur `p` est la clé d’exemple jetable de la spécification, pas une vraie clé.
-
-Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
-
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain attiekelagune.example --dns-value "v=abiz1;k=ci-CIABJ032023B1201234;h=www.attiekelagune.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain attiekelagune.example --dns-value 'v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=k31TEfyioPuzYsqDw1mTybCB9LK01Tn/a3Vi4gm4G7Y='
 ```
+
+Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
 
 ## 3. Passer par un fournisseur et MCP
 
@@ -118,7 +110,6 @@ Un outil compatible qui lit votre fiche peut répondre à des questions comme :
 - **Registre :** le Registre du commerce et du crédit mobilier (RCCM), tenu par les greffes des tribunaux de commerce ; le Centre de promotion des investissements en Côte d’Ivoire (CEPICI) sert de guichet unique. Site officiel : <https://cepici.ci>. Le site peut afficher une vérification anti-robot avant de s’ouvrir.
 - **Ajouter l’enregistrement TXT :** dans les réglages DNS de votre bureau d’enregistrement ou de votre hébergeur DNS, ajoutez un enregistrement TXT nommé `_abiz` (certaines interfaces demandent le nom complet, `_abiz.votredomaine.ci`), avec la valeur ci-dessus et une durée de vie (TTL) de 300 secondes. Les domaines en `.ci` fonctionnent comme les `.com` ou tout autre domaine. Gardez la valeur d’un seul tenant si possible, et ne coupez jamais `p`.
 - **Données personnelles :** Loi n° 2013-450 du 19 juin 2013 relative à la protection des données à caractère personnel. Une fiche ABIZ est publique. Ne publiez que des informations professionnelles que vous acceptez de partager, et omettez les adresses personnelles et les numéros de téléphone privés (section 4.3 de la SPEC).
-- **Langues :** Le français est la langue officielle et la langue des affaires.
 
 ## 7. Pour aller plus loin
 

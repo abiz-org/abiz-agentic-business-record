@@ -1,5 +1,7 @@
 # Convertirse en una empresa agéntica con ABIZ en Guinea Ecuatorial
 
+*Guía para ABIZ 1.1 (propuesta). La [especificación (SPEC.md, en inglés)](../../../SPEC.md) es el texto de referencia: si esta guía y la especificación difieren, prevalece la especificación.* El español es la lengua principal de la administración; el francés y el portugués también son oficiales.
+
 ## 1. Qué significa para una empresa en Guinea Ecuatorial
 
 A los asistentes de IA se les pregunta cada vez más «¿cuál es la web real de esta empresa?» o «¿quién gestiona este comercio?». ABIZ (Agentic Business Record) es una norma abierta que permite a una empresa de Guinea Ecuatorial publicar una sola vez sus datos públicos en un formato que esas herramientas pueden leer: un breve registro DNS TXT en un dominio que la empresa controla, que apunta a una ficha de empresa en JSON servida por HTTPS. Como ese puntero está en el DNS de la propia empresa, una herramienta puede comprobar que la ficha la publicó quien controla el dominio, en lugar de fiarse de un directorio no oficial o de una suposición.
@@ -15,22 +17,8 @@ Toda ficha de empresa lleva estos cinco campos (sección 4.1 de la SPEC):
 | `record-version` | `abiz1` |
 | `business-name` | el nombre público que conocen los clientes, por ejemplo `Carpintería Bioko` |
 | `country` | `gq`, el código ISO 3166-1 alfa-2, en minúsculas |
-| `identity-host` | `www.carpinteriabioko.example/abiz`, que debe coincidir exactamente con `h` en el DNS |
+| `identity-host` | `carpinteriabioko.gq.to.co`, que debe coincidir exactamente con `h` en el DNS |
 | `domains` | `["carpinteriabioko.example"]`, que debe incluir el dominio que lleva `_abiz` |
-
-Una ficha mínima:
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Carpintería Bioko",
-  "country": "gq",
-  "identity-host": "www.carpinteriabioko.example/abiz",
-  "domains": [
-    "carpinteriabioko.example"
-  ]
-}
-```
 
 ### Clave de empresa opcional `k`
 
@@ -48,6 +36,28 @@ Guinea Ecuatorial no usa subdivisión: no añada códigos de provincia, región 
 
 **Ejemplo (ficticio):** `GQ/MAL/2023/B/123` pasa a ser `GQMAL2023B123`, así que `k=gq-GQMAL2023B123`. En la ficha: `"business-key": "gq-GQMAL2023B123"` y `"registration-number": "GQMAL2023B123"`. Las claves se comparan sin distinguir mayúsculas; la forma canónica lleva el código de país en minúsculas y el número en mayúsculas.
 
+**Compruébelo:** no hemos podido confirmar el formato exacto de este número en una fuente oficial, por lo que el ejemplo es solo orientativo. Use el número tal como figura en su documento oficial de inscripción. Si no está claro qué número identifica a la empresa a nivel nacional, no publique `k` hasta estar seguro.
+
+**Empresarios individuales:** si el único número que tiene es personal, como un documento nacional de identidad o un número fiscal personal, no publique `k`. Omita `k`, `business-key` y `registration-number`; el registro sigue siendo válido.
+
+### Registro DNS TXT
+
+Publique un único registro TXT en `_abiz` bajo su dominio, en forma compacta, sin espacios y con `v=abiz1` en primer lugar:
+
+```dns
+_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=cTqoflZy3kIjDK/x9txwEatwA4JYcmetRPbNAilOa24="
+```
+
+El valor `p` anterior es una clave de ejemplo desechable, generada para esta página. No la copie nunca: publique su propia clave u omita `p`. Todos los nombres, números y dominios de esta página son ficticios.
+
+Sin las etiquetas opcionales `k` y `p`, esto también es válido:
+
+```dns
+_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;h=carpinteriabioko.gq.to.co"
+```
+
+El registro de la empresa servido como `application/json` en `https://carpinteriabioko.gq.to.co`:
+
 ```json
 {
   "record-version": "abiz1",
@@ -55,38 +65,20 @@ Guinea Ecuatorial no usa subdivisión: no añada códigos de provincia, región 
   "country": "gq",
   "business-key": "gq-GQMAL2023B123",
   "registration-number": "GQMAL2023B123",
-  "identity-host": "www.carpinteriabioko.example/abiz",
+  "identity-host": "carpinteriabioko.gq.to.co",
   "domains": [
     "carpinteriabioko.example"
   ]
 }
 ```
 
-**Compruébelo:** no hemos podido confirmar el formato exacto de este número en una fuente oficial, por lo que el ejemplo es solo orientativo. Use el número tal como figura en su documento oficial de inscripción. Si no está claro qué número identifica a la empresa a nivel nacional, no publique `k` hasta estar seguro.
-
-### Registro DNS TXT
-
-Publique un único registro TXT en `_abiz` bajo su dominio, en forma compacta, sin espacios y con `v=abiz1` en primer lugar:
-
-```dns
-_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;k=gq-GQMAL2023B123;h=www.carpinteriabioko.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
-```
-
-Sin las etiquetas opcionales `k` y `p`, esto también es válido:
-
-```dns
-_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;h=www.carpinteriabioko.example/abiz"
-```
-
-Todos los nombres y números de esta página son ficticios. El valor `p` es la clave de ejemplo desechable de la especificación, no una clave real.
-
-Puede alojar la ficha JSON usted mismo, en cualquier servidor HTTPS, o usar cualquier proveedor compatible. ABIZ no exige un proveedor concreto.
-
 Para comprobar una ficha antes de publicarla, ejecute el validador de referencia desde una copia de este repositorio:
 
 ```sh
-python scripts/validate.py record.json --domain carpinteriabioko.example --dns-value "v=abiz1;k=gq-GQMAL2023B123;h=www.carpinteriabioko.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain carpinteriabioko.example --dns-value 'v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=cTqoflZy3kIjDK/x9txwEatwA4JYcmetRPbNAilOa24='
 ```
+
+Puede alojar la ficha JSON usted mismo, en cualquier servidor HTTPS, o usar cualquier proveedor compatible. ABIZ no exige un proveedor concreto.
 
 ## 3. Usar un proveedor y MCP
 
@@ -118,7 +110,6 @@ Una herramienta compatible que lea su ficha puede responder a preguntas como:
 - **Registro:** Registro Mercantil y RCCM (OHADA). No indicamos una web porque no hemos podido confirmar una dirección oficial que funcione.
 - **Añadir el registro TXT:** en la configuración DNS de su registrador o proveedor de DNS, añada un registro TXT con el nombre `_abiz` (algunos paneles piden el nombre completo, `_abiz.sudominio.gq`), el valor indicado y un TTL de 300 segundos. Los dominios `.gq` funcionan igual que `.com` o cualquier otro. Mantenga el valor entero siempre que pueda y no divida nunca `p`.
 - **Protección de datos:** Compruebe las normas de protección de datos aplicables en Guinea Ecuatorial antes de publicar datos personales. Una ficha ABIZ es pública. Publique solo información empresarial que acepte compartir y omita domicilios particulares y teléfonos privados (sección 4.3 de la SPEC).
-- **Idiomas:** El español es la lengua principal de la administración; el francés y el portugués también son oficiales.
 
 ## 7. Más información
 

@@ -1,5 +1,7 @@
 # Becoming an Agentic Business using ABIZ in Somalia
 
+*A guide to ABIZ 1.1 (proposed). The [specification (SPEC.md)](../../../SPEC.md) is authoritative: if this guide and the specification differ, the specification applies.* Somali and Arabic are official. This guide is in English.
+
 ## 1. What this means for a business in Somalia
 
 AI assistants are now often asked questions such as ‘what is this company’s real website?’ or ‘who runs this shop?’. ABIZ (Agentic Business Record) is an open standard that lets a business in Somalia publish its public facts once, in a form those tools can read: a short DNS TXT record on a domain the business controls, pointing to a JSON business record served over HTTPS. Because the pointer sits in the business’s own DNS, a tool can tell that the record was published by whoever controls that domain, instead of relying on an unofficial directory or a guess.
@@ -15,22 +17,8 @@ Every business record needs these five fields (SPEC section 4.1):
 | `record-version` | `abiz1` |
 | `business-name` | the public name customers know, for example `Hodan Trading` |
 | `country` | `so`, the ISO 3166-1 alpha-2 code, in lowercase |
-| `identity-host` | `www.hodantrading.example/abiz`, which must match `h` in DNS exactly |
+| `identity-host` | `www.hodantrading.example/abiz.json`, which must match `h` in DNS exactly |
 | `domains` | `["hodantrading.example"]`, which must include the domain that carries `_abiz` |
-
-A minimal record:
-
-```json
-{
-  "record-version": "abiz1",
-  "business-name": "Hodan Trading",
-  "country": "so",
-  "identity-host": "www.hodantrading.example/abiz",
-  "domains": [
-    "hodantrading.example"
-  ]
-}
-```
 
 ### Optional business key `k`
 
@@ -53,24 +41,38 @@ Somalia uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json;p=S4e67JsuTmX6eqC+IMOcJsiaadrT3unOVl+fe+/oJiM="
 ```
+
+The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key or leave `p` out. All names, numbers and domains on this page are fictional.
 
 Without the optional `k` and `p` tags, this is also valid:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz"
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example/abiz.json"
 ```
 
-All names and numbers on this page are fictional. The `p` value is the throwaway example key from the specification, not a real key.
+The business record served as `application/json` at `https://www.hodantrading.example/abiz.json`:
 
-You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
+```json
+{
+  "record-version": "abiz1",
+  "business-name": "Hodan Trading",
+  "country": "so",
+  "identity-host": "www.hodantrading.example/abiz.json",
+  "domains": [
+    "hodantrading.example"
+  ]
+}
+```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain hodantrading.example --dns-value "v=abiz1;h=www.hodantrading.example/abiz;p=oS5YhE6Qz35Id1hMp3XOI3eQWW03DVgY3kU6rEdlodQ="
+python scripts/validate.py record.json --domain hodantrading.example --dns-value 'v=abiz1;h=www.hodantrading.example/abiz.json;p=S4e67JsuTmX6eqC+IMOcJsiaadrT3unOVl+fe+/oJiM='
 ```
+
+You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
 
 ## 3. Using a provider and MCP
 
@@ -102,7 +104,6 @@ A compatible tool that reads your record can answer questions such as:
 - **Register:** the federal Ministry of Commerce and Industry; some federal member states and Somaliland also register businesses themselves. We have not listed a website because we could not confirm an official address that loads.
 - **Adding the TXT record:** in the DNS settings of your registrar or DNS host, add a TXT record with the name `_abiz` (some panels want the full name, `_abiz.yourdomain.so`), the value shown above and a TTL of 300 seconds. Domains under `.so` work in the same way as `.com` or any other domain. Keep the value in one piece where possible, and never split `p`.
 - **Privacy:** Check the data-protection rules that apply in Somalia before you publish personal data. An ABIZ record is public. Publish only business facts you are happy to share, and leave out private home addresses and personal phone numbers (SPEC section 4.3).
-- **Languages:** Somali and Arabic are official. This guide is in English.
 
 ## 7. Further reading
 
