@@ -36,7 +36,6 @@ Countries under sanctions or with a high-risk environment have no to.co example;
 | [Mongolia](mongolia.md) | English |
 | [Myanmar](myanmar.md) | English |
 | [Nepal](nepal.md) | English |
-| [North Korea](north-korea.md) | 한국어 |
 | [Oman](oman.md) | العربية |
 | [Pakistan](pakistan.md) | English |
 | [Palestine](palestine.md) | العربية |
