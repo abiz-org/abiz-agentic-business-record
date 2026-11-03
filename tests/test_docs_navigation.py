@@ -38,7 +38,7 @@ class DocsNavigationTests(unittest.TestCase):
             self.assertTrue(any("missing file: fiji.md" in e for e in errors), errors)
 
     def test_github_slug(self):
-        self.assertEqual(github_slug("The proposed 1.1 `p` key"), "the-proposed-11-p-key")
+        self.assertEqual(github_slug("The ABIZ 1.1 `p` key"), "the-abiz-11-p-key")
         self.assertEqual(github_slug("What will I learn?"), "what-will-i-learn")
 
 
