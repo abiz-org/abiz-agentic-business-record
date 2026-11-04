@@ -165,7 +165,7 @@ Een aanbieder kan bijvoorbeeld het record van Bakkerij Paramaribo hosten op `bak
 
 ## 4. Sleutels en handtekeningen (ABIZ 1.1)
 
-- **`p` is verplicht.** `v` en `h` zijn verplicht; `k` is optioneel. `p` moet een openbare Ed25519-sleutel zijn: 32 ruwe bytes, standaard-base64, precies 44 tekens, eindigend op één `=`. Base64url wordt niet aanvaard (sectie 3.3.2). Elke andere waarde, zoals een oud hexadecimaal ABIZ 1.0-token of een base64url-sleutel, maakt de hele bewering ongeldig.
+- **`p` is verplicht.** `v` en `h` zijn verplicht; `k` is optioneel. `p` moet een openbare Ed25519-sleutel zijn: 32 ruwe bytes, standaard-base64, precies 44 tekens, eindigend op één `=`. Base64url wordt niet aanvaard (sectie 3.3.2). Elke andere waarde, zoals een hexadecimale tekenreeks of een base64url-sleutel, maakt de hele bewering ongeldig.
 - **Voorbeeld** (voorbeeldsleutel voor eenmalig gebruik; de private sleutel is vernietigd). Kopieer hem nooit: publiceer uw eigen sleutel. Een ABIZ 1.1-assertie moet `p` bevatten.
 
   ```dns

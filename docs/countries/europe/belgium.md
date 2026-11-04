@@ -102,7 +102,7 @@ Een voorbeeld: een aanbieder publiceert uw record op `bakkerijpeeters.be.to.co` 
 
 ## 4. Sleutels en handtekeningen (ABIZ 1.1)
 
-ABIZ 1.1 vereist een openbare Ed25519-sleutel in de DNS-tag `p`. `v` en `h` zijn verplicht. `p` is verplicht. `k` is optioneel. `p` moet 32 ruwe bytes in standaard-base64 zijn: 44 tekens die eindigen op precies één `=`, in één DNS-string. Base64url wordt niet aanvaard. Elke andere waarde, zoals een hexadecimaal ABIZ 1.0-token, maakt het hele record ongeldig.
+ABIZ 1.1 vereist een openbare Ed25519-sleutel in de DNS-tag `p`. `v` en `h` zijn verplicht. `p` is verplicht. `k` is optioneel. `p` moet 32 ruwe bytes in standaard-base64 zijn: 44 tekens die eindigen op precies één `=`, in één DNS-string. Base64url wordt niet aanvaard. Elke andere waarde, zoals een hexadecimale tekenreeks, maakt het hele record ongeldig.
 
 De bijbehorende privésleutel is van het bedrijf en wordt nooit gepubliceerd. Bewaart een aanbieder hem voor u, dan moet die u de sleutel laten exporteren. Software kan een handtekening die met de privésleutel is gemaakt, controleren met de sleutel in de DNS. De handtekening dekt de RFC 8785-canonieke vorm van het record zonder het lid `signature` en wordt gecontroleerd met `public_key`, dat gelijk moet zijn aan `p` (SPEC sectie 4.6).
 

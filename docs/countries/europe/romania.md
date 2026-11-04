@@ -102,7 +102,7 @@ De exemplu, un furnizor vă publică înregistrarea la `carpatimobila.ro.to.co` 
 
 ## 4. Chei și semnături (ABIZ 1.1)
 
-ABIZ 1.1 cere o cheie publică Ed25519 în eticheta DNS `p`. `v` și `h` sunt obligatorii. `p` este obligatorie. `k` este opțional. `p` trebuie să fie codificarea base64 standard a cheii de 32 de octeți: 44 de caractere care se termină cu exact un `=`, într-un singur șir DNS. Base64url nu este acceptat. Orice altă valoare, de exemplu un token hexazecimal din ABIZ 1.0, invalidează întreaga înregistrare.
+ABIZ 1.1 cere o cheie publică Ed25519 în eticheta DNS `p`. `v` și `h` sunt obligatorii. `p` este obligatorie. `k` este opțional. `p` trebuie să fie codificarea base64 standard a cheii de 32 de octeți: 44 de caractere care se termină cu exact un `=`, într-un singur șir DNS. Base64url nu este acceptat. Orice altă valoare, de exemplu un șir hexazecimal, invalidează întreaga înregistrare.
 
 Cheia privată corespunzătoare aparține firmei și nu se publică niciodată. Dacă un furnizor o păstrează pentru dumneavoastră, trebuie să vă permită să o exportați. Un software poate verifica o semnătură făcută cu cheia privată folosind cheia publicată în DNS. Semnătura acoperă forma canonică RFC 8785 a înregistrării fără membrul `signature` și se verifică cu `public_key`, care trebuie să fie egal cu `p` (SPEC, secțiunea 4.6).
 

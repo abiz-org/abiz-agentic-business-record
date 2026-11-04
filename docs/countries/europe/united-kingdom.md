@@ -17,7 +17,7 @@ An ABIZ record has two parts:
 1. **A DNS TXT record** at `_abiz.<your domain>`, which says where the business record lives and carries your public key (section 2). If you cannot edit DNS, a small file at `https://<your domain>/.well-known/abiz.json` can carry the same values instead (section 4).
 2. **The business record**, served over HTTPS at that address as HTML, Markdown and JSON, chosen with a `format` parameter. The JSON validates against the ABIZ schema, repeats your public key as `public_key` and is signed with your private key in `signature` (sections 3, 5, 6 and 9).
 
-All field names in the JSON record use snake_case, such as `business_name` and `identity_host`. The hyphenated names of ABIZ 1.0, such as `business-name`, are no longer accepted.
+All field names in the JSON record use snake_case, such as `business_name` and `identity_host`. Hyphenated names, such as `business-name`, are not accepted.
 
 ## 2. Publishing the DNS record
 
@@ -681,7 +681,7 @@ The normative schema is [`schemas/abiz-business-record-v1.1.schema.json`](../../
 https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json
 ```
 
-Cite that `$id` and the SPEC revision when you claim conformance (SPEC section 7). The repository copy is the normative text; check that the copy served at the `$id` address matches it. The published ABIZ 1.0 schema remains [`schemas/abiz-business-record-v1.schema.json`](../../../schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). This guide demonstrates the published 1.1 records. `record_version` is `abiz1` in both revisions; the `$id` selects the schema. The well-known file of section 4 has its own schema, [`schemas/abiz-well-known-v1.1.schema.json`](../../../schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`).
+Cite that `$id` and the SPEC revision when you claim conformance (SPEC section 7). The repository copy is the normative text; check that the copy served at the `$id` address matches it. ABIZ 1.0 records use the ABIZ 1.0 schema, [`schemas/abiz-business-record-v1.schema.json`](../../../schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). This guide demonstrates the published 1.1 records. `record_version` is `abiz1` in both revisions; the `$id` selects the schema. The well-known file of section 4 has its own schema, [`schemas/abiz-well-known-v1.1.schema.json`](../../../schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`).
 
 The schema rejects any top-level field not listed below. Beyond the schema, `scripts/validate.py` checks that `country` and the key's country are assigned codes, that `business_key` matches `country` and `registration_number`, that URLs use HTTPS, that `country` is not `kp` (North Korea is not supported, SPEC section 4.2.7), that `signature` verifies with `public_key` over the record (SPEC section 4.6), and, with `--domain` and `--dns-value` or `--well-known` (or just `--p`), that the record and the assertion agree, including that `p` is present and valid and that `public_key` equals it.
 
@@ -951,7 +951,7 @@ For example, a provider might serve the record of Hartley’s Bakery Ltd at `har
 
 ### The key
 
-ABIZ 1.1 requires every business to publish an Ed25519 public key in the DNS `p` tag, or in the `p` member of the well-known file (SPEC section 3.3). It must be the standard base64 encoding of the 32-byte public key: 44 characters ending in one `=`, in a single DNS string. A record without `p`, or with any other value, such as an ABIZ 1.0 hexadecimal token or a base64url key, is invalid.
+ABIZ 1.1 requires every business to publish an Ed25519 public key in the DNS `p` tag, or in the `p` member of the well-known file (SPEC section 3.3). It must be the standard base64 encoding of the 32-byte public key: 44 characters ending in one `=`, in a single DNS string. A record without `p`, or with any other value, such as a hexadecimal string or a base64url key, is invalid.
 
 The business record repeats the same value as `public_key`. `p` is the authoritative copy: if the two differ, software must reject the record's claim to belong to your domain.
 
@@ -1012,7 +1012,7 @@ The company number is on the certificate of incorporation and can be searched fr
 
 ### Adding the TXT record
 
-Add the record wherever your domain's DNS is managed, usually at your domain registrar or web host. The registry for `.uk` domains is [Nominet](https://www.nominet.uk/), but you add the record at your registrar or DNS host; any that supports TXT records will do. Create a record of type TXT with the name `_abiz` (some control panels want the full name, `_abiz.hartleysbakery.example`), the value exactly as in section 2 and a TTL of 300. Do not add spaces inside the value, include `p` (the same value as `public_key` in your record), and remove any older ABIZ record so that only one remains. An ABIZ 1.0 record with no `p`, or a hexadecimal `p`, must be replaced. If you cannot add a TXT record at all, publish the well-known file of section 4 on your website instead.
+Add the record wherever your domain's DNS is managed, usually at your domain registrar or web host. The registry for `.uk` domains is [Nominet](https://www.nominet.uk/), but you add the record at your registrar or DNS host; any that supports TXT records will do. Create a record of type TXT with the name `_abiz` (some control panels want the full name, `_abiz.hartleysbakery.example`), the value exactly as in section 2 and a TTL of 300. Do not add spaces inside the value, include `p` (the same value as `public_key` in your record), and remove any older ABIZ record so that only one remains. A record with no `p`, or a hexadecimal `p`, must be replaced. If you cannot add a TXT record at all, publish the well-known file of section 4 on your website instead.
 
 ### Privacy and publishing data
 

@@ -9,4 +9,4 @@ Each example identifies the business-record revision it demonstrates. `record_ve
 
 `examples/REVISION` contains `1.1`. `examples/abiz-1.0/REVISION` contains `1.0`. The reference validator reads the nearest `REVISION` file. `--revision` overrides it. An unsupported revision is reported as such, and is not an invalid signature.
 
-ABIZ 1.1 is the latest published specification and the normative JSON Schema. It is not a proposal. The 1.0 examples are the records from the earlier published 1.0 specification.
+ABIZ 1.1 is the latest published specification and the normative JSON Schema. The examples in `abiz-1.0/` are ABIZ 1.0 records.

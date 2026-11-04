@@ -165,7 +165,7 @@ For example, a provider might host the record for Dockyard Sail Repairs at `dock
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
-- **`p` is required.** `v` and `h` are required; `k` is optional. `p` must be an Ed25519 public key: 32 raw bytes, standard base64, exactly 44 characters, one trailing `=`. Base64url is not accepted (section 3.3.2). Any other value, such as an old ABIZ 1.0 hexadecimal token, makes the whole assertion invalid.
+- **`p` is required.** `v` and `h` are required; `k` is optional. `p` must be an Ed25519 public key: 32 raw bytes, standard base64, exactly 44 characters, one trailing `=`. Base64url is not accepted (section 3.3.2). Any other value, such as a hexadecimal string, makes the whole assertion invalid.
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns

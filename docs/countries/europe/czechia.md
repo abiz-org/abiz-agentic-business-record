@@ -102,7 +102,7 @@ Příklad: poskytovatel zveřejní váš záznam na adrese `pekarnanovak.cz.to.c
 
 ## 4. Klíče a podpisy (ABIZ 1.1)
 
-ABIZ 1.1 vyžaduje veřejný klíč Ed25519 ve značce DNS `p`. `v` a `h` jsou povinné. `p` je povinné. `k` je nepovinné. `p` musí být 32 surových bajtů ve standardním base64: 44 znaků zakončených právě jedním `=`, v jednom řetězci DNS. Base64url se nepřijímá. Jakákoli jiná hodnota, například šestnáctkový token z ABIZ 1.0, činí celý záznam neplatným.
+ABIZ 1.1 vyžaduje veřejný klíč Ed25519 ve značce DNS `p`. `v` a `h` jsou povinné. `p` je povinné. `k` je nepovinné. `p` musí být 32 surových bajtů ve standardním base64: 44 znaků zakončených právě jedním `=`, v jednom řetězci DNS. Base64url se nepřijímá. Jakákoli jiná hodnota, například šestnáctkový řetězec, činí celý záznam neplatným.
 
 Odpovídající soukromý klíč patří firmě a nikdy se nezveřejňuje. Pokud ho za vás uchovává poskytovatel, musí vám umožnit jeho export. Software může ověřit podpis vytvořený soukromým klíčem pomocí klíče zveřejněného v DNS. ABIZ 1.1 zatím nedefinuje, které bajty podpis záznamu firmy pokrývá.
 

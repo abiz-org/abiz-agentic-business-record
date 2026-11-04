@@ -165,7 +165,7 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie Soleil à 
 
 ## 4. Clés et signatures (ABIZ 1.1)
 
-- **`p` est obligatoire.** `v` et `h` sont obligatoires ; `k` est facultative. `p` doit être une clé publique Ed25519 : 32 octets bruts, en base64 standard, exactement 44 caractères, un seul `=` final. Le base64url n’est pas accepté (section 3.3.2). Toute autre valeur, comme un ancien jeton hexadécimal d’ABIZ 1.0, rend toute l’assertion invalide.
+- **`p` est obligatoire.** `v` et `h` sont obligatoires ; `k` est facultative. `p` doit être une clé publique Ed25519 : 32 octets bruts, en base64 standard, exactement 44 caractères, un seul `=` final. Le base64url n’est pas accepté (section 3.3.2). Toute autre valeur, comme une chaîne hexadécimale, rend toute l’assertion invalide.
 - **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`.
 
   ```dns

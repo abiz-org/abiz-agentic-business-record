@@ -92,7 +92,7 @@ Bir sağlayıcı kaydı barındırıp DNS işaretçisini sizin adınıza yayıml
 
 ABIZ 1.1 bir imza anahtarı gerektirir. DNS’teki `p` etiketi bir Ed25519 açık anahtarı taşır: 32 ham bayt, standart base64, 44 karakter, sonda tek bir `=` (SPEC bölüm 3.3.2). Base64url kabul edilmez. İşletme ya da onun adına çalışan bir sağlayıcı ilgili özel anahtarı saklar ve işletme kaydını onunla imzalar. Özel anahtar her zaman işletmenindir; barındırma sağlayıcısı işletmenin anahtarı dışa aktarmasına izin vermelidir.
 
-- `v` ve `h` zorunludur. `p` zorunludur. `k` isteğe bağlıdır. `p` geçerli bir anahtar olmalıdır: eski bir ABIZ 1.0 onaltılık belirteci ya da base64url anahtarı gibi başka bir değer, tüm beyanı geçersiz kılar.
+- `v` ve `h` zorunludur. `p` zorunludur. `k` isteğe bağlıdır. `p` geçerli bir anahtar olmalıdır: onaltılık bir dize ya da base64url anahtarı gibi başka bir değer, tüm beyanı geçersiz kılar.
 - Yalnızca güncel anahtar yayımlanır. Döndürmek için yeni bir Ed25519 anahtar çifti üretin, yeni açık anahtarı DNS veya well-known beyanında yayımlayın, kaydı yeni özel anahtarla yeniden imzalayın ve `public_key` değerini aynı `p` yapın. DNS önbelleğini hesaba katın. ABIZ 1.1 beyanı dururken yalnızca `p`’yi kaldırmak geçerli bir iptal değildir: geri çekmek için DNS veya well-known beyanının tamamını kaldırın. ABIZ 1.1’de emekliye ayrılan anahtarlar ne DNS’te ne de işletme kaydında yayımlanır.
 - Anahtar, alan adının DNS’ini kimin denetlediğini gösterir; hukuki kimliği kanıtlamaz.
 

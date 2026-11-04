@@ -5,7 +5,7 @@ This does not perform DNS lookups, registry checks, or HTTPS fetches.
 
 ABIZ 1.1: the DNS p tag is REQUIRED and must be an Ed25519 public key in
 standard base64 (44 characters, one "="). A missing p, or any other p value,
-including an ABIZ 1.0 hex token or base64url, makes the assertion invalid.
+including a hexadecimal string or base64url, makes the assertion invalid.
 The same tags may instead come from https://<domain>/.well-known/abiz.json
 (SPEC section 3.4); a DNS assertion takes precedence over that file.
 The key format check uses the standard library.
@@ -19,8 +19,8 @@ which is in requirements-dev.txt:
 
     python -m pip install -r requirements-dev.txt
 
-ABIZ 1.1, 2026-11-03 location, contact, hours and listing amendment (SPEC
-section 4.7): after the schema passes, the validator also checks what JSON
+ABIZ 1.1 location, contact, hours and listing members (SPEC section
+4.7): after the schema passes, the validator also checks what JSON
 Schema cannot express: every URL is a safe HTTPS URL on a public DNS name;
 country, service-area and tax jurisdiction codes are assigned, and region codes
 match their country (ISO 3166-2 coverage is partial: assigned subdivision codes
@@ -63,7 +63,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_REVISION_1_0 = ROOT / "schemas" / "abiz-business-record-v1.schema.json"
 SCHEMA_REVISION_1_1 = ROOT / "schemas" / "abiz-business-record-v1.1.schema.json"
 WELL_KNOWN_SCHEMA = ROOT / "schemas" / "abiz-well-known-v1.1.schema.json"
-# Default path used by the published 1.1 checks. The earlier 1.0 contract is separate.
+# Default path used by the published 1.1 checks. The 1.0 schema is separate.
 SCHEMA = SCHEMA_REVISION_1_1
 SUPPORTED_REVISIONS = ("1.0", "1.1")
 # SPEC.md section 3.4: the well-known file and its limits.
