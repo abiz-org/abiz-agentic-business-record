@@ -102,7 +102,7 @@ Per esempio, un fornitore può pubblicare la vostra scheda all'indirizzo `titano
 
 ## 4. Chiavi e firme (ABIZ 1.1)
 
-ABIZ 1.1 richiede una chiave pubblica Ed25519 nel tag DNS `p`. `v` e `h` sono obbligatori. `p` è obbligatorio. `k` è facoltativo. `p` deve essere 32 byte grezzi in base64 standard: 44 caratteri che terminano con un solo `=`, in un'unica stringa DNS. Base64url non è accettato. Qualsiasi altro valore, come un token esadecimale di ABIZ 1.0, rende non valido l'intero record.
+ABIZ 1.1 richiede una chiave pubblica Ed25519 nel tag DNS `p`. `v` e `h` sono obbligatori. `p` è obbligatorio. `k` è facoltativo. `p` deve essere 32 byte grezzi in base64 standard: 44 caratteri che terminano con un solo `=`, in un'unica stringa DNS. Base64url non è accettato. Qualsiasi altro valore, come una stringa esadecimale, rende non valido l'intero record.
 
 La chiave privata corrispondente appartiene all'impresa e non viene mai pubblicata. Un fornitore che la custodisce per voi deve permettervi di esportarla. Un software può verificare una firma creata con la chiave privata usando la chiave pubblicata nel DNS. La firma della scheda copre la forma canonica RFC 8785 della scheda senza il membro `signature` e si verifica con `public_key`, che deve essere uguale a `p` (SPEC sezione 4.6).
 

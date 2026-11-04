@@ -92,7 +92,7 @@ Un proveedor puede alojar la ficha y publicar el puntero DNS por usted. Por ejem
 
 ABIZ 1.1 añade una clave de firma opcional. La etiqueta DNS `p` puede contener una clave pública Ed25519: 44 caracteres en base64 estándar que terminan en un único `=` (sección 3.3.2 de la SPEC). La empresa, o un proveedor que actúe en su nombre, guarda la clave privada correspondiente y puede firmar contenidos que otros verifican con la clave publicada. La clave privada pertenece siempre a la empresa, y un proveedor de alojamiento debe permitirle exportarla.
 
-- `v` y `h` son obligatorios. `p` es obligatoria. `k` es opcional. `p` debe ser una clave válida de 32 bytes en base64 estándar, 44 caracteres, un único `=` final. Base64url no se acepta. Cualquier otro valor, como un antiguo token hexadecimal de ABIZ 1.0, invalida toda la aserción.
+- `v` y `h` son obligatorios. `p` es obligatoria. `k` es opcional. `p` debe ser una clave válida de 32 bytes en base64 estándar, 44 caracteres, un único `=` final. Base64url no se acepta. Cualquier otro valor, como una cadena hexadecimal, invalida toda la aserción.
 - Solo se publica la clave vigente. Para cambiarla, genere un nuevo par Ed25519, publique la nueva clave pública, vuelva a firmar la ficha y haga que `public_key` sea ese mismo `p`. Tenga en cuenta la caché del DNS. Quitar solo `p` no es una revocación válida mientras la aserción ABIZ 1.1 siga publicada: para retirarla, elimine la declaración completa. En ABIZ 1.1 las claves retiradas no se publican, ni en el DNS ni en la ficha.
 - Una clave muestra quién controla el DNS del dominio. No prueba la identidad jurídica.
 

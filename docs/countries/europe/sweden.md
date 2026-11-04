@@ -102,7 +102,7 @@ Ett exempel: en leverantör publicerar er post på `norrlandsnickeri.se.to.co` o
 
 ## 4. Nycklar och signaturer (ABIZ 1.1)
 
-ABIZ 1.1 kräver en publik Ed25519-nyckel i DNS-taggen `p`. `v` och `h` är obligatoriska. `p` är obligatoriskt. `k` är frivilligt. `p` måste vara 32 råbyte i standard-base64: 44 tecken som slutar med exakt ett `=`, i en enda DNS-sträng. Base64url accepteras inte. Alla andra värden, till exempel en hexadecimal ABIZ 1.0-token, gör hela posten ogiltig.
+ABIZ 1.1 kräver en publik Ed25519-nyckel i DNS-taggen `p`. `v` och `h` är obligatoriska. `p` är obligatoriskt. `k` är frivilligt. `p` måste vara 32 råbyte i standard-base64: 44 tecken som slutar med exakt ett `=`, i en enda DNS-sträng. Base64url accepteras inte. Alla andra värden, till exempel en hexadecimal sträng, gör hela posten ogiltig.
 
 Den tillhörande privata nyckeln tillhör företaget och publiceras aldrig. Förvarar en leverantör den åt er måste ni kunna exportera den. Programvara kan kontrollera en signatur som gjorts med den privata nyckeln mot nyckeln i DNS. Signaturen täcker den RFC 8785-kanoniska formen av posten utan medlemmen `signature` och kontrolleras med `public_key`, som måste vara lika med `p` (SPEC avsnitt 4.6).
 

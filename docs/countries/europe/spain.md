@@ -102,7 +102,7 @@ Por ejemplo, un proveedor puede publicar su ficha en `panaderiagarcia.es.to.co` 
 
 ## 4. Claves y firmas (ABIZ 1.1)
 
-ABIZ 1.1 exige una clave pública Ed25519 en la etiqueta DNS `p`. `v` y `h` son obligatorios. `p` es obligatoria. `k` es opcional. `p` debe ser 32 bytes en base64 estándar: 44 caracteres que terminan en un único `=`, en una sola cadena DNS. Base64url no se acepta. Cualquier otro valor, como un token hexadecimal de ABIZ 1.0, invalida todo el registro.
+ABIZ 1.1 exige una clave pública Ed25519 en la etiqueta DNS `p`. `v` y `h` son obligatorios. `p` es obligatoria. `k` es opcional. `p` debe ser 32 bytes en base64 estándar: 44 caracteres que terminan en un único `=`, en una sola cadena DNS. Base64url no se acepta. Cualquier otro valor, como una cadena hexadecimal, invalida todo el registro.
 
 La clave privada correspondiente pertenece a la empresa y nunca se publica. Si un proveedor la custodia por usted, debe permitirle exportarla. Un software puede comprobar una firma hecha con la clave privada usando la clave publicada en el DNS. La firma de la ficha cubre la forma canónica RFC 8785 de la ficha sin `signature`, y `public_key` debe ser igual a `p` (SPEC sección 4.6).
 

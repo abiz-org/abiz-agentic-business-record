@@ -102,7 +102,7 @@ Por exemplo, um fornecedor pode disponibilizar o seu registo em `pastelariaribei
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 
-O ABIZ 1.1 exige uma chave pública Ed25519 na etiqueta DNS `p`. `v` e `h` são obrigatórios. `p` é obrigatória. `k` é opcional. `p` tem de ser 32 bytes em base64 padrão: 44 caracteres terminados num único `=`, numa só cadeia DNS. Base64url não é aceite. Qualquer outro valor, como um token hexadecimal do ABIZ 1.0, invalida todo o registo.
+O ABIZ 1.1 exige uma chave pública Ed25519 na etiqueta DNS `p`. `v` e `h` são obrigatórios. `p` é obrigatória. `k` é opcional. `p` tem de ser 32 bytes em base64 padrão: 44 caracteres terminados num único `=`, numa só cadeia DNS. Base64url não é aceite. Qualquer outro valor, como uma sequência hexadecimal, invalida todo o registo.
 
 A chave privada correspondente pertence à empresa e nunca é publicada. Se um fornecedor a guardar por si, tem de lhe permitir exportá-la. Um software pode verificar uma assinatura feita com a chave privada usando a chave publicada no DNS. A assinatura do registo abrange a forma canónica RFC 8785 do registo sem o membro `signature`, e verifica-se com `public_key`, que tem de ser igual a `p` (SPEC secção 4.6).
 

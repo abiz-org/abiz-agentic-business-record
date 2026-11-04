@@ -102,7 +102,7 @@ Et eksempel: en udbyder offentliggør jeres post på `fiskehusetholm.dk.to.co` o
 
 ## 4. Nøgler og signaturer (ABIZ 1.1)
 
-ABIZ 1.1 kræver en offentlig Ed25519-nøgle i DNS-tagget `p`. `v` og `h` er obligatoriske. `p` er obligatorisk. `k` er frivillig. `p` skal være 32 rå byte i standard-base64: 44 tegn, der slutter med præcis ét `=`, i én DNS-streng. Base64url accepteres ikke. Alle andre værdier, fx et hexadecimalt ABIZ 1.0-token, gør hele posten ugyldig.
+ABIZ 1.1 kræver en offentlig Ed25519-nøgle i DNS-tagget `p`. `v` og `h` er obligatoriske. `p` er obligatorisk. `k` er frivillig. `p` skal være 32 rå byte i standard-base64: 44 tegn, der slutter med præcis ét `=`, i én DNS-streng. Base64url accepteres ikke. Alle andre værdier, fx en hexadecimal streng, gør hele posten ugyldig.
 
 Den tilhørende private nøgle tilhører virksomheden og offentliggøres aldrig. Opbevarer en udbyder den for jer, skal I kunne eksportere den. Software kan kontrollere en signatur, der er lavet med den private nøgle, mod nøglen i DNS. Signaturen dækker den RFC 8785-kanoniske form af posten uden medlemmet `signature` og kontrolleres med `public_key`, som skal være lig med `p` (SPEC afsnit 4.6).
 

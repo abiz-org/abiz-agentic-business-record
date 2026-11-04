@@ -90,7 +90,7 @@ Nhà cung cấp có thể lưu trữ hồ sơ và công bố con trỏ DNS thay 
 
 ABIZ 1.1 yêu cầu khóa ký. Thẻ DNS `p` mang khóa công khai Ed25519: 32 byte thô, base64 chuẩn, 44 ký tự, một dấu `=` ở cuối (SPEC mục 3.3.2). Không chấp nhận base64url. Doanh nghiệp, hoặc nhà cung cấp thay mặt doanh nghiệp, giữ khóa bí mật tương ứng và ký hồ sơ doanh nghiệp bằng khóa đó. Khóa bí mật luôn thuộc về doanh nghiệp, và nhà cung cấp lưu trữ phải cho phép doanh nghiệp xuất khóa.
 
-- `v` và `h` là bắt buộc. `p` là bắt buộc. `k` là tùy chọn. `p` phải là một khóa hợp lệ: mọi giá trị khác, như mã thông báo thập lục phân cũ của ABIZ 1.0 hay khóa base64url, đều làm toàn bộ khai báo mất hiệu lực.
+- `v` và `h` là bắt buộc. `p` là bắt buộc. `k` là tùy chọn. `p` phải là một khóa hợp lệ: mọi giá trị khác, như một chuỗi thập lục phân hay khóa base64url, đều làm toàn bộ khai báo mất hiệu lực.
 - Chỉ công bố khóa hiện hành. Để xoay khóa, tạo cặp khóa Ed25519 mới, công bố khóa công khai mới trong khai báo DNS hoặc well-known, ký lại hồ sơ bằng khóa bí mật mới, và đặt `public_key` trùng `p` đó. Hãy tính đến bộ nhớ đệm DNS. Xóa riêng `p` không phải là thu hồi hợp lệ khi khai báo ABIZ 1.1 vẫn còn: để rút khai báo, hãy xóa toàn bộ khai báo DNS hoặc well-known. Trong ABIZ 1.1, khóa đã ngừng dùng không được công bố, cả trong DNS lẫn trong hồ sơ doanh nghiệp.
 - Khóa cho biết ai kiểm soát DNS của tên miền. Khóa không chứng minh danh tính pháp lý.
 

@@ -102,7 +102,7 @@ Par exemple, un fournisseur peut servir votre fiche à l'adresse `rivierayachtin
 
 ## 4. Clés et signatures (ABIZ 1.1)
 
-ABIZ 1.1 exige une clé publique Ed25519 dans la balise DNS `p`. `v` et `h` sont obligatoires. `p` est obligatoire. `k` est facultatif. `p` doit être 32 octets bruts en base64 standard : 44 caractères terminés par un seul `=`, dans une seule chaîne DNS. Le base64url n'est pas accepté. Toute autre valeur, comme un jeton hexadécimal ABIZ 1.0, rend l'ensemble de l'enregistrement invalide.
+ABIZ 1.1 exige une clé publique Ed25519 dans la balise DNS `p`. `v` et `h` sont obligatoires. `p` est obligatoire. `k` est facultatif. `p` doit être 32 octets bruts en base64 standard : 44 caractères terminés par un seul `=`, dans une seule chaîne DNS. Le base64url n'est pas accepté. Toute autre valeur, comme une chaîne hexadécimale, rend l'ensemble de l'enregistrement invalide.
 
 La clé privée correspondante appartient à l'entreprise et n'est jamais publiée. Un fournisseur qui la conserve pour vous doit vous permettre de l'exporter. Un logiciel peut vérifier une signature produite avec la clé privée à l'aide de la clé publiée dans le DNS. La signature de la fiche couvre la forme canonique RFC 8785 de la fiche sans le membre `signature`, et se vérifie avec `public_key`, qui doit être égal à `p` (SPEC section 4.6).
 

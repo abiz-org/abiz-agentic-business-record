@@ -90,7 +90,7 @@ Penyedia dapat meng-host catatan dan menerbitkan penunjuk DNS untuk Anda. Misaln
 
 ABIZ 1.1 mewajibkan kunci penandatanganan. Tag DNS `p` memuat kunci publik Ed25519: 32 byte mentah, base64 standar, 44 karakter, satu `=` di akhir (SPEC bagian 3.3.2). Base64url tidak diterima. Usaha, atau penyedia yang bertindak atas namanya, menyimpan kunci privat pasangannya dan menandatangani catatan usaha dengannya. Kunci privat selalu milik usaha, dan penyedia hosting wajib mengizinkan usaha mengekspornya.
 
-- `v` dan `h` wajib. `p` bersifat wajib. `k` bersifat opsional. `p` harus kunci yang sah: nilai lain, seperti token heksadesimal lama ABIZ 1.0 atau kunci base64url, membuat seluruh pernyataan tidak sah.
+- `v` dan `h` wajib. `p` bersifat wajib. `k` bersifat opsional. `p` harus kunci yang sah: nilai lain, seperti string heksadesimal atau kunci base64url, membuat seluruh pernyataan tidak sah.
 - Hanya kunci yang berlaku yang diterbitkan. Untuk rotasi, buat pasangan kunci Ed25519 baru, terbitkan kunci publik baru pada pernyataan DNS atau well-known, tanda tangani ulang catatan dengan kunci privat baru, dan setel `public_key` ke `p` yang sama. Perhitungkan cache DNS. Menghapus hanya `p` bukan pencabutan yang sah selama pernyataan ABIZ 1.1 tetap ada: untuk menariknya, hapus seluruh pernyataan DNS atau well-known. Di ABIZ 1.1, kunci yang sudah dipensiunkan tidak diterbitkan, baik di DNS maupun di catatan usaha.
 - Kunci menunjukkan siapa yang mengendalikan DNS domain. Kunci tidak membuktikan identitas hukum.
 

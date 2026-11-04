@@ -92,7 +92,7 @@ Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par
 
 ABIZ 1.1 exige une clé de signature. La balise DNS `p` contient une clé publique Ed25519 : 32 octets bruts, en base64 standard, 44 caractères, un seul `=` final (section 3.3.2 de la SPEC). Le base64url n’est pas accepté. L’entreprise, ou un fournisseur agissant pour elle, conserve la clé privée correspondante et signe la fiche avec elle. La clé privée appartient toujours à l’entreprise, et un hébergeur doit lui permettre de l’exporter.
 
-- `v` et `h` sont obligatoires. `p` est obligatoire. `k` est facultative. `p` doit être une clé valide : toute autre valeur, comme un ancien jeton hexadécimal ABIZ 1.0 ou une clé en base64url, rend l’assertion entière invalide.
+- `v` et `h` sont obligatoires. `p` est obligatoire. `k` est facultative. `p` doit être une clé valide : toute autre valeur, comme une chaîne hexadécimale ou une clé en base64url, rend l’assertion entière invalide.
 - Seule la clé en cours est publiée. Pour en changer, générez une nouvelle paire Ed25519, publiez la nouvelle clé publique dans l’assertion DNS ou well-known, resignez la fiche avec la nouvelle clé privée, et faites correspondre `public_key` à ce `p`. Tenez compte du cache et de la propagation DNS. Supprimer seulement `p` n’est pas une révocation valable tant que l’assertion ABIZ 1.1 reste en place : pour la retirer, supprimez toute la déclaration DNS ou well-known. Les clés retirées ne sont pas publiées en ABIZ 1.1, ni dans le DNS, ni dans la fiche.
 - Une clé montre qui contrôle le DNS du domaine. Elle ne prouve pas l’identité juridique.
 

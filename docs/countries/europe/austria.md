@@ -102,7 +102,7 @@ Ein Beispiel: Ein Anbieter stellt Ihren Eintrag unter `tischlereigruber.at.to.co
 
 ## 4. Schlüssel und Signaturen (ABIZ 1.1)
 
-ABIZ 1.1 verlangt einen öffentlichen Ed25519-Schlüssel im DNS-Tag `p`. `v` und `h` sind Pflicht. `p` ist Pflicht. `k` ist optional. `p` muss 32 Rohbytes in Standard-Base64 sein: 44 Zeichen, am Ende genau ein `=`, in einem einzigen DNS-String. Base64url wird nicht akzeptiert. Jeder andere Wert, etwa ein hexadezimales Token aus ABIZ 1.0, macht den ganzen Eintrag ungültig.
+ABIZ 1.1 verlangt einen öffentlichen Ed25519-Schlüssel im DNS-Tag `p`. `v` und `h` sind Pflicht. `p` ist Pflicht. `k` ist optional. `p` muss 32 Rohbytes in Standard-Base64 sein: 44 Zeichen, am Ende genau ein `=`, in einem einzigen DNS-String. Base64url wird nicht akzeptiert. Jeder andere Wert, etwa eine hexadezimale Zeichenkette, macht den ganzen Eintrag ungültig.
 
 Der zugehörige private Schlüssel gehört dem Unternehmen und wird nie veröffentlicht. Verwahrt ein Anbieter ihn für Sie, muss er Ihnen den Export ermöglichen. Software kann eine mit dem privaten Schlüssel erstellte Signatur gegen den Schlüssel im DNS prüfen. Die Signatur deckt die RFC-8785-kanonische Form des Eintrags ohne das Mitglied `signature` ab und wird mit `public_key` geprüft, das gleich `p` sein muss (SPEC Abschnitt 4.6).
 

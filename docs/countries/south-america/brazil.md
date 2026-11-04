@@ -174,7 +174,7 @@ Por exemplo, um provedor pode hospedar o registro da Padaria Pão de Mel em `pad
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 
-- **`p` é obrigatória.** `v` e `h` são obrigatórios; `k` é opcional. `p` deve ser uma chave pública Ed25519: 32 bytes brutos, base64 padrão, exatamente 44 caracteres, um único `=` no fim. Base64url não é aceito (seção 3.3.2). Qualquer outro valor, como um antigo token hexadecimal da ABIZ 1.0, invalida toda a declaração.
+- **`p` é obrigatória.** `v` e `h` são obrigatórios; `k` é opcional. `p` deve ser uma chave pública Ed25519: 32 bytes brutos, base64 padrão, exatamente 44 caracteres, um único `=` no fim. Base64url não é aceito (seção 3.3.2). Qualquer outro valor, como uma sequência hexadecimal, invalida toda a declaração.
 - **Exemplo** (a chave é um exemplo descartável; a chave privada correspondente foi descartada). Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`.
 
   ```dns

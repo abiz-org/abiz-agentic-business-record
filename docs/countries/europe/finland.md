@@ -102,7 +102,7 @@ Esimerkki: palveluntarjoaja julkaisee tietueenne osoitteessa `koivudesign.fi.to.
 
 ## 4. Avaimet ja allekirjoitukset (ABIZ 1.1)
 
-ABIZ 1.1 edellyttää julkisen Ed25519-avaimen DNS-tunnisteessa `p`. `v` ja `h` ovat pakollisia. `p` on pakollinen. `k` on vapaaehtoinen. `p`:n on oltava 32 raakatavua tavallisessa base64-koodauksessa: 44 merkkiä, joista viimeinen on täsmälleen yksi `=`, yhdessä DNS-merkkijonossa. Base64urlia ei hyväksytä. Mikä tahansa muu arvo, kuten ABIZ 1.0:n heksadesimaalinen tunnus, tekee koko tietueesta virheellisen.
+ABIZ 1.1 edellyttää julkisen Ed25519-avaimen DNS-tunnisteessa `p`. `v` ja `h` ovat pakollisia. `p` on pakollinen. `k` on vapaaehtoinen. `p`:n on oltava 32 raakatavua tavallisessa base64-koodauksessa: 44 merkkiä, joista viimeinen on täsmälleen yksi `=`, yhdessä DNS-merkkijonossa. Base64urlia ei hyväksytä. Mikä tahansa muu arvo, kuten heksadesimaalinen merkkijono, tekee koko tietueesta virheellisen.
 
 Vastaava yksityinen avain kuuluu yritykselle, eikä sitä koskaan julkaista. Jos palveluntarjoaja säilyttää sitä puolestanne, sen on annettava teidän viedä avain itsellenne. Ohjelmisto voi tarkistaa yksityisellä avaimella tehdyn allekirjoituksen DNS:ssä julkaistua avainta vasten. Allekirjoitus kattaa tietueen RFC 8785 -kanonisen muodon ilman jäsentä `signature`, ja se tarkistetaan `public_key`-avaimella, jonka on oltava sama kuin `p` (SPEC kohta 4.6).
 

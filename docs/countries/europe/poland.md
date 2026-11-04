@@ -102,7 +102,7 @@ Przykład: dostawca publikuje Państwa rekord pod adresem `piekarniakowalski.pl.
 
 ## 4. Klucze i podpisy (ABIZ 1.1)
 
-ABIZ 1.1 wymaga klucza publicznego Ed25519 w znaczniku DNS `p`. `v` i `h` są wymagane. `p` jest wymagane. `k` jest opcjonalne. `p` musi być standardowym kodowaniem base64 klucza o długości 32 bajtów: 44 znaki zakończone dokładnie jednym `=`, w jednym ciągu DNS. Base64url nie jest akceptowane. Każda inna wartość, np. szesnastkowy token z ABIZ 1.0, unieważnia cały rekord.
+ABIZ 1.1 wymaga klucza publicznego Ed25519 w znaczniku DNS `p`. `v` i `h` są wymagane. `p` jest wymagane. `k` jest opcjonalne. `p` musi być standardowym kodowaniem base64 klucza o długości 32 bajtów: 44 znaki zakończone dokładnie jednym `=`, w jednym ciągu DNS. Base64url nie jest akceptowane. Każda inna wartość, np. ciąg szesnastkowy, unieważnia cały rekord.
 
 Odpowiadający mu klucz prywatny należy do firmy i nigdy nie jest publikowany. Jeśli przechowuje go dostawca, musi umożliwić jego eksport. Oprogramowanie może sprawdzić podpis złożony kluczem prywatnym za pomocą klucza opublikowanego w DNS. Podpis obejmuje formę kanoniczną RFC 8785 rekordu bez członu `signature` i jest weryfikowany kluczem `public_key`, który musi być równy `p` (SPEC, sekcja 4.6).
 
