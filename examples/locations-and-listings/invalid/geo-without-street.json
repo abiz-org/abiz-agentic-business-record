@@ -11,14 +11,14 @@
   "domains": [
     "cliftoncycles.example"
   ],
-  "public_key": "ghhS3N6om3C16jTWSjgKCNva7aeW7d6NcgrHjd9npbw=",
+  "public_key": "uzZ30YLWT2lYCbdF9LOLUGSGaV9aXImE+wGEhl7FN6s=",
   "website": "https://cliftoncycles.example",
   "email": "hello@cliftoncycles.example",
   "phone": "+441179460000",
   "locations": [
     {
       "location_id": "registered-office",
-      "kind": "registered-office",
+      "kind": "registered_office",
       "address": {
         "street_lines": [
           "Suite 2, Example House",
@@ -258,5 +258,5 @@
     "code": "GB-ENG",
     "name": "England"
   },
-  "signature": "BnlTopnBmufG17bt8zBHgpFYUnHAL2D/xdK1xm6rTpMT93lyWmuzZqnNWhJII1CfF57shA5IAJkITc/3YI4cBg=="
+  "signature": "/VQBajnKiCuBQjDUl3+5ftzQ2nNf9TwHdXsSMRoZnHKZYrIUdOo+slEHEJ2foFwHPcVKFdtCTyqPm5cypk1fAg=="
 }
