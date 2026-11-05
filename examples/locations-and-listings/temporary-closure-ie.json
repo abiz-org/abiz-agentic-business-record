@@ -1,21 +1,24 @@
 {
   "record_version": "abiz1",
-  "business_name": "Harbour Lights Café Ltd",
-  "country": "ie",
+  "business_name": "Harbour Lights Caf\u00e9 Ltd",
+  "country": {
+    "code": "IE",
+    "name": "Ireland"
+  },
   "business_key": "ie-654321",
   "registration_number": "654321",
   "identity_host": "harbourlightscafe.ie.to.co",
   "domains": [
     "harbourlights.example"
   ],
-  "public_key": "ys4koCzcaCUQgr/JiAYHwy9/0jRmwyt7FMA7G609iZE=",
+  "public_key": "z2LTgj6vpAQ56nGsutZSQJ0d+uUTBzBKVmm2PuzwElI=",
   "operational_status": "open",
   "locations": [
     {
       "location_id": "howth",
       "kind": "trading",
       "name": "Harbour Lights, Howth",
-      "description": "Closed for refurbishment until 1 December 2026. The Dún Laoghaire café is open as usual.",
+      "description": "Closed for refurbishment until 1 December 2026. The D\u00fan Laoghaire caf\u00e9 is open as usual.",
       "address": {
         "street_lines": [
           "1 Example Pier"
@@ -35,12 +38,12 @@
     {
       "location_id": "dun-laoghaire",
       "kind": "trading",
-      "name": "Harbour Lights, Dún Laoghaire",
+      "name": "Harbour Lights, D\u00fan Laoghaire",
       "address": {
         "street_lines": [
           "22 Example Road"
         ],
-        "locality": "Dún Laoghaire",
+        "locality": "D\u00fan Laoghaire",
         "region": {
           "code": "IE-DR"
         },
@@ -121,5 +124,9 @@
     }
   ],
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "69oebpOTYf5xs8OpL4zw+MN0br/SI75VHr/7terRIifsXZrhh1/y8pySlFIVdVXCc9dbnubEXn4WTh+RX9KeDA=="
+  "region": {
+    "code": "IE-D",
+    "name": "Dublin"
+  },
+  "signature": "HzyWBQIeDxnhz+7NjxsasbhCmlB7gGblX2nNruoGf8TgWrevyMAMHOENQAr0pFleBT8K6hlgy/nwN750NKjYAA=="
 }

@@ -43,7 +43,7 @@ Mauritius uses no subdivision: do not add a region, province or city code. SPEC 
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.portlouisspice.example. 300 IN TXT "v=abiz1;k=mu-C23123456;h=portlouisspice.mu.to.co;p=2d3MfWn4nCRZdUqgjIALNJ9EpNCRMyLZ+fbSeLMZ8yo="
+_abiz.portlouisspice.example. 300 IN TXT "v=abiz1;k=mu-C23123456;h=portlouisspice.mu.to.co;p=T42xa0DQRDgdJh0/tzU8VuH0rv6QDszXjG1Kl0Yo/PE="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -51,7 +51,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.portlouisspice.example. 300 IN TXT "v=abiz1;h=portlouisspice.mu.to.co;p=2d3MfWn4nCRZdUqgjIALNJ9EpNCRMyLZ+fbSeLMZ8yo="
+_abiz.portlouisspice.example. 300 IN TXT "v=abiz1;h=portlouisspice.mu.to.co;p=T42xa0DQRDgdJh0/tzU8VuH0rv6QDszXjG1Kl0Yo/PE="
 ```
 
 The business record served as `application/json` at `https://portlouisspice.mu.to.co`:
@@ -60,22 +60,25 @@ The business record served as `application/json` at `https://portlouisspice.mu.t
 {
   "record_version": "abiz1",
   "business_name": "Port Louis Spice House",
-  "country": "mu",
+  "country": {
+    "code": "MU",
+    "name": "Mauritius"
+  },
   "business_key": "mu-C23123456",
   "registration_number": "C23123456",
   "identity_host": "portlouisspice.mu.to.co",
   "domains": [
     "portlouisspice.example"
   ],
-  "public_key": "2d3MfWn4nCRZdUqgjIALNJ9EpNCRMyLZ+fbSeLMZ8yo=",
-  "signature": "zuUiA3aLToJo4vRQp9IxnM6R4TuXsRqRPpnaW/M26TKJUBhPNNL84cWtduXOxesOcEEVUzSSGwT3vUfF5qITDg=="
+  "public_key": "T42xa0DQRDgdJh0/tzU8VuH0rv6QDszXjG1Kl0Yo/PE=",
+  "signature": "79pYwPrsprQpk9XbNpgzdpNcq/1jUE5Gf/mpCcdeOBjbGR1t0evcrE7n3YQslFVTSLRweQOJMmq4MujUPOgBAQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain portlouisspice.example --dns-value 'v=abiz1;k=mu-C23123456;h=portlouisspice.mu.to.co;p=2d3MfWn4nCRZdUqgjIALNJ9EpNCRMyLZ+fbSeLMZ8yo='
+python scripts/validate.py record.json --domain portlouisspice.example --dns-value 'v=abiz1;k=mu-C23123456;h=portlouisspice.mu.to.co;p=T42xa0DQRDgdJh0/tzU8VuH0rv6QDszXjG1Kl0Yo/PE='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -84,7 +87,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Mauritius with a record hosted by to.co might use the host `portlouisspice.mu.to.co`, giving the DNS value `v=abiz1;k=mu-C23123456;h=portlouisspice.mu.to.co;p=2d3MfWn4nCRZdUqgjIALNJ9EpNCRMyLZ+fbSeLMZ8yo=`. An unregistered business might use a town-based host such as `portlouisspice-portlouis.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Mauritius with a record hosted by to.co might use the host `portlouisspice.mu.to.co`, giving the DNS value `v=abiz1;k=mu-C23123456;h=portlouisspice.mu.to.co;p=T42xa0DQRDgdJh0/tzU8VuH0rv6QDszXjG1Kl0Yo/PE=`. An unregistered business might use a town-based host such as `portlouisspice-portlouis.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

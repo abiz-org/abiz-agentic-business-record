@@ -41,7 +41,7 @@ Cheile se compară fără a ține cont de majuscule, dar publicați forma canoni
 Publicați exact o înregistrare TXT ABIZ la `_abiz` pe domeniul dumneavoastră, în forma compactă, fără spații:
 
 ```dns
-_abiz.codruvin.example. 300 IN TXT "v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=6k1pJUgnF6IiBcYWtRXawfW0QYRop5RvFxVxToHKMqs="
+_abiz.codruvin.example. 300 IN TXT "v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=x5Q6reFPUmnTZV2iyGHWcqUp/XbUxQE0FSK165q/FMk="
 ```
 
 - `v=abiz1` trebuie să fie primul. `h` și `p` sunt obligatorii; `k` este opțional.
@@ -58,21 +58,24 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
 {
   "record_version": "abiz1",
   "business_name": "Codru Vin SRL",
-  "country": "md",
+  "country": {
+    "code": "MD",
+    "name": "Moldova"
+  },
   "business_key": "md-1012345678901",
   "registration_number": "1012345678901",
   "identity_host": "codruvin.md.to.co",
   "domains": [
     "codruvin.example"
   ],
-  "public_key": "6k1pJUgnF6IiBcYWtRXawfW0QYRop5RvFxVxToHKMqs=",
-  "description": "Cramă din Chișinău.",
+  "public_key": "x5Q6reFPUmnTZV2iyGHWcqUp/XbUxQE0FSK165q/FMk=",
+  "description": "Cram\u0103 din Chi\u0219in\u0103u.",
   "website": "https://codruvin.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Chișinău",
+        "locality": "Chi\u0219in\u0103u",
         "country": {
           "code": "MD"
         }
@@ -80,14 +83,14 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
       "public": true
     }
   ],
-  "signature": "ClygB5+TbQd5IkcgQJQf4WGTxm8sZidp9/qHtysfgykwvv6Aep4L6w6ewLNzuPYBF+Kh8uJCzWlHurS80ftqBw=="
+  "signature": "WU+bXa6ioC7qTjwCnKTftoXkxVCeXit8ylRyxebO8zcGb/YGdXEjIv3wv/8Qnzx+WgAPWGovSyJ2hmqrXZYFAQ=="
 }
 ```
 
 Cu validatorul de referință puteți verifica local înregistrarea și valoarea DNS:
 
 ```sh
-python scripts/validate.py record.json --domain codruvin.example --dns-value 'v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=6k1pJUgnF6IiBcYWtRXawfW0QYRop5RvFxVxToHKMqs='
+python scripts/validate.py record.json --domain codruvin.example --dns-value 'v=abiz1;k=md-1012345678901;h=codruvin.md.to.co;p=x5Q6reFPUmnTZV2iyGHWcqUp/XbUxQE0FSK165q/FMk='
 ```
 
 ### Găzduire proprie sau printr-un furnizor

@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.boulangeriemartin.example. 300 IN TXT "v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=RvoPOjuuV9jqdn3+BVdq72bAF5C52Mfsv+SAHe8Qfow="
+_abiz.boulangeriemartin.example. 300 IN TXT "v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=p+XCQyj5h79Px6VX8bYhhm9ypLtVcbYenPQJbnms2/Q="
 ```
 
 - `v=abiz1` doit venir en premier. `h` et `p` sont obligatoires ; `k` est facultatif.
@@ -58,15 +58,18 @@ La fiche servie à l'adresse `https://boulangeriemartin.fr.to.co`, au format `ap
 {
   "record_version": "abiz1",
   "business_name": "Boulangerie Martin SAS",
-  "country": "fr",
+  "country": {
+    "code": "FR",
+    "name": "France"
+  },
   "business_key": "fr-123456789",
   "registration_number": "123456789",
   "identity_host": "boulangeriemartin.fr.to.co",
   "domains": [
     "boulangeriemartin.example"
   ],
-  "public_key": "RvoPOjuuV9jqdn3+BVdq72bAF5C52Mfsv+SAHe8Qfow=",
-  "description": "Boulangerie artisanale à Lyon.",
+  "public_key": "p+XCQyj5h79Px6VX8bYhhm9ypLtVcbYenPQJbnms2/Q=",
+  "description": "Boulangerie artisanale \u00e0 Lyon.",
   "website": "https://boulangeriemartin.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ La fiche servie à l'adresse `https://boulangeriemartin.fr.to.co`, au format `ap
       "public": true
     }
   ],
-  "signature": "psMj75tYWYdZ/CZh1E0DOphLOvYcEP/bSW3hEvcOnMd/PY9cM09ZIhxp6kogZ9ezosDTsVSjMY5xmaEg/q/YCg=="
+  "signature": "yY2N/2CM41vV33hsP/wTOyDewiEiJXriWwx2/fLWl5UY9S4jc+P9xS0GvQpMBxAgOVTYcTtfbpF+1qHke9j1Aw=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain boulangeriemartin.example --dns-value 'v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=RvoPOjuuV9jqdn3+BVdq72bAF5C52Mfsv+SAHe8Qfow='
+python scripts/validate.py record.json --domain boulangeriemartin.example --dns-value 'v=abiz1;k=fr-123456789;h=boulangeriemartin.fr.to.co;p=p+XCQyj5h79Px6VX8bYhhm9ypLtVcbYenPQJbnms2/Q='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur

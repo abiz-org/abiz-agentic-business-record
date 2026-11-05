@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.fornpirineu.example. 300 IN TXT "v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=/ANl6yxf1NMqjxGP9HQqPDCzKD1Bt0uH4iUkC9clVlA="
+_abiz.fornpirineu.example. 300 IN TXT "v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=MObZqHHgmACgBoSnlqGXKCe238GpI/BIO4J8BfK6UeQ="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://fornpirineu.ad.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Forn Pirineu SL",
-  "country": "ad",
+  "country": {
+    "code": "AD",
+    "name": "Andorra"
+  },
   "business_key": "ad-L712345X",
   "registration_number": "L712345X",
   "identity_host": "fornpirineu.ad.to.co",
   "domains": [
     "fornpirineu.example"
   ],
-  "public_key": "/ANl6yxf1NMqjxGP9HQqPDCzKD1Bt0uH4iUkC9clVlA=",
+  "public_key": "MObZqHHgmACgBoSnlqGXKCe238GpI/BIO4J8BfK6UeQ=",
   "description": "Bakery in Andorra la Vella.",
   "website": "https://fornpirineu.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://fornpirineu.ad.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "ZiuSOz5KZvzbHlAsNO6Za6lMk+6RCckZuIIflMLSt+DYqyHUZ51XCTCD/102IKCHjPvPN9cuBhKPy8Uor9hrBw=="
+  "signature": "RwdPdRJKGvtMY0Y4F/WxqI9kcPDDsDh9zqW3kwy4o/DYnZAr+j1ToFnyyJlbmk8U9vXRlLaTuyQZTpbQUDSADA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain fornpirineu.example --dns-value 'v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=/ANl6yxf1NMqjxGP9HQqPDCzKD1Bt0uH4iUkC9clVlA='
+python scripts/validate.py record.json --domain fornpirineu.example --dns-value 'v=abiz1;k=ad-L712345X;h=fornpirineu.ad.to.co;p=MObZqHHgmACgBoSnlqGXKCe238GpI/BIO4J8BfK6UeQ='
 ```
 
 ### Self-hosted or through a provider

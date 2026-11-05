@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.daugavakoks.example. 300 IN TXT "v=abiz1;k=lv-40001234567;h=daugavakoks.lv.to.co;p=c3/ZkSLzm1EwRlkhpMmb8JONcp1BlVGTZ571imFVE38="
+_abiz.daugavakoks.example. 300 IN TXT "v=abiz1;k=lv-40001234567;h=daugavakoks.lv.to.co;p=UCSb2mVcbp8FboTIQ/LN94S6HM9PrkyAbFHDnxZgVd8="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://daugavakoks.lv.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Daugava Koks SIA",
-  "country": "lv",
+  "country": {
+    "code": "LV",
+    "name": "Latvia"
+  },
   "business_key": "lv-40001234567",
   "registration_number": "40001234567",
   "identity_host": "daugavakoks.lv.to.co",
   "domains": [
     "daugavakoks.example"
   ],
-  "public_key": "c3/ZkSLzm1EwRlkhpMmb8JONcp1BlVGTZ571imFVE38=",
+  "public_key": "UCSb2mVcbp8FboTIQ/LN94S6HM9PrkyAbFHDnxZgVd8=",
   "description": "Timber merchant in Riga.",
   "website": "https://daugavakoks.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://daugavakoks.lv.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "tN0eWKEdyzVm4YpaTaAGLXV4Bjlv2AP8IRi5xGWK1w04JHpadv+m/fQfZpT8rIY9MXEBKJLIxw/g/x6sgqkfDw=="
+  "signature": "/AQLfzuP4BcfCBMK14QGr8qihMHG8QXZy5uhOYIpkHKiMZGocaRNY5wkXkd4rtM2bIyz+7wsr4nYHcsDVafGBg=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain daugavakoks.example --dns-value 'v=abiz1;k=lv-40001234567;h=daugavakoks.lv.to.co;p=c3/ZkSLzm1EwRlkhpMmb8JONcp1BlVGTZ571imFVE38='
+python scripts/validate.py record.json --domain daugavakoks.example --dns-value 'v=abiz1;k=lv-40001234567;h=daugavakoks.lv.to.co;p=UCSb2mVcbp8FboTIQ/LN94S6HM9PrkyAbFHDnxZgVd8='
 ```
 
 ### Self-hosted or through a provider

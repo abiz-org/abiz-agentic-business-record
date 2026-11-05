@@ -1,14 +1,17 @@
 {
   "record_version": "abiz1",
   "business_name": "Green Mountain Mobile Bike Repair LLC",
-  "country": "us",
+  "country": {
+    "code": "US",
+    "name": "United States"
+  },
   "business_key": "us-vt-0123456",
   "registration_number": "0123456",
   "identity_host": "greenmountainbikes.vt.us.to.co",
   "domains": [
     "greenmountainbikes.example"
   ],
-  "public_key": "1MtmvijI6RcUXbrmb9N/nbrSzmaG3hMGyv/gH+eK5qQ=",
+  "public_key": "xMkhUuXu96MawHmVko0Fne9QSxDixjSxn3GB1CDZtAU=",
   "description": "We come to you: mobile bicycle repair across northern Vermont and Hanover, New Hampshire.",
   "phone": "+18025550100",
   "locations": [
@@ -103,5 +106,9 @@
       "public": false
     }
   ],
-  "signature": "iS3HYXoeF5iPkjcV/2rj0EfBzLa2SMgE0dobQ4M0pHAPY7K1ZI/+w5/08EJ9cMLKIxisFiTh3aoZQAeScMkLDA=="
+  "region": {
+    "code": "US-VT",
+    "name": "Vermont"
+  },
+  "signature": "3h5q6LiYRcpwkn7I2ApAn6+XOgdLBomLe6RAxvwmt6ce735vbDjd/xMcQSayzo3vFkrbAm1zlo2Fe64MP/hOCA=="
 }

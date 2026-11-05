@@ -41,7 +41,7 @@ Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, m
 Publiceer precies één ABIZ-TXT-record onder `_abiz` op uw domein, in de compacte vorm zonder spaties:
 
 ```dns
-_abiz.bakkerijpeeters.example. 300 IN TXT "v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=tzht7C39KDuSrkNsoZPU9SXxgeqK3GOWv2UvFpU4IFU="
+_abiz.bakkerijpeeters.example. 300 IN TXT "v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=oUF7QJU1kAyTU+yOQ4nNptaEb0TxFJG8JPwyX5Q8ZKk="
 ```
 
 - `v=abiz1` moet vooraan staan. `h` en `p` zijn verplicht; `k` is optioneel.
@@ -58,14 +58,17 @@ Het record dat op `https://bakkerijpeeters.be.to.co` als `application/json` word
 {
   "record_version": "abiz1",
   "business_name": "Bakkerij Peeters BV",
-  "country": "be",
+  "country": {
+    "code": "BE",
+    "name": "Belgium"
+  },
   "business_key": "be-0123456789",
   "registration_number": "0123456789",
   "identity_host": "bakkerijpeeters.be.to.co",
   "domains": [
     "bakkerijpeeters.example"
   ],
-  "public_key": "tzht7C39KDuSrkNsoZPU9SXxgeqK3GOWv2UvFpU4IFU=",
+  "public_key": "oUF7QJU1kAyTU+yOQ4nNptaEb0TxFJG8JPwyX5Q8ZKk=",
   "description": "Ambachtelijke bakkerij in Gent.",
   "website": "https://bakkerijpeeters.example",
   "locations": [
@@ -80,14 +83,14 @@ Het record dat op `https://bakkerijpeeters.be.to.co` als `application/json` word
       "public": true
     }
   ],
-  "signature": "WRrXAMfnSKhdgW91i6Ct7wptPc7hv7/mZg9OhZdd1bRbZthcq8HOJFHmgO1o7cxQvc0QXphdT6M8yglAtMHJDw=="
+  "signature": "butv73EnBLY26BBlii3H7NboHIUn11WPcuh0ypgMXcODfzEZwRtDlaAK1BeNqFmkLuVXS0dg4g+phoO3eTKRBw=="
 }
 ```
 
 Met de referentievalidator controleert u record en DNS-waarde lokaal:
 
 ```sh
-python scripts/validate.py record.json --domain bakkerijpeeters.example --dns-value 'v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=tzht7C39KDuSrkNsoZPU9SXxgeqK3GOWv2UvFpU4IFU='
+python scripts/validate.py record.json --domain bakkerijpeeters.example --dns-value 'v=abiz1;k=be-0123456789;h=bakkerijpeeters.be.to.co;p=oUF7QJU1kAyTU+yOQ4nNptaEb0TxFJG8JPwyX5Q8ZKk='
 ```
 
 ### Zelf hosten of via een aanbieder

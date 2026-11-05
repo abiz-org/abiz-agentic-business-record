@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.gozoseasalt.example. 300 IN TXT "v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=xbEFxaFe2tpfwySl1jC5KdWMmZNzOVG7szpYjvZQv2U="
+_abiz.gozoseasalt.example. 300 IN TXT "v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=dZyzPigsvsnkCW+A/mQEKdTlUgtYufd6U8MM6pL1hpI="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://gozoseasalt.mt.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Gozo Sea Salt Ltd",
-  "country": "mt",
+  "country": {
+    "code": "MT",
+    "name": "Malta"
+  },
   "business_key": "mt-C12345",
   "registration_number": "C12345",
   "identity_host": "gozoseasalt.mt.to.co",
   "domains": [
     "gozoseasalt.example"
   ],
-  "public_key": "xbEFxaFe2tpfwySl1jC5KdWMmZNzOVG7szpYjvZQv2U=",
+  "public_key": "dZyzPigsvsnkCW+A/mQEKdTlUgtYufd6U8MM6pL1hpI=",
   "description": "Sea salt producer on Gozo.",
   "website": "https://gozoseasalt.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://gozoseasalt.mt.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "Fy7B1P2Mxfje7Fe8mGt5Un0DtoWKzWtHPmU6vNLw2TpGSf/dTeEHeahLQ4O/TNxo+bQL138BfNEDNjVWGt6TBQ=="
+  "signature": "fT6mibEfI+04G3f9eDA9S5diWw4XDQiOWcsV59b+BVLVLr+ZJGg0KPaGY7UEInAa69wlGKUnmTSIpnCTiyZJDA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain gozoseasalt.example --dns-value 'v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=xbEFxaFe2tpfwySl1jC5KdWMmZNzOVG7szpYjvZQv2U='
+python scripts/validate.py record.json --domain gozoseasalt.example --dns-value 'v=abiz1;k=mt-C12345;h=gozoseasalt.mt.to.co;p=dZyzPigsvsnkCW+A/mQEKdTlUgtYufd6U8MM6pL1hpI='
 ```
 
 ### Self-hosted or through a provider

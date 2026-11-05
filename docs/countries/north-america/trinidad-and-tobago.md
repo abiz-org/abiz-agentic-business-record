@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q="
+_abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=I7QLnrSPs7/x8VAoKjZmnnW6UxgpdMrxAr7Dm5nIQhg="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -56,14 +56,17 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Steelpan Workshop Limited",
-  "country": "tt",
+  "country": {
+    "code": "TT",
+    "name": "Trinidad and Tobago"
+  },
   "business_key": "tt-C1234567",
   "registration_number": "C1234567",
   "identity_host": "steelpanworkshop.tt.to.co",
   "domains": [
     "steelpanworkshop.example"
   ],
-  "public_key": "iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q=",
+  "public_key": "I7QLnrSPs7/x8VAoKjZmnnW6UxgpdMrxAr7Dm5nIQhg=",
   "description": "Steelpan making, tuning and lessons.",
   "website": "https://steelpanworkshop.example",
   "locations": [
@@ -141,7 +144,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "LrbSBZgaojjsnxJLJQPaLAW7SwhA1Eq/T68+JEiot67Ov81ygyHUZed6yPqMHXDeXP/ubFp37nH1yLr+Sli6DQ=="
+  "signature": "cRd7PLHTDg8ukxB31aYRvWzfxAxpc4QyWqJDNTgoa9UGvTiYZdMiBecTjwK9SmtDCdQ3AO8T+NG+Z3QEVsPADQ=="
 }
 ```
 
@@ -154,7 +157,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain steelpanworkshop.example \
-  --dns-value 'v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q='
+  --dns-value 'v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=I7QLnrSPs7/x8VAoKjZmnnW6UxgpdMrxAr7Dm5nIQhg='
 ```
 
 ## 3. Using a provider and MCP
@@ -169,7 +172,7 @@ For example, a provider might host the record for Steelpan Workshop at `steelpan
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=iq0pYeiPzgVVn5zJGvzX5z7bEedtue1mzRWr0vBsT2Q="
+  _abiz.steelpanworkshop.example. 300 IN TXT "v=abiz1;k=tt-C1234567;h=steelpanworkshop.tt.to.co;p=I7QLnrSPs7/x8VAoKjZmnnW6UxgpdMrxAr7Dm5nIQhg="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.tatradrevo.example. 300 IN TXT "v=abiz1;k=sk-12345678;h=tatradrevo.sk.to.co;p=gk1kzli+17o3cpD1rV7KjPtdhLOO3jWgbd8J/e/iFtw="
+_abiz.tatradrevo.example. 300 IN TXT "v=abiz1;k=sk-12345678;h=tatradrevo.sk.to.co;p=w7iuVx0yvkHoUgNUFBIrik/dhiZ5O69t9hPRw1OlSFM="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,21 +58,24 @@ The record served at `https://tatradrevo.sk.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Tatra Drevo s.r.o.",
-  "country": "sk",
+  "country": {
+    "code": "SK",
+    "name": "Slovakia"
+  },
   "business_key": "sk-12345678",
   "registration_number": "12345678",
   "identity_host": "tatradrevo.sk.to.co",
   "domains": [
     "tatradrevo.example"
   ],
-  "public_key": "gk1kzli+17o3cpD1rV7KjPtdhLOO3jWgbd8J/e/iFtw=",
-  "description": "Joinery in Košice.",
+  "public_key": "w7iuVx0yvkHoUgNUFBIrik/dhiZ5O69t9hPRw1OlSFM=",
+  "description": "Joinery in Ko\u0161ice.",
   "website": "https://tatradrevo.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Košice",
+        "locality": "Ko\u0161ice",
         "country": {
           "code": "SK"
         }
@@ -80,14 +83,14 @@ The record served at `https://tatradrevo.sk.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "taS9NH/EDVpn5cH6NfKuP8I/wnZYtcHSgZJ3rCfH07ULw5oeRvQ7Mv5b7sjqVcRboUUu2Ex+excK7Ro3Ig0LAg=="
+  "signature": "laGGBCXYhuS6KUk7HcLmnHqjWmJ2ofxvDhk+zwt2Iq9O4/7wu1MoZte1q260KejLvZ6qfJ8zEVWOnpEn3cvoAw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain tatradrevo.example --dns-value 'v=abiz1;k=sk-12345678;h=tatradrevo.sk.to.co;p=gk1kzli+17o3cpD1rV7KjPtdhLOO3jWgbd8J/e/iFtw='
+python scripts/validate.py record.json --domain tatradrevo.example --dns-value 'v=abiz1;k=sk-12345678;h=tatradrevo.sk.to.co;p=w7iuVx0yvkHoUgNUFBIrik/dhiZ5O69t9hPRw1OlSFM='
 ```
 
 ### Self-hosted or through a provider

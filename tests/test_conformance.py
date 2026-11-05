@@ -39,8 +39,8 @@ UNREG = json.loads((ROOT / "examples" / "unregistered-us.json").read_text())
 # Throwaway public key from examples/dns-ed25519-p.txt. The private key was not committed.
 P_MESSAGE = b"abiz1.1 p-key test"
 P_SIGNATURE = (
-    "IaZr5HsbImiYvB92BzVDbwsCmCnq59qwga3YPWghNoHNJ+Z9fhMwFGV3VD+c5kVOsdcv"
-    "gFZIa+iillIxV21kBA=="
+    "CR17WUoiuuu1D7URwjw46qhBbJ34Z2PZmbDn9xdf4XLhewQ738cX96a7uk/WOGK/"
+    "xNnuoEujm9eWxWxXjHNmDA=="
 )
 # Shape of $defs/retired_key. Not a record property; the signature is a placeholder.
 RETIRED_KEY_ENTRY = {
@@ -374,8 +374,12 @@ class ABIZBusinessKeyTests(unittest.TestCase):
 
     def record(self, key, number, country="us"):
         r = copy.deepcopy(REG)
-        r["country"], r["business_key"], r["registration_number"] = country, key, number
-        r["locations"][0]["address"] = {"country": {"code": country.upper()}}
+        code = country.upper()
+        r["country"] = {"code": code, "name": "United States" if code == "US" else code}
+        if code != "US":
+            r.pop("region", None)
+        r["business_key"], r["registration_number"] = key, number
+        r["locations"][0]["address"] = {"country": {"code": code}}
         r["locations"][0].pop("opening_hours")
         return resign(r)
 
@@ -394,7 +398,7 @@ class ABIZBusinessKeyTests(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises(ValueError):
                 parse_business_key(key)
         bad = copy.deepcopy(REG)
-        bad["country"] = "UK"
+        bad["country"] = {"code": "UK", "name": "United Kingdom"}
         bad["business_key"], bad["registration_number"] = "uk-123456", "123456"
         self.assertTrue(validate_record(bad, SCHEMA))
         bad = copy.deepcopy(UNREG)
@@ -433,8 +437,8 @@ class ABIZBusinessKeyTests(unittest.TestCase):
                          f"v=abiz1;k=us-or-ABC123;h={self.HOST};p={TEST_P}"), [])
         self.assertTrue(validate_record(record, SCHEMA, "harbourbikes.example",
                         f"v=abiz1;k=us-or-ABC124;h={self.HOST};p={TEST_P}"))
-        # Uppercase record country, as in the unregistered example, is still valid.
-        self.assertEqual(UNREG["country"], "US")
+        self.assertEqual(UNREG["country"]["code"], "US")
+        self.assertEqual(UNREG["country"]["name"], "United States")
         self.assertEqual(validate_record(UNREG, SCHEMA), [])
 
     def test_special_characters_rejected(self):
@@ -618,10 +622,11 @@ class ABIZUnitAndCountryTests(unittest.TestCase):
                                         "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=" + P))
 
     def test_north_korea_is_not_supported(self):
-        record = resign({"record_version": "abiz1", "business_name": "Example", "country": "kp",
+        record = resign({"record_version": "abiz1", "business_name": "Example",
+                         "country": {"code": "KP", "name": "North Korea"},
                          "identity_host": "example.biz.to.co", "domains": ["example.example"]})
         self.assertTrue(any("not supported" in e for e in validate_record(record, SCHEMA)))
-        self.assertTrue(validate_record(resign({**record, "country": "KP"}), SCHEMA))
+        self.assertTrue(validate_record(resign({**record, "country": {"code": "kp", "name": "North Korea"}}), SCHEMA))
         with self.assertRaisesRegex(ValueError, "not supported"):
             parse_business_key("kp-123456")
         located = copy.deepcopy(REG)

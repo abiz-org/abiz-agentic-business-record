@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json",
   "title": "ABIZ 1.1 Business Record (published; protocol family abiz1)",
-  "description": "Structural schema for the published ABIZ 1.1 specification, the latest normative JSON Schema. ABIZ 1.0 records use schemas/abiz-business-record-v1.schema.json ($id https://abizrecord.org/schema/abiz-business-record-v1.schema.json). This revision specifies the business_key, registration_number and case-insensitive country rules, snake_case member names, the REQUIRED public_key and signature members (SPEC section 4.6), and the location, contact, hours and listing members (SPEC section 4.7): email and phone, blog_url and rss_url, tax_registrations, social_profiles, categories, media, review_summaries, operational_status, and structured locations with a nested address, geo, opening_hours, service_areas and external_listings. Root opening_hours, contact_email, contact_phone and flat location address members are not allowed, and recent_posts is prohibited. $defs/retired_key reserves a nested retired-key shape; it is not a record property. The schema checks only the form of public_key and signature: a consumer MUST also verify the signature over the RFC 8785 canonical record and compare public_key with the DNS or well-known p. scripts/validate.py adds the checks JSON Schema cannot express (overlapping hours, duplicate identifiers, assigned codes, time zones, URL safety). Independent DNS and registry checks are required for full conformance.",
+  "description": "Structural schema for the published ABIZ 1.1 specification, the latest normative JSON Schema. ABIZ 1.0 records use schemas/abiz-business-record-v1.schema.json ($id https://abizrecord.org/schema/abiz-business-record-v1.schema.json). This revision specifies the business_key, registration_number, nested country ({ code, name }) and optional nested region rules, snake_case member names, the REQUIRED public_key and signature members (SPEC section 4.6), and the location, contact, hours and listing members (SPEC section 4.7): email and phone, blog_url and rss_url, tax_registrations, social_profiles, categories, media, review_summaries, operational_status, and structured locations with a nested address, geo, opening_hours, service_areas and external_listings. Root opening_hours, contact_email, contact_phone and flat location address members are not allowed, and recent_posts is prohibited. $defs/retired_key reserves a nested retired-key shape; it is not a record property. The schema checks only the form of public_key and signature: a consumer MUST also verify the signature over the RFC 8785 canonical record and compare public_key with the DNS or well-known p. scripts/validate.py adds the checks JSON Schema cannot express (overlapping hours, duplicate identifiers, assigned codes, time zones, URL safety). Independent DNS and registry checks are required for full conformance.",
   "type": "object",
   "required": [
     "record_version",
@@ -26,9 +26,22 @@
       "pattern": "\\S"
     },
     "country": {
-      "type": "string",
-      "pattern": "^[A-Za-z]{2}$",
-      "description": "Assigned ISO 3166-1 alpha-2 country code. Case-insensitive; canonical form is lowercase. The validator checks it against data/iso3166.json."
+      "allOf": [
+        {
+          "$ref": "#/$defs/country_ref"
+        },
+        {
+          "required": [
+            "code",
+            "name"
+          ]
+        }
+      ],
+      "description": "The business's country: { code, name }. code is an assigned ISO 3166-1 alpha-2 code, uppercase and authoritative. name is a human-readable label (English short name recommended) and is never used in place of code. Not kp (SPEC section 4.2.7). The validator checks code against data/iso3166.json."
+    },
+    "region": {
+      "$ref": "#/$defs/region_ref",
+      "description": "Optional ISO 3166-2 subdivision of country (state, province, emirate, nation of the UK) when the producer holds one. code MUST belong to country.code. Omit when there is no subdivision on the business record."
     },
     "identity_host": {
       "type": "string",

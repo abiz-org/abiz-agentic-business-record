@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug="
+_abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=PJr3o2ISeqSFZ1RpGSIxlQxPDZSdtddvx+OCZsHbeQE="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -56,14 +56,17 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 {
   "record_version": "abiz1",
   "business_name": "Chocolates Mitad del Mundo S.A.",
-  "country": "ec",
+  "country": {
+    "code": "EC",
+    "name": "Ecuador"
+  },
   "business_key": "ec-123456",
   "registration_number": "123456",
   "identity_host": "chocolatesmitaddelmundo.ec.to.co",
   "domains": [
     "chocolatesmitad.example"
   ],
-  "public_key": "3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug=",
+  "public_key": "PJr3o2ISeqSFZ1RpGSIxlQxPDZSdtddvx+OCZsHbeQE=",
   "description": "Chocolate de cacao fino de aroma.",
   "website": "https://chocolatesmitad.example",
   "locations": [
@@ -136,7 +139,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "q3kW7jqdq2oLiWFEp9KxjPgTSO8A27sWeB/8+lJOF/Q/Yiznx3ZmbdAHLS9RavbMBJj8Ls7eEC3cCGDLC4iPCg=="
+  "signature": "7VGUtPlfhcJ5QxNL0tBciL8Uu9GCmjzP/nC/Q4HBzLUAibSMPVJhwEOdGMsxI/AIkajRuZKX7R6N+DinIK5SCw=="
 }
 ```
 
@@ -149,7 +152,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain chocolatesmitad.example \
-  --dns-value 'v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug='
+  --dns-value 'v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=PJr3o2ISeqSFZ1RpGSIxlQxPDZSdtddvx+OCZsHbeQE='
 ```
 
 ## 3. Proveedores y MCP
@@ -164,7 +167,7 @@ Por ejemplo, un proveedor puede alojar el registro de Chocolates Mitad del Mundo
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=3jcvkLLLCuFVCKpsWoEwdNMOtd+MZF/7W18la4Lp5ug="
+  _abiz.chocolatesmitad.example. 300 IN TXT "v=abiz1;k=ec-123456;h=chocolatesmitaddelmundo.ec.to.co;p=PJr3o2ISeqSFZ1RpGSIxlQxPDZSdtddvx+OCZsHbeQE="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

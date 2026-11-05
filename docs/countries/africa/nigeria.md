@@ -43,7 +43,7 @@ Nigeria uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.lekkisolar.example. 300 IN TXT "v=abiz1;k=ng-RC1234567;h=lekkisolar.ng.to.co;p=2nWLr9Yg/N2E74GOTKhsKcYjxpjGs+qS0JFUX+Av//c="
+_abiz.lekkisolar.example. 300 IN TXT "v=abiz1;k=ng-RC1234567;h=lekkisolar.ng.to.co;p=U3IgNmFr7KEnExxy5eINcGXPLdPfMlDnLG8TjomFaEI="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -51,7 +51,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.lekkisolar.example. 300 IN TXT "v=abiz1;h=lekkisolar.ng.to.co;p=2nWLr9Yg/N2E74GOTKhsKcYjxpjGs+qS0JFUX+Av//c="
+_abiz.lekkisolar.example. 300 IN TXT "v=abiz1;h=lekkisolar.ng.to.co;p=U3IgNmFr7KEnExxy5eINcGXPLdPfMlDnLG8TjomFaEI="
 ```
 
 The business record served as `application/json` at `https://lekkisolar.ng.to.co`:
@@ -60,22 +60,25 @@ The business record served as `application/json` at `https://lekkisolar.ng.to.co
 {
   "record_version": "abiz1",
   "business_name": "Lekki Solar Installers",
-  "country": "ng",
+  "country": {
+    "code": "NG",
+    "name": "Nigeria"
+  },
   "business_key": "ng-RC1234567",
   "registration_number": "RC1234567",
   "identity_host": "lekkisolar.ng.to.co",
   "domains": [
     "lekkisolar.example"
   ],
-  "public_key": "2nWLr9Yg/N2E74GOTKhsKcYjxpjGs+qS0JFUX+Av//c=",
-  "signature": "eLh3IGoE5zVsadcH9X2xcPDSOegGHGEnYOXPzvDVCzHzUQ385KNqsfgNq60QXnIBrKh1nCeQOX6e0SrOC4WgCg=="
+  "public_key": "U3IgNmFr7KEnExxy5eINcGXPLdPfMlDnLG8TjomFaEI=",
+  "signature": "BV1SBr5XfzOtP9QxvAN/Yax/QKbe7PVn9A7tNkJYhUACCpsqV/0gc6G5svheAgHxnqgr8IYu/bSO3bF4O73TBA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain lekkisolar.example --dns-value 'v=abiz1;k=ng-RC1234567;h=lekkisolar.ng.to.co;p=2nWLr9Yg/N2E74GOTKhsKcYjxpjGs+qS0JFUX+Av//c='
+python scripts/validate.py record.json --domain lekkisolar.example --dns-value 'v=abiz1;k=ng-RC1234567;h=lekkisolar.ng.to.co;p=U3IgNmFr7KEnExxy5eINcGXPLdPfMlDnLG8TjomFaEI='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -84,7 +87,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Nigeria with a record hosted by to.co might use the host `lekkisolar.ng.to.co`, giving the DNS value `v=abiz1;k=ng-RC1234567;h=lekkisolar.ng.to.co;p=2nWLr9Yg/N2E74GOTKhsKcYjxpjGs+qS0JFUX+Av//c=`. An unregistered business might use a town-based host such as `lekkisolar-lagos.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Nigeria with a record hosted by to.co might use the host `lekkisolar.ng.to.co`, giving the DNS value `v=abiz1;k=ng-RC1234567;h=lekkisolar.ng.to.co;p=U3IgNmFr7KEnExxy5eINcGXPLdPfMlDnLG8TjomFaEI=`. An unregistered business might use a town-based host such as `lekkisolar-lagos.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

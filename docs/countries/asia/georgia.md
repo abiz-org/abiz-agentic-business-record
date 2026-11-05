@@ -43,7 +43,7 @@ Georgia uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.tbilisiwinecellar.example. 300 IN TXT "v=abiz1;k=ge-412345678;h=tbilisiwinecellar.ge.to.co;p=ztoMkAfuO7ROEgzrfSS7EqE4tA61C93mfKI8I5NtGxY="
+_abiz.tbilisiwinecellar.example. 300 IN TXT "v=abiz1;k=ge-412345678;h=tbilisiwinecellar.ge.to.co;p=KqnAnhKAfwOmQebcHm1tyd0HPP5tPcwMz2rlJGabjxU="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -51,7 +51,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.tbilisiwinecellar.example. 300 IN TXT "v=abiz1;h=tbilisiwinecellar.ge.to.co;p=ztoMkAfuO7ROEgzrfSS7EqE4tA61C93mfKI8I5NtGxY="
+_abiz.tbilisiwinecellar.example. 300 IN TXT "v=abiz1;h=tbilisiwinecellar.ge.to.co;p=KqnAnhKAfwOmQebcHm1tyd0HPP5tPcwMz2rlJGabjxU="
 ```
 
 The business record served as `application/json` at `https://tbilisiwinecellar.ge.to.co`:
@@ -60,22 +60,25 @@ The business record served as `application/json` at `https://tbilisiwinecellar.g
 {
   "record_version": "abiz1",
   "business_name": "Tbilisi Wine Cellar",
-  "country": "ge",
+  "country": {
+    "code": "GE",
+    "name": "Georgia"
+  },
   "business_key": "ge-412345678",
   "registration_number": "412345678",
   "identity_host": "tbilisiwinecellar.ge.to.co",
   "domains": [
     "tbilisiwinecellar.example"
   ],
-  "public_key": "ztoMkAfuO7ROEgzrfSS7EqE4tA61C93mfKI8I5NtGxY=",
-  "signature": "Em58ufV7meNrEwfZKuYlMY83D4FHo6dr5vNxXLjjhXvOG5Vp/sFHp80H53pJCmejpFw9NRBT6T7X1/tP9i5IAw=="
+  "public_key": "KqnAnhKAfwOmQebcHm1tyd0HPP5tPcwMz2rlJGabjxU=",
+  "signature": "YTZw9yuBLew8YoSMr8Vi3xcXcvRy6HQigaAZLxjRR+dG+ek3z1fR+GBfFkl1SpbHE6AjeJYTs48qNI2o/aAgDw=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain tbilisiwinecellar.example --dns-value 'v=abiz1;k=ge-412345678;h=tbilisiwinecellar.ge.to.co;p=ztoMkAfuO7ROEgzrfSS7EqE4tA61C93mfKI8I5NtGxY='
+python scripts/validate.py record.json --domain tbilisiwinecellar.example --dns-value 'v=abiz1;k=ge-412345678;h=tbilisiwinecellar.ge.to.co;p=KqnAnhKAfwOmQebcHm1tyd0HPP5tPcwMz2rlJGabjxU='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -84,7 +87,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Georgia with a record hosted by to.co might use the host `tbilisiwinecellar.ge.to.co`, giving the DNS value `v=abiz1;k=ge-412345678;h=tbilisiwinecellar.ge.to.co;p=ztoMkAfuO7ROEgzrfSS7EqE4tA61C93mfKI8I5NtGxY=`. An unregistered business might use a town-based host such as `tbilisiwinecellar-tbilisi.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Georgia with a record hosted by to.co might use the host `tbilisiwinecellar.ge.to.co`, giving the DNS value `v=abiz1;k=ge-412345678;h=tbilisiwinecellar.ge.to.co;p=KqnAnhKAfwOmQebcHm1tyd0HPP5tPcwMz2rlJGabjxU=`. An unregistered business might use a town-based host such as `tbilisiwinecellar-tbilisi.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

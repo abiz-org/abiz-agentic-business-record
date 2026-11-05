@@ -45,7 +45,7 @@ Madagascar n’utilise pas de subdivision : n’ajoutez ni code de région, ni c
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.vanillesava.example. 300 IN TXT "v=abiz1;k=mg-5001234567;h=vanillesava.mg.to.co;p=8Kqtqulwwz3vmPXdLkrN7N/eqI0cFlNYf+YDOlUaJHo="
+_abiz.vanillesava.example. 300 IN TXT "v=abiz1;k=mg-5001234567;h=vanillesava.mg.to.co;p=czj1bxgFOJ+fcpTJsA2uVKn28Tj1BlNlfCsy4GoUU14="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.vanillesava.example. 300 IN TXT "v=abiz1;h=vanillesava.mg.to.co;p=8Kqtqulwwz3vmPXdLkrN7N/eqI0cFlNYf+YDOlUaJHo="
+_abiz.vanillesava.example. 300 IN TXT "v=abiz1;h=vanillesava.mg.to.co;p=czj1bxgFOJ+fcpTJsA2uVKn28Tj1BlNlfCsy4GoUU14="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://vanillesava.mg.to.co` :
@@ -62,22 +62,25 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://van
 {
   "record_version": "abiz1",
   "business_name": "Vanille de la SAVA",
-  "country": "mg",
+  "country": {
+    "code": "MG",
+    "name": "Madagascar"
+  },
   "business_key": "mg-5001234567",
   "registration_number": "5001234567",
   "identity_host": "vanillesava.mg.to.co",
   "domains": [
     "vanillesava.example"
   ],
-  "public_key": "8Kqtqulwwz3vmPXdLkrN7N/eqI0cFlNYf+YDOlUaJHo=",
-  "signature": "nYby3nbVzPZ5gv/KcRa/uqJaA5/M5V/QXbH7SKPPPE3+To5+EBbBZmBTwuM+7Vf2DH5n4bvi1ds/Y4KtG5w0AA=="
+  "public_key": "czj1bxgFOJ+fcpTJsA2uVKn28Tj1BlNlfCsy4GoUU14=",
+  "signature": "iGwoo1pnqdqTnawNrZuIP7z1UY035QhT1qFR+V9j00fPQGv3zrtbj/8VyH4rTMa3mOV6+KT4WIyBt/VbvN1EAA=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain vanillesava.example --dns-value 'v=abiz1;k=mg-5001234567;h=vanillesava.mg.to.co;p=8Kqtqulwwz3vmPXdLkrN7N/eqI0cFlNYf+YDOlUaJHo='
+python scripts/validate.py record.json --domain vanillesava.example --dns-value 'v=abiz1;k=mg-5001234567;h=vanillesava.mg.to.co;p=czj1bxgFOJ+fcpTJsA2uVKn28Tj1BlNlfCsy4GoUU14='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée à Madagascar dont la fiche est hébergée par to.co pourrait utiliser l’hôte `vanillesava.mg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=mg-5001234567;h=vanillesava.mg.to.co;p=8Kqtqulwwz3vmPXdLkrN7N/eqI0cFlNYf+YDOlUaJHo=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `vanillesava-antalaha.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée à Madagascar dont la fiche est hébergée par to.co pourrait utiliser l’hôte `vanillesava.mg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=mg-5001234567;h=vanillesava.mg.to.co;p=czj1bxgFOJ+fcpTJsA2uVKn28Tj1BlNlfCsy4GoUU14=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `vanillesava-antalaha.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

@@ -47,7 +47,7 @@ Bangladesh uses no subdivision: do not add a region, province or city code. SPEC
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.dhakajute.example. 300 IN TXT "v=abiz1;k=bd-C1234562023;h=dhakajute.bd.to.co;p=9mvhZt+CTP85ywK1NZWlZpNIIkELzsJodtzu6VaFolo="
+_abiz.dhakajute.example. 300 IN TXT "v=abiz1;k=bd-C1234562023;h=dhakajute.bd.to.co;p=mPgFvNDBNSNG3WIgtn2lX7Ujp3DtrhScpqqYx7EBdYk="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.dhakajute.example. 300 IN TXT "v=abiz1;h=dhakajute.bd.to.co;p=9mvhZt+CTP85ywK1NZWlZpNIIkELzsJodtzu6VaFolo="
+_abiz.dhakajute.example. 300 IN TXT "v=abiz1;h=dhakajute.bd.to.co;p=mPgFvNDBNSNG3WIgtn2lX7Ujp3DtrhScpqqYx7EBdYk="
 ```
 
 The business record served as `application/json` at `https://dhakajute.bd.to.co`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://dhakajute.bd.to.co`
 {
   "record_version": "abiz1",
   "business_name": "Dhaka Jute Works",
-  "country": "bd",
+  "country": {
+    "code": "BD",
+    "name": "Bangladesh"
+  },
   "business_key": "bd-C1234562023",
   "registration_number": "C1234562023",
   "identity_host": "dhakajute.bd.to.co",
   "domains": [
     "dhakajute.example"
   ],
-  "public_key": "9mvhZt+CTP85ywK1NZWlZpNIIkELzsJodtzu6VaFolo=",
-  "signature": "7+HjqW3PzAVX2Cv70Pfzv0UOfDBB2dGS+TZByTl5hl2JJeVprWb9U+gkIsOp9WZW2ryWWGwwvNhRzhhh2d2YBg=="
+  "public_key": "mPgFvNDBNSNG3WIgtn2lX7Ujp3DtrhScpqqYx7EBdYk=",
+  "signature": "4PPKNnqgqQUE+ZJrnwyo4H0Sits5/Tgfrqzvqh7d2NT5M+S/l1/9y8SPBN5nEiBr4Fwbh2cZHq40XHVdDBqMDg=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain dhakajute.example --dns-value 'v=abiz1;k=bd-C1234562023;h=dhakajute.bd.to.co;p=9mvhZt+CTP85ywK1NZWlZpNIIkELzsJodtzu6VaFolo='
+python scripts/validate.py record.json --domain dhakajute.example --dns-value 'v=abiz1;k=bd-C1234562023;h=dhakajute.bd.to.co;p=mPgFvNDBNSNG3WIgtn2lX7Ujp3DtrhScpqqYx7EBdYk='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -88,7 +91,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Bangladesh with a record hosted by to.co might use the host `dhakajute.bd.to.co`, giving the DNS value `v=abiz1;k=bd-C1234562023;h=dhakajute.bd.to.co;p=9mvhZt+CTP85ywK1NZWlZpNIIkELzsJodtzu6VaFolo=`. An unregistered business might use a town-based host such as `dhakajute-dhaka.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Bangladesh with a record hosted by to.co might use the host `dhakajute.bd.to.co`, giving the DNS value `v=abiz1;k=bd-C1234562023;h=dhakajute.bd.to.co;p=mPgFvNDBNSNG3WIgtn2lX7Ujp3DtrhScpqqYx7EBdYk=`. An unregistered business might use a town-based host such as `dhakajute-dhaka.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

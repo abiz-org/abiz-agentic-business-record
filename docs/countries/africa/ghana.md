@@ -43,7 +43,7 @@ Ghana uses no subdivision: do not add a region, province or city code. SPEC sect
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.kumasikente.example. 300 IN TXT "v=abiz1;k=gh-CS123456789;h=kumasikente.gh.to.co;p=2KyaRTd9j21l+K3WnAlce86yKMDTf0xWeI/cM8qCn9g="
+_abiz.kumasikente.example. 300 IN TXT "v=abiz1;k=gh-CS123456789;h=kumasikente.gh.to.co;p=EBVIiFnWI2rhtfDTwKcM8FI7D9EbRPA0OZllIYppngE="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -51,7 +51,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.kumasikente.example. 300 IN TXT "v=abiz1;h=kumasikente.gh.to.co;p=2KyaRTd9j21l+K3WnAlce86yKMDTf0xWeI/cM8qCn9g="
+_abiz.kumasikente.example. 300 IN TXT "v=abiz1;h=kumasikente.gh.to.co;p=EBVIiFnWI2rhtfDTwKcM8FI7D9EbRPA0OZllIYppngE="
 ```
 
 The business record served as `application/json` at `https://kumasikente.gh.to.co`:
@@ -60,22 +60,25 @@ The business record served as `application/json` at `https://kumasikente.gh.to.c
 {
   "record_version": "abiz1",
   "business_name": "Kumasi Kente Works",
-  "country": "gh",
+  "country": {
+    "code": "GH",
+    "name": "Ghana"
+  },
   "business_key": "gh-CS123456789",
   "registration_number": "CS123456789",
   "identity_host": "kumasikente.gh.to.co",
   "domains": [
     "kumasikente.example"
   ],
-  "public_key": "2KyaRTd9j21l+K3WnAlce86yKMDTf0xWeI/cM8qCn9g=",
-  "signature": "GrkPM/sFwsRABSgfjlhbR2wop2F/bI/W+BLiZrDrKImlbsZDcGHtK/FyQ7TrXLc91yPMonyJ+yceEWNwRuQdAA=="
+  "public_key": "EBVIiFnWI2rhtfDTwKcM8FI7D9EbRPA0OZllIYppngE=",
+  "signature": "DOJoYZ8xoE4/nlHNkZ0VwHItpcmGE8y5Kg+YKyYtKaGYWlzFmZBIYgGbX1Lqqut2muyuRvOuGgq3f463tA3vBA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain kumasikente.example --dns-value 'v=abiz1;k=gh-CS123456789;h=kumasikente.gh.to.co;p=2KyaRTd9j21l+K3WnAlce86yKMDTf0xWeI/cM8qCn9g='
+python scripts/validate.py record.json --domain kumasikente.example --dns-value 'v=abiz1;k=gh-CS123456789;h=kumasikente.gh.to.co;p=EBVIiFnWI2rhtfDTwKcM8FI7D9EbRPA0OZllIYppngE='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -84,7 +87,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Ghana with a record hosted by to.co might use the host `kumasikente.gh.to.co`, giving the DNS value `v=abiz1;k=gh-CS123456789;h=kumasikente.gh.to.co;p=2KyaRTd9j21l+K3WnAlce86yKMDTf0xWeI/cM8qCn9g=`. An unregistered business might use a town-based host such as `kumasikente-kumasi.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Ghana with a record hosted by to.co might use the host `kumasikente.gh.to.co`, giving the DNS value `v=abiz1;k=gh-CS123456789;h=kumasikente.gh.to.co;p=EBVIiFnWI2rhtfDTwKcM8FI7D9EbRPA0OZllIYppngE=`. An unregistered business might use a town-based host such as `kumasikente-kumasi.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

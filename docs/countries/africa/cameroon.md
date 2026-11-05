@@ -45,7 +45,7 @@ Le Cameroun n’utilise pas de subdivision : n’ajoutez ni code de région, ni 
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.boulangeriewouri.example. 300 IN TXT "v=abiz1;k=cm-RCDLA2023B1234;h=boulangeriewouri.cm.to.co;p=LGsy1ZIzd5/Z9xI8Dsk4b9bKbuyBV1lII9hf17XTOTE="
+_abiz.boulangeriewouri.example. 300 IN TXT "v=abiz1;k=cm-RCDLA2023B1234;h=boulangeriewouri.cm.to.co;p=i2JP8gPbiLL9AjO4GAH5oVe+Y52rP05V8XBe5rd9TPg="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.boulangeriewouri.example. 300 IN TXT "v=abiz1;h=boulangeriewouri.cm.to.co;p=LGsy1ZIzd5/Z9xI8Dsk4b9bKbuyBV1lII9hf17XTOTE="
+_abiz.boulangeriewouri.example. 300 IN TXT "v=abiz1;h=boulangeriewouri.cm.to.co;p=i2JP8gPbiLL9AjO4GAH5oVe+Y52rP05V8XBe5rd9TPg="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://boulangeriewouri.cm.to.co` :
@@ -62,22 +62,25 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://bou
 {
   "record_version": "abiz1",
   "business_name": "Boulangerie du Wouri",
-  "country": "cm",
+  "country": {
+    "code": "CM",
+    "name": "Cameroon"
+  },
   "business_key": "cm-RCDLA2023B1234",
   "registration_number": "RCDLA2023B1234",
   "identity_host": "boulangeriewouri.cm.to.co",
   "domains": [
     "boulangeriewouri.example"
   ],
-  "public_key": "LGsy1ZIzd5/Z9xI8Dsk4b9bKbuyBV1lII9hf17XTOTE=",
-  "signature": "l/Q1/lsGFbphfOj+Qd8e/5glT2HEgvjj2NRWh9lFHSqZ1bKN1ObVrlfHtVfjZnIUrUmlNVvThdUxgIShRoS0Ag=="
+  "public_key": "i2JP8gPbiLL9AjO4GAH5oVe+Y52rP05V8XBe5rd9TPg=",
+  "signature": "ABR4cPQb3nzQtWkZoyVmIzxDWm1qJk6+kom51jhBiFCn+3aT6b0wC24E598OhPfVIeOC5wDlmeW2EqluJ6XeBw=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain boulangeriewouri.example --dns-value 'v=abiz1;k=cm-RCDLA2023B1234;h=boulangeriewouri.cm.to.co;p=LGsy1ZIzd5/Z9xI8Dsk4b9bKbuyBV1lII9hf17XTOTE='
+python scripts/validate.py record.json --domain boulangeriewouri.example --dns-value 'v=abiz1;k=cm-RCDLA2023B1234;h=boulangeriewouri.cm.to.co;p=i2JP8gPbiLL9AjO4GAH5oVe+Y52rP05V8XBe5rd9TPg='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Cameroun dont la fiche est hébergée par to.co pourrait utiliser l’hôte `boulangeriewouri.cm.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cm-RCDLA2023B1234;h=boulangeriewouri.cm.to.co;p=LGsy1ZIzd5/Z9xI8Dsk4b9bKbuyBV1lII9hf17XTOTE=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `boulangeriewouri-douala.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Cameroun dont la fiche est hébergée par to.co pourrait utiliser l’hôte `boulangeriewouri.cm.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cm-RCDLA2023B1234;h=boulangeriewouri.cm.to.co;p=i2JP8gPbiLL9AjO4GAH5oVe+Y52rP05V8XBe5rd9TPg=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `boulangeriewouri-douala.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.elaiourgeiokritis.example. 300 IN TXT "v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=gKHkKJuzfOKOvMN8YY7ej46KbVPWAP7qLbn+5pD+rl4="
+_abiz.elaiourgeiokritis.example. 300 IN TXT "v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=Z/BgPC6MzmlaULz0Ou72Y1zAjvJ99+3Ib0rzHxRC2VE="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://elaiourgeiokritis.gr.to.co`, as `application/json`
 {
   "record_version": "abiz1",
   "business_name": "Elaiourgeio Kritis IKE",
-  "country": "gr",
+  "country": {
+    "code": "GR",
+    "name": "Greece"
+  },
   "business_key": "gr-123456701000",
   "registration_number": "123456701000",
   "identity_host": "elaiourgeiokritis.gr.to.co",
   "domains": [
     "elaiourgeiokritis.example"
   ],
-  "public_key": "gKHkKJuzfOKOvMN8YY7ej46KbVPWAP7qLbn+5pD+rl4=",
+  "public_key": "Z/BgPC6MzmlaULz0Ou72Y1zAjvJ99+3Ib0rzHxRC2VE=",
   "description": "Olive mill in Heraklion.",
   "website": "https://elaiourgeiokritis.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://elaiourgeiokritis.gr.to.co`, as `application/json`
       "public": true
     }
   ],
-  "signature": "crqOG6TqdAjjC1UUksYZzzZ+hRLfe0Y0eody9wdYm0q0rXz9Sw9AtkiQgySIYJ453kucE9eXSBsb4bRfjfrVAg=="
+  "signature": "W2Vx3m2GS/v9eN6Y4HDyfSJSWE4CZbZUuoKNY0vZ8EQKzc43rJa6ZmwfFbHvy/4hLEp0PQ76PpOuBi3REOIcBw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain elaiourgeiokritis.example --dns-value 'v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=gKHkKJuzfOKOvMN8YY7ej46KbVPWAP7qLbn+5pD+rl4='
+python scripts/validate.py record.json --domain elaiourgeiokritis.example --dns-value 'v=abiz1;k=gr-123456701000;h=elaiourgeiokritis.gr.to.co;p=Z/BgPC6MzmlaULz0Ou72Y1zAjvJ99+3Ib0rzHxRC2VE='
 ```
 
 ### Self-hosted or through a provider

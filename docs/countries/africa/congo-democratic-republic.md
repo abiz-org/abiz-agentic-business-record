@@ -45,7 +45,7 @@ La République démocratique du Congo n’utilise pas de subdivision : n’ajout
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.imprimerielisanga.example. 300 IN TXT "v=abiz1;k=cd-CDKNGRCCM23B01234;h=imprimerielisanga.cd.to.co;p=OfjTsKqAGVrU9x83aYTh1rll8xJZgiTUWNagutLZh6Q="
+_abiz.imprimerielisanga.example. 300 IN TXT "v=abiz1;k=cd-CDKNGRCCM23B01234;h=imprimerielisanga.cd.to.co;p=H/pE83SQO+6FmZGPeWw2YZGGOg744T/NZHlNyVkIrIM="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.imprimerielisanga.example. 300 IN TXT "v=abiz1;h=imprimerielisanga.cd.to.co;p=OfjTsKqAGVrU9x83aYTh1rll8xJZgiTUWNagutLZh6Q="
+_abiz.imprimerielisanga.example. 300 IN TXT "v=abiz1;h=imprimerielisanga.cd.to.co;p=H/pE83SQO+6FmZGPeWw2YZGGOg744T/NZHlNyVkIrIM="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://imprimerielisanga.cd.to.co` :
@@ -62,22 +62,25 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://imp
 {
   "record_version": "abiz1",
   "business_name": "Imprimerie Lisanga",
-  "country": "cd",
+  "country": {
+    "code": "CD",
+    "name": "Democratic Republic of the Congo"
+  },
   "business_key": "cd-CDKNGRCCM23B01234",
   "registration_number": "CDKNGRCCM23B01234",
   "identity_host": "imprimerielisanga.cd.to.co",
   "domains": [
     "imprimerielisanga.example"
   ],
-  "public_key": "OfjTsKqAGVrU9x83aYTh1rll8xJZgiTUWNagutLZh6Q=",
-  "signature": "IgTU06aaRhubg5Xf6SiuNsYuK+u+ifQSTA5F02qO8G23C9F9nMHrl3ImdYrTCZpqULrpw3qpTzAjf93f1k+YCQ=="
+  "public_key": "H/pE83SQO+6FmZGPeWw2YZGGOg744T/NZHlNyVkIrIM=",
+  "signature": "3xZVYEsjJGgOfpBdpwDZvyCS5vhrW1jlOkNHfoXjUMYRKN7G7+UOvgzl1VT/W60p1fie06tnSR2cDVuXwdp7DA=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain imprimerielisanga.example --dns-value 'v=abiz1;k=cd-CDKNGRCCM23B01234;h=imprimerielisanga.cd.to.co;p=OfjTsKqAGVrU9x83aYTh1rll8xJZgiTUWNagutLZh6Q='
+python scripts/validate.py record.json --domain imprimerielisanga.example --dns-value 'v=abiz1;k=cd-CDKNGRCCM23B01234;h=imprimerielisanga.cd.to.co;p=H/pE83SQO+6FmZGPeWw2YZGGOg744T/NZHlNyVkIrIM='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en République démocratique du Congo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `imprimerielisanga.cd.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cd-CDKNGRCCM23B01234;h=imprimerielisanga.cd.to.co;p=OfjTsKqAGVrU9x83aYTh1rll8xJZgiTUWNagutLZh6Q=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `imprimerielisanga-kinshasa.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en République démocratique du Congo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `imprimerielisanga.cd.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cd-CDKNGRCCM23B01234;h=imprimerielisanga.cd.to.co;p=H/pE83SQO+6FmZGPeWw2YZGGOg744T/NZHlNyVkIrIM=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `imprimerielisanga-kinshasa.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

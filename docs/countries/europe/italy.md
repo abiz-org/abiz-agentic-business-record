@@ -41,7 +41,7 @@ Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate 
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.pasticceriarossi.example. 300 IN TXT "v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=A/me2pbHmvH7XDzBvJiJ6JyS59Xead4G//iE7NFMNwE="
+_abiz.pasticceriarossi.example. 300 IN TXT "v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=l9730DUDEnBmjvby9GD+hFKAGEDWuLdIbzflWpUOFgQ="
 ```
 
 - `v=abiz1` deve venire per primo. `h` e `p` sono obbligatori; `k` è facoltativo.
@@ -58,14 +58,17 @@ La scheda servita all'indirizzo `https://pasticceriarossi.it.to.co` come `applic
 {
   "record_version": "abiz1",
   "business_name": "Pasticceria Rossi S.r.l.",
-  "country": "it",
+  "country": {
+    "code": "IT",
+    "name": "Italy"
+  },
   "business_key": "it-12345678901",
   "registration_number": "12345678901",
   "identity_host": "pasticceriarossi.it.to.co",
   "domains": [
     "pasticceriarossi.example"
   ],
-  "public_key": "A/me2pbHmvH7XDzBvJiJ6JyS59Xead4G//iE7NFMNwE=",
+  "public_key": "l9730DUDEnBmjvby9GD+hFKAGEDWuLdIbzflWpUOFgQ=",
   "description": "Pasticceria artigianale a Bologna.",
   "website": "https://pasticceriarossi.example",
   "locations": [
@@ -80,14 +83,14 @@ La scheda servita all'indirizzo `https://pasticceriarossi.it.to.co` come `applic
       "public": true
     }
   ],
-  "signature": "vtMqgEv/X1GW98TV3mx1b2oh9jL4/L9+1pJ2iuIkdUyt3YclQei2HR3mBzLdNzMHNhNYVLy21uto8MoFDlHEAw=="
+  "signature": "P87lOskIsTzsT1aupBleR4BDfIl6shxng4tAwzTw4c93LWDEpe2MlefASQlxH460PsFgEt4HD84O7Nb6A7muDA=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain pasticceriarossi.example --dns-value 'v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=A/me2pbHmvH7XDzBvJiJ6JyS59Xead4G//iE7NFMNwE='
+python scripts/validate.py record.json --domain pasticceriarossi.example --dns-value 'v=abiz1;k=it-12345678901;h=pasticceriarossi.it.to.co;p=l9730DUDEnBmjvby9GD+hFKAGEDWuLdIbzflWpUOFgQ='
 ```
 
 ### In proprio o tramite un fornitore

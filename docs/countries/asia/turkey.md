@@ -45,7 +45,7 @@ Türkiye’de alt bölge kodu kullanılmaz: il veya ilçe kodu eklemeyin. SPEC b
 Alan adınızın altında `_abiz` adıyla yalnızca bir TXT kaydı yayımlayın; boşluksuz kısa biçimde ve en başta `v=abiz1` olacak şekilde:
 
 ```dns
-_abiz.kapadokyaseramik.example. 300 IN TXT "v=abiz1;k=tr-0123456789000015;h=kapadokyaseramik.tr.to.co;p=4ibVnq387H/uJZ4qf/0Sbtb6VHzSdKyNmEqUdg+K450="
+_abiz.kapadokyaseramik.example. 300 IN TXT "v=abiz1;k=tr-0123456789000015;h=kapadokyaseramik.tr.to.co;p=ciNEixVVJB98qzfOzc4pTPgqxU4Zn6ZR99caIv+OMIU="
 ```
 
 Yukarıdaki `p` değeri bu sayfa için üretilmiş, tek kullanımlık bir örnek anahtardır. Asla kopyalamayın: kendi anahtarınızı yayımlayın. Bir ABIZ 1.1 beyanı `p` içermelidir. Bu sayfadaki tüm adlar, numaralar ve alan adları hayalîdir.
@@ -53,7 +53,7 @@ Yukarıdaki `p` değeri bu sayfa için üretilmiş, tek kullanımlık bir örnek
 İsteğe bağlı `k` etiketi olmadan da şu kayıt geçerlidir:
 
 ```dns
-_abiz.kapadokyaseramik.example. 300 IN TXT "v=abiz1;h=kapadokyaseramik.tr.to.co;p=4ibVnq387H/uJZ4qf/0Sbtb6VHzSdKyNmEqUdg+K450="
+_abiz.kapadokyaseramik.example. 300 IN TXT "v=abiz1;h=kapadokyaseramik.tr.to.co;p=ciNEixVVJB98qzfOzc4pTPgqxU4Zn6ZR99caIv+OMIU="
 ```
 
 `https://kapadokyaseramik.tr.to.co` adresinde `application/json` olarak sunulan işletme kaydı:
@@ -62,22 +62,25 @@ _abiz.kapadokyaseramik.example. 300 IN TXT "v=abiz1;h=kapadokyaseramik.tr.to.co;
 {
   "record_version": "abiz1",
   "business_name": "Kapadokya Seramik",
-  "country": "tr",
+  "country": {
+    "code": "TR",
+    "name": "T\u00fcrkiye"
+  },
   "business_key": "tr-0123456789000015",
   "registration_number": "0123456789000015",
   "identity_host": "kapadokyaseramik.tr.to.co",
   "domains": [
     "kapadokyaseramik.example"
   ],
-  "public_key": "4ibVnq387H/uJZ4qf/0Sbtb6VHzSdKyNmEqUdg+K450=",
-  "signature": "VyIt4A+bWY6PBttC3gJ+BRGT/Li1ZfZ7mgdHNusrBwo9h5SeuVSyb6D2D56jRV2W0lam2Olo/hd6chyhthFrCg=="
+  "public_key": "ciNEixVVJB98qzfOzc4pTPgqxU4Zn6ZR99caIv+OMIU=",
+  "signature": "qkYBRujVrsHo18YMCWL9de2EPWbXxVknAnGRZsexNVMvveULUT9ezgoE2RandQTt+ASxJsiH24IBQdmF/87OCg=="
 }
 ```
 
 Bir kaydı yayımlamadan önce denetlemek için bu deponun bir kopyasında başvuru doğrulayıcısını çalıştırın:
 
 ```sh
-python scripts/validate.py record.json --domain kapadokyaseramik.example --dns-value 'v=abiz1;k=tr-0123456789000015;h=kapadokyaseramik.tr.to.co;p=4ibVnq387H/uJZ4qf/0Sbtb6VHzSdKyNmEqUdg+K450='
+python scripts/validate.py record.json --domain kapadokyaseramik.example --dns-value 'v=abiz1;k=tr-0123456789000015;h=kapadokyaseramik.tr.to.co;p=ciNEixVVJB98qzfOzc4pTPgqxU4Zn6ZR99caIv+OMIU='
 ```
 
 JSON kaydını herhangi bir HTTPS sunucusunda kendiniz barındırabilir ya da uyumlu herhangi bir sağlayıcıyı kullanabilirsiniz. ABIZ belirli bir sağlayıcı şart koşmaz.
@@ -86,7 +89,7 @@ JSON kaydını herhangi bir HTTPS sunucusunda kendiniz barındırabilir ya da uy
 
 Model Context Protocol (MCP), yapay zekâ asistanlarının dış sunuculardaki araçları standart bir yolla çağırmasını ve veri okumasını sağlayan açık bir protokoldür. İşletme kaydı isteğe bağlı `mcp_server_url` alanını, yani işletmenin MCP sunucusunun HTTPS adresini içerebilir; örneğin rezervasyon ya da ürün bilgisi için. ABIZ bu sunucuya kefil olmaz; araçlar kendi erişim denetimlerini uygulamalıdır (SPEC bölüm 4.2.6).
 
-Bir sağlayıcı kaydı barındırıp DNS işaretçisini sizin adınıza yayımlayabilir. Örneğin kaydı to.co’da barındırılan, Türkiye’de tescilli bir şirket `kapadokyaseramik.tr.to.co` adresini kullanabilir; DNS değeri `v=abiz1;k=tr-0123456789000015;h=kapadokyaseramik.tr.to.co;p=4ibVnq387H/uJZ4qf/0Sbtb6VHzSdKyNmEqUdg+K450=` olur. Tescilsiz bir işletme ise `kapadokyaseramik-nevsehir.biz.to.co` gibi şehir adı içeren bir adres kullanabilir. Uyumlu her sağlayıcı ya da kendi sunucunuz aynı şekilde çalışır.
+Bir sağlayıcı kaydı barındırıp DNS işaretçisini sizin adınıza yayımlayabilir. Örneğin kaydı to.co’da barındırılan, Türkiye’de tescilli bir şirket `kapadokyaseramik.tr.to.co` adresini kullanabilir; DNS değeri `v=abiz1;k=tr-0123456789000015;h=kapadokyaseramik.tr.to.co;p=ciNEixVVJB98qzfOzc4pTPgqxU4Zn6ZR99caIv+OMIU=` olur. Tescilsiz bir işletme ise `kapadokyaseramik-nevsehir.biz.to.co` gibi şehir adı içeren bir adres kullanabilir. Uyumlu her sağlayıcı ya da kendi sunucunuz aynı şekilde çalışır.
 
 ## 4. Anahtarlar ve imzalar (ABIZ 1.1)
 

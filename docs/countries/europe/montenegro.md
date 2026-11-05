@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.lovcenturist.example. 300 IN TXT "v=abiz1;k=me-02123456;h=lovcenturist.me.to.co;p=L0xNDDHugkGqeFQ9W7FqmJw5rDw1suXDgKSkcPtY3qQ="
+_abiz.lovcenturist.example. 300 IN TXT "v=abiz1;k=me-02123456;h=lovcenturist.me.to.co;p=jh4LoN6pkimjKG/FcRS8T8Xzd8bwDLYW9DTcIlI+Ezc="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -57,15 +57,18 @@ The record served at `https://lovcenturist.me.to.co`, as `application/json`:
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Lovćen Turist d.o.o.",
-  "country": "me",
+  "business_name": "Lov\u0107en Turist d.o.o.",
+  "country": {
+    "code": "ME",
+    "name": "Montenegro"
+  },
   "business_key": "me-02123456",
   "registration_number": "02123456",
   "identity_host": "lovcenturist.me.to.co",
   "domains": [
     "lovcenturist.example"
   ],
-  "public_key": "L0xNDDHugkGqeFQ9W7FqmJw5rDw1suXDgKSkcPtY3qQ=",
+  "public_key": "jh4LoN6pkimjKG/FcRS8T8Xzd8bwDLYW9DTcIlI+Ezc=",
   "description": "Travel agency in Podgorica.",
   "website": "https://lovcenturist.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://lovcenturist.me.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "mG7srhUnVuFFFEfSotvJq1R92bPbpxKP90glePJr5xMw72D3MdWlQPAi9Z0v/cgPD/3a3KSzcIPMmn7PWSH9BA=="
+  "signature": "p0wOxGZ99GPww/B/NurBoArRAZKkRnriJQbyE8cT2YQMztNUxQ4AsIzeFi7mj7hLwGWc1s9QOOX893Mi3vwkBw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain lovcenturist.example --dns-value 'v=abiz1;k=me-02123456;h=lovcenturist.me.to.co;p=L0xNDDHugkGqeFQ9W7FqmJw5rDw1suXDgKSkcPtY3qQ='
+python scripts/validate.py record.json --domain lovcenturist.example --dns-value 'v=abiz1;k=me-02123456;h=lovcenturist.me.to.co;p=jh4LoN6pkimjKG/FcRS8T8Xzd8bwDLYW9DTcIlI+Ezc='
 ```
 
 ### Self-hosted or through a provider

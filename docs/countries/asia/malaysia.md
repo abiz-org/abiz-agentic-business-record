@@ -43,7 +43,7 @@ Malaysia tidak menggunakan kod subbahagian: jangan tambah kod negeri, daerah ata
 Terbitkan tepat satu rekod TXT bernama `_abiz` di bawah domain anda, dalam bentuk padat tanpa ruang, dengan `v=abiz1` di hadapan:
 
 ```dns
-_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc="
+_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=YHpWorDrHTJdCW292MKGWi1DGBLJSbn/umXYeZlUlbY="
 ```
 
 Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. Jangan sekali-kali menyalinnya: terbitkan kunci anda sendiri. Pengisytiharan ABIZ 1.1 mesti mengandungi `p`. Semua nama, nombor dan domain di halaman ini adalah rekaan.
@@ -51,7 +51,7 @@ Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. 
 Tanpa tag pilihan `k`, rekod ini juga sah:
 
 ```dns
-_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc="
+_abiz.batikmelaka.example. 300 IN TXT "v=abiz1;h=batikmelaka.my.to.co;p=YHpWorDrHTJdCW292MKGWi1DGBLJSbn/umXYeZlUlbY="
 ```
 
 Rekod perniagaan yang disediakan sebagai `application/json` di `https://batikmelaka.my.to.co`:
@@ -60,22 +60,25 @@ Rekod perniagaan yang disediakan sebagai `application/json` di `https://batikmel
 {
   "record_version": "abiz1",
   "business_name": "Kedai Batik Melaka",
-  "country": "my",
+  "country": {
+    "code": "MY",
+    "name": "Malaysia"
+  },
   "business_key": "my-202301012345",
   "registration_number": "202301012345",
   "identity_host": "batikmelaka.my.to.co",
   "domains": [
     "batikmelaka.example"
   ],
-  "public_key": "Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc=",
-  "signature": "c6CdLfRcjA4eBjOSWWTaDieka1UPIvOULIKfAfgxMHxja7XYHCnP3G+lqtR4o7xQ1jT637N+/hiyu6MBZSV+AQ=="
+  "public_key": "YHpWorDrHTJdCW292MKGWi1DGBLJSbn/umXYeZlUlbY=",
+  "signature": "0i9YmINvOsGb3mKs5b43d7HfB4Mdim18S3gb29Cu/LhMit2t3cddFaJBka9/ni/t4XY3/+d/Bmd134gSGf02Dg=="
 }
 ```
 
 Untuk menyemak rekod sebelum diterbitkan, jalankan pengesah rujukan daripada salinan repositori ini:
 
 ```sh
-python scripts/validate.py record.json --domain batikmelaka.example --dns-value 'v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc='
+python scripts/validate.py record.json --domain batikmelaka.example --dns-value 'v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=YHpWorDrHTJdCW292MKGWi1DGBLJSbn/umXYeZlUlbY='
 ```
 
 Anda boleh menempatkan sendiri rekod JSON pada mana-mana pelayan HTTPS, atau menggunakan mana-mana penyedia yang serasi. ABIZ tidak mewajibkan penyedia tertentu.
@@ -84,7 +87,7 @@ Anda boleh menempatkan sendiri rekod JSON pada mana-mana pelayan HTTPS, atau men
 
 Model Context Protocol (MCP) ialah protokol terbuka yang membolehkan pembantu AI memanggil alat dan membaca data daripada pelayan luar dengan cara yang standard. Rekod perniagaan boleh mengandungi medan pilihan `mcp_server_url`, iaitu alamat HTTPS pelayan MCP perniagaan, contohnya untuk tempahan atau maklumat produk. ABIZ tidak menjamin pelayan itu; alat mesti menggunakan kawalan akses sendiri (SPEC bahagian 4.2.6).
 
-Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Malaysia yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `batikmelaka.my.to.co`, dengan nilai DNS `v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=Cbzfb02SDUwSu1h2gg81Z+n9ghB6T7/aq+awnPP6Opc=`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `batikmelaka-melaka.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
+Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Malaysia yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `batikmelaka.my.to.co`, dengan nilai DNS `v=abiz1;k=my-202301012345;h=batikmelaka.my.to.co;p=YHpWorDrHTJdCW292MKGWi1DGBLJSbn/umXYeZlUlbY=`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `batikmelaka-melaka.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
 
 ## 4. Kunci dan tandatangan (ABIZ 1.1)
 

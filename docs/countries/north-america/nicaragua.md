@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.hamacasmasaya.example. 300 IN TXT "v=abiz1;h=hamacasmasaya.ni.to.co;p=sYJGMrWQSQF2Bl64AGB69JZjKow+dbVI75OEM1sVSZw="
+_abiz.hamacasmasaya.example. 300 IN TXT "v=abiz1;h=hamacasmasaya.ni.to.co;p=1mYrpK0IRPAq1ZXsRc7IzBI6hpm3hR3G+p2PFjiGAeo="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -48,12 +48,15 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 {
   "record_version": "abiz1",
   "business_name": "Hamacas Masaya, S.A.",
-  "country": "ni",
+  "country": {
+    "code": "NI",
+    "name": "Nicaragua"
+  },
   "identity_host": "hamacasmasaya.ni.to.co",
   "domains": [
     "hamacasmasaya.example"
   ],
-  "public_key": "sYJGMrWQSQF2Bl64AGB69JZjKow+dbVI75OEM1sVSZw=",
+  "public_key": "1mYrpK0IRPAq1ZXsRc7IzBI6hpm3hR3G+p2PFjiGAeo=",
   "description": "Hamacas tejidas a mano en Masaya.",
   "website": "https://hamacasmasaya.example",
   "locations": [
@@ -131,7 +134,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "pjqM+QFroepYB7olojkYC/RXNBOYSl/Zm18VqvnJ+I3PHmnbxmgKBh39SDprgDOXZQXFv4uTs4dApeRrFyuSBw=="
+  "signature": "Fsh7E6ZAlaxNaxdX79KpZ9I7YD6stSiLF3Q7bn4g/UwRBwo3OUUJAqBnHvWOXmSsetH1TyRYET4T8MOG4XEBBw=="
 }
 ```
 
@@ -144,7 +147,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain hamacasmasaya.example \
-  --dns-value 'v=abiz1;h=hamacasmasaya.ni.to.co;p=sYJGMrWQSQF2Bl64AGB69JZjKow+dbVI75OEM1sVSZw='
+  --dns-value 'v=abiz1;h=hamacasmasaya.ni.to.co;p=1mYrpK0IRPAq1ZXsRc7IzBI6hpm3hR3G+p2PFjiGAeo='
 ```
 
 ## 3. Proveedores y MCP
@@ -159,7 +162,7 @@ Por ejemplo, un proveedor puede alojar el registro de Hamacas Masaya en `hamacas
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.hamacasmasaya.example. 300 IN TXT "v=abiz1;h=hamacasmasaya.ni.to.co;p=sYJGMrWQSQF2Bl64AGB69JZjKow+dbVI75OEM1sVSZw="
+  _abiz.hamacasmasaya.example. 300 IN TXT "v=abiz1;h=hamacasmasaya.ni.to.co;p=1mYrpK0IRPAq1ZXsRc7IzBI6hpm3hR3G+p2PFjiGAeo="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

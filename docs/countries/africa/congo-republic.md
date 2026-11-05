@@ -45,7 +45,7 @@ La République du Congo n’utilise pas de subdivision : n’ajoutez ni code de 
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=m//dHh0sYMMWdh/Pb4L2XLovicFN+s9AHO4F5iU24fU="
+_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=jrHkr63oGAHsuGokpiEriz5IhBsCl80C4BxIoNOvjaQ="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;h=pecheriepointe.cg.to.co;p=m//dHh0sYMMWdh/Pb4L2XLovicFN+s9AHO4F5iU24fU="
+_abiz.pecheriepointe.example. 300 IN TXT "v=abiz1;h=pecheriepointe.cg.to.co;p=jrHkr63oGAHsuGokpiEriz5IhBsCl80C4BxIoNOvjaQ="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://pecheriepointe.cg.to.co` :
@@ -61,23 +61,26 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://pec
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Pêcherie de la Pointe",
-  "country": "cg",
+  "business_name": "P\u00eacherie de la Pointe",
+  "country": {
+    "code": "CG",
+    "name": "Congo"
+  },
   "business_key": "cg-CGBZV23B12345",
   "registration_number": "CGBZV23B12345",
   "identity_host": "pecheriepointe.cg.to.co",
   "domains": [
     "pecheriepointe.example"
   ],
-  "public_key": "m//dHh0sYMMWdh/Pb4L2XLovicFN+s9AHO4F5iU24fU=",
-  "signature": "el6ZzYJAloHYUDUmb79SuH+C+nVkCJjhx0Rb5quNq2aNg/UbyQUnoN76ICZUVqQjJa89LLDOsC/EFn0258dQAA=="
+  "public_key": "jrHkr63oGAHsuGokpiEriz5IhBsCl80C4BxIoNOvjaQ=",
+  "signature": "HDVE+oa0JzQnxxP7bt5+BfnJewHsdL+C+ERWWv+/SUJXRja9wtsg6U22nUHDo2Ofe24m2OoWheXBNe9jmlhPCw=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain pecheriepointe.example --dns-value 'v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=m//dHh0sYMMWdh/Pb4L2XLovicFN+s9AHO4F5iU24fU='
+python scripts/validate.py record.json --domain pecheriepointe.example --dns-value 'v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=jrHkr63oGAHsuGokpiEriz5IhBsCl80C4BxIoNOvjaQ='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en République du Congo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `pecheriepointe.cg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=m//dHh0sYMMWdh/Pb4L2XLovicFN+s9AHO4F5iU24fU=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `pecheriepointe-pointenoire.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en République du Congo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `pecheriepointe.cg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=cg-CGBZV23B12345;h=pecheriepointe.cg.to.co;p=jrHkr63oGAHsuGokpiEriz5IhBsCl80C4BxIoNOvjaQ=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `pecheriepointe-pointenoire.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

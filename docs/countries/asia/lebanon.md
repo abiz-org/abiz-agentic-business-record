@@ -43,7 +43,7 @@ lb-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.cedarsweets.example. 300 IN TXT "v=abiz1;h=cedarsweets.lb.to.co;p=kwf6v33+MKKzhKY4GAA7eJgPwXsgwRs+S3YnBd9O/Mo="
+_abiz.cedarsweets.example. 300 IN TXT "v=abiz1;h=cedarsweets.lb.to.co;p=/stnefm4oq89yZbd5TSSYEajdDChXcQGkgi78T6slz4="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -51,7 +51,7 @@ _abiz.cedarsweets.example. 300 IN TXT "v=abiz1;h=cedarsweets.lb.to.co;p=kwf6v33+
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.cedarsweets.example. 300 IN TXT "v=abiz1;h=cedarsweets.lb.to.co;p=kwf6v33+MKKzhKY4GAA7eJgPwXsgwRs+S3YnBd9O/Mo="
+_abiz.cedarsweets.example. 300 IN TXT "v=abiz1;h=cedarsweets.lb.to.co;p=/stnefm4oq89yZbd5TSSYEajdDChXcQGkgi78T6slz4="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://cedarsweets.lb.to.co`:
@@ -59,21 +59,24 @@ _abiz.cedarsweets.example. 300 IN TXT "v=abiz1;h=cedarsweets.lb.to.co;p=kwf6v33+
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "حلويات الأرز",
-  "country": "lb",
+  "business_name": "\u062d\u0644\u0648\u064a\u0627\u062a \u0627\u0644\u0623\u0631\u0632",
+  "country": {
+    "code": "LB",
+    "name": "Lebanon"
+  },
   "identity_host": "cedarsweets.lb.to.co",
   "domains": [
     "cedarsweets.example"
   ],
-  "public_key": "kwf6v33+MKKzhKY4GAA7eJgPwXsgwRs+S3YnBd9O/Mo=",
-  "signature": "pi7a/YJXc2sXviH3MKdOV6B1njoi8u96+sDtcL19LK7bIaDLsxbNndC4aSsBA/leeEOVFKYIM7bEF5kfk6xhBQ=="
+  "public_key": "/stnefm4oq89yZbd5TSSYEajdDChXcQGkgi78T6slz4=",
+  "signature": "wKNCmd4cR7WsFTfI5NxrdmJgZtbgNCy1dkJk+F64MqqWmmBWCYbEGWpcOTl+Q+DXahPOnelS5PBHZiyUgkWJCA=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain cedarsweets.example --dns-value 'v=abiz1;h=cedarsweets.lb.to.co;p=kwf6v33+MKKzhKY4GAA7eJgPwXsgwRs+S3YnBd9O/Mo='
+python scripts/validate.py record.json --domain cedarsweets.example --dns-value 'v=abiz1;h=cedarsweets.lb.to.co;p=/stnefm4oq89yZbd5TSSYEajdDChXcQGkgi78T6slz4='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -82,7 +85,7 @@ python scripts/validate.py record.json --domain cedarsweets.example --dns-value 
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في لبنان يستضيف to.co سجلها المضيف `cedarsweets.lb.to.co`، فتكون قيمة DNS هي `v=abiz1;h=cedarsweets.lb.to.co;p=kwf6v33+MKKzhKY4GAA7eJgPwXsgwRs+S3YnBd9O/Mo=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `cedarsweets-beirut.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في لبنان يستضيف to.co سجلها المضيف `cedarsweets.lb.to.co`، فتكون قيمة DNS هي `v=abiz1;h=cedarsweets.lb.to.co;p=/stnefm4oq89yZbd5TSSYEajdDChXcQGkgi78T6slz4=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `cedarsweets-beirut.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

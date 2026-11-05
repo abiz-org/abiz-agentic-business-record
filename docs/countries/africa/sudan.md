@@ -47,7 +47,7 @@ sd-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;k=sd-12345;h=www.gezirahmills.example;p=W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY="
+_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;k=sd-12345;h=www.gezirahmills.example;p=YKNaSV2pX1wojVts/vlbSup6lzXUIgLO5Z6S2buR5pg="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.gezirahmills.example. 300 IN TXT "v=abiz1;k=sd-12345;h=www.gezirahmills.ex
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;h=www.gezirahmills.example;p=W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY="
+_abiz.gezirahmills.example. 300 IN TXT "v=abiz1;h=www.gezirahmills.example;p=YKNaSV2pX1wojVts/vlbSup6lzXUIgLO5Z6S2buR5pg="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.gezirahmills.example/?format=json`:
@@ -63,23 +63,26 @@ _abiz.gezirahmills.example. 300 IN TXT "v=abiz1;h=www.gezirahmills.example;p=W9e
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "مطاحن الجزيرة",
-  "country": "sd",
+  "business_name": "\u0645\u0637\u0627\u062d\u0646 \u0627\u0644\u062c\u0632\u064a\u0631\u0629",
+  "country": {
+    "code": "SD",
+    "name": "Sudan"
+  },
   "business_key": "sd-12345",
   "registration_number": "12345",
   "identity_host": "www.gezirahmills.example",
   "domains": [
     "gezirahmills.example"
   ],
-  "public_key": "W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY=",
-  "signature": "JdSttojcQznoTnnk/V6EFEj4h7NnJ0cch0lPFuEj/Rms8T72WYv/0JYJWYyWHbz9Qthg/NoB4lTaJRbpd+ZOAA=="
+  "public_key": "YKNaSV2pX1wojVts/vlbSup6lzXUIgLO5Z6S2buR5pg=",
+  "signature": "Q7q+w6S909jp1yNWChpvqgtTTzhdwq3CRLcl135VS12Yt8t1y4BDjE/t4AUCkoi6lMgqz2qHdudrQs9madUhCw=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain gezirahmills.example --dns-value 'v=abiz1;k=sd-12345;h=www.gezirahmills.example;p=W9esZkPH6L0hp3QaGPrl4l1PBewNTXvVkhHNaq2BuKY='
+python scripts/validate.py record.json --domain gezirahmills.example --dns-value 'v=abiz1;k=sd-12345;h=www.gezirahmills.example;p=YKNaSV2pX1wojVts/vlbSup6lzXUIgLO5Z6S2buR5pg='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.

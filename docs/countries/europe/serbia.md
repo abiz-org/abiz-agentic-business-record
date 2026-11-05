@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.dunavkafa.example. 300 IN TXT "v=abiz1;k=rs-12345678;h=dunavkafa.rs.to.co;p=8i6yN1JiNf2iauESSPgFtw25vWW8kCjG1hEgCfS+TKk="
+_abiz.dunavkafa.example. 300 IN TXT "v=abiz1;k=rs-12345678;h=dunavkafa.rs.to.co;p=wN1heUdMm3VAK7N4vIp/Ed975zBPOkqGJx9Ymni8ClE="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://dunavkafa.rs.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Dunav Kafa d.o.o.",
-  "country": "rs",
+  "country": {
+    "code": "RS",
+    "name": "Serbia"
+  },
   "business_key": "rs-12345678",
   "registration_number": "12345678",
   "identity_host": "dunavkafa.rs.to.co",
   "domains": [
     "dunavkafa.example"
   ],
-  "public_key": "8i6yN1JiNf2iauESSPgFtw25vWW8kCjG1hEgCfS+TKk=",
+  "public_key": "wN1heUdMm3VAK7N4vIp/Ed975zBPOkqGJx9Ymni8ClE=",
   "description": "Coffee roaster in Novi Sad.",
   "website": "https://dunavkafa.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://dunavkafa.rs.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "MRd6wF0MhzOzmocxvdq3lhkvJSRxp4pOAjTTEubMN05ckM2/dVwrLB1m11bqyl5k7TIOlRllD8yu8W/OF6fDBA=="
+  "signature": "CdNvA/gCdGyK6dqY0OucpQJHbiARCPOBq2H9exXvjkyZlIladD4UzKqsOI5+8sz85u5KwWS0KKpgcPA+OGsSBA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain dunavkafa.example --dns-value 'v=abiz1;k=rs-12345678;h=dunavkafa.rs.to.co;p=8i6yN1JiNf2iauESSPgFtw25vWW8kCjG1hEgCfS+TKk='
+python scripts/validate.py record.json --domain dunavkafa.example --dns-value 'v=abiz1;k=rs-12345678;h=dunavkafa.rs.to.co;p=wN1heUdMm3VAK7N4vIp/Ed975zBPOkqGJx9Ymni8ClE='
 ```
 
 ### Self-hosted or through a provider

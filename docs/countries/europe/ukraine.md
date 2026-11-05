@@ -41,7 +41,7 @@
 Опублікуйте на своєму домені під `_abiz` рівно один запис TXT ABIZ у компактній формі без пробілів:
 
 ```dns
-_abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=/IkZz7XBtov6fx81z0DW5LiNGkkpCGEaIXqb//OeLLY="
+_abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=PrBNXU/eBOsWGwq/8mcd4MZpemA0UKV2aLXGDOY9AtI="
 ```
 
 - `v=abiz1` має стояти першим. `h` і `p` обов'язкові; `k` необов'язковий.
@@ -57,22 +57,25 @@ _abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.u
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "ТОВ «Карпатський Мед»",
-  "country": "ua",
+  "business_name": "\u0422\u041e\u0412 \u00ab\u041a\u0430\u0440\u043f\u0430\u0442\u0441\u044c\u043a\u0438\u0439 \u041c\u0435\u0434\u00bb",
+  "country": {
+    "code": "UA",
+    "name": "Ukraine"
+  },
   "business_key": "ua-12345678",
   "registration_number": "12345678",
   "identity_host": "karpatskyimed.ua.to.co",
   "domains": [
     "karpatskyimed.example"
   ],
-  "public_key": "/IkZz7XBtov6fx81z0DW5LiNGkkpCGEaIXqb//OeLLY=",
-  "description": "Пасіка та продаж меду у Львові.",
+  "public_key": "PrBNXU/eBOsWGwq/8mcd4MZpemA0UKV2aLXGDOY9AtI=",
+  "description": "\u041f\u0430\u0441\u0456\u043a\u0430 \u0442\u0430 \u043f\u0440\u043e\u0434\u0430\u0436 \u043c\u0435\u0434\u0443 \u0443 \u041b\u044c\u0432\u043e\u0432\u0456.",
   "website": "https://karpatskyimed.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Львів",
+        "locality": "\u041b\u044c\u0432\u0456\u0432",
         "country": {
           "code": "UA"
         }
@@ -80,14 +83,14 @@ _abiz.karpatskyimed.example. 300 IN TXT "v=abiz1;k=ua-12345678;h=karpatskyimed.u
       "public": true
     }
   ],
-  "signature": "6dY6xNELL5z9B1qIb/TnjTy9aoqY29cEtdTp1v9QWTZzCWPnLTfJ10jyOi2qAYXzdEPzsTd3spCMJjDXsIbzAg=="
+  "signature": "jksJuX6IMK8DYfKAGgfFTtiIJudxhOuptAJdO0Fake/gZ2JDp9GSs642wqRTwzjd3i52pL70hxMbx6QkXtSNCA=="
 }
 ```
 
 Еталонним валідатором можна перевірити запис і значення DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain karpatskyimed.example --dns-value 'v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=/IkZz7XBtov6fx81z0DW5LiNGkkpCGEaIXqb//OeLLY='
+python scripts/validate.py record.json --domain karpatskyimed.example --dns-value 'v=abiz1;k=ua-12345678;h=karpatskyimed.ua.to.co;p=PrBNXU/eBOsWGwq/8mcd4MZpemA0UKV2aLXGDOY9AtI='
 ```
 
 ### Самостійно або через постачальника

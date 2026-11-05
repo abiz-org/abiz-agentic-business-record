@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0="
+_abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=a/d17ryHsJyW7xy8GULZ7Y/jYzk3cLiDlesPVJcSjKY="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -55,16 +55,19 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Café Las Brumas, S.A. de C.V.",
-  "country": "sv",
+  "business_name": "Caf\u00e9 Las Brumas, S.A. de C.V.",
+  "country": {
+    "code": "SV",
+    "name": "El Salvador"
+  },
   "business_key": "sv-12345",
   "registration_number": "12345",
   "identity_host": "cafelasbrumas.sv.to.co",
   "domains": [
     "cafelasbrumas.example"
   ],
-  "public_key": "I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0=",
-  "description": "Café de la Ruta de las Flores.",
+  "public_key": "a/d17ryHsJyW7xy8GULZ7Y/jYzk3cLiDlesPVJcSjKY=",
+  "description": "Caf\u00e9 de la Ruta de las Flores.",
   "website": "https://cafelasbrumas.example",
   "locations": [
     {
@@ -141,7 +144,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "t4WfszWlFRba9UE5/xkbb/zl8xP5weXb9OnFoODDFNHZ7ZrUiUjBDw34fodhWBaRs3BoCD2F69FQK7zIJSFbDA=="
+  "signature": "7Q/uXkp9dz03k2tQD+jxhaBxArk2PGnmTSUBfJrsNExTYs7Fjf0okUVe9atYxeDsaEdFhGbuLYWSQqzx0HdNBQ=="
 }
 ```
 
@@ -154,7 +157,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain cafelasbrumas.example \
-  --dns-value 'v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0='
+  --dns-value 'v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=a/d17ryHsJyW7xy8GULZ7Y/jYzk3cLiDlesPVJcSjKY='
 ```
 
 ## 3. Proveedores y MCP
@@ -169,7 +172,7 @@ Por ejemplo, un proveedor puede alojar el registro de Café Las Brumas en `cafel
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=I3DbPy8T/xeEUUNkrSOhROuNA0Ca2h2DpposLTsi8N0="
+  _abiz.cafelasbrumas.example. 300 IN TXT "v=abiz1;k=sv-12345;h=cafelasbrumas.sv.to.co;p=a/d17ryHsJyW7xy8GULZ7Y/jYzk3cLiDlesPVJcSjKY="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

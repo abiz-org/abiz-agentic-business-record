@@ -45,7 +45,7 @@ Zambia uses no subdivision: do not add a region, province or city code. SPEC sec
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.copperbeltwelding.example. 300 IN TXT "v=abiz1;k=zm-120230012345;h=copperbeltwelding.zm.to.co;p=iFuUCL0fHU8evGN3f7wa3+pdegktFqtRYnvHTu7oESQ="
+_abiz.copperbeltwelding.example. 300 IN TXT "v=abiz1;k=zm-120230012345;h=copperbeltwelding.zm.to.co;p=mW+qHEGqiXmhrdzJ62Nq0ooFRlIWEw9UJZAd4tz/p7E="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.copperbeltwelding.example. 300 IN TXT "v=abiz1;h=copperbeltwelding.zm.to.co;p=iFuUCL0fHU8evGN3f7wa3+pdegktFqtRYnvHTu7oESQ="
+_abiz.copperbeltwelding.example. 300 IN TXT "v=abiz1;h=copperbeltwelding.zm.to.co;p=mW+qHEGqiXmhrdzJ62Nq0ooFRlIWEw9UJZAd4tz/p7E="
 ```
 
 The business record served as `application/json` at `https://copperbeltwelding.zm.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://copperbeltwelding.z
 {
   "record_version": "abiz1",
   "business_name": "Copperbelt Welding",
-  "country": "zm",
+  "country": {
+    "code": "ZM",
+    "name": "Zambia"
+  },
   "business_key": "zm-120230012345",
   "registration_number": "120230012345",
   "identity_host": "copperbeltwelding.zm.to.co",
   "domains": [
     "copperbeltwelding.example"
   ],
-  "public_key": "iFuUCL0fHU8evGN3f7wa3+pdegktFqtRYnvHTu7oESQ=",
-  "signature": "oTc/jLIKkeJTHBO7mkPC85IfvCm0OPijJf4cllkhgj4JMGJskx0Ydc3XlJ/SWbICH+hrZOLtiU1IMSydJ6PDCQ=="
+  "public_key": "mW+qHEGqiXmhrdzJ62Nq0ooFRlIWEw9UJZAd4tz/p7E=",
+  "signature": "R9iGlXggEOxmBzUrKdM1i7kF1sDAGlBLMRyPd3yI4fTSvRH3VjtoOs6iX7YIhJmjPcufa1vjE5N01Q3swN62BQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain copperbeltwelding.example --dns-value 'v=abiz1;k=zm-120230012345;h=copperbeltwelding.zm.to.co;p=iFuUCL0fHU8evGN3f7wa3+pdegktFqtRYnvHTu7oESQ='
+python scripts/validate.py record.json --domain copperbeltwelding.example --dns-value 'v=abiz1;k=zm-120230012345;h=copperbeltwelding.zm.to.co;p=mW+qHEGqiXmhrdzJ62Nq0ooFRlIWEw9UJZAd4tz/p7E='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Zambia with a record hosted by to.co might use the host `copperbeltwelding.zm.to.co`, giving the DNS value `v=abiz1;k=zm-120230012345;h=copperbeltwelding.zm.to.co;p=iFuUCL0fHU8evGN3f7wa3+pdegktFqtRYnvHTu7oESQ=`. An unregistered business might use a town-based host such as `copperbeltwelding-kitwe.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Zambia with a record hosted by to.co might use the host `copperbeltwelding.zm.to.co`, giving the DNS value `v=abiz1;k=zm-120230012345;h=copperbeltwelding.zm.to.co;p=mW+qHEGqiXmhrdzJ62Nq0ooFRlIWEw9UJZAd4tz/p7E=`. An unregistered business might use a town-based host such as `copperbeltwelding-kitwe.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

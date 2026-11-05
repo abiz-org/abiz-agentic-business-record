@@ -39,7 +39,7 @@ Se incluir `business_key` e `registration_number` no registro, inclua os dois, e
 Publique exatamente um registro TXT que comece com `v=abiz1` em `_abiz.` seguido do seu domínio. Use a forma compacta, sem espaços (seção 3.1.1), e um TTL de 300 segundos:
 
 ```dns
-_abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw="
+_abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=xjqh9P8Oibx0BDEC4vyIYhGZNHfK5yzCyJUUfPdDNTg="
 ```
 
 Uma empresa sem número de registro, ou que prefira não publicá-lo, simplesmente omite `k`:
@@ -55,25 +55,28 @@ Este exemplo é fictício. Ele passa no validador de referência.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Padaria Pão de Mel Ltda.",
-  "country": "br",
+  "business_name": "Padaria P\u00e3o de Mel Ltda.",
+  "country": {
+    "code": "BR",
+    "name": "Brazil"
+  },
   "business_key": "br-12345678000195",
   "registration_number": "12345678000195",
   "identity_host": "padariapaodemel.br.to.co",
   "domains": [
     "padariapaodemel.example"
   ],
-  "public_key": "niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw=",
+  "public_key": "xjqh9P8Oibx0BDEC4vyIYhGZNHfK5yzCyJUUfPdDNTg=",
   "description": "Padaria artesanal no bairro de Pinheiros.",
   "website": "https://padariapaodemel.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "São Paulo",
+        "locality": "S\u00e3o Paulo",
         "region": {
           "code": "BR-SP",
-          "name": "São Paulo"
+          "name": "S\u00e3o Paulo"
         },
         "country": {
           "code": "BR"
@@ -150,7 +153,7 @@ Este exemplo é fictício. Ele passa no validador de referência.
       "public": true
     }
   ],
-  "signature": "Uvv94nEZZt/UXrCavZRlibG/0v4n1k9517OK1dudBCgv7DleMAbudcxPtGtc6GNirQ08cifrEyiRfvYH4a10Dg=="
+  "signature": "3nm4bglN+d+h8E8zcHS7t2Q9AS3icYB6mOpPuull/9141fok/ScJ6n/lyd/AXtoz4QZmvPhRcd1KxdXkkfaLBA=="
 }
 ```
 
@@ -163,7 +166,7 @@ Antes de publicar, verifique o registro e o valor DNS com o validador de referê
 ```sh
 python scripts/validate.py record.json \
   --domain padariapaodemel.example \
-  --dns-value 'v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw='
+  --dns-value 'v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=xjqh9P8Oibx0BDEC4vyIYhGZNHfK5yzCyJUUfPdDNTg='
 ```
 
 ## 3. Provedores e MCP
@@ -178,7 +181,7 @@ Por exemplo, um provedor pode hospedar o registro da Padaria Pão de Mel em `pad
 - **Exemplo** (a chave é um exemplo descartável; a chave privada correspondente foi descartada). Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`.
 
   ```dns
-  _abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=niKc1zneSrFY7FSaVPdGpN1X4okFDQFxJNQI7OULqaw="
+  _abiz.padariapaodemel.example. 300 IN TXT "v=abiz1;k=br-12345678000195;h=padariapaodemel.br.to.co;p=xjqh9P8Oibx0BDEC4vyIYhGZNHfK5yzCyJUUfPdDNTg="
   ```
 
 - **A chave privada pertence à empresa.** Ela nunca deve aparecer no DNS, no registro nem num repositório público. Um provedor pode gerá-la e guardá-la por você (modo hospedado), mas deve permitir que você a exporte a qualquer momento, por exemplo em PKCS#8, e apagar a cópia dele quando você pedir (seção 3.3.4).

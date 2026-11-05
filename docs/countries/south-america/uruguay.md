@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4="
+_abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=ETsZHjpG17ai9HwPh8ubyiUtXdBlK2Mht4KvQ39ILXk="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -48,12 +48,15 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 {
   "record_version": "abiz1",
   "business_name": "Bodega del Sur S.A.",
-  "country": "uy",
+  "country": {
+    "code": "UY",
+    "name": "Uruguay"
+  },
   "identity_host": "bodegadelsur.uy.to.co",
   "domains": [
     "bodegadelsur.example"
   ],
-  "public_key": "Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4=",
+  "public_key": "ETsZHjpG17ai9HwPh8ubyiUtXdBlK2Mht4KvQ39ILXk=",
   "description": "Vinos de Canelones y visitas guiadas.",
   "website": "https://bodegadelsur.example",
   "locations": [
@@ -126,7 +129,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "9PKm/2u97oh2/4ezsqKdwL8hMerrLNn7hKBomxKe5JlDdD1d57ixFIkBNn+lPdouPkyzWmAZehbGWZh14dQJAA=="
+  "signature": "9bQbWUTEgnV4eRt+DBtYz5fzfmCBLDSjE7zTtEZehkHsqC5JdapVCxWr2RT1G2eYCupo7PHYWBRWUpViHLMTBg=="
 }
 ```
 
@@ -139,7 +142,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain bodegadelsur.example \
-  --dns-value 'v=abiz1;h=bodegadelsur.uy.to.co;p=Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4='
+  --dns-value 'v=abiz1;h=bodegadelsur.uy.to.co;p=ETsZHjpG17ai9HwPh8ubyiUtXdBlK2Mht4KvQ39ILXk='
 ```
 
 ## 3. Proveedores y MCP
@@ -154,7 +157,7 @@ Por ejemplo, un proveedor puede alojar el registro de Bodega del Sur en `bodegad
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=Im4slqZ2uvYHnB2jyDuKvfHjnSXs0rQyFhQe9KZhNM4="
+  _abiz.bodegadelsur.example. 300 IN TXT "v=abiz1;h=bodegadelsur.uy.to.co;p=ETsZHjpG17ai9HwPh8ubyiUtXdBlK2Mht4KvQ39ILXk="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

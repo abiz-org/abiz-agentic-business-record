@@ -47,7 +47,7 @@ Afghanistan uses no subdivision: do not add a region, province or city code. SPE
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.kabulcarpet.example. 300 IN TXT "v=abiz1;k=af-12345;h=www.kabulcarpet.example;p=h5M5HCeb0rzlzB3LvxL7XkUs2Cn0pq9d1Yg9xMiSuGU="
+_abiz.kabulcarpet.example. 300 IN TXT "v=abiz1;k=af-12345;h=www.kabulcarpet.example;p=seIzAsy9pH7qXSyM07Sss8443vdW+dWKkwCnN+QS9Pw="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.kabulcarpet.example. 300 IN TXT "v=abiz1;h=www.kabulcarpet.example;p=h5M5HCeb0rzlzB3LvxL7XkUs2Cn0pq9d1Yg9xMiSuGU="
+_abiz.kabulcarpet.example. 300 IN TXT "v=abiz1;h=www.kabulcarpet.example;p=seIzAsy9pH7qXSyM07Sss8443vdW+dWKkwCnN+QS9Pw="
 ```
 
 The business record served as `application/json` at `https://www.kabulcarpet.example/?format=json`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://www.kabulcarpet.exa
 {
   "record_version": "abiz1",
   "business_name": "Kabul Carpet House",
-  "country": "af",
+  "country": {
+    "code": "AF",
+    "name": "Afghanistan"
+  },
   "business_key": "af-12345",
   "registration_number": "12345",
   "identity_host": "www.kabulcarpet.example",
   "domains": [
     "kabulcarpet.example"
   ],
-  "public_key": "h5M5HCeb0rzlzB3LvxL7XkUs2Cn0pq9d1Yg9xMiSuGU=",
-  "signature": "AHUczzPq+zp58CeSe0yQeUSWjp+v7LutRqb9TDMxFpv751AJqpRERf+fm90OHAy7g7cdqJ+6bA2CvRWfii48AQ=="
+  "public_key": "seIzAsy9pH7qXSyM07Sss8443vdW+dWKkwCnN+QS9Pw=",
+  "signature": "OkMd5X6eQSawjiNPgt7VbElxDHHb/ssFbO4yKlFiBhO7xExTEc/yg6ZOuH3xjexgZf9fe0t/3oux+7Vf9lfPCg=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain kabulcarpet.example --dns-value 'v=abiz1;k=af-12345;h=www.kabulcarpet.example;p=h5M5HCeb0rzlzB3LvxL7XkUs2Cn0pq9d1Yg9xMiSuGU='
+python scripts/validate.py record.json --domain kabulcarpet.example --dns-value 'v=abiz1;k=af-12345;h=www.kabulcarpet.example;p=seIzAsy9pH7qXSyM07Sss8443vdW+dWKkwCnN+QS9Pw='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.

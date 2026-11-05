@@ -40,7 +40,7 @@ Choose your region to find instructions for your country:
 Every DNS assertion MUST include `p`, the business's Ed25519 public key (SPEC section 3.3). It MAY include a business key, `k`, in the form `country[-subdivision]-registration-number` (SPEC section 4.2). `k` is optional for every business. A subdivision is required only for the United States, Canada (provincial corporations) and the United Arab Emirates:
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo="
 ```
 
 Without a key, for example for an unregistered business:
@@ -52,7 +52,7 @@ _abiz.marketstand.example. 300 IN TXT "v=abiz1;h=market-stand-repairs-portland.b
 The same values as a well-known file, `https://harbourbikes.example/.well-known/abiz.json` (see `examples/well-known-registered-us.json`):
 
 ```json
-{ "v": "abiz1", "k": "us-or-123456", "h": "harbour-bike-repair.or.us.to.co", "p": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=" }
+{ "v": "abiz1", "k": "us-or-123456", "h": "harbour-bike-repair.or.us.to.co", "p": "oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo=" }
 ```
 
 **These are different fictional businesses, not two simultaneous ABIZ records at the same DNS owner name.** Each `p` is a throwaway key. Hostnames ending in `.or.us.to.co` and `.biz.to.co` illustrate one particular provider. ABIZ itself does not require to.co.
@@ -65,12 +65,13 @@ Every business record carries `public_key` (the same value as `p`) and `signatur
 {
   "record_version": "abiz1",
   "business_name": "Harbour Bike Repair LLC",
-  "country": "us",
+  "country": { "code": "US", "name": "United States" },
+  "region": { "code": "US-OR", "name": "Oregon" },
   "business_key": "us-or-123456",
   "registration_number": "123456",
   "identity_host": "harbour-bike-repair.or.us.to.co",
   "domains": ["harbourbikes.example"],
-  "public_key": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=",
+  "public_key": "oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo=",
   …
   "signature": "tcf4loWK…7etAA=="
 }
@@ -111,10 +112,10 @@ Contact details are `email` and `phone`, opening hours are given per location in
 python -m pip install -r requirements-dev.txt
 python scripts/validate.py examples/registered-us.json
 python scripts/validate.py examples/abiz-1.0/registered-us.json --revision 1.0
-python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --dns-value 'v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk='
+python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --dns-value 'v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo='
 python scripts/validate.py examples/registered-us.json --domain harbourbikes.example --well-known examples/well-known-registered-us.json
 python scripts/validate.py examples/well-known-registered-us.json
-python scripts/validate.py examples/registered-us.json --p '6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk='
+python scripts/validate.py examples/registered-us.json --p 'oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo='
 python scripts/validate.py examples/locations-and-listings/multi-location-gb.json --p "$(sed -n 's/^multi-location-gb.json .*;p=//p' examples/locations-and-listings/dns-assertions.txt)"
 python -m unittest discover -s tests -v
 ```

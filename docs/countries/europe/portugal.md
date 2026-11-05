@@ -41,7 +41,7 @@ As chaves comparam-se sem distinguir maiúsculas de minúsculas, mas publique a 
 Publique um único registo TXT ABIZ em `_abiz` no seu domínio, na forma compacta e sem espaços:
 
 ```dns
-_abiz.pastelariaribeira.example. 300 IN TXT "v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=NRD9R/v55ek3v710riRR0Tf+0kn0hG71JVC2OYc6nw0="
+_abiz.pastelariaribeira.example. 300 IN TXT "v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=p4bkEyVWR60WThw+NXWbbCvELEKn/9Ry+iYG+MIoYb0="
 ```
 
 - `v=abiz1` tem de vir primeiro. `h` é obrigatório; `k` e `p` são opcionais.
@@ -58,14 +58,17 @@ O registo disponibilizado em `https://pastelariaribeira.pt.to.co` como `applicat
 {
   "record_version": "abiz1",
   "business_name": "Pastelaria Ribeira Lda",
-  "country": "pt",
+  "country": {
+    "code": "PT",
+    "name": "Portugal"
+  },
   "business_key": "pt-512345678",
   "registration_number": "512345678",
   "identity_host": "pastelariaribeira.pt.to.co",
   "domains": [
     "pastelariaribeira.example"
   ],
-  "public_key": "NRD9R/v55ek3v710riRR0Tf+0kn0hG71JVC2OYc6nw0=",
+  "public_key": "p4bkEyVWR60WThw+NXWbbCvELEKn/9Ry+iYG+MIoYb0=",
   "description": "Pastelaria no Porto.",
   "website": "https://pastelariaribeira.example",
   "locations": [
@@ -80,14 +83,14 @@ O registo disponibilizado em `https://pastelariaribeira.pt.to.co` como `applicat
       "public": true
     }
   ],
-  "signature": "Bgl/ANNlyZ6zQoAq9QbsEZMoLqiRm8vvdSIkIl/EMrDwQG3mciAPZKy4Kl58e71VdXuPQiJvHdMW5j6Y9Qh7DA=="
+  "signature": "AR7lHw4YkGmjaI+X7s0FQRKJDlowi3LYJfogNtrnPuoIFV0LGvOsNmr6FSq5PKZewZUVmNoENwgj5LRHEZYRBQ=="
 }
 ```
 
 Com o validador de referência pode verificar localmente o registo e o valor DNS:
 
 ```sh
-python scripts/validate.py record.json --domain pastelariaribeira.example --dns-value 'v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=NRD9R/v55ek3v710riRR0Tf+0kn0hG71JVC2OYc6nw0='
+python scripts/validate.py record.json --domain pastelariaribeira.example --dns-value 'v=abiz1;k=pt-512345678;h=pastelariaribeira.pt.to.co;p=p4bkEyVWR60WThw+NXWbbCvELEKn/9Ry+iYG+MIoYb0='
 ```
 
 ### Alojamento próprio ou através de um fornecedor

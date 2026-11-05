@@ -1,14 +1,17 @@
 {
   "record_version": "abiz1",
   "business_name": "Clifton Cycles Ltd",
-  "country": "gb",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "business_key": "gb-11223344",
   "registration_number": "11223344",
   "identity_host": "cliftoncycles.uk.to.co",
   "domains": [
     "cliftoncycles.example"
   ],
-  "public_key": "k8+wEsNG3W+nCRZQ4xF4AZJHxzOeax1AUijG7Uk0qJ0=",
+  "public_key": "ghhS3N6om3C16jTWSjgKCNva7aeW7d6NcgrHjd9npbw=",
   "website": "https://cliftoncycles.example",
   "email": "hello@cliftoncycles.example",
   "phone": "+441179460000",
@@ -250,5 +253,9 @@
     }
   ],
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "RhomSRcQDnOzaqjRQ3bjKD1P2JWOcy2uwpaAsSZZwFTymCizX8SkfTkxpTMISgAKQ8AhPgXGMm33T1IzL/lUAw=="
+  "region": {
+    "code": "GB-ENG",
+    "name": "England"
+  },
+  "signature": "p+ZEMGIYFg5QTZxQjR6ndbf4fVP50HqKw7qOQS/q+ZP2GZASdhiQIITSFFVcwPgWugzZCer5sNBSo6xaRPzBDQ=="
 }

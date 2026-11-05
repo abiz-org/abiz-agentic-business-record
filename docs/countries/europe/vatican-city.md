@@ -33,7 +33,7 @@ Nella Città del Vaticano non esiste un registro pubblico nazionale delle impres
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.libreriadelborgo.example. 300 IN TXT "v=abiz1;h=www.libreriadelborgo.example;p=7zwkuonubhUZtYD49RTXMKuWZCViv8si2EUuK1D6fZI="
+_abiz.libreriadelborgo.example. 300 IN TXT "v=abiz1;h=www.libreriadelborgo.example;p=L3RxI3iujcNwASihdzOiRDXNoNQroZ+ZLkYBzzYiWxk="
 ```
 
 - `v=abiz1` deve venire per primo. `h` e `p` sono obbligatori; `k` è facoltativo.
@@ -50,19 +50,22 @@ La scheda servita all'indirizzo `https://www.libreriadelborgo.example/?format=js
 {
   "record_version": "abiz1",
   "business_name": "Libreria del Borgo",
-  "country": "va",
+  "country": {
+    "code": "VA",
+    "name": "Vatican City"
+  },
   "identity_host": "www.libreriadelborgo.example",
   "domains": [
     "libreriadelborgo.example"
   ],
-  "public_key": "7zwkuonubhUZtYD49RTXMKuWZCViv8si2EUuK1D6fZI=",
-  "description": "Libreria nella Città del Vaticano.",
+  "public_key": "L3RxI3iujcNwASihdzOiRDXNoNQroZ+ZLkYBzzYiWxk=",
+  "description": "Libreria nella Citt\u00e0 del Vaticano.",
   "website": "https://libreriadelborgo.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Città del Vaticano",
+        "locality": "Citt\u00e0 del Vaticano",
         "country": {
           "code": "VA"
         }
@@ -70,14 +73,14 @@ La scheda servita all'indirizzo `https://www.libreriadelborgo.example/?format=js
       "public": true
     }
   ],
-  "signature": "lYy/bO11We5ASiIVhog9/txOYtVIOSi4EEEhf6Bqdz4vbOko5d7z0bM1Y95vSXoqlkC9zdAUrPGhjLKq+zYfDg=="
+  "signature": "caUHLWv2sUvhtQRyucMKDY3KwktQY3sD/3BmifP5XDGL3fE0L2Vi+thBkEUqUwgiAvtZqtSqy8IOi5jDehFnBA=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain libreriadelborgo.example --dns-value 'v=abiz1;h=www.libreriadelborgo.example;p=7zwkuonubhUZtYD49RTXMKuWZCViv8si2EUuK1D6fZI='
+python scripts/validate.py record.json --domain libreriadelborgo.example --dns-value 'v=abiz1;h=www.libreriadelborgo.example;p=L3RxI3iujcNwASihdzOiRDXNoNQroZ+ZLkYBzzYiWxk='
 ```
 
 ### In proprio o tramite un fornitore

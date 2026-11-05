@@ -47,7 +47,7 @@ ye-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;k=ye-12345;h=www.harazcoffee.example;p=anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw="
+_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;k=ye-12345;h=www.harazcoffee.example;p=s8+IllyLYibkPWpxSN8yb39xdpukC9uv44olxZX8lVs="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.harazcoffee.example. 300 IN TXT "v=abiz1;k=ye-12345;h=www.harazcoffee.exam
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;h=www.harazcoffee.example;p=anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw="
+_abiz.harazcoffee.example. 300 IN TXT "v=abiz1;h=www.harazcoffee.example;p=s8+IllyLYibkPWpxSN8yb39xdpukC9uv44olxZX8lVs="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.harazcoffee.example/?format=json`:
@@ -63,23 +63,26 @@ _abiz.harazcoffee.example. 300 IN TXT "v=abiz1;h=www.harazcoffee.example;p=anCy4
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "بن حراز",
-  "country": "ye",
+  "business_name": "\u0628\u0646 \u062d\u0631\u0627\u0632",
+  "country": {
+    "code": "YE",
+    "name": "Yemen"
+  },
   "business_key": "ye-12345",
   "registration_number": "12345",
   "identity_host": "www.harazcoffee.example",
   "domains": [
     "harazcoffee.example"
   ],
-  "public_key": "anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw=",
-  "signature": "w0/qK8+EWpykcpinfhiTxgTuFzVoRFpShwalT+F/g3na4BXUT8lULYPAh7vyn7E7Swrw20snl67JcxZQsDJCBw=="
+  "public_key": "s8+IllyLYibkPWpxSN8yb39xdpukC9uv44olxZX8lVs=",
+  "signature": "1VTrezhSt1lPMRdvkVdPD7qwYuFhWzQnc7ZpZpxlk0dVZQGNKX54pz4phh19iMmVDSedP/rJA5LenP+d2MmIDg=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain harazcoffee.example --dns-value 'v=abiz1;k=ye-12345;h=www.harazcoffee.example;p=anCy48YfhXbITVrfhe4GZdZaGBJmbBMiU8+fefuORLw='
+python scripts/validate.py record.json --domain harazcoffee.example --dns-value 'v=abiz1;k=ye-12345;h=www.harazcoffee.example;p=s8+IllyLYibkPWpxSN8yb39xdpukC9uv44olxZX8lVs='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.

@@ -43,7 +43,7 @@ kz-<registration-number>
 Опубликуйте ровно одну запись TXT по имени `_abiz` в вашем домене, в компактной форме без пробелов, с `v=abiz1` в начале:
 
 ```dns
-_abiz.steppewind.example. 300 IN TXT "v=abiz1;k=kz-230140012345;h=steppewind.kz.to.co;p=/AHakhMBdFjb24CClj3OI5vx5k4S/yR5XIXBfNYksUc="
+_abiz.steppewind.example. 300 IN TXT "v=abiz1;k=kz-230140012345;h=steppewind.kz.to.co;p=/IkgDK7bIn/gmalb13Ta/X4gHBxe+x3C5dDF1UOptWE="
 ```
 
 Значение `p` выше — одноразовый пример ключа, созданный для этой страницы. Никогда не копируйте его: опубликуйте собственный ключ. Утверждение ABIZ 1.1 обязано содержать `p`. Все названия, номера и домены на этой странице вымышлены.
@@ -51,7 +51,7 @@ _abiz.steppewind.example. 300 IN TXT "v=abiz1;k=kz-230140012345;h=steppewind.kz.
 Без необязательного тега `k` такая запись тоже допустима:
 
 ```dns
-_abiz.steppewind.example. 300 IN TXT "v=abiz1;h=steppewind.kz.to.co;p=/AHakhMBdFjb24CClj3OI5vx5k4S/yR5XIXBfNYksUc="
+_abiz.steppewind.example. 300 IN TXT "v=abiz1;h=steppewind.kz.to.co;p=/IkgDK7bIn/gmalb13Ta/X4gHBxe+x3C5dDF1UOptWE="
 ```
 
 Запись о бизнесе, которая отдаётся как `application/json` по адресу `https://steppewind.kz.to.co`:
@@ -59,23 +59,26 @@ _abiz.steppewind.example. 300 IN TXT "v=abiz1;h=steppewind.kz.to.co;p=/AHakhMBdF
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "ТОО «Степной ветер»",
-  "country": "kz",
+  "business_name": "\u0422\u041e\u041e \u00ab\u0421\u0442\u0435\u043f\u043d\u043e\u0439 \u0432\u0435\u0442\u0435\u0440\u00bb",
+  "country": {
+    "code": "KZ",
+    "name": "Kazakhstan"
+  },
   "business_key": "kz-230140012345",
   "registration_number": "230140012345",
   "identity_host": "steppewind.kz.to.co",
   "domains": [
     "steppewind.example"
   ],
-  "public_key": "/AHakhMBdFjb24CClj3OI5vx5k4S/yR5XIXBfNYksUc=",
-  "signature": "RrahnUfaVaBWqCcXSF37NYcXp718c6I5vqDykLLjgrj0FOyXpnz9PpOeuDhmEkGhl0rZRbfYfwdsvTgAgM7yAQ=="
+  "public_key": "/IkgDK7bIn/gmalb13Ta/X4gHBxe+x3C5dDF1UOptWE=",
+  "signature": "QwKp4bb4vg9/F1Z+2e2qgbvlKc4jzSWxtM5ERs/jtMYiAwUL8NgHmhE1OFMPVgI1aALiihG/De2pmlFzhcDODA=="
 }
 ```
 
 Чтобы проверить карточку перед публикацией, запустите эталонный валидатор из копии этого репозитория:
 
 ```sh
-python scripts/validate.py record.json --domain steppewind.example --dns-value 'v=abiz1;k=kz-230140012345;h=steppewind.kz.to.co;p=/AHakhMBdFjb24CClj3OI5vx5k4S/yR5XIXBfNYksUc='
+python scripts/validate.py record.json --domain steppewind.example --dns-value 'v=abiz1;k=kz-230140012345;h=steppewind.kz.to.co;p=/IkgDK7bIn/gmalb13Ta/X4gHBxe+x3C5dDF1UOptWE='
 ```
 
 Карточку JSON можно разместить самостоятельно на любом HTTPS-сервере или у любого совместимого провайдера. ABIZ не требует конкретного провайдера.
@@ -84,7 +87,7 @@ python scripts/validate.py record.json --domain steppewind.example --dns-value '
 
 Model Context Protocol (MCP) — открытый протокол, по которому ИИ-ассистенты стандартным способом вызывают инструменты и читают данные на внешних серверах. Карточка компании может содержать необязательное поле `mcp_server_url` — HTTPS-адрес MCP-сервера компании, например для бронирования или сведений о товарах. ABIZ не ручается за этот сервер: инструменты должны применять собственный контроль доступа (раздел 4.2.6 SPEC).
 
-Провайдер может разместить карточку и опубликовать DNS-указатель за вас. Например, зарегистрированная в Казахстане компания, чья карточка размещена на to.co, может использовать хост `steppewind.kz.to.co`, и тогда значение DNS будет `v=abiz1;k=kz-230140012345;h=steppewind.kz.to.co;p=/AHakhMBdFjb24CClj3OI5vx5k4S/yR5XIXBfNYksUc=`. Незарегистрированный бизнес может использовать хост с названием города, например `steppewind-almaty.biz.to.co`. Любой совместимый провайдер или ваш собственный сервер работают так же.
+Провайдер может разместить карточку и опубликовать DNS-указатель за вас. Например, зарегистрированная в Казахстане компания, чья карточка размещена на to.co, может использовать хост `steppewind.kz.to.co`, и тогда значение DNS будет `v=abiz1;k=kz-230140012345;h=steppewind.kz.to.co;p=/IkgDK7bIn/gmalb13Ta/X4gHBxe+x3C5dDF1UOptWE=`. Незарегистрированный бизнес может использовать хост с названием города, например `steppewind-almaty.biz.to.co`. Любой совместимый провайдер или ваш собственный сервер работают так же.
 
 ## 4. Ключи и подписи (ABIZ 1.1)
 

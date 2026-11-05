@@ -41,7 +41,7 @@ Klucze porównuje się bez rozróżniania wielkości liter, ale proszę publikow
 Proszę opublikować dokładnie jeden rekord TXT ABIZ pod `_abiz` w swojej domenie, w postaci zwartej, bez spacji:
 
 ```dns
-_abiz.piekarniakowalski.example. 300 IN TXT "v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=zRHp+btvHFPfD7ODoyqksta+TYe59LzCpE7TZmqbLu0="
+_abiz.piekarniakowalski.example. 300 IN TXT "v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=ZrkuXSKyIB7ejMKd68BA5PSl1f0UhvVO+9gemBrAfC0="
 ```
 
 - `v=abiz1` musi być pierwsze. `h` i `p` są wymagane; `k` jest opcjonalne.
@@ -58,21 +58,24 @@ Rekord udostępniany pod `https://piekarniakowalski.pl.to.co` jako `application/
 {
   "record_version": "abiz1",
   "business_name": "Piekarnia Kowalski sp. z o.o.",
-  "country": "pl",
+  "country": {
+    "code": "PL",
+    "name": "Poland"
+  },
   "business_key": "pl-0000123456",
   "registration_number": "0000123456",
   "identity_host": "piekarniakowalski.pl.to.co",
   "domains": [
     "piekarniakowalski.example"
   ],
-  "public_key": "zRHp+btvHFPfD7ODoyqksta+TYe59LzCpE7TZmqbLu0=",
-  "description": "Rzemieślnicza piekarnia w Krakowie.",
+  "public_key": "ZrkuXSKyIB7ejMKd68BA5PSl1f0UhvVO+9gemBrAfC0=",
+  "description": "Rzemie\u015blnicza piekarnia w Krakowie.",
   "website": "https://piekarniakowalski.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Kraków",
+        "locality": "Krak\u00f3w",
         "country": {
           "code": "PL"
         }
@@ -80,14 +83,14 @@ Rekord udostępniany pod `https://piekarniakowalski.pl.to.co` jako `application/
       "public": true
     }
   ],
-  "signature": "04T24v6SiCOskvxyktUNTYy3lpfBqyuqonfiuC5EhOo0KmsB37FNS8l8/fA44M8puFMuP4Jifo9dSr/pFt4dCA=="
+  "signature": "jAVx2PWr4+QugwsLW0VhxK2/Ryvv3dYv1LWkgB9L38mC9/31D8CuWxude6vSbRlpDwjYs9iDIP6zhWogWtvTAw=="
 }
 ```
 
 Walidatorem referencyjnym można lokalnie sprawdzić rekord i wartość DNS:
 
 ```sh
-python scripts/validate.py record.json --domain piekarniakowalski.example --dns-value 'v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=zRHp+btvHFPfD7ODoyqksta+TYe59LzCpE7TZmqbLu0='
+python scripts/validate.py record.json --domain piekarniakowalski.example --dns-value 'v=abiz1;k=pl-0000123456;h=piekarniakowalski.pl.to.co;p=ZrkuXSKyIB7ejMKd68BA5PSl1f0UhvVO+9gemBrAfC0='
 ```
 
 ### Samodzielnie lub przez dostawcę

@@ -47,7 +47,7 @@ tn-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.sahelolive.example. 300 IN TXT "v=abiz1;k=tn-1234567A;h=sahelolive.tn.to.co;p=6AlwIkXdM/RRe6Ha0zQCtNOsUsUaMZNZjlBg6U+Od/w="
+_abiz.sahelolive.example. 300 IN TXT "v=abiz1;k=tn-1234567A;h=sahelolive.tn.to.co;p=pmHNp2nwQ44wHa7zBWbJ/wrX67jhTxeEdoDigkfmSps="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.sahelolive.example. 300 IN TXT "v=abiz1;k=tn-1234567A;h=sahelolive.tn.to.c
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.sahelolive.example. 300 IN TXT "v=abiz1;h=sahelolive.tn.to.co;p=6AlwIkXdM/RRe6Ha0zQCtNOsUsUaMZNZjlBg6U+Od/w="
+_abiz.sahelolive.example. 300 IN TXT "v=abiz1;h=sahelolive.tn.to.co;p=pmHNp2nwQ44wHa7zBWbJ/wrX67jhTxeEdoDigkfmSps="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://sahelolive.tn.to.co`:
@@ -63,23 +63,26 @@ _abiz.sahelolive.example. 300 IN TXT "v=abiz1;h=sahelolive.tn.to.co;p=6AlwIkXdM/
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "زيوت الساحل",
-  "country": "tn",
+  "business_name": "\u0632\u064a\u0648\u062a \u0627\u0644\u0633\u0627\u062d\u0644",
+  "country": {
+    "code": "TN",
+    "name": "Tunisia"
+  },
   "business_key": "tn-1234567A",
   "registration_number": "1234567A",
   "identity_host": "sahelolive.tn.to.co",
   "domains": [
     "sahelolive.example"
   ],
-  "public_key": "6AlwIkXdM/RRe6Ha0zQCtNOsUsUaMZNZjlBg6U+Od/w=",
-  "signature": "iJ/Q94iUdZUoTAFIZuLywyUKuXog7uS0tEh+JB0dNQh4teFKB+5AacBYnoVnfPyCtVp7jFHP3f+XW6bzDPSRBA=="
+  "public_key": "pmHNp2nwQ44wHa7zBWbJ/wrX67jhTxeEdoDigkfmSps=",
+  "signature": "hxZLhuhAF85w5gtd1wS/eDN15gdrzujWnm0KCXUZHut12IsuGIBYu1rbOOSNqEtOxpRTNkN6w8Cfdjm4oMWhCA=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain sahelolive.example --dns-value 'v=abiz1;k=tn-1234567A;h=sahelolive.tn.to.co;p=6AlwIkXdM/RRe6Ha0zQCtNOsUsUaMZNZjlBg6U+Od/w='
+python scripts/validate.py record.json --domain sahelolive.example --dns-value 'v=abiz1;k=tn-1234567A;h=sahelolive.tn.to.co;p=pmHNp2nwQ44wHa7zBWbJ/wrX67jhTxeEdoDigkfmSps='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain sahelolive.example --dns-value '
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في تونس يستضيف to.co سجلها المضيف `sahelolive.tn.to.co`، فتكون قيمة DNS هي `v=abiz1;k=tn-1234567A;h=sahelolive.tn.to.co;p=6AlwIkXdM/RRe6Ha0zQCtNOsUsUaMZNZjlBg6U+Od/w=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `sahelolive-sousse.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في تونس يستضيف to.co سجلها المضيف `sahelolive.tn.to.co`، فتكون قيمة DNS هي `v=abiz1;k=tn-1234567A;h=sahelolive.tn.to.co;p=pmHNp2nwQ44wHa7zBWbJ/wrX67jhTxeEdoDigkfmSps=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `sahelolive-sousse.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

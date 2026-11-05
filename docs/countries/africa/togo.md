@@ -45,7 +45,7 @@ Le Togo n’utilise pas de subdivision : n’ajoutez ni code de région, ni code
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.pagneslome.example. 300 IN TXT "v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY="
+_abiz.pagneslome.example. 300 IN TXT "v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=kAoPwzml2lL7o8un7ssf9FeQMmkQcPe9vv3NKeNa/ac="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.pagneslome.example. 300 IN TXT "v=abiz1;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY="
+_abiz.pagneslome.example. 300 IN TXT "v=abiz1;h=pagneslome.tg.to.co;p=kAoPwzml2lL7o8un7ssf9FeQMmkQcPe9vv3NKeNa/ac="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://pagneslome.tg.to.co` :
@@ -61,23 +61,26 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://pag
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Pagnes de Lomé",
-  "country": "tg",
+  "business_name": "Pagnes de Lom\u00e9",
+  "country": {
+    "code": "TG",
+    "name": "Togo"
+  },
   "business_key": "tg-TGLFW012023B1201234",
   "registration_number": "TGLFW012023B1201234",
   "identity_host": "pagneslome.tg.to.co",
   "domains": [
     "pagneslome.example"
   ],
-  "public_key": "daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY=",
-  "signature": "eGbmvKP06hr39vUKLFKWr1Oom+/bcKFdNX8v0stofIROrA36ART8r1ZlvBLaE0q8cuTcsZ4/AaTkYHE4r+dzAQ=="
+  "public_key": "kAoPwzml2lL7o8un7ssf9FeQMmkQcPe9vv3NKeNa/ac=",
+  "signature": "T5H2Ul+IkvuHlXANUjku7VSSPSqm6ws1KlL+Y7sxW3emDMlzpyz6kuYJJ87htf+tCABgHOqd5JdFrfpF0rpLCg=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain pagneslome.example --dns-value 'v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY='
+python scripts/validate.py record.json --domain pagneslome.example --dns-value 'v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=kAoPwzml2lL7o8un7ssf9FeQMmkQcPe9vv3NKeNa/ac='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Togo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `pagneslome.tg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=daXV8kIwQT1k1YR/fH//vPKlh7CtIFfhdnDPnAqipZY=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `pagneslome-lome.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Togo dont la fiche est hébergée par to.co pourrait utiliser l’hôte `pagneslome.tg.to.co`, ce qui donne la valeur DNS `v=abiz1;k=tg-TGLFW012023B1201234;h=pagneslome.tg.to.co;p=kAoPwzml2lL7o8un7ssf9FeQMmkQcPe9vv3NKeNa/ac=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `pagneslome-lome.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

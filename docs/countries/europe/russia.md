@@ -41,7 +41,7 @@
 Опубликуйте на своём домене под `_abiz` ровно одну запись TXT ABIZ, в компактной форме без пробелов:
 
 ```dns
-_abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example;p=L9kcaNPdmptjPUyneyEt3nbl4J+4mHis3FZLDvl4LWE="
+_abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example;p=NbIIQSKgqO1WSGDtyxpAITZEyn8hcWCl77wMBaT0Txw="
 ```
 
 - `v=abiz1` должен стоять первым. `h` и `p` обязательны; `k` необязателен.
@@ -57,22 +57,25 @@ _abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyh
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "ООО «Северный Хлеб»",
-  "country": "ru",
+  "business_name": "\u041e\u041e\u041e \u00ab\u0421\u0435\u0432\u0435\u0440\u043d\u044b\u0439 \u0425\u043b\u0435\u0431\u00bb",
+  "country": {
+    "code": "RU",
+    "name": "Russia"
+  },
   "business_key": "ru-1027700123456",
   "registration_number": "1027700123456",
   "identity_host": "www.severnyhleb.example",
   "domains": [
     "severnyhleb.example"
   ],
-  "public_key": "L9kcaNPdmptjPUyneyEt3nbl4J+4mHis3FZLDvl4LWE=",
-  "description": "Пекарня в Твери.",
+  "public_key": "NbIIQSKgqO1WSGDtyxpAITZEyn8hcWCl77wMBaT0Txw=",
+  "description": "\u041f\u0435\u043a\u0430\u0440\u043d\u044f \u0432 \u0422\u0432\u0435\u0440\u0438.",
   "website": "https://severnyhleb.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Тверь",
+        "locality": "\u0422\u0432\u0435\u0440\u044c",
         "country": {
           "code": "RU"
         }
@@ -80,14 +83,14 @@ _abiz.severnyhleb.example. 300 IN TXT "v=abiz1;k=ru-1027700123456;h=www.severnyh
       "public": true
     }
   ],
-  "signature": "5lj/Mkj6WH69fmGIib1StP4d8n0VqxRI/FQ6hjAwbqeFuDDD4O3NP5nz2FKL7qgoIMRguRfS1xuZDNGQwp5VBg=="
+  "signature": "p3RpoflR7fvZoG+d93w1sPTNz47WfAuLS2lWUe0v7tJ5tdC8BejBCrojUMAV9DOLQKlD2/+gXkOmglb1yMJhCg=="
 }
 ```
 
 Эталонным валидатором можно проверить запись и значение DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain severnyhleb.example --dns-value 'v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example;p=L9kcaNPdmptjPUyneyEt3nbl4J+4mHis3FZLDvl4LWE='
+python scripts/validate.py record.json --domain severnyhleb.example --dns-value 'v=abiz1;k=ru-1027700123456;h=www.severnyhleb.example;p=NbIIQSKgqO1WSGDtyxpAITZEyn8hcWCl77wMBaT0Txw='
 ```
 
 ### Самостоятельно или через поставщика

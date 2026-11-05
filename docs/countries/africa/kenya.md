@@ -45,7 +45,7 @@ Kenya uses no subdivision: do not add a region, province or city code. SPEC sect
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.riftvalleycycles.example. 300 IN TXT "v=abiz1;k=ke-PVTAB1CDE2;h=riftvalleycycles.ke.to.co;p=EFHWwuZXhzDlJpO+zSQu9d0e4T3cU17JJz+PHQ5p+i8="
+_abiz.riftvalleycycles.example. 300 IN TXT "v=abiz1;k=ke-PVTAB1CDE2;h=riftvalleycycles.ke.to.co;p=J41TbHlT3CsxdrBjd1IixgbN81q6ISXXg9C70npflOk="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.riftvalleycycles.example. 300 IN TXT "v=abiz1;h=riftvalleycycles.ke.to.co;p=EFHWwuZXhzDlJpO+zSQu9d0e4T3cU17JJz+PHQ5p+i8="
+_abiz.riftvalleycycles.example. 300 IN TXT "v=abiz1;h=riftvalleycycles.ke.to.co;p=J41TbHlT3CsxdrBjd1IixgbN81q6ISXXg9C70npflOk="
 ```
 
 The business record served as `application/json` at `https://riftvalleycycles.ke.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://riftvalleycycles.ke
 {
   "record_version": "abiz1",
   "business_name": "Rift Valley Cycles",
-  "country": "ke",
+  "country": {
+    "code": "KE",
+    "name": "Kenya"
+  },
   "business_key": "ke-PVTAB1CDE2",
   "registration_number": "PVTAB1CDE2",
   "identity_host": "riftvalleycycles.ke.to.co",
   "domains": [
     "riftvalleycycles.example"
   ],
-  "public_key": "EFHWwuZXhzDlJpO+zSQu9d0e4T3cU17JJz+PHQ5p+i8=",
-  "signature": "SE9K39iyg9beSGDv1c3K5rNbOAdiiYUzLBZuHDq/Mcz8oV95pThF7HMhVZnWgIj+HJnjTTpsfEG1eCCFnjnaDg=="
+  "public_key": "J41TbHlT3CsxdrBjd1IixgbN81q6ISXXg9C70npflOk=",
+  "signature": "Q2LzRRGF1SthjhYhM9DRgNOQ7q4YGXpxJ61WGAWCK3l5lg2G0SFwIyx2oFVAh1fjyZ9O9QCXvEDntkt1YlDMAQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain riftvalleycycles.example --dns-value 'v=abiz1;k=ke-PVTAB1CDE2;h=riftvalleycycles.ke.to.co;p=EFHWwuZXhzDlJpO+zSQu9d0e4T3cU17JJz+PHQ5p+i8='
+python scripts/validate.py record.json --domain riftvalleycycles.example --dns-value 'v=abiz1;k=ke-PVTAB1CDE2;h=riftvalleycycles.ke.to.co;p=J41TbHlT3CsxdrBjd1IixgbN81q6ISXXg9C70npflOk='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Kenya with a record hosted by to.co might use the host `riftvalleycycles.ke.to.co`, giving the DNS value `v=abiz1;k=ke-PVTAB1CDE2;h=riftvalleycycles.ke.to.co;p=EFHWwuZXhzDlJpO+zSQu9d0e4T3cU17JJz+PHQ5p+i8=`. An unregistered business might use a town-based host such as `riftvalleycycles-nakuru.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Kenya with a record hosted by to.co might use the host `riftvalleycycles.ke.to.co`, giving the DNS value `v=abiz1;k=ke-PVTAB1CDE2;h=riftvalleycycles.ke.to.co;p=J41TbHlT3CsxdrBjd1IixgbN81q6ISXXg9C70npflOk=`. An unregistered business might use a town-based host such as `riftvalleycycles-nakuru.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

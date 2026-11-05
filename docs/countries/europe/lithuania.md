@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.nemunoduona.example. 300 IN TXT "v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=CeW+AO7+A82ik86/q1+r8dOhRB0E4kXQnwoWtAJBhVc="
+_abiz.nemunoduona.example. 300 IN TXT "v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=qHezZLf+CMnWm5yPrKegkDV9y1Dwem7zqtCmJ3TbC+w="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://nemunoduona.lt.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Nemuno Duona UAB",
-  "country": "lt",
+  "country": {
+    "code": "LT",
+    "name": "Lithuania"
+  },
   "business_key": "lt-123456789",
   "registration_number": "123456789",
   "identity_host": "nemunoduona.lt.to.co",
   "domains": [
     "nemunoduona.example"
   ],
-  "public_key": "CeW+AO7+A82ik86/q1+r8dOhRB0E4kXQnwoWtAJBhVc=",
+  "public_key": "qHezZLf+CMnWm5yPrKegkDV9y1Dwem7zqtCmJ3TbC+w=",
   "description": "Bakery in Kaunas.",
   "website": "https://nemunoduona.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://nemunoduona.lt.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "/SB2O+r5kSsVwqfXdt+TcyNRhHMgEWhQ7u7WvtMnx/Tcy+n2NDSnDk9v1ZZ23F/1IkjIX1zTFKJJMpz1RbasAg=="
+  "signature": "G/c4sqgUcKAe75L1SfNmT70UVSnQF5Hk6HOMj29VKUV6Aoyb7a2X9lufiCkn/LzYKd/LRivYaViMN/QjOxU3Cg=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain nemunoduona.example --dns-value 'v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=CeW+AO7+A82ik86/q1+r8dOhRB0E4kXQnwoWtAJBhVc='
+python scripts/validate.py record.json --domain nemunoduona.example --dns-value 'v=abiz1;k=lt-123456789;h=nemunoduona.lt.to.co;p=qHezZLf+CMnWm5yPrKegkDV9y1Dwem7zqtCmJ3TbC+w='
 ```
 
 ### Self-hosted or through a provider

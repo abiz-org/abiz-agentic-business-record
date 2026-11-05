@@ -39,7 +39,7 @@ Neemt u `business_key` en `registration_number` op in het record, neem dan beide
 Publiceer precies één TXT-record dat begint met `v=abiz1` op `_abiz.` gevolgd door uw domein. Gebruik de compacte vorm zonder spaties (sectie 3.1.1) en een TTL van 300 seconden:
 
 ```dns
-_abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY="
+_abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=33/gd4VA9zbCRCRSULT3AGtJGtoiHlB1VY8QBQlMRTc="
 ```
 
 Een bedrijf zonder inschrijvingsnummer, of dat het liever niet publiceert, laat `k` gewoon weg:
@@ -56,14 +56,17 @@ Dit voorbeeld is fictief. Het slaagt voor de referentievalidator.
 {
   "record_version": "abiz1",
   "business_name": "Bakkerij Paramaribo N.V.",
-  "country": "sr",
+  "country": {
+    "code": "SR",
+    "name": "Suriname"
+  },
   "business_key": "sr-12345",
   "registration_number": "12345",
   "identity_host": "bakkerijparamaribo.sr.to.co",
   "domains": [
     "bakkerijparamaribo.example"
   ],
-  "public_key": "mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY=",
+  "public_key": "33/gd4VA9zbCRCRSULT3AGtJGtoiHlB1VY8QBQlMRTc=",
   "description": "Ambachtelijke bakkerij in het centrum van Paramaribo.",
   "website": "https://bakkerijparamaribo.example",
   "locations": [
@@ -141,7 +144,7 @@ Dit voorbeeld is fictief. Het slaagt voor de referentievalidator.
       "public": true
     }
   ],
-  "signature": "W+2wg5dfRuMqiphL6yK2qNlg2pQ8SenwAeZwtUoojJeo5VtV+YgYVMtchQgThMY9AGNIheCGg9S1k1Z55vFoBg=="
+  "signature": "DCmJEDxe7gU9DiQ/QUTFbXe6JQ59bE/9Piwk6adcvbILbe5cu6xhLSeg3MIDcTlxvzlKiRNTW0iW4+EcPD3dAA=="
 }
 ```
 
@@ -154,7 +157,7 @@ Controleer het record en de DNS-waarde vóór publicatie met de referentievalida
 ```sh
 python scripts/validate.py record.json \
   --domain bakkerijparamaribo.example \
-  --dns-value 'v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY='
+  --dns-value 'v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=33/gd4VA9zbCRCRSULT3AGtJGtoiHlB1VY8QBQlMRTc='
 ```
 
 ## 3. Aanbieders en MCP
@@ -169,7 +172,7 @@ Een aanbieder kan bijvoorbeeld het record van Bakkerij Paramaribo hosten op `bak
 - **Voorbeeld** (voorbeeldsleutel voor eenmalig gebruik; de private sleutel is vernietigd). Kopieer hem nooit: publiceer uw eigen sleutel. Een ABIZ 1.1-assertie moet `p` bevatten.
 
   ```dns
-  _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=mAJTStaJod1E2tnJTTFaKhlexQ+Zxl5kyKOe27ttYLY="
+  _abiz.bakkerijparamaribo.example. 300 IN TXT "v=abiz1;k=sr-12345;h=bakkerijparamaribo.sr.to.co;p=33/gd4VA9zbCRCRSULT3AGtJGtoiHlB1VY8QBQlMRTc="
   ```
 
 - **De private sleutel is van het bedrijf.** Hij mag nooit in de DNS, in het record of in een openbare repository staan. Een aanbieder mag hem voor u aanmaken en bewaren (gehoste modus), maar moet u hem altijd laten exporteren, bijvoorbeeld als PKCS#8, en zijn kopie op verzoek verwijderen (sectie 3.3.4).

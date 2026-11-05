@@ -43,7 +43,7 @@ cy-<registration-number>
 Δημοσιεύστε μία μόνο εγγραφή TXT με όνομα `_abiz` κάτω από τον τομέα σας, σε συμπαγή μορφή χωρίς κενά, με πρώτο το `v=abiz1`:
 
 ```dns
-_abiz.tavernalemesos.example. 300 IN TXT "v=abiz1;k=cy-HE123456;h=tavernalemesos.cy.to.co;p=KAcPTQXrnLRWeEjdosNQC2vVOgpOMKDoyh7niPo/i84="
+_abiz.tavernalemesos.example. 300 IN TXT "v=abiz1;k=cy-HE123456;h=tavernalemesos.cy.to.co;p=i7whfW0tCGIahl7KO5k/KkXDUUKGzMCJc3hm1dpqPZ0="
 ```
 
 Η παραπάνω τιμή `p` είναι ένα προσωρινό κλειδί-παράδειγμα που δημιουργήθηκε για αυτή τη σελίδα. Μην την αντιγράψετε ποτέ: δημοσιεύστε δικό σας κλειδί Μια δήλωση ABIZ 1.1 πρέπει να περιλαμβάνει `p`. Όλα τα ονόματα, οι αριθμοί και οι τομείς αυτής της σελίδας είναι φανταστικά.
@@ -51,7 +51,7 @@ _abiz.tavernalemesos.example. 300 IN TXT "v=abiz1;k=cy-HE123456;h=tavernalemesos
 Χωρίς την προαιρετική ετικέτα `k`, είναι επίσης έγκυρη η εξής:
 
 ```dns
-_abiz.tavernalemesos.example. 300 IN TXT "v=abiz1;h=tavernalemesos.cy.to.co;p=KAcPTQXrnLRWeEjdosNQC2vVOgpOMKDoyh7niPo/i84="
+_abiz.tavernalemesos.example. 300 IN TXT "v=abiz1;h=tavernalemesos.cy.to.co;p=i7whfW0tCGIahl7KO5k/KkXDUUKGzMCJc3hm1dpqPZ0="
 ```
 
 Η εγγραφή της επιχείρησης που διατίθεται ως `application/json` στη διεύθυνση `https://tavernalemesos.cy.to.co`:
@@ -59,23 +59,26 @@ _abiz.tavernalemesos.example. 300 IN TXT "v=abiz1;h=tavernalemesos.cy.to.co;p=KA
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Ταβέρνα Λεμεσός",
-  "country": "cy",
+  "business_name": "\u03a4\u03b1\u03b2\u03ad\u03c1\u03bd\u03b1 \u039b\u03b5\u03bc\u03b5\u03c3\u03cc\u03c2",
+  "country": {
+    "code": "CY",
+    "name": "Cyprus"
+  },
   "business_key": "cy-HE123456",
   "registration_number": "HE123456",
   "identity_host": "tavernalemesos.cy.to.co",
   "domains": [
     "tavernalemesos.example"
   ],
-  "public_key": "KAcPTQXrnLRWeEjdosNQC2vVOgpOMKDoyh7niPo/i84=",
-  "signature": "LTTzTwlt0dNgxogQeU2Z5jsZZUZ30PsPPlJ+JHlnnYzlR8/CklryEnJGJ3lu8I0EdlEGv4dadcfAZ7J/V8PpDw=="
+  "public_key": "i7whfW0tCGIahl7KO5k/KkXDUUKGzMCJc3hm1dpqPZ0=",
+  "signature": "8lrlkf3VwdN60pR4AC9GNgHG78FCoBFcCaFuxp5a+QtLaX1mAElfuJvpLVkoiC65ImaTdBcfuTGPW74m4gCgAw=="
 }
 ```
 
 Για να ελέγξετε μια εγγραφή πριν από τη δημοσίευση, εκτελέστε τον επικυρωτή αναφοράς από αντίγραφο αυτού του αποθετηρίου:
 
 ```sh
-python scripts/validate.py record.json --domain tavernalemesos.example --dns-value 'v=abiz1;k=cy-HE123456;h=tavernalemesos.cy.to.co;p=KAcPTQXrnLRWeEjdosNQC2vVOgpOMKDoyh7niPo/i84='
+python scripts/validate.py record.json --domain tavernalemesos.example --dns-value 'v=abiz1;k=cy-HE123456;h=tavernalemesos.cy.to.co;p=i7whfW0tCGIahl7KO5k/KkXDUUKGzMCJc3hm1dpqPZ0='
 ```
 
 Μπορείτε να φιλοξενήσετε την εγγραφή JSON μόνοι σας σε οποιονδήποτε διακομιστή HTTPS ή να χρησιμοποιήσετε οποιονδήποτε συμβατό πάροχο. Το ABIZ δεν απαιτεί συγκεκριμένο πάροχο.
@@ -84,7 +87,7 @@ python scripts/validate.py record.json --domain tavernalemesos.example --dns-val
 
 Το Model Context Protocol (MCP) είναι ανοιχτό πρωτόκολλο που επιτρέπει στους βοηθούς ΤΝ να καλούν εργαλεία και να διαβάζουν δεδομένα από εξωτερικούς διακομιστές με τυποποιημένο τρόπο. Η εγγραφή μπορεί να περιέχει το προαιρετικό πεδίο `mcp_server_url`, τη διεύθυνση HTTPS ενός διακομιστή MCP της επιχείρησης, π.χ. για κρατήσεις ή πληροφορίες προϊόντων. Το ABIZ δεν εγγυάται αυτόν τον διακομιστή· τα εργαλεία πρέπει να εφαρμόζουν δικούς τους ελέγχους πρόσβασης (ενότητα 4.2.6 του SPEC).
 
-Ένας πάροχος μπορεί να φιλοξενεί την εγγραφή και να δημοσιεύει τον δείκτη DNS για λογαριασμό σας. Για παράδειγμα, μια εγγεγραμμένη εταιρεία στην Κύπρο με εγγραφή φιλοξενούμενη στο to.co θα μπορούσε να χρησιμοποιεί τον κόμβο `tavernalemesos.cy.to.co`, με τιμή DNS `v=abiz1;k=cy-HE123456;h=tavernalemesos.cy.to.co;p=KAcPTQXrnLRWeEjdosNQC2vVOgpOMKDoyh7niPo/i84=`. Μια μη εγγεγραμμένη επιχείρηση θα μπορούσε να χρησιμοποιεί κόμβο με το όνομα της πόλης, όπως `tavernalemesos-limassol.biz.to.co`. Κάθε συμβατός πάροχος ή ο δικός σας διακομιστής λειτουργεί με τον ίδιο τρόπο.
+Ένας πάροχος μπορεί να φιλοξενεί την εγγραφή και να δημοσιεύει τον δείκτη DNS για λογαριασμό σας. Για παράδειγμα, μια εγγεγραμμένη εταιρεία στην Κύπρο με εγγραφή φιλοξενούμενη στο to.co θα μπορούσε να χρησιμοποιεί τον κόμβο `tavernalemesos.cy.to.co`, με τιμή DNS `v=abiz1;k=cy-HE123456;h=tavernalemesos.cy.to.co;p=i7whfW0tCGIahl7KO5k/KkXDUUKGzMCJc3hm1dpqPZ0=`. Μια μη εγγεγραμμένη επιχείρηση θα μπορούσε να χρησιμοποιεί κόμβο με το όνομα της πόλης, όπως `tavernalemesos-limassol.biz.to.co`. Κάθε συμβατός πάροχος ή ο δικός σας διακομιστής λειτουργεί με τον ίδιο τρόπο.
 
 ## 4. Κλειδιά και υπογραφές (ABIZ 1.1)
 

@@ -45,7 +45,7 @@ the Maldives uses no subdivision: do not add a region, province or city code. SP
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.maledive.example. 300 IN TXT "v=abiz1;k=mv-C12342023;h=maledive.mv.to.co;p=cTa3JmmnpRax56SxL8n9MSWXHMgbMlySKzllhA1i/Pg="
+_abiz.maledive.example. 300 IN TXT "v=abiz1;k=mv-C12342023;h=maledive.mv.to.co;p=5Pz83R7KtNzyfRhDCwRLrUM7OJU+x1TKV1hyIxDPCQc="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.maledive.example. 300 IN TXT "v=abiz1;h=maledive.mv.to.co;p=cTa3JmmnpRax56SxL8n9MSWXHMgbMlySKzllhA1i/Pg="
+_abiz.maledive.example. 300 IN TXT "v=abiz1;h=maledive.mv.to.co;p=5Pz83R7KtNzyfRhDCwRLrUM7OJU+x1TKV1hyIxDPCQc="
 ```
 
 The business record served as `application/json` at `https://maledive.mv.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://maledive.mv.to.co`:
 {
   "record_version": "abiz1",
   "business_name": "Male Dive Supplies",
-  "country": "mv",
+  "country": {
+    "code": "MV",
+    "name": "Maldives"
+  },
   "business_key": "mv-C12342023",
   "registration_number": "C12342023",
   "identity_host": "maledive.mv.to.co",
   "domains": [
     "maledive.example"
   ],
-  "public_key": "cTa3JmmnpRax56SxL8n9MSWXHMgbMlySKzllhA1i/Pg=",
-  "signature": "YewM+nIMNhQoeqIBVlnC5zKKGc5cYYkimDpuY7t3eyK0hYbj5+bfychTEBN7pDOvET+4oSLhv+ni06eb2e5UCw=="
+  "public_key": "5Pz83R7KtNzyfRhDCwRLrUM7OJU+x1TKV1hyIxDPCQc=",
+  "signature": "KQunDCYybtKGHXx3S6DrIeOR7khSTPCdgZ3DNiOTDbqIKLQCiUQkKFbsA+ONBeMrKzPZ+QCeIWoj8y2gG8ojBw=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain maledive.example --dns-value 'v=abiz1;k=mv-C12342023;h=maledive.mv.to.co;p=cTa3JmmnpRax56SxL8n9MSWXHMgbMlySKzllhA1i/Pg='
+python scripts/validate.py record.json --domain maledive.example --dns-value 'v=abiz1;k=mv-C12342023;h=maledive.mv.to.co;p=5Pz83R7KtNzyfRhDCwRLrUM7OJU+x1TKV1hyIxDPCQc='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in the Maldives with a record hosted by to.co might use the host `maledive.mv.to.co`, giving the DNS value `v=abiz1;k=mv-C12342023;h=maledive.mv.to.co;p=cTa3JmmnpRax56SxL8n9MSWXHMgbMlySKzllhA1i/Pg=`. An unregistered business might use a town-based host such as `maledive-male.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in the Maldives with a record hosted by to.co might use the host `maledive.mv.to.co`, giving the DNS value `v=abiz1;k=mv-C12342023;h=maledive.mv.to.co;p=5Pz83R7KtNzyfRhDCwRLrUM7OJU+x1TKV1hyIxDPCQc=`. An unregistered business might use a town-based host such as `maledive-male.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

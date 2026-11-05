@@ -41,7 +41,7 @@
 Опубликуйте на своём домене под `_abiz` ровно одну запись TXT ABIZ, в компактной форме без пробелов:
 
 ```dns
-_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example;p=SYPsKPE6CqInwxYPJUEOyizixxiXZXGAvapHUQPP9PM="
+_abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayagoda.example;p=Or93mxTViOAdZHJBibzTBU/mWorZYf6+XdcOCO0oj2Q="
 ```
 
 - `v=abiz1` должен стоять первым. `h` и `p` обязательны; `k` необязателен.
@@ -57,22 +57,25 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "ООО «Лесная Ягода»",
-  "country": "by",
+  "business_name": "\u041e\u041e\u041e \u00ab\u041b\u0435\u0441\u043d\u0430\u044f \u042f\u0433\u043e\u0434\u0430\u00bb",
+  "country": {
+    "code": "BY",
+    "name": "Belarus"
+  },
   "business_key": "by-123456789",
   "registration_number": "123456789",
   "identity_host": "www.lesnayayagoda.example",
   "domains": [
     "lesnayayagoda.example"
   ],
-  "public_key": "SYPsKPE6CqInwxYPJUEOyizixxiXZXGAvapHUQPP9PM=",
-  "description": "Производитель ягодных продуктов в Минске.",
+  "public_key": "Or93mxTViOAdZHJBibzTBU/mWorZYf6+XdcOCO0oj2Q=",
+  "description": "\u041f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c \u044f\u0433\u043e\u0434\u043d\u044b\u0445 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u043e\u0432 \u0432 \u041c\u0438\u043d\u0441\u043a\u0435.",
   "website": "https://lesnayayagoda.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Минск",
+        "locality": "\u041c\u0438\u043d\u0441\u043a",
         "country": {
           "code": "BY"
         }
@@ -80,14 +83,14 @@ _abiz.lesnayayagoda.example. 300 IN TXT "v=abiz1;k=by-123456789;h=www.lesnayayag
       "public": true
     }
   ],
-  "signature": "q4p1lsh6dSQrep6ByiWTkThIRozgD8pNcHYFosD21vOHqdSudY9102/njzKJxMzxDrHiChIUfKrFr7jYBHecCA=="
+  "signature": "ke+4JtuuNDJAi4po/avqWsxBU7SCYi6V2C8rm1U3JAGz5FttcS/a33LrD0HRRwxWl4H+Amg8M65nSWzuaJbtAQ=="
 }
 ```
 
 Эталонным валидатором можно проверить запись и значение DNS локально:
 
 ```sh
-python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example;p=SYPsKPE6CqInwxYPJUEOyizixxiXZXGAvapHUQPP9PM='
+python scripts/validate.py record.json --domain lesnayayagoda.example --dns-value 'v=abiz1;k=by-123456789;h=www.lesnayayagoda.example;p=Or93mxTViOAdZHJBibzTBU/mWorZYf6+XdcOCO0oj2Q='
 ```
 
 ### Самостоятельно или через поставщика

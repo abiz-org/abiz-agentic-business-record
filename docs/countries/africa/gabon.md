@@ -45,7 +45,7 @@ Le Gabon n’utilise pas de subdivision : n’ajoutez ni code de région, ni cod
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.scierieogooue.example. 300 IN TXT "v=abiz1;k=ga-GALBV012023B1200123;h=scierieogooue.ga.to.co;p=WcsJ+QLVVn0AMiPiNN3wCfYSxemhsEOm2fhl7bZKM4g="
+_abiz.scierieogooue.example. 300 IN TXT "v=abiz1;k=ga-GALBV012023B1200123;h=scierieogooue.ga.to.co;p=I6yAF1WcGCfp0o93Gj3fUTI/STFVFJun4jQ0wglVy28="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.scierieogooue.example. 300 IN TXT "v=abiz1;h=scierieogooue.ga.to.co;p=WcsJ+QLVVn0AMiPiNN3wCfYSxemhsEOm2fhl7bZKM4g="
+_abiz.scierieogooue.example. 300 IN TXT "v=abiz1;h=scierieogooue.ga.to.co;p=I6yAF1WcGCfp0o93Gj3fUTI/STFVFJun4jQ0wglVy28="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://scierieogooue.ga.to.co` :
@@ -61,23 +61,26 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://sci
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Scierie de l’Ogooué",
-  "country": "ga",
+  "business_name": "Scierie de l\u2019Ogoou\u00e9",
+  "country": {
+    "code": "GA",
+    "name": "Gabon"
+  },
   "business_key": "ga-GALBV012023B1200123",
   "registration_number": "GALBV012023B1200123",
   "identity_host": "scierieogooue.ga.to.co",
   "domains": [
     "scierieogooue.example"
   ],
-  "public_key": "WcsJ+QLVVn0AMiPiNN3wCfYSxemhsEOm2fhl7bZKM4g=",
-  "signature": "JoFqMq6dQGaDuVPZBFrfVXJmgxs/xU267MPWz91+kEcDvcCTxODAiSXj7zDR/gTdURBD+e+NiEn1PG3nR+DZBg=="
+  "public_key": "I6yAF1WcGCfp0o93Gj3fUTI/STFVFJun4jQ0wglVy28=",
+  "signature": "TpXcM0O2NfQavhRcMaDGmEc6iNAXxdEvE8+kx5lH2u5vnbwkpm2UzN7zpUPenFQgJ88cBMYmVJQf1U2meIwFDQ=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain scierieogooue.example --dns-value 'v=abiz1;k=ga-GALBV012023B1200123;h=scierieogooue.ga.to.co;p=WcsJ+QLVVn0AMiPiNN3wCfYSxemhsEOm2fhl7bZKM4g='
+python scripts/validate.py record.json --domain scierieogooue.example --dns-value 'v=abiz1;k=ga-GALBV012023B1200123;h=scierieogooue.ga.to.co;p=I6yAF1WcGCfp0o93Gj3fUTI/STFVFJun4jQ0wglVy28='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Gabon dont la fiche est hébergée par to.co pourrait utiliser l’hôte `scierieogooue.ga.to.co`, ce qui donne la valeur DNS `v=abiz1;k=ga-GALBV012023B1200123;h=scierieogooue.ga.to.co;p=WcsJ+QLVVn0AMiPiNN3wCfYSxemhsEOm2fhl7bZKM4g=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `scierieogooue-libreville.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Gabon dont la fiche est hébergée par to.co pourrait utiliser l’hôte `scierieogooue.ga.to.co`, ce qui donne la valeur DNS `v=abiz1;k=ga-GALBV012023B1200123;h=scierieogooue.ga.to.co;p=I6yAF1WcGCfp0o93Gj3fUTI/STFVFJun4jQ0wglVy28=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `scierieogooue-libreville.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

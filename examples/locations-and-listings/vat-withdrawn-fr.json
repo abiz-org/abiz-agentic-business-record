@@ -1,14 +1,17 @@
 {
   "record_version": "abiz1",
-  "business_name": "Café Lumière SARL",
-  "country": "fr",
+  "business_name": "Caf\u00e9 Lumi\u00e8re SARL",
+  "country": {
+    "code": "FR",
+    "name": "France"
+  },
   "business_key": "fr-123456789",
   "registration_number": "123456789",
   "identity_host": "cafelumiere.fr.to.co",
   "domains": [
     "cafelumiere.example"
   ],
-  "public_key": "vn/11MtLUfHv82429l3ucz74T2c8QeTc37VW3eWHC8Y=",
+  "public_key": "Q4OaBNwqZZp5C8xB6RN4+DXKBQxTHC2Zz1T2OlQDj14=",
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "v2njmnSY2AM23h/7H0hoTh5NSX/87vIbLrAYFwvNyeJnLnRYYD3IUgofDvDxvCP07O62r5ypx2i8yipTXp6sDg=="
+  "signature": "ojPhlbn2E9zDv188AhWRmjuBqhc/4oW4ynpAgavPCxeVAmkQeJTaW6kCGN5/PK+zLWTJFZSD9sP3lkeBESr+DA=="
 }

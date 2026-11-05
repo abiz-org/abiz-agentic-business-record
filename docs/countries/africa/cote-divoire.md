@@ -45,7 +45,7 @@ La Côte d’Ivoire n’utilise pas de subdivision : n’ajoutez ni code de rég
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=SBjHSi8SYrDgWMNNnjm0PMU379Sv29oYyxEHVG++e7A="
+_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=QVZDhnCOiQEftUGaK7uhjSc30dtiJqaKU97b4WT5XdY="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;h=attiekelagune.ci.to.co;p=SBjHSi8SYrDgWMNNnjm0PMU379Sv29oYyxEHVG++e7A="
+_abiz.attiekelagune.example. 300 IN TXT "v=abiz1;h=attiekelagune.ci.to.co;p=QVZDhnCOiQEftUGaK7uhjSc30dtiJqaKU97b4WT5XdY="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://attiekelagune.ci.to.co` :
@@ -61,23 +61,26 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://att
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Attiéké de la Lagune",
-  "country": "ci",
+  "business_name": "Atti\u00e9k\u00e9 de la Lagune",
+  "country": {
+    "code": "CI",
+    "name": "C\u00f4te d'Ivoire"
+  },
   "business_key": "ci-CIABJ032023B1201234",
   "registration_number": "CIABJ032023B1201234",
   "identity_host": "attiekelagune.ci.to.co",
   "domains": [
     "attiekelagune.example"
   ],
-  "public_key": "SBjHSi8SYrDgWMNNnjm0PMU379Sv29oYyxEHVG++e7A=",
-  "signature": "C62HDOC+DfEcVH+QdVXAZFfN9ZzBaAHu/zPgRbfeblpOIt0GF0WbL/vpWUSStKXPU0HxccOJ3UL80RRNgpjsAQ=="
+  "public_key": "QVZDhnCOiQEftUGaK7uhjSc30dtiJqaKU97b4WT5XdY=",
+  "signature": "NDg164d+x8UzRcJiSkNOKZDgX9zGrHxFgaGxSg9a6dj+nMFZity94m5ptzbEzWsbClJExJtyZCreMGUmmHwYDw=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain attiekelagune.example --dns-value 'v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=SBjHSi8SYrDgWMNNnjm0PMU379Sv29oYyxEHVG++e7A='
+python scripts/validate.py record.json --domain attiekelagune.example --dns-value 'v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=QVZDhnCOiQEftUGaK7uhjSc30dtiJqaKU97b4WT5XdY='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en Côte d’Ivoire dont la fiche est hébergée par to.co pourrait utiliser l’hôte `attiekelagune.ci.to.co`, ce qui donne la valeur DNS `v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=SBjHSi8SYrDgWMNNnjm0PMU379Sv29oYyxEHVG++e7A=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `attiekelagune-abidjan.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée en Côte d’Ivoire dont la fiche est hébergée par to.co pourrait utiliser l’hôte `attiekelagune.ci.to.co`, ce qui donne la valeur DNS `v=abiz1;k=ci-CIABJ032023B1201234;h=attiekelagune.ci.to.co;p=QVZDhnCOiQEftUGaK7uhjSc30dtiJqaKU97b4WT5XdY=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `attiekelagune-abidjan.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

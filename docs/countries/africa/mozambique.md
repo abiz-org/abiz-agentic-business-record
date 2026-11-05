@@ -45,7 +45,7 @@ Moçambique não usa subdivisão: não acrescente código de região, província
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=Vd5hPWrJ4+C/ZKMXBHZUhuk6ElTGF/54UE62ydw76qM="
+_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=SIbn08hpschcZ4UjzCmjY/QJB96NVhUffpTKpr+UA/I="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,7 +53,7 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;h=cajuariamaputo.mz.to.co;p=Vd5hPWrJ4+C/ZKMXBHZUhuk6ElTGF/54UE62ydw76qM="
+_abiz.cajuariamaputo.example. 300 IN TXT "v=abiz1;h=cajuariamaputo.mz.to.co;p=SIbn08hpschcZ4UjzCmjY/QJB96NVhUffpTKpr+UA/I="
 ```
 
 O registo da empresa servido como `application/json` em `https://cajuariamaputo.mz.to.co`:
@@ -62,22 +62,25 @@ O registo da empresa servido como `application/json` em `https://cajuariamaputo.
 {
   "record_version": "abiz1",
   "business_name": "Cajuaria Maputo",
-  "country": "mz",
+  "country": {
+    "code": "MZ",
+    "name": "Mozambique"
+  },
   "business_key": "mz-101234567",
   "registration_number": "101234567",
   "identity_host": "cajuariamaputo.mz.to.co",
   "domains": [
     "cajuariamaputo.example"
   ],
-  "public_key": "Vd5hPWrJ4+C/ZKMXBHZUhuk6ElTGF/54UE62ydw76qM=",
-  "signature": "l3er9Asvgy2qIqXqsHSiiXXUUz8d6/OlQNprG62WCsPGtI84Um7gUMphkg41X0XMLhOA6j9iNTD5IPxUTt5TCA=="
+  "public_key": "SIbn08hpschcZ4UjzCmjY/QJB96NVhUffpTKpr+UA/I=",
+  "signature": "Y5PyWZf9zp+31kiOUe0u7JWVccOLjl6wNstXvBMfvQaBP9I1B7Db/zo62Ly4R7eXA24qZ2Q060NSM2XdJ31CCw=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain cajuariamaputo.example --dns-value 'v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=Vd5hPWrJ4+C/ZKMXBHZUhuk6ElTGF/54UE62ydw76qM='
+python scripts/validate.py record.json --domain cajuariamaputo.example --dns-value 'v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=SIbn08hpschcZ4UjzCmjY/QJB96NVhUffpTKpr+UA/I='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
@@ -86,7 +89,7 @@ Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou reco
 
 O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Moçambique com a ficha alojada no to.co poderia usar o anfitrião `cajuariamaputo.mz.to.co`, o que dá o valor DNS `v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=Vd5hPWrJ4+C/ZKMXBHZUhuk6ElTGF/54UE62ydw76qM=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `cajuariamaputo-maputo.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Moçambique com a ficha alojada no to.co poderia usar o anfitrião `cajuariamaputo.mz.to.co`, o que dá o valor DNS `v=abiz1;k=mz-101234567;h=cajuariamaputo.mz.to.co;p=SIbn08hpschcZ4UjzCmjY/QJB96NVhUffpTKpr+UA/I=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `cajuariamaputo-maputo.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 

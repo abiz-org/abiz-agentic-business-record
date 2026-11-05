@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.saaremaapuit.example. 300 IN TXT "v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=7BJo7KsQHcijXmn0Oz4QZbMYmY6TJnClbf/yx7y7A44="
+_abiz.saaremaapuit.example. 300 IN TXT "v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=rHKQBv5DJRtuLV1x+tdOOQmEdYwQIy4evwYkP3zNBlE="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -57,15 +57,18 @@ The record served at `https://saaremaapuit.ee.to.co`, as `application/json`:
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Saaremaa Puit OÜ",
-  "country": "ee",
+  "business_name": "Saaremaa Puit O\u00dc",
+  "country": {
+    "code": "EE",
+    "name": "Estonia"
+  },
   "business_key": "ee-12345678",
   "registration_number": "12345678",
   "identity_host": "saaremaapuit.ee.to.co",
   "domains": [
     "saaremaapuit.example"
   ],
-  "public_key": "7BJo7KsQHcijXmn0Oz4QZbMYmY6TJnClbf/yx7y7A44=",
+  "public_key": "rHKQBv5DJRtuLV1x+tdOOQmEdYwQIy4evwYkP3zNBlE=",
   "description": "Timber workshop on Saaremaa.",
   "website": "https://saaremaapuit.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://saaremaapuit.ee.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "hdauw6Y/+qlD9O6sAbCaUpt43WSqC1RqnCLgG+valM2zTzPAxkNPiKYh1kjnU1gKOwdDnTXrq8OHVFGSnjr7CA=="
+  "signature": "fPqTCKJM32jqX7HvedrjysVyzgCdjyoPHjlO/EopTiGMh1jVbjwOkzCFxNOpybsj2/WG3g4mdaQvpR8oIRZ8DA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain saaremaapuit.example --dns-value 'v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=7BJo7KsQHcijXmn0Oz4QZbMYmY6TJnClbf/yx7y7A44='
+python scripts/validate.py record.json --domain saaremaapuit.example --dns-value 'v=abiz1;k=ee-12345678;h=saaremaapuit.ee.to.co;p=rHKQBv5DJRtuLV1x+tdOOQmEdYwQIy4evwYkP3zNBlE='
 ```
 
 ### Self-hosted or through a provider

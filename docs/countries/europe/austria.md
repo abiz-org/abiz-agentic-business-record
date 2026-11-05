@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.tischlereigruber.example. 300 IN TXT "v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=aVJPXi80B4ympmTmnEsyjDKiU2NfUOsEDF6IybfUCxs="
+_abiz.tischlereigruber.example. 300 IN TXT "v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=ihQz7qbsa8WFncQgx2/ojdLmVZH75hgkaTjC99eg48M="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` und `p` sind Pflicht, `k` ist optional.
@@ -58,14 +58,17 @@ Der Eintrag, der unter `https://tischlereigruber.at.to.co` als `application/json
 {
   "record_version": "abiz1",
   "business_name": "Tischlerei Gruber GmbH",
-  "country": "at",
+  "country": {
+    "code": "AT",
+    "name": "Austria"
+  },
   "business_key": "at-123456A",
   "registration_number": "123456A",
   "identity_host": "tischlereigruber.at.to.co",
   "domains": [
     "tischlereigruber.example"
   ],
-  "public_key": "aVJPXi80B4ympmTmnEsyjDKiU2NfUOsEDF6IybfUCxs=",
+  "public_key": "ihQz7qbsa8WFncQgx2/ojdLmVZH75hgkaTjC99eg48M=",
   "description": "Tischlerei in Graz.",
   "website": "https://tischlereigruber.example",
   "locations": [
@@ -80,14 +83,14 @@ Der Eintrag, der unter `https://tischlereigruber.at.to.co` als `application/json
       "public": true
     }
   ],
-  "signature": "e+NCmxy6Rju3eRfdx2mQrBktGjWyL0RzTcRqtPSyr742WCNxqTZAmS3c04+d2o4DqmZF7AaLyMKg1rmGUcVLCQ=="
+  "signature": "ODv6c7FWkmJO/DnkZlPBf+pSs2enw1a9Qipj5S/4cJ2hEdjQ9XtcJf6pP9RbQJ5YIDTKm1BB5v5JyXqQMtFRBQ=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain tischlereigruber.example --dns-value 'v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=aVJPXi80B4ympmTmnEsyjDKiU2NfUOsEDF6IybfUCxs='
+python scripts/validate.py record.json --domain tischlereigruber.example --dns-value 'v=abiz1;k=at-123456A;h=tischlereigruber.at.to.co;p=ihQz7qbsa8WFncQgx2/ojdLmVZH75hgkaTjC99eg48M='
 ```
 
 ### Selbst hosten oder über einen Anbieter

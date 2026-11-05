@@ -41,7 +41,7 @@ Nøgler sammenlignes uden forskel på store og små bogstaver, men offentliggør
 Offentliggør præcis én ABIZ TXT-post under `_abiz` på jeres domæne, i kompakt form uden mellemrum:
 
 ```dns
-_abiz.fiskehusetholm.example. 300 IN TXT "v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=aspCxrnYr9RiTS7T/cVsOjbL87o1Qy7Nr0VZzsddZLA="
+_abiz.fiskehusetholm.example. 300 IN TXT "v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=OMY+IuLLxljHRJH9W6dh+BSZ/Y0gu2Qvpr7F+Gj25I0="
 ```
 
 - `v=abiz1` skal stå først. `h` og `p` er obligatoriske; `k` er frivillig.
@@ -58,14 +58,17 @@ Posten, der leveres på `https://fiskehusetholm.dk.to.co` som `application/json`
 {
   "record_version": "abiz1",
   "business_name": "Fiskehuset Holm ApS",
-  "country": "dk",
+  "country": {
+    "code": "DK",
+    "name": "Denmark"
+  },
   "business_key": "dk-12345678",
   "registration_number": "12345678",
   "identity_host": "fiskehusetholm.dk.to.co",
   "domains": [
     "fiskehusetholm.example"
   ],
-  "public_key": "aspCxrnYr9RiTS7T/cVsOjbL87o1Qy7Nr0VZzsddZLA=",
+  "public_key": "OMY+IuLLxljHRJH9W6dh+BSZ/Y0gu2Qvpr7F+Gj25I0=",
   "description": "Fiskehandel i Aarhus.",
   "website": "https://fiskehusetholm.example",
   "locations": [
@@ -80,14 +83,14 @@ Posten, der leveres på `https://fiskehusetholm.dk.to.co` som `application/json`
       "public": true
     }
   ],
-  "signature": "/Y9vJkI8MGhCM0fRksIdaihskxrXsE4KDiYD2IecIAD9pBxC56Q/f6Y/EpUOeulqlJa0u1rFKslXgHd7c9ylAQ=="
+  "signature": "IiUWfpcRDjl0MRw68Uw0qqlq8OiciPZ6DcqdU/9azXrmDvb+eLAPtuZsUfuyOPLKffMByMZDXlK9veT1qskQDg=="
 }
 ```
 
 Med referencevalidatoren kan I kontrollere posten og DNS-værdien lokalt:
 
 ```sh
-python scripts/validate.py record.json --domain fiskehusetholm.example --dns-value 'v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=aspCxrnYr9RiTS7T/cVsOjbL87o1Qy7Nr0VZzsddZLA='
+python scripts/validate.py record.json --domain fiskehusetholm.example --dns-value 'v=abiz1;k=dk-12345678;h=fiskehusetholm.dk.to.co;p=OMY+IuLLxljHRJH9W6dh+BSZ/Y0gu2Qvpr7F+Gj25I0='
 ```
 
 ### Selv eller via en udbyder

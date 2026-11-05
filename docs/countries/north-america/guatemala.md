@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA="
+_abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=G4ACwb04DsinhgC3HWa4LNETDrKaHLfVkun0BkcamGo="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -56,14 +56,17 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 {
   "record_version": "abiz1",
   "business_name": "Textiles Quetzal, S.A.",
-  "country": "gt",
+  "country": {
+    "code": "GT",
+    "name": "Guatemala"
+  },
   "business_key": "gt-123456",
   "registration_number": "123456",
   "identity_host": "textilesquetzal.gt.to.co",
   "domains": [
     "textilesquetzal.example"
   ],
-  "public_key": "2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA=",
+  "public_key": "G4ACwb04DsinhgC3HWa4LNETDrKaHLfVkun0BkcamGo=",
   "description": "Tejidos mayas hechos en telar de cintura.",
   "website": "https://textilesquetzal.example",
   "locations": [
@@ -141,7 +144,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "0k911InWZpDJkWZxrv2lFDvcLmoo9T39YhZXisxBdNOCH3Gk83tlt+49RytOd1mBWxd9rXFMSV66ULp/LKFgBQ=="
+  "signature": "MSBjpOuRxgd8k+mM4araxWKFpfRzDyvLdMX54R0rLllDuxntqyW/YeYFq9mfOrJjfo+oNGZhiF2Io4fbL9LzCA=="
 }
 ```
 
@@ -154,7 +157,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain textilesquetzal.example \
-  --dns-value 'v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA='
+  --dns-value 'v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=G4ACwb04DsinhgC3HWa4LNETDrKaHLfVkun0BkcamGo='
 ```
 
 ## 3. Proveedores y MCP
@@ -169,7 +172,7 @@ Por ejemplo, un proveedor puede alojar el registro de Textiles Quetzal en `texti
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=2VGpDM4FWqRvgHqo4TIAcYN53nUKrcfi6Sjg/qdqOFA="
+  _abiz.textilesquetzal.example. 300 IN TXT "v=abiz1;k=gt-123456;h=textilesquetzal.gt.to.co;p=G4ACwb04DsinhgC3HWa4LNETDrKaHLfVkun0BkcamGo="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

@@ -43,7 +43,7 @@ Rwanda uses no subdivision: do not add a region, province or city code. SPEC sec
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.kigalihillscoffee.example. 300 IN TXT "v=abiz1;k=rw-123456789;h=kigalihillscoffee.rw.to.co;p=Ew2xGZte7EsbNEeitNAXjr36gVg86TC1Uy+uCVdoEDk="
+_abiz.kigalihillscoffee.example. 300 IN TXT "v=abiz1;k=rw-123456789;h=kigalihillscoffee.rw.to.co;p=4B+BGdpaLejIxjAnZX1oLs2GmEC8PqhB0mveZ4BiCHY="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -51,7 +51,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.kigalihillscoffee.example. 300 IN TXT "v=abiz1;h=kigalihillscoffee.rw.to.co;p=Ew2xGZte7EsbNEeitNAXjr36gVg86TC1Uy+uCVdoEDk="
+_abiz.kigalihillscoffee.example. 300 IN TXT "v=abiz1;h=kigalihillscoffee.rw.to.co;p=4B+BGdpaLejIxjAnZX1oLs2GmEC8PqhB0mveZ4BiCHY="
 ```
 
 The business record served as `application/json` at `https://kigalihillscoffee.rw.to.co`:
@@ -60,22 +60,25 @@ The business record served as `application/json` at `https://kigalihillscoffee.r
 {
   "record_version": "abiz1",
   "business_name": "Kigali Hills Coffee",
-  "country": "rw",
+  "country": {
+    "code": "RW",
+    "name": "Rwanda"
+  },
   "business_key": "rw-123456789",
   "registration_number": "123456789",
   "identity_host": "kigalihillscoffee.rw.to.co",
   "domains": [
     "kigalihillscoffee.example"
   ],
-  "public_key": "Ew2xGZte7EsbNEeitNAXjr36gVg86TC1Uy+uCVdoEDk=",
-  "signature": "6uD+izKr4bsnJjwr1K9jM0JBnvXkjCBQ8sfI5q2rBxBQrjUTBjl2nBbehcdpWY1CXWswIqxWDQ5e7yooiv2qBA=="
+  "public_key": "4B+BGdpaLejIxjAnZX1oLs2GmEC8PqhB0mveZ4BiCHY=",
+  "signature": "W/T7580aoIM04e8CNf8lPeImZskq2Ohfl/ZyhT7GfQs8e0DVDvIqweWRnDqehthWYxY9cS+u2k9Hh0Ns/yBrBA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain kigalihillscoffee.example --dns-value 'v=abiz1;k=rw-123456789;h=kigalihillscoffee.rw.to.co;p=Ew2xGZte7EsbNEeitNAXjr36gVg86TC1Uy+uCVdoEDk='
+python scripts/validate.py record.json --domain kigalihillscoffee.example --dns-value 'v=abiz1;k=rw-123456789;h=kigalihillscoffee.rw.to.co;p=4B+BGdpaLejIxjAnZX1oLs2GmEC8PqhB0mveZ4BiCHY='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -84,7 +87,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Rwanda with a record hosted by to.co might use the host `kigalihillscoffee.rw.to.co`, giving the DNS value `v=abiz1;k=rw-123456789;h=kigalihillscoffee.rw.to.co;p=Ew2xGZte7EsbNEeitNAXjr36gVg86TC1Uy+uCVdoEDk=`. An unregistered business might use a town-based host such as `kigalihillscoffee-kigali.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Rwanda with a record hosted by to.co might use the host `kigalihillscoffee.rw.to.co`, giving the DNS value `v=abiz1;k=rw-123456789;h=kigalihillscoffee.rw.to.co;p=4B+BGdpaLejIxjAnZX1oLs2GmEC8PqhB0mveZ4BiCHY=`. An unregistered business might use a town-based host such as `kigalihillscoffee-kigali.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

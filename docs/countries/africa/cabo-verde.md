@@ -45,7 +45,7 @@ Cabo Verde não usa subdivisão: não acrescente código de região, província 
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.pastelariamorabeza.example. 300 IN TXT "v=abiz1;k=cv-212345678;h=pastelariamorabeza.cv.to.co;p=aNSiKaqT3WAzok8s+I4eivGq2QBsB2xDbUtJTz8+bNQ="
+_abiz.pastelariamorabeza.example. 300 IN TXT "v=abiz1;k=cv-212345678;h=pastelariamorabeza.cv.to.co;p=ZUTRaRlzrFMZEGcYXihZkZDYibmotNQ2a2TDkQ6D+YM="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,7 +53,7 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.pastelariamorabeza.example. 300 IN TXT "v=abiz1;h=pastelariamorabeza.cv.to.co;p=aNSiKaqT3WAzok8s+I4eivGq2QBsB2xDbUtJTz8+bNQ="
+_abiz.pastelariamorabeza.example. 300 IN TXT "v=abiz1;h=pastelariamorabeza.cv.to.co;p=ZUTRaRlzrFMZEGcYXihZkZDYibmotNQ2a2TDkQ6D+YM="
 ```
 
 O registo da empresa servido como `application/json` em `https://pastelariamorabeza.cv.to.co`:
@@ -62,22 +62,25 @@ O registo da empresa servido como `application/json` em `https://pastelariamorab
 {
   "record_version": "abiz1",
   "business_name": "Pastelaria Morabeza",
-  "country": "cv",
+  "country": {
+    "code": "CV",
+    "name": "Cabo Verde"
+  },
   "business_key": "cv-212345678",
   "registration_number": "212345678",
   "identity_host": "pastelariamorabeza.cv.to.co",
   "domains": [
     "pastelariamorabeza.example"
   ],
-  "public_key": "aNSiKaqT3WAzok8s+I4eivGq2QBsB2xDbUtJTz8+bNQ=",
-  "signature": "ymN9TexikczqtTKvhN6fLGESK8tBTLpULHmEPyl3cY4DYRBD3faqpiqZ8FZupLXtncf0fJr6YzLycNaD0qqoBQ=="
+  "public_key": "ZUTRaRlzrFMZEGcYXihZkZDYibmotNQ2a2TDkQ6D+YM=",
+  "signature": "tLfPPlkFHr39eIEfkSlU98UXZzFqsQcdvaygAbUQL0J0KwfoXBQ2BnmnCS4S6KOpdmfSCfWbFZn21qNJRyR4Aw=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain pastelariamorabeza.example --dns-value 'v=abiz1;k=cv-212345678;h=pastelariamorabeza.cv.to.co;p=aNSiKaqT3WAzok8s+I4eivGq2QBsB2xDbUtJTz8+bNQ='
+python scripts/validate.py record.json --domain pastelariamorabeza.example --dns-value 'v=abiz1;k=cv-212345678;h=pastelariamorabeza.cv.to.co;p=ZUTRaRlzrFMZEGcYXihZkZDYibmotNQ2a2TDkQ6D+YM='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
@@ -86,7 +89,7 @@ Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou reco
 
 O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Cabo Verde com a ficha alojada no to.co poderia usar o anfitrião `pastelariamorabeza.cv.to.co`, o que dá o valor DNS `v=abiz1;k=cv-212345678;h=pastelariamorabeza.cv.to.co;p=aNSiKaqT3WAzok8s+I4eivGq2QBsB2xDbUtJTz8+bNQ=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `pastelariamorabeza-praia.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Cabo Verde com a ficha alojada no to.co poderia usar o anfitrião `pastelariamorabeza.cv.to.co`, o que dá o valor DNS `v=abiz1;k=cv-212345678;h=pastelariamorabeza.cv.to.co;p=ZUTRaRlzrFMZEGcYXihZkZDYibmotNQ2a2TDkQ6D+YM=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `pastelariamorabeza-praia.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 

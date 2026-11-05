@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs="
+_abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=lum8Mb6O2RFMT2csR3tCMpIgxiBPjXICxpXTxaQnikQ="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -55,15 +55,18 @@ This example is fictional. It passes the reference validator.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Apia Harbour Café Ltd",
-  "country": "ws",
+  "business_name": "Apia Harbour Caf\u00e9 Ltd",
+  "country": {
+    "code": "WS",
+    "name": "Samoa"
+  },
   "business_key": "ws-12345",
   "registration_number": "12345",
   "identity_host": "apiaharbourcafe.ws.to.co",
   "domains": [
     "apiaharbourcafe.example"
   ],
-  "public_key": "ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs=",
+  "public_key": "lum8Mb6O2RFMT2csR3tCMpIgxiBPjXICxpXTxaQnikQ=",
   "description": "Coffee and Samoan breakfasts on the waterfront.",
   "website": "https://apiaharbourcafe.example",
   "locations": [
@@ -141,7 +144,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "pAbWvI2GLSZL4XzyvCm4zS1ihS95a7nmC17oFpr/6V8iL9Oe0K0fvQphaLlColYpWZXnlGkjRdMCFi0JLVoyCw=="
+  "signature": "iEafhw9YN7J5d035yyZVgtQKAgcDDIoOIOest3rWmKhs4OPzK9KZedAXEhvdCPNWDRcwfTEIJRtBZ6pIqy8oCg=="
 }
 ```
 
@@ -154,7 +157,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain apiaharbourcafe.example \
-  --dns-value 'v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs='
+  --dns-value 'v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=lum8Mb6O2RFMT2csR3tCMpIgxiBPjXICxpXTxaQnikQ='
 ```
 
 ## 3. Using a provider and MCP
@@ -169,7 +172,7 @@ For example, a provider might host the record for Apia Harbour Café at `apiahar
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=ZXImtHN9aTXQe9VJakNa7Fp9ngdW8mqNKE/N34XDRZs="
+  _abiz.apiaharbourcafe.example. 300 IN TXT "v=abiz1;k=ws-12345;h=apiaharbourcafe.ws.to.co;p=lum8Mb6O2RFMT2csR3tCMpIgxiBPjXICxpXTxaQnikQ="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

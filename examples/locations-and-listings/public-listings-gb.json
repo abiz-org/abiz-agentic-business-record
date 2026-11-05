@@ -1,12 +1,15 @@
 {
   "record_version": "abiz1",
   "business_name": "The Tidy Teapot",
-  "country": "gb",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "identity_host": "thetidyteapot.biz.to.co",
   "domains": [
     "tidyteapot.example"
   ],
-  "public_key": "zO7AEoSwH8/8t43mjvFGyQETuaysg8C6H0MW8ACkyYA=",
+  "public_key": "dbDEfDF0huwR8fogrXbtUcXjCLS3+zMIQvdOay3vkqo=",
   "website": "https://tidyteapot.example",
   "review_summaries": [
     {
@@ -76,5 +79,5 @@
     }
   ],
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "8+48UTqd+br1cIlcJbvYKo633wW0iq5tKamp6IFFzThNEEjk15vQqaaGlSNI4ViVpkIYsYEy3xXth/7nXqjBBg=="
+  "signature": "bl/ExRDXVV5Z6k6TG0JNVVU2fXbKRdJoQ6JMNXQHOIc6ypRYTddWsgxBxabm10fPIPpWLnDJmNdqV4DCxe2DCg=="
 }

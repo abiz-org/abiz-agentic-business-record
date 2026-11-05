@@ -45,7 +45,7 @@ Si vous ajoutez `business_key` et `registration_number` à la fiche, ajoutez les
 Publiez un seul enregistrement TXT commençant par `v=abiz1` à `_abiz.` suivi de votre domaine. Utilisez la forme compacte, sans espaces (section 3.1.1), avec un TTL de 300 secondes :
 
 ```dns
-_abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM="
+_abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=HkYMD9PNEjMSUqtSr4z9Ftprjya1/iLYhwMdCk7anC0="
 ```
 
 Une entreprise sans numéro d’immatriculation, ou qui préfère ne pas le publier, omet simplement `k` :
@@ -62,24 +62,27 @@ Cet exemple est fictif. Il passe le validateur de référence.
 {
   "record_version": "abiz1",
   "business_name": "Boulangerie du Vieux-Port inc.",
-  "country": "ca",
+  "country": {
+    "code": "CA",
+    "name": "Canada"
+  },
   "business_key": "ca-qc-1234567890",
   "registration_number": "1234567890",
   "identity_host": "boulangerieduvieuxport.qc.ca.to.co",
   "domains": [
     "boulangerieduvieuxport.example"
   ],
-  "public_key": "yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM=",
+  "public_key": "HkYMD9PNEjMSUqtSr4z9Ftprjya1/iLYhwMdCk7anC0=",
   "description": "Boulangerie artisanale et viennoiseries dans le Vieux-Port.",
   "website": "https://boulangerieduvieuxport.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Québec",
+        "locality": "Qu\u00e9bec",
         "region": {
           "code": "CA-QC",
-          "name": "Québec"
+          "name": "Qu\u00e9bec"
         },
         "country": {
           "code": "CA"
@@ -151,7 +154,7 @@ Cet exemple est fictif. Il passe le validateur de référence.
       "public": true
     }
   ],
-  "signature": "VJ2vK0jiVqA71QuwK+rY+RHDWRmAeI9H6zkIqHvxa42Z6XgWQVEnvWKInXdCanIUfJ2AxZNtyn9r7+iGGnHTDQ=="
+  "signature": "8DGRROQEFAyVG4UhDi2ofkGwS+7Td7waGTKsrRxGixTCv+NERA6w3Zlgx+RUg8+3hVmtYU2zK8hXKTV480PUCA=="
 }
 ```
 
@@ -164,7 +167,7 @@ Avant de publier, vérifiez la fiche et la valeur DNS avec le validateur de réf
 ```sh
 python scripts/validate.py record.json \
   --domain boulangerieduvieuxport.example \
-  --dns-value 'v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM='
+  --dns-value 'v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=HkYMD9PNEjMSUqtSr4z9Ftprjya1/iLYhwMdCk7anC0='
 ```
 
 ## 3. Fournisseurs et MCP
@@ -179,7 +182,7 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie du Vieux-P
 - **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`.
 
   ```dns
-  _abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=yqBQ0dRFxFPK8ivZR02YUAp6Rhq60QT7V5TtYHz17jM="
+  _abiz.boulangerieduvieuxport.example. 300 IN TXT "v=abiz1;k=ca-qc-1234567890;h=boulangerieduvieuxport.qc.ca.to.co;p=HkYMD9PNEjMSUqtSr4z9Ftprjya1/iLYhwMdCk7anC0="
   ```
 
 - **La clé privée appartient à l’entreprise.** Elle ne doit jamais figurer dans le DNS, dans la fiche ni dans un dépôt public. Un fournisseur peut la générer et la conserver pour vous (mode hébergé), mais il doit vous permettre de l’exporter à tout moment, par exemple au format PKCS#8, et supprimer sa copie à votre demande (section 3.3.4).

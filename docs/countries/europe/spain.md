@@ -41,7 +41,7 @@ Las claves se comparan sin distinguir mayúsculas y minúsculas, pero publique l
 Publique un único registro TXT de ABIZ en `_abiz` de su dominio, en forma compacta y sin espacios:
 
 ```dns
-_abiz.panaderiagarcia.example. 300 IN TXT "v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=RIUMCp8r9lDTD/7HW+7qEr5VaUUCOiLr4aUwGyS+kYU="
+_abiz.panaderiagarcia.example. 300 IN TXT "v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=LI5zPRHGLP4OPMb8Ai3OagYYgMDRvhe5mkieh96ddGc="
 ```
 
 - `v=abiz1` debe ir primero. `h` es obligatorio; `k` y `p` son opcionales.
@@ -57,16 +57,19 @@ La ficha que se sirve en `https://panaderiagarcia.es.to.co` como `application/js
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Panadería García S.L.",
-  "country": "es",
+  "business_name": "Panader\u00eda Garc\u00eda S.L.",
+  "country": {
+    "code": "ES",
+    "name": "Spain"
+  },
   "business_key": "es-B12345678",
   "registration_number": "B12345678",
   "identity_host": "panaderiagarcia.es.to.co",
   "domains": [
     "panaderiagarcia.example"
   ],
-  "public_key": "RIUMCp8r9lDTD/7HW+7qEr5VaUUCOiLr4aUwGyS+kYU=",
-  "description": "Panadería artesana en Valencia.",
+  "public_key": "LI5zPRHGLP4OPMb8Ai3OagYYgMDRvhe5mkieh96ddGc=",
+  "description": "Panader\u00eda artesana en Valencia.",
   "website": "https://panaderiagarcia.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ La ficha que se sirve en `https://panaderiagarcia.es.to.co` como `application/js
       "public": true
     }
   ],
-  "signature": "gi3veEw/8DVI1Np6UjXPmVFfuNCtbPz9p9tKNZ9tMwGi1CBy2TeN7Xw6I6cc1veDFemyhS0cpKRbjpa+1bAoBA=="
+  "signature": "0afqCSzVx7amKirStkFIzCihrONXvccTt0wHkgrKBLHj8o9vlPPLMgfX/EkC0K2Bl4OIib3bOxZfiMb+ZudoBg=="
 }
 ```
 
 Con el validador de referencia puede comprobar en local la ficha y el valor DNS:
 
 ```sh
-python scripts/validate.py record.json --domain panaderiagarcia.example --dns-value 'v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=RIUMCp8r9lDTD/7HW+7qEr5VaUUCOiLr4aUwGyS+kYU='
+python scripts/validate.py record.json --domain panaderiagarcia.example --dns-value 'v=abiz1;k=es-B12345678;h=panaderiagarcia.es.to.co;p=LI5zPRHGLP4OPMb8Ai3OagYYgMDRvhe5mkieh96ddGc='
 ```
 
 ### Por su cuenta o con un proveedor

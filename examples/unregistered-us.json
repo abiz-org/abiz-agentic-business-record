@@ -1,12 +1,15 @@
 {
   "record_version": "abiz1",
   "business_name": "Market Stand Repairs",
-  "country": "US",
+  "country": {
+    "code": "US",
+    "name": "United States"
+  },
   "identity_host": "market-stand-repairs-portland.biz.to.co",
   "domains": [
     "marketstand.example"
   ],
-  "public_key": "zc6S6bKXaZXO7NCI+fjtgMWLdbdEeavjVvydQsoQCJ0=",
+  "public_key": "GgTwPhOA2HOoHi1d2aVmKoq3KRqlvnWBzf2yhQ3bLPU=",
   "services": [
     {
       "name": "Small appliance repairs"
@@ -27,5 +30,9 @@
     }
   ],
   "website": "https://marketstand.example",
-  "signature": "cgbqS3tAawDzTQaH355zfaS/gmyLJRs6H4xn3+FCFNPAE5OQ5qpAMLqfe0MEnPMXMCMlmluXdrdrY2zN0fFJBw=="
+  "region": {
+    "code": "US-OR",
+    "name": "Oregon"
+  },
+  "signature": "bINo0A251gWHRh91sEL6+56tRZquGpbkWO4aQ8Vl+5AKlK3xpNEZAiD8NH/WdYk9cwdZJUsGQqDFboCWgsThBg=="
 }

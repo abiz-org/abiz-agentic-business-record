@@ -1,13 +1,16 @@
 {
   "record_version": "abiz1",
-  "business_name": "Bücherwurm Antiquariat Müller",
-  "country": "de",
+  "business_name": "B\u00fccherwurm Antiquariat M\u00fcller",
+  "country": {
+    "code": "DE",
+    "name": "Germany"
+  },
   "identity_host": "buecherwurm-mueller.biz.to.co",
   "domains": [
     "buecherwurm.example"
   ],
-  "public_key": "OvMnNT5gZsQNN8fNZI6OvaeFzhCYccSUfNhHhjEpuk8=",
-  "description": "Antiquarische Bücher, nur im Versand. Kein Ladengeschäft.",
+  "public_key": "8bwEa/LXBEmNWVomPJdQfKtZKkFGoY6RlnpcEyc2tZ8=",
+  "description": "Antiquarische B\u00fccher, nur im Versand. Kein Ladengesch\u00e4ft.",
   "website": "https://buecherwurm.example",
   "email": "kontakt@buecherwurm.example",
   "phone": "+493012345678",
@@ -19,7 +22,7 @@
     "primary": {
       "taxonomy": "nace_rev2",
       "id": "47.79",
-      "name": "Einzelhandel mit Antiquitäten und Gebrauchtwaren"
+      "name": "Einzelhandel mit Antiquit\u00e4ten und Gebrauchtwaren"
     },
     "additional": [
       {
@@ -35,7 +38,7 @@
       "kind": "logo",
       "url": "https://buecherwurm.example/media/logo.svg",
       "content_type": "image/svg+xml",
-      "alt_text": "Bücherwurm logo",
+      "alt_text": "B\u00fccherwurm logo",
       "position": 1
     },
     {
@@ -46,7 +49,7 @@
       "width": 1600,
       "height": 900,
       "caption": "Unser Lager in Berlin",
-      "alt_text": "Holzregale voller alter Bücher",
+      "alt_text": "Holzregale voller alter B\u00fccher",
       "position": 2,
       "updated_at": "2026-10-01T08:00:00Z"
     },
@@ -67,5 +70,5 @@
   ],
   "operational_status": "open",
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "wWUUHGKCOCJgI98XkObzRuhQoWBg8U5M/S7TIn+YI6W8CT43d2UbPznM0sNjCrZSVBcDEKtkwRi1S0gkfwHfCQ=="
+  "signature": "55kSJ8cOmpxcxZAKiAZ5exToMvdCVoeNFeSADNOCOsgVlzimyrcvwTJGENPgO6b5aXBSVYMMeTdEbnFrPwklAA=="
 }

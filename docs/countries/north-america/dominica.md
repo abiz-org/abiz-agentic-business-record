@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.mornetrailguides.example. 300 IN TXT "v=abiz1;k=dm-12345;h=mornetrailguides.dm.to.co;p=LjaXahBLsGA0rnU5pNxx8wF9WtGUG5FrjDJ3yxc7DEU="
+_abiz.mornetrailguides.example. 300 IN TXT "v=abiz1;k=dm-12345;h=mornetrailguides.dm.to.co;p=uoRKt827Tj48Yfrh3eiBnnOKdyR3UJzYGZRJdUzQ6is="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -56,14 +56,17 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Morne Trail Guides Ltd",
-  "country": "dm",
+  "country": {
+    "code": "DM",
+    "name": "Dominica"
+  },
   "business_key": "dm-12345",
   "registration_number": "12345",
   "identity_host": "mornetrailguides.dm.to.co",
   "domains": [
     "mornetrailguides.example"
   ],
-  "public_key": "LjaXahBLsGA0rnU5pNxx8wF9WtGUG5FrjDJ3yxc7DEU=",
+  "public_key": "uoRKt827Tj48Yfrh3eiBnnOKdyR3UJzYGZRJdUzQ6is=",
   "description": "Guided hikes to Boiling Lake and the Waitukubuli trail.",
   "website": "https://mornetrailguides.example",
   "locations": [
@@ -141,7 +144,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "Xpx5Cqtlu47j5OIjHYwBar0oCIY2Vl0zWhfo+QzIkEWGN5QYAuR/2enqNRu0gWkjJjw4slWunbj4HaZdqzk8BA=="
+  "signature": "w9TnbNyi8QiGVstrG5vv02+A+ZiBfb5NN3FMcv12c69nTe6r6MZxehj0RDeg2B4dEoTMiK8Ai8Xc/leoRWICDA=="
 }
 ```
 
@@ -154,7 +157,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain mornetrailguides.example \
-  --dns-value 'v=abiz1;k=dm-12345;h=mornetrailguides.dm.to.co;p=LjaXahBLsGA0rnU5pNxx8wF9WtGUG5FrjDJ3yxc7DEU='
+  --dns-value 'v=abiz1;k=dm-12345;h=mornetrailguides.dm.to.co;p=uoRKt827Tj48Yfrh3eiBnnOKdyR3UJzYGZRJdUzQ6is='
 ```
 
 ## 3. Using a provider and MCP
@@ -169,7 +172,7 @@ For example, a provider might host the record for Morne Trail Guides at `mornetr
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.mornetrailguides.example. 300 IN TXT "v=abiz1;k=dm-12345;h=mornetrailguides.dm.to.co;p=LjaXahBLsGA0rnU5pNxx8wF9WtGUG5FrjDJ3yxc7DEU="
+  _abiz.mornetrailguides.example. 300 IN TXT "v=abiz1;k=dm-12345;h=mornetrailguides.dm.to.co;p=uoRKt827Tj48Yfrh3eiBnnOKdyR3UJzYGZRJdUzQ6is="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

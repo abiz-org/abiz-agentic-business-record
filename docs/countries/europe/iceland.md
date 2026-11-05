@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.heklaferdir.example. 300 IN TXT "v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=FvSlKFKqCYry6WFu2xPYuCq/0V0ySKMqrI/hdjUd3Tg="
+_abiz.heklaferdir.example. 300 IN TXT "v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=IdOwUGyMIq9MfntYYxFmd0PhzRjprPeFYOW0yWFBmy8="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,21 +58,24 @@ The record served at `https://heklaferdir.is.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Hekla Ferdir ehf.",
-  "country": "is",
+  "country": {
+    "code": "IS",
+    "name": "Iceland"
+  },
   "business_key": "is-1234567890",
   "registration_number": "1234567890",
   "identity_host": "heklaferdir.is.to.co",
   "domains": [
     "heklaferdir.example"
   ],
-  "public_key": "FvSlKFKqCYry6WFu2xPYuCq/0V0ySKMqrI/hdjUd3Tg=",
-  "description": "Tour operator in Reykjavík.",
+  "public_key": "IdOwUGyMIq9MfntYYxFmd0PhzRjprPeFYOW0yWFBmy8=",
+  "description": "Tour operator in Reykjav\u00edk.",
   "website": "https://heklaferdir.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Reykjavík",
+        "locality": "Reykjav\u00edk",
         "country": {
           "code": "IS"
         }
@@ -80,14 +83,14 @@ The record served at `https://heklaferdir.is.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "XwDhmaWndc9W52+uzlorZZkmx715HkHC3JiaowlqH8KxvNXeEypltc7II6DGqc1WiLZnErIn9hmraQuOqWAGDw=="
+  "signature": "DP8QBdZiXhzK1GE2UPt4MzHURx2TrFjiR5TwB2qyAdQQPj13XEtliV5MFKaJmG+jwzq1MN9rlbjclY90ZXKXAw=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain heklaferdir.example --dns-value 'v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=FvSlKFKqCYry6WFu2xPYuCq/0V0ySKMqrI/hdjUd3Tg='
+python scripts/validate.py record.json --domain heklaferdir.example --dns-value 'v=abiz1;k=is-1234567890;h=heklaferdir.is.to.co;p=IdOwUGyMIq9MfntYYxFmd0PhzRjprPeFYOW0yWFBmy8='
 ```
 
 ### Self-hosted or through a provider

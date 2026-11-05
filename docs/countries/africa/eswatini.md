@@ -45,7 +45,7 @@ Eswatini uses no subdivision: do not add a region, province or city code. SPEC s
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.lubombocrafts.example. 300 IN TXT "v=abiz1;k=sz-1232023;h=lubombocrafts.sz.to.co;p=YKYuGLWHLHJtT3In+MPi7/FGSr04z9NrABQIttLLSd8="
+_abiz.lubombocrafts.example. 300 IN TXT "v=abiz1;k=sz-1232023;h=lubombocrafts.sz.to.co;p=us7kcKLLATAGAl1N8rwoeRMKx+eKa0gr/ubncG7jd3k="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.lubombocrafts.example. 300 IN TXT "v=abiz1;h=lubombocrafts.sz.to.co;p=YKYuGLWHLHJtT3In+MPi7/FGSr04z9NrABQIttLLSd8="
+_abiz.lubombocrafts.example. 300 IN TXT "v=abiz1;h=lubombocrafts.sz.to.co;p=us7kcKLLATAGAl1N8rwoeRMKx+eKa0gr/ubncG7jd3k="
 ```
 
 The business record served as `application/json` at `https://lubombocrafts.sz.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://lubombocrafts.sz.to
 {
   "record_version": "abiz1",
   "business_name": "Lubombo Crafts",
-  "country": "sz",
+  "country": {
+    "code": "SZ",
+    "name": "Eswatini"
+  },
   "business_key": "sz-1232023",
   "registration_number": "1232023",
   "identity_host": "lubombocrafts.sz.to.co",
   "domains": [
     "lubombocrafts.example"
   ],
-  "public_key": "YKYuGLWHLHJtT3In+MPi7/FGSr04z9NrABQIttLLSd8=",
-  "signature": "S+OBGL5HRQJt2bv8wNK+XnP5015JdITbUKUnZ9DkF5JX68BituSaVlVlGDB6V3cfOm4VPgqXIetTuJu21QEgBw=="
+  "public_key": "us7kcKLLATAGAl1N8rwoeRMKx+eKa0gr/ubncG7jd3k=",
+  "signature": "VcD3Wp5ESkjKhzuRBDjTcoTIsEh207AXTlX6sMPBKTO4CbyvjsV8YzrGfPKFOzai/S+bgc1VXQ7LjXi2WgLeBg=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain lubombocrafts.example --dns-value 'v=abiz1;k=sz-1232023;h=lubombocrafts.sz.to.co;p=YKYuGLWHLHJtT3In+MPi7/FGSr04z9NrABQIttLLSd8='
+python scripts/validate.py record.json --domain lubombocrafts.example --dns-value 'v=abiz1;k=sz-1232023;h=lubombocrafts.sz.to.co;p=us7kcKLLATAGAl1N8rwoeRMKx+eKa0gr/ubncG7jd3k='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Eswatini with a record hosted by to.co might use the host `lubombocrafts.sz.to.co`, giving the DNS value `v=abiz1;k=sz-1232023;h=lubombocrafts.sz.to.co;p=YKYuGLWHLHJtT3In+MPi7/FGSr04z9NrABQIttLLSd8=`. An unregistered business might use a town-based host such as `lubombocrafts-mbabane.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Eswatini with a record hosted by to.co might use the host `lubombocrafts.sz.to.co`, giving the DNS value `v=abiz1;k=sz-1232023;h=lubombocrafts.sz.to.co;p=us7kcKLLATAGAl1N8rwoeRMKx+eKa0gr/ubncG7jd3k=`. An unregistered business might use a town-based host such as `lubombocrafts-mbabane.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

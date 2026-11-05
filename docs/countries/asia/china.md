@@ -43,7 +43,7 @@ cn-<registration-number>
 在域名下的 `_abiz` 处只发布一条 TXT 记录，采用不含空格的紧凑格式，并以 `v=abiz1` 开头：
 
 ```dns
-_abiz.qingshantea.example. 300 IN TXT "v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI="
+_abiz.qingshantea.example. 300 IN TXT "v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=xliS6dhDUa7GsiatoxkNuNIiOTdFLxzeBE+sISSM1R4="
 ```
 
 上面的 `p` 值是为本页生成的一次性示例密钥。切勿复制：请发布您自己的密钥。ABIZ 1.1 声明必须包含 `p`。本页中的所有名称、号码和域名均为虚构。
@@ -51,7 +51,7 @@ _abiz.qingshantea.example. 300 IN TXT "v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingsha
 省略可选的 `k` 标签时，以下写法同样有效：
 
 ```dns
-_abiz.qingshantea.example. 300 IN TXT "v=abiz1;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI="
+_abiz.qingshantea.example. 300 IN TXT "v=abiz1;h=qingshantea.cn.to.co;p=xliS6dhDUa7GsiatoxkNuNIiOTdFLxzeBE+sISSM1R4="
 ```
 
 以 `application/json` 形式在 `https://qingshantea.cn.to.co` 提供的企业记录：
@@ -59,23 +59,26 @@ _abiz.qingshantea.example. 300 IN TXT "v=abiz1;h=qingshantea.cn.to.co;p=YZq8jSTa
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "杭州青山茶业有限公司",
-  "country": "cn",
+  "business_name": "\u676d\u5dde\u9752\u5c71\u8336\u4e1a\u6709\u9650\u516c\u53f8",
+  "country": {
+    "code": "CN",
+    "name": "China"
+  },
   "business_key": "cn-91330100MA2ABCDE1X",
   "registration_number": "91330100MA2ABCDE1X",
   "identity_host": "qingshantea.cn.to.co",
   "domains": [
     "qingshantea.example"
   ],
-  "public_key": "YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI=",
-  "signature": "q7X5wXRHY1Pprasl9bCpK9oZWTPkDRZQJQPCgPhlkuJeMCMgSRqDPhOMcQge31uW3Q7buB5dA9ETUKif0NcWAg=="
+  "public_key": "xliS6dhDUa7GsiatoxkNuNIiOTdFLxzeBE+sISSM1R4=",
+  "signature": "ggg1HD/4UhE0ND84BfmrnCgV4jsrRlbNaDyx09n8sZwvZsFvC+Q3e4QnaZz7eagCZnG/Frv7Ikfw1rRNv8vOAw=="
 }
 ```
 
 发布前如需检查记录，可在本仓库的副本中运行参考验证器：
 
 ```sh
-python scripts/validate.py record.json --domain qingshantea.example --dns-value 'v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI='
+python scripts/validate.py record.json --domain qingshantea.example --dns-value 'v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=xliS6dhDUa7GsiatoxkNuNIiOTdFLxzeBE+sISSM1R4='
 ```
 
 您可以在任何 HTTPS 服务器上自行托管 JSON 记录，也可以使用任何兼容的服务商。ABIZ 不要求使用特定服务商。
@@ -84,7 +87,7 @@ python scripts/validate.py record.json --domain qingshantea.example --dns-value 
 
 模型上下文协议（Model Context Protocol，MCP）是一种开放协议，让 AI 助手以标准方式调用外部服务器上的工具并读取数据。企业记录可包含可选字段 `mcp_server_url`，即企业 MCP 服务器的 HTTPS 地址，例如用于预约或产品信息。ABIZ 不为该服务器作担保，工具必须自行实施访问控制（SPEC 第 4.2.6 节）。
 
-服务商可以替您托管记录并发布 DNS 指针。例如，一家在中国登记、由 to.co 托管记录的公司可以使用主机名 `qingshantea.cn.to.co`，对应的 DNS 值为 `v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=YZq8jSTakRCOmsX/AWZzKRXDi9TCHjrnkarDdiDQHoI=`。未登记的商户可以使用含地名的主机名，例如 `qingshantea-hangzhou.biz.to.co`。任何兼容的服务商或您自己的服务器都以同样方式工作。
+服务商可以替您托管记录并发布 DNS 指针。例如，一家在中国登记、由 to.co 托管记录的公司可以使用主机名 `qingshantea.cn.to.co`，对应的 DNS 值为 `v=abiz1;k=cn-91330100MA2ABCDE1X;h=qingshantea.cn.to.co;p=xliS6dhDUa7GsiatoxkNuNIiOTdFLxzeBE+sISSM1R4=`。未登记的商户可以使用含地名的主机名，例如 `qingshantea-hangzhou.biz.to.co`。任何兼容的服务商或您自己的服务器都以同样方式工作。
 
 ## 4. 密钥与签名（ABIZ 1.1）
 

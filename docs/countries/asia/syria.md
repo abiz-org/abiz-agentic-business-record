@@ -43,7 +43,7 @@ sy-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc="
+_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=LcdTwYgv9k8Ugxq6N8Hna+kSsaidyUMgv9jg75uo/MY="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -51,7 +51,7 @@ _abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=ddQfeCA
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc="
+_abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=LcdTwYgv9k8Ugxq6N8Hna+kSsaidyUMgv9jg75uo/MY="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://www.alepposoap.example/?format=json`:
@@ -59,21 +59,24 @@ _abiz.alepposoap.example. 300 IN TXT "v=abiz1;h=www.alepposoap.example;p=ddQfeCA
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "صابون حلب",
-  "country": "sy",
+  "business_name": "\u0635\u0627\u0628\u0648\u0646 \u062d\u0644\u0628",
+  "country": {
+    "code": "SY",
+    "name": "Syria"
+  },
   "identity_host": "www.alepposoap.example",
   "domains": [
     "alepposoap.example"
   ],
-  "public_key": "ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc=",
-  "signature": "cz3QM2v0HpLdtvhpDmERcqFgdk+aZWC0kmBqELJ9uKdzXr3jaY0j0jlZS7Ngo5nMXUiV0zBNUZQ3HMhKid52Bw=="
+  "public_key": "LcdTwYgv9k8Ugxq6N8Hna+kSsaidyUMgv9jg75uo/MY=",
+  "signature": "mo1ko4ePfcIrp9HEOpopO1m58hVKdBu/Bz+MZVdbzcfiwK/kZXSLHZyGE+YZvyru3M157FAWSVQc/WV/qWOnAQ=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain alepposoap.example --dns-value 'v=abiz1;h=www.alepposoap.example;p=ddQfeCAZArpoWYT76kZVkCnyiAyjXRCcW3oUqvsBkjc='
+python scripts/validate.py record.json --domain alepposoap.example --dns-value 'v=abiz1;h=www.alepposoap.example;p=LcdTwYgv9k8Ugxq6N8Hna+kSsaidyUMgv9jg75uo/MY='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.

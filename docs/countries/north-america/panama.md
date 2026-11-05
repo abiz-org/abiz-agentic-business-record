@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA="
+_abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=nkPSb3ZaFrcRYg2VOJ4OLt+azp4gC4shSKn1JoLPGac="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -56,21 +56,24 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 {
   "record_version": "abiz1",
   "business_name": "Transportes Canal, S.A.",
-  "country": "pa",
+  "country": {
+    "code": "PA",
+    "name": "Panama"
+  },
   "business_key": "pa-155123456",
   "registration_number": "155123456",
   "identity_host": "transportescanal.pa.to.co",
   "domains": [
     "transportescanal.example"
   ],
-  "public_key": "bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA=",
+  "public_key": "nkPSb3ZaFrcRYg2VOJ4OLt+azp4gC4shSKn1JoLPGac=",
   "description": "Mudanzas y transporte de carga ligera.",
   "website": "https://transportescanal.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Ciudad de Panamá",
+        "locality": "Ciudad de Panam\u00e1",
         "country": {
           "code": "PA"
         }
@@ -141,7 +144,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "GPKtWTnSCEXuDmpTwJISPsnrn4GqIw5pHpdpu3qouCglRkdYz7vVxX1oGGwaFzONKZ8FLRhoWB0MqL5nbac+BQ=="
+  "signature": "dMJqqHVKk9K7Z5lPXTT5u1Vu5OyBw82a2eWOMMpkYXoVjkKMLfE5osIcBn0zXjGRX22TeFYCInDzgpjFD33XDQ=="
 }
 ```
 
@@ -154,7 +157,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain transportescanal.example \
-  --dns-value 'v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA='
+  --dns-value 'v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=nkPSb3ZaFrcRYg2VOJ4OLt+azp4gC4shSKn1JoLPGac='
 ```
 
 ## 3. Proveedores y MCP
@@ -169,7 +172,7 @@ Por ejemplo, un proveedor puede alojar el registro de Transportes Canal en `tran
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=bj06lHRxqpnM6CqnNbPIFs4Tra6M7TT89NE505WaZjA="
+  _abiz.transportescanal.example. 300 IN TXT "v=abiz1;k=pa-155123456;h=transportescanal.pa.to.co;p=nkPSb3ZaFrcRYg2VOJ4OLt+azp4gC4shSKn1JoLPGac="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.jadranskaribarnica.example. 300 IN TXT "v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=SK7XK9qcGo0IvRSoLaau7hkLswsXx5Pn8aE3QQoMcUU="
+_abiz.jadranskaribarnica.example. 300 IN TXT "v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=aUxVtguVxzutGeZf15gt/DVLi3q5gnPSTDGEoUwh6fI="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://jadranskaribarnica.hr.to.co`, as `application/json
 {
   "record_version": "abiz1",
   "business_name": "Jadranska Ribarnica d.o.o.",
-  "country": "hr",
+  "country": {
+    "code": "HR",
+    "name": "Croatia"
+  },
   "business_key": "hr-080123456",
   "registration_number": "080123456",
   "identity_host": "jadranskaribarnica.hr.to.co",
   "domains": [
     "jadranskaribarnica.example"
   ],
-  "public_key": "SK7XK9qcGo0IvRSoLaau7hkLswsXx5Pn8aE3QQoMcUU=",
+  "public_key": "aUxVtguVxzutGeZf15gt/DVLi3q5gnPSTDGEoUwh6fI=",
   "description": "Fishmonger in Split.",
   "website": "https://jadranskaribarnica.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://jadranskaribarnica.hr.to.co`, as `application/json
       "public": true
     }
   ],
-  "signature": "zxf2MmUw/o0bYW2jp4iJHcqV6kRs3KQ5lkJyfCm4/xmvUHzhesvwgBe4w2F9sYxNz026VQeSFgo+Og73m8uGBg=="
+  "signature": "vI130ErkqXGfWhnk4f7Fva9rrEp+K4a8uvR1P/EEr5XUL1AST5+52BP/ap2U8ixKlyenfFYDDIz42Czje4CoBA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain jadranskaribarnica.example --dns-value 'v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=SK7XK9qcGo0IvRSoLaau7hkLswsXx5Pn8aE3QQoMcUU='
+python scripts/validate.py record.json --domain jadranskaribarnica.example --dns-value 'v=abiz1;k=hr-080123456;h=jadranskaribarnica.hr.to.co;p=aUxVtguVxzutGeZf15gt/DVLi3q5gnPSTDGEoUwh6fI='
 ```
 
 ### Self-hosted or through a provider

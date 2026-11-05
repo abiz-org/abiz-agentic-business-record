@@ -45,7 +45,7 @@ Timor-Leste não usa subdivisão: não acrescente código de região, província
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.caferamelau.example. 300 IN TXT "v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k="
+_abiz.caferamelau.example. 300 IN TXT "v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=jxssePnJirSItR0H+3NWN6SNPZ8gBQvjOQwSyNvTquM="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,7 +53,7 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.caferamelau.example. 300 IN TXT "v=abiz1;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k="
+_abiz.caferamelau.example. 300 IN TXT "v=abiz1;h=caferamelau.tl.to.co;p=jxssePnJirSItR0H+3NWN6SNPZ8gBQvjOQwSyNvTquM="
 ```
 
 O registo da empresa servido como `application/json` em `https://caferamelau.tl.to.co`:
@@ -61,23 +61,26 @@ O registo da empresa servido como `application/json` em `https://caferamelau.tl.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Café Ramelau",
-  "country": "tl",
+  "business_name": "Caf\u00e9 Ramelau",
+  "country": {
+    "code": "TL",
+    "name": "Timor-Leste"
+  },
   "business_key": "tl-12345",
   "registration_number": "12345",
   "identity_host": "caferamelau.tl.to.co",
   "domains": [
     "caferamelau.example"
   ],
-  "public_key": "ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k=",
-  "signature": "h1du1bMZzlHkLmU+rRc94bXaKoubZq9GH9vocleahsSAHFTCBq+30Z/LGKHgBMVrIsmEcYeML3J6WeWk6ebeBQ=="
+  "public_key": "jxssePnJirSItR0H+3NWN6SNPZ8gBQvjOQwSyNvTquM=",
+  "signature": "Fv/7vXba35skafWG4gBDWw0oCnQBhlIj5a4Iwn2cqsr1t3c2bG1/wVsWmCqgfpZ+bYJ9JlhZ9ssckXxwt+OSAg=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain caferamelau.example --dns-value 'v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k='
+python scripts/validate.py record.json --domain caferamelau.example --dns-value 'v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=jxssePnJirSItR0H+3NWN6SNPZ8gBQvjOQwSyNvTquM='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
@@ -86,7 +89,7 @@ Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou reco
 
 O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Timor-Leste com a ficha alojada no to.co poderia usar o anfitrião `caferamelau.tl.to.co`, o que dá o valor DNS `v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=ROLZzFkSZ28rPdxwckQaHh/ongQjUmeSmisV71JcN9k=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `caferamelau-dili.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em Timor-Leste com a ficha alojada no to.co poderia usar o anfitrião `caferamelau.tl.to.co`, o que dá o valor DNS `v=abiz1;k=tl-12345;h=caferamelau.tl.to.co;p=jxssePnJirSItR0H+3NWN6SNPZ8gBQvjOQwSyNvTquM=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `caferamelau-dili.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 
