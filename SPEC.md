@@ -691,7 +691,7 @@ The URLs in `services` and `links` are limited to 2048 characters, like every ot
 ##### 4.7.6.1 Identity, kind and visibility
 
 - `location_id` is a stable public identifier for the location: lowercase letters, digits and hyphens, 1–100 characters, unique within `locations`. A producer SHOULD keep it unchanged when other details of the location change, and MUST NOT reuse it for a different place. It is not an internal database key and not an ABIZ record host.
-- `kind` is `registered-office`, `trading` or `other`. A registered office is the address on the business register; a trading location is a place where the business deals with customers; `other` is any other place, such as a market stall or a depot.
+- `kind` is `registered_office`, `trading` or `other`. A registered office is the address on the business register; a trading location is a place where the business deals with customers; `other` is any other place, such as a market stall or a depot. Registered tokens use snake_case.
 - `name` (at most 180 characters) is the location's own display name, and may differ from `business_name`. `description` (at most 2000 characters) is a public description of the location, not private notes.
 - `public: true` means that the business presents the location as a place customers or visitors can go. It is **not** consent to publish any detail of the location: a detail that is not to be published is left out, whatever `public` says.
 
@@ -820,6 +820,7 @@ JSON Schema cannot express every rule in this section. A conforming consumer, an
 | `locations[].country` (required, any case) | `locations[].address.country.code` (required in an address, uppercase) |
 | root `country` (string, any case) | `country` `{ "code", "name" }` (`code` uppercase, `name` required) |
 | (none) | optional root `region` `{ "code"?, "name"? }` when the producer holds a subdivision |
+| `locations[].kind` `registered-office` | `registered_office` |
 
 A producer migrating text hours SHOULD convert them only when they are unambiguous, and otherwise leave the location's hours out until the business confirms them. Rolling back means publishing a re-signed record in the previous form; one record host cannot publish both forms at once.
 

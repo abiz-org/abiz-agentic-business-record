@@ -925,7 +925,7 @@
         "kind": {
           "type": "string",
           "enum": [
-            "registered-office",
+            "registered_office",
             "trading",
             "other"
           ]

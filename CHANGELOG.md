@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1 — snake_case location `kind` (2026-11-05)
+
+Still published ABIZ 1.1. The wire tag remains `v=abiz1`. Registered tokens use snake_case, like `temporarily_closed` and `google_business_profile`.
+
+- **`locations[].kind` `registered-office` → `registered_office` (breaking).** `trading` and `other` are unchanged. **Migration:** rename the value and re-sign. A consumer MAY accept the hyphenated token for an announced window; it MUST NOT report that record as ABIZ 1.1 conformant. `location_id` and `media[].id` stay hyphenated slugs.
+
 ## 1.1 — nested country and region (2026-11-05)
 
 Breaking amendment of the published ABIZ 1.1 schema. Producers MUST republish and re-sign.

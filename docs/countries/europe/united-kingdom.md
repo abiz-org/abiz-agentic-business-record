@@ -416,7 +416,7 @@ The partners incorporate Hartley’s Bakery Ltd at Companies House, which issues
 DNS:
 
 ```dns
-_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery.uk.to.co;p=ykA5MazMqN/Y6Ssp0z691eXUUJLqylOmhkGXgQSuPZ4="
+_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery.uk.to.co;p=0AfE+rSDQ7F6A86cz9TWLp5gXP8LMWKcjT+6EVmQiP0="
 ```
 
 JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: application/json`):
@@ -435,7 +435,7 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
   "domains": [
     "hartleysbakery.example"
   ],
-  "public_key": "ykA5MazMqN/Y6Ssp0z691eXUUJLqylOmhkGXgQSuPZ4=",
+  "public_key": "0AfE+rSDQ7F6A86cz9TWLp5gXP8LMWKcjT+6EVmQiP0=",
   "description": "Sourdough, rye and seasonal bakes, made by hand every morning in Bristol. Order a loaf for collection, or ask us about a celebration cake.",
   "website": "https://www.hartleysbakery.example",
   "email": "hello@hartleysbakery.example",
@@ -467,7 +467,7 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
   "locations": [
     {
       "location_id": "registered-office",
-      "kind": "registered-office",
+      "kind": "registered_office",
       "name": "Registered office",
       "address": {
         "street_lines": [
@@ -666,7 +666,7 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
       "food_hygiene_rating_url": "https://www.hartleysbakery.example/hygiene"
     }
   },
-  "signature": "G7227o+rFV4na1/pnZIGOQt0smboyR+6D6qEpy9fofaK5QN1VqNtJr4CXDB3h0qkV/HFTLCmzsY1h5kBHg/3BQ=="
+  "signature": "nQFu1LLsCtQxtNokIUSuvMP9peYr6cnDWb3ZKCkyAILnCqz+uFiZXyrH7T5ejG8GF1FJ2pclkpKZB3tqcU4xBQ=="
 }
 ```
 
@@ -674,7 +674,7 @@ Notes:
 
 - `business_name` is the name on the register, including `Ltd`.
 - `business_key` is `gb-` plus the company number, `registration_number` is the number alone, and DNS `k` equals `business_key`.
-- The registered office is already public on the Companies House register, so it is listed with `"kind": "registered-office"`. The shop is a trading address; the market stall uses `other`.
+- The registered office is already public on the Companies House register, so it is listed with `"kind": "registered_office"`. The shop is a trading address; the market stall uses `other`.
 - `mcp_server_url` is optional (section 8). `extensions` holds implementation-specific data under a reverse-domain key; consumers may ignore it, and it must not change the meaning of any standard field.
 - The move to a new key held by the provider changes `p`, `public_key` and `signature` together. The provider signs the record for the company with the company's key (hosted mode, section 9).
 - The `p` value and the signature are throwaway examples. Never copy them: publish your own key and sign your own record. Neither `p` nor `signature` can be left out.
@@ -720,7 +720,7 @@ The table is generated from the schema file. Types, constraints and required fla
 | `services[].url` | string (HTTPS URL; up to 2048 characters) | No | Page for the service | `"https://www.hartleysbakery.example/order"` |
 | `locations` | array of objects (up to 100 items) | No | Places of business (SPEC section 4.7.6). Each location's values are its own and are not inherited from the business level. | See below |
 | `locations[].location_id` | string (lowercase slug, length 1–100) | No | Stable public identifier, unique within locations. Not an internal database key. | `"bristol-shop"` |
-| `locations[].kind` | string (one of `registered-office`, `trading`, `other`) | No | Type of location | `"trading"` |
+| `locations[].kind` | string (one of `registered_office`, `trading`, `other`) | No | Type of location | `"trading"` |
 | `locations[].name` | string (length 1–180) | No | Location name | `"Hartley’s Bakery, Bristol"` |
 | `locations[].description` | string (length 1–2000) | No | Location-specific description | Not used |
 | `locations[].address` | object | No | Public postal address; omit every part that is not to be published (SPEC 4.7.6.2) | See below |
@@ -892,7 +892,7 @@ _abiz.severnsideevents.example. 300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsi
 **The subsidiary: its own record and its own company number.**
 
 ```dns
-_abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsidecycles.example;p=1D2p53dPLQ8A0Z9SMpIIWcHml5OVpBe/qTd130MGQrM="
+_abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsidecycles.example;p=E0HmEFTSjSOUt3SH3dmdEoo1cgN8/3uDca2Q6akonJ4="
 ```
 
 ```json
@@ -909,12 +909,12 @@ _abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsi
   "domains": [
     "severnsidecycles.example"
   ],
-  "public_key": "1D2p53dPLQ8A0Z9SMpIIWcHml5OVpBe/qTd130MGQrM=",
+  "public_key": "E0HmEFTSjSOUt3SH3dmdEoo1cgN8/3uDca2Q6akonJ4=",
   "description": "Cycle hire and repairs in Edinburgh. A subsidiary of Severnside Leisure Group plc.",
   "website": "https://www.severnsidecycles.example",
   "locations": [
     {
-      "kind": "registered-office",
+      "kind": "registered_office",
       "address": {
         "street_lines": [
           "2 Example Lane"
@@ -944,7 +944,7 @@ _abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsi
       "relationship": "subsidiary"
     }
   },
-  "signature": "N6my7JSg5sOTqi6N0sxL6WZ5vjUEPsJ5zGIxXSRF0A2VxcSIQy4303QpQdktzfVo35GuCjJcySn3j5s/xwnZDQ=="
+  "signature": "tTbnGd73QQyexGws/WDYdKS+QbLgPEvCQ4HIQowwvK1T0YVJulwsuE3NoOK92eF8fodEmiqdVXxf4qlPACltBQ=="
 }
 ```
 
