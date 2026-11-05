@@ -47,7 +47,7 @@ qa-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.dohacafe.example. 300 IN TXT "v=abiz1;k=qa-123456;h=dohacafe.qa.to.co;p=piwBTnQU5tgyTvRfu+or4NNHAeBqScwgizgr1x93W3c="
+_abiz.dohacafe.example. 300 IN TXT "v=abiz1;k=qa-123456;h=dohacafe.qa.to.co;p=1p4WXF/7aJZJGIDrXvhckCDOg48AiAnjeeohoaEUVCY="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.dohacafe.example. 300 IN TXT "v=abiz1;k=qa-123456;h=dohacafe.qa.to.co;p=pi
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.dohacafe.example. 300 IN TXT "v=abiz1;h=dohacafe.qa.to.co;p=piwBTnQU5tgyTvRfu+or4NNHAeBqScwgizgr1x93W3c="
+_abiz.dohacafe.example. 300 IN TXT "v=abiz1;h=dohacafe.qa.to.co;p=1p4WXF/7aJZJGIDrXvhckCDOg48AiAnjeeohoaEUVCY="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://dohacafe.qa.to.co`:
@@ -63,23 +63,26 @@ _abiz.dohacafe.example. 300 IN TXT "v=abiz1;h=dohacafe.qa.to.co;p=piwBTnQU5tgyTv
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "مقهى الدوحة",
-  "country": "qa",
+  "business_name": "\u0645\u0642\u0647\u0649 \u0627\u0644\u062f\u0648\u062d\u0629",
+  "country": {
+    "code": "QA",
+    "name": "Qatar"
+  },
   "business_key": "qa-123456",
   "registration_number": "123456",
   "identity_host": "dohacafe.qa.to.co",
   "domains": [
     "dohacafe.example"
   ],
-  "public_key": "piwBTnQU5tgyTvRfu+or4NNHAeBqScwgizgr1x93W3c=",
-  "signature": "W77wy5IirRXRvtyzFjF3EW45Ogg19k5W/8fy5nLw2K+h1nXxfHOU+bclH3+KimB1WY7uPCy81XV09oCk9RUQDA=="
+  "public_key": "1p4WXF/7aJZJGIDrXvhckCDOg48AiAnjeeohoaEUVCY=",
+  "signature": "Xu926xHup3b5LwbmZxRnfxIPgKoB1cIOt57gRlftDY6H04l17dD++NUCF13NIvHnndHBePtwuFLUjEyTCP9DCw=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain dohacafe.example --dns-value 'v=abiz1;k=qa-123456;h=dohacafe.qa.to.co;p=piwBTnQU5tgyTvRfu+or4NNHAeBqScwgizgr1x93W3c='
+python scripts/validate.py record.json --domain dohacafe.example --dns-value 'v=abiz1;k=qa-123456;h=dohacafe.qa.to.co;p=1p4WXF/7aJZJGIDrXvhckCDOg48AiAnjeeohoaEUVCY='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain dohacafe.example --dns-value 'v=
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في قطر يستضيف to.co سجلها المضيف `dohacafe.qa.to.co`، فتكون قيمة DNS هي `v=abiz1;k=qa-123456;h=dohacafe.qa.to.co;p=piwBTnQU5tgyTvRfu+or4NNHAeBqScwgizgr1x93W3c=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `dohacafe-doha.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في قطر يستضيف to.co سجلها المضيف `dohacafe.qa.to.co`، فتكون قيمة DNS هي `v=abiz1;k=qa-123456;h=dohacafe.qa.to.co;p=1p4WXF/7aJZJGIDrXvhckCDOg48AiAnjeeohoaEUVCY=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `dohacafe-doha.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

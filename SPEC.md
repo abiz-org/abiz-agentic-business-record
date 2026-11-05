@@ -297,7 +297,7 @@ Every record member name is snake_case (`record_version`, `business_name`, `iden
 
 - `record_version` = `abiz1`
 - `business_name`: nonempty public name
-- `country`: assigned ISO 3166-1 alpha-2 country code, case-insensitive, canonically lowercase (section 4.2.4); not `kp` (section 4.2.7)
+- `country`: `{ "code", "name" }` (section 4.2.4). `code` is an assigned ISO 3166-1 alpha-2 country code, uppercase and authoritative; `name` is a human-readable label (English short name recommended) and is never used in place of `code`. Not `kp` (section 4.2.7)
 - `identity_host`: the record host, matching `h` exactly (a bare hostname, or a hostname and path for a unit, section 8)
 - `domains`: array of business-controlled domain names this record claims
 - `public_key`: the Ed25519 public key, equal to `p` (section 4.6.1)
@@ -305,7 +305,7 @@ Every record member name is snake_case (`record_version`, `business_name`, `iden
 
 ### 4.2 Registration and MCP
 
-`business_key` and `registration_number` are OPTIONAL, for registered and unregistered businesses alike. If either is present, both MUST be present. The country part of `business_key` MUST equal the record's `country`, and its registration-number part MUST equal `registration_number`, both compared case-insensitively. Including these fields in the record does not require `k` in DNS. If the DNS assertion contains `k`, `k` MUST equal `business_key` (section 4.2.4).
+`business_key` and `registration_number` are OPTIONAL, for registered and unregistered businesses alike. If either is present, both MUST be present. The country part of `business_key` MUST equal `country.code`, and its registration-number part MUST equal `registration_number`, both compared case-insensitively. Including these fields in the record does not require `k` in DNS. If the DNS assertion contains `k`, `k` MUST equal `business_key` (section 4.2.4).
 
 #### 4.2.1 Business key grammar
 
@@ -369,9 +369,9 @@ Leading zeros and letter prefixes are part of the number and MUST be kept: `0123
 
 #### 4.2.4 Case and comparison
 
-Case is not significant anywhere in a business key, nor in the record's `country`. The ISO 3166 codes of section 4.7 (`address.country.code`, `address.region.code`, service-area codes and tax `jurisdiction`) are written in uppercase, as ISO 3166 writes them, and the schema requires that; a consumer compares them with `country` and `business_key` case-insensitively. Consumers MUST compare country codes, subdivision codes, registration numbers and whole business keys case-insensitively (ASCII case folding). `US-OR-123456`, `us-or-123456` and `us-OR-123456` are the same key.
+Case is not significant anywhere in a business key. `country.code`, `region.code`, the ISO 3166 codes of section 4.7 (`address.country.code`, `address.region.code`, service-area codes and tax `jurisdiction`) are written in uppercase, as ISO 3166 writes them, and the schema requires that. A consumer compares them with the country and subdivision parts of `business_key` case-insensitively. Consumers MUST compare country codes, subdivision codes, registration numbers and whole business keys case-insensitively (ASCII case folding). `US-OR-123456`, `us-or-123456` and `us-OR-123456` are the same key.
 
-Producers SHOULD publish the canonical form: country and subdivision in lowercase, registration number in uppercase, for example `us-or-123456`, `ca-bc-BC0578072`, `de-K1101RHRB12345`. Record `country` SHOULD also be lowercase.
+Producers SHOULD publish the canonical form of a business key: country and subdivision in lowercase, registration number in uppercase, for example `us-or-123456`, `ca-bc-BC0578072`, `de-K1101RHRB12345`. Record `country.code` and `region.code` are uppercase.
 
 #### 4.2.5 Migration of existing keys
 
@@ -383,11 +383,11 @@ A business key MUST follow section 4.2.1. Keys with `.`, `_` or `-` inside the n
 
 #### 4.2.7 Unsupported country: North Korea
 
-ABIZ does not support businesses in North Korea (the Democratic People's Republic of Korea, ISO 3166-1 `kp`). A business record whose `country`, any `locations[].address.country.code`, service-area code or tax `jurisdiction` is `kp` (in any case) is invalid, and so is a business key whose country is `kp`. Producers MUST NOT publish such a record or key, and consumers MUST reject it. South Korea (`kr`) is unaffected.
+ABIZ does not support businesses in North Korea (the Democratic People's Republic of Korea, ISO 3166-1 `kp`). A business record whose `country.code`, any `locations[].address.country.code`, service-area code or tax `jurisdiction` is `kp` (in any case) is invalid, and so is a business key whose country is `kp`. Producers MUST NOT publish such a record or key, and consumers MUST reject it. South Korea (`kr`) is unaffected.
 
 ### 4.3 Optional useful facts
 
-The schema defines optional `description`, `website`, `email`, `phone`, `logo_url`, `blog_url`, `rss_url`, `last_updated`, `services`, `locations`, `tax_registrations`, `social_profiles`, `categories`, `media`, `review_summaries`, `operational_status` and `links`. Section 4.7 sets out the rules for them and for the members of a location. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record (section 4.7.6.2). A record MUST NOT contain `recent_posts` (section 4.7.12).
+The schema defines optional `region`, `description`, `website`, `email`, `phone`, `logo_url`, `blog_url`, `rss_url`, `last_updated`, `services`, `locations`, `tax_registrations`, `social_profiles`, `categories`, `media`, `review_summaries`, `operational_status` and `links`. `region` is `{ "code"?, "name"? }` with at least one member: an ISO 3166-2 subdivision of `country.code` (state, province, emirate, or nation of the UK) when the producer holds one. Omit it when there is no subdivision on the business. Section 4.7 sets out the rules for them and for the members of a location. Public data MUST not claim a check that did not occur. A producer MUST omit private personal addresses rather than marking them private in a public record (section 4.7.6.2). A record MUST NOT contain `recent_posts` (section 4.7.12).
 
 Implementations MAY add namespaced values inside `extensions` (reverse-domain keys). Member names inside an extension are defined by its owner; snake_case is RECOMMENDED, and the examples in this repository use it (for example `"to.co": {"badge": "registered", "business_pass": true}`). Extensions are covered by the record signature. Unknown top-level properties MUST be rejected. Extensions MUST NOT override the meaning of mandatory fields.
 
@@ -398,7 +398,7 @@ A Draft 2020-12 structural validator MUST evaluate required properties, types, c
 Schema validation does **not** check the following. The reference validator checks the signature items locally:
 - whether a business actually controls a domain;
 - whether `identity_host` matches a fetched DNS or well-known `h` value, or whether the two sources agree (section 3.4.4);
-- whether `business_key` matches `k` and `country`, or uses an assigned country and subdivision code (section 4.2);
+- whether `business_key` matches `k` and `country.code`, or uses an assigned country and subdivision code (section 4.2);
 - whether `signature` verifies, or whether `public_key` equals `p` (section 4.6.4);
 - the rules of section 4.7.13: safe URLs, assigned codes, time zones, overlapping hours, repeated identifiers, ratings within their scale and the `recent_posts` ban anywhere;
 - whether a tax registration, listing or review summary is genuine or current;
@@ -456,7 +456,7 @@ In summary, RFC 8785 serialises with no insignificant whitespace, sorts object m
 `examples/registered-us.signing-input.txt` is the signing input of `examples/registered-us.json`, as a test vector:
 
 ```text
-{"business_key":"us-or-123456","business_name":"Harbour Bike Repair LLC","country":"us","description":"Bicycle repair and maintenance in Portland.","domains":["harbourbikes.example"],"identity_host":"harbour-bike-repair.or.us.to.co","last_updated":"2026-11-03T09:00:00Z","locations":[{"address":{"country":{"code":"US"},"locality":"Portland","region":{"code":"US-OR","name":"Oregon"}},"kind":"trading","opening_hours":{"time_zone":"America/Los_Angeles","weekly":[{"day":"monday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"tuesday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"wednesday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"thursday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"friday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"saturday","periods":[]},{"day":"sunday","periods":[]}]},"public":true}],"public_key":"6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=","record_version":"abiz1","registration_number":"123456","services":[{"name":"Bicycle servicing"},{"name":"Wheel repairs"}],"website":"https://harbourbikes.example"}
+{"business_key":"us-or-123456","business_name":"Harbour Bike Repair LLC","country":{"code":"US","name":"United States"},"description":"Bicycle repair and maintenance in Portland.","domains":["harbourbikes.example"],"identity_host":"harbour-bike-repair.or.us.to.co","last_updated":"2026-11-03T09:00:00Z","locations":[{"address":{"country":{"code":"US"},"locality":"Portland","region":{"code":"US-OR","name":"Oregon"}},"kind":"trading","opening_hours":{"time_zone":"America/Los_Angeles","weekly":[{"day":"monday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"tuesday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"wednesday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"thursday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"friday","periods":[{"closes":"17:00","opens":"09:00"}]},{"day":"saturday","periods":[]},{"day":"sunday","periods":[]}]},"public":true}],"public_key":"oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo=","record_version":"abiz1","region":{"code":"US-OR","name":"Oregon"},"registration_number":"123456","services":[{"name":"Bicycle servicing"},{"name":"Wheel repairs"}],"website":"https://harbourbikes.example"}
 ```
 
 #### 4.6.3 Producing a signature
@@ -526,14 +526,17 @@ A record that has `contact_email`, `contact_phone`, root `opening_hours` or a fl
 {
   "record_version": "abiz1",
   "business_name": "Harbour Bike Repair LLC",
-  "country": "us",
+  "country": {
+    "code": "US",
+    "name": "United States"
+  },
   "business_key": "us-or-123456",
   "registration_number": "123456",
   "identity_host": "harbour-bike-repair.or.us.to.co",
   "domains": [
     "harbourbikes.example"
   ],
-  "public_key": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=",
+  "public_key": "oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo=",
   "description": "Bicycle repair and maintenance in Portland.",
   "website": "https://harbourbikes.example",
   "services": [
@@ -619,7 +622,11 @@ A record that has `contact_email`, `contact_phone`, root `opening_hours` or a fl
     }
   ],
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "tcf4loWK5IQq4wt9MFXswxUBHXHfPhkHf4puoHC1VeliwTLNHWQd75kf5CnCFvEui546QU/t7QWIRHEoX7etAA=="
+  "region": {
+    "code": "US-OR",
+    "name": "Oregon"
+  },
+  "signature": "uOes11KfqTG67o+wMRuA05f3JYOaHjyT4OG7EE0w5vhPN3na1N14cEDpzddPszaDCgqO02idxAzrn78csltVCA=="
 }
 ```
 
@@ -811,6 +818,8 @@ JSON Schema cannot express every rule in this section. A conforming consumer, an
 | `locations[].region` (text) | `locations[].address.region` (`{ "code"?, "name"? }`) |
 | `locations[].postal_code` | `locations[].address.postal_code` |
 | `locations[].country` (required, any case) | `locations[].address.country.code` (required in an address, uppercase) |
+| root `country` (string, any case) | `country` `{ "code", "name" }` (`code` uppercase, `name` required) |
+| (none) | optional root `region` `{ "code"?, "name"? }` when the producer holds a subdivision |
 
 A producer migrating text hours SHOULD convert them only when they are unambiguous, and otherwise leave the location's hours out until the business confirms them. Rolling back means publishing a re-signed record in the previous form; one record host cannot publish both forms at once.
 

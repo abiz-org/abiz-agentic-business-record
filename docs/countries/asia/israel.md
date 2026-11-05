@@ -43,7 +43,7 @@ il-<registration-number>
 מפרסמים רשומת TXT אחת בלבד בשם `_abiz` תחת הדומיין, בצורה דחוסה ללא רווחים, כש-`v=abiz1` ראשון:
 
 ```dns
-_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ="
+_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=6EfyuWZnISLM+DiUtSxgbKdcu9o78+PbmxzN7eI3NyY="
 ```
 
 ערך ה-`p` שלמעלה הוא מפתח דוגמה חד-פעמי שנוצר לדף הזה. לעולם אל תעתיקו אותו: פרסמו מפתח משלכם הצהרת ABIZ 1.1 חייבת לכלול `p`. כל השמות, המספרים והדומיינים בדף הזה בדויים.
@@ -51,7 +51,7 @@ _abiz.carmelbakery.example. 300 IN TXT "v=abiz1;k=il-512345678;h=carmelbakery.il
 גם בלי התג האופציונלי `k` הרשומה הזאת תקינה:
 
 ```dns
-_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ="
+_abiz.carmelbakery.example. 300 IN TXT "v=abiz1;h=carmelbakery.il.to.co;p=6EfyuWZnISLM+DiUtSxgbKdcu9o78+PbmxzN7eI3NyY="
 ```
 
 רשומת העסק המוגשת כ-`application/json` בכתובת `https://carmelbakery.il.to.co`:
@@ -59,23 +59,26 @@ _abiz.carmelbakery.example. 300 IN TXT "v=abiz1;h=carmelbakery.il.to.co;p=MHbul4
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "מאפיית הכרמל",
-  "country": "il",
+  "business_name": "\u05de\u05d0\u05e4\u05d9\u05d9\u05ea \u05d4\u05db\u05e8\u05de\u05dc",
+  "country": {
+    "code": "IL",
+    "name": "Israel"
+  },
   "business_key": "il-512345678",
   "registration_number": "512345678",
   "identity_host": "carmelbakery.il.to.co",
   "domains": [
     "carmelbakery.example"
   ],
-  "public_key": "MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ=",
-  "signature": "begQJoUvuvLiYGuid9SII/rmGv64j5IVEdNhMwG8XOWqiI93sd1ft/dNKb/14v/rYM50AIBdSzMqtzCP4k54DQ=="
+  "public_key": "6EfyuWZnISLM+DiUtSxgbKdcu9o78+PbmxzN7eI3NyY=",
+  "signature": "ubDr4lecAy6A7dbZWCypDI96mxQZxJt7lkb1DXboXCYqJbHGIruJK4yrgdCjc2Jq8+aHXkvDuhQp5GsFOc72BQ=="
 }
 ```
 
 כדי לבדוק רשומה לפני הפרסום, הריצו את כלי האימות המרכזי מתוך עותק של המאגר הזה:
 
 ```sh
-python scripts/validate.py record.json --domain carmelbakery.example --dns-value 'v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ='
+python scripts/validate.py record.json --domain carmelbakery.example --dns-value 'v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=6EfyuWZnISLM+DiUtSxgbKdcu9o78+PbmxzN7eI3NyY='
 ```
 
 אפשר לארח את רשומת ה-JSON בעצמכם בכל שרת HTTPS, או להשתמש בכל ספק תואם. ABIZ אינו מחייב ספק מסוים.
@@ -84,7 +87,7 @@ python scripts/validate.py record.json --domain carmelbakery.example --dns-value
 
 ‏Model Context Protocol ‏(MCP) הוא פרוטוקול פתוח שמאפשר לעוזרי בינה מלאכותית להפעיל כלים ולקרוא נתונים משרתים חיצוניים בדרך אחידה. רשומת עסק יכולה לכלול שדה אופציונלי `mcp_server_url`, כתובת HTTPS של שרת MCP של העסק, למשל להזמנות או למידע על מוצרים. ABIZ אינו ערב לשרת הזה, והכלים חייבים להפעיל בקרות גישה משלהם (סעיף 4.2.6 במפרט).
 
-ספק יכול לארח את הרשומה ולפרסם את מצביע ה-DNS בשבילכם. לדוגמה, חברה רשומה בישראל שהרשומה שלה מתארחת ב-to.co יכולה להשתמש במארח `carmelbakery.il.to.co`, וערך ה-DNS יהיה `v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=MHbul4Xcoeo/B6f3FKzOUySHueD6cVOBl0SgfZ6X3BQ=`. עסק לא רשום יכול להשתמש במארח שמבוסס על שם העיר, כמו `carmelbakery-haifa.biz.to.co`. כל ספק תואם, או שרת משלכם, פועל באותה דרך.
+ספק יכול לארח את הרשומה ולפרסם את מצביע ה-DNS בשבילכם. לדוגמה, חברה רשומה בישראל שהרשומה שלה מתארחת ב-to.co יכולה להשתמש במארח `carmelbakery.il.to.co`, וערך ה-DNS יהיה `v=abiz1;k=il-512345678;h=carmelbakery.il.to.co;p=6EfyuWZnISLM+DiUtSxgbKdcu9o78+PbmxzN7eI3NyY=`. עסק לא רשום יכול להשתמש במארח שמבוסס על שם העיר, כמו `carmelbakery-haifa.biz.to.co`. כל ספק תואם, או שרת משלכם, פועל באותה דרך.
 
 ## 4. מפתחות וחתימות (ABIZ 1.1)
 

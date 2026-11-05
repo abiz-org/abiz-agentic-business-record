@@ -199,6 +199,14 @@ def check_country(code: str) -> str:
     return code.lower()
 
 
+def record_country_code(record: dict) -> str:
+    """Top-level country.code (SPEC section 4.1). Raises if country is not a nested object."""
+    country = record.get("country")
+    if not isinstance(country, dict) or not isinstance(country.get("code"), str):
+        raise ValueError("country must be an object with code and name")
+    return check_country(country["code"])
+
+
 def parse_business_key(value: str) -> tuple[str, str | None, str]:
     """Split a business key (SPEC section 4.2.1) into canonical (country, subdivision, number).
 
@@ -960,13 +968,19 @@ def validate_record(
             errors.append(f"invalid declared domain: {d}")
     errors.extend(check_amended_members(record))
     try:
-        check_country(record["country"])
+        country = record_country_code(record)
     except ValueError as exc:
         errors.append(str(exc))
+        country = ""
+    region = record.get("region")
+    if isinstance(region, dict) and isinstance(region.get("code"), str) and country:
+        problem = check_region_code(region["code"], country)
+        if problem:
+            errors.append(problem)
     if "business_key" in record:
         try:
-            country, _, number = parse_business_key(record["business_key"])
-            if country != record["country"].lower():
+            key_country, _, number = parse_business_key(record["business_key"])
+            if country and key_country != country:
                 errors.append("business_key country does not match country")
             if number != record["registration_number"].upper():
                 errors.append("business_key does not match registration_number")

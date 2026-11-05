@@ -42,7 +42,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk="
+_abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=eTInYcDOpDFkLu7FObDgudHj1N16S9xMxxRKkpMMTSg="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -59,14 +59,17 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Harbourside Bike Repairs Pty Ltd",
-  "country": "au",
+  "country": {
+    "code": "AU",
+    "name": "Australia"
+  },
   "business_key": "au-123456789",
   "registration_number": "123456789",
   "identity_host": "harboursidebikerepairs.au.to.co",
   "domains": [
     "harboursidebikerepairs.example"
   ],
-  "public_key": "tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk=",
+  "public_key": "eTInYcDOpDFkLu7FObDgudHj1N16S9xMxxRKkpMMTSg=",
   "description": "Bicycle servicing and repairs near Circular Quay.",
   "website": "https://harboursidebikerepairs.example",
   "locations": [
@@ -148,7 +151,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "el9PEhUj2HILUiND8nE8JW40VWQI/8eGWrQJZPYgkUP+/jLxykwEbcT0TME2bu4+uEf8tJWkgHZS8luQm4k2CQ=="
+  "signature": "UGlFlli9RCUvJx6LOwQ0E+9fQ+Rt/B2JhjfxNkgw7YDGB2L4zipcj9XjJdY0YGd+pt7j1M82f01YyukwFbvOAQ=="
 }
 ```
 
@@ -161,7 +164,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain harboursidebikerepairs.example \
-  --dns-value 'v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk='
+  --dns-value 'v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=eTInYcDOpDFkLu7FObDgudHj1N16S9xMxxRKkpMMTSg='
 ```
 
 ## 3. Using a provider and MCP
@@ -178,7 +181,7 @@ To see how one provider describes this for Australian businesses, see [ABIZ reco
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=tBBqDaiChNx1uh0PF4wBfeCzPNkVTuk/c55x9Gj+3dk="
+  _abiz.harboursidebikerepairs.example. 300 IN TXT "v=abiz1;k=au-123456789;h=harboursidebikerepairs.au.to.co;p=eTInYcDOpDFkLu7FObDgudHj1N16S9xMxxRKkpMMTSg="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

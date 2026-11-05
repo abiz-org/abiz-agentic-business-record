@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.balatonbor.example. 300 IN TXT "v=abiz1;k=hu-0109123456;h=balatonbor.hu.to.co;p=G+YGOXAEyK+v6oGgvl3WMXazqVhtcTnlAcaF0VXJCMI="
+_abiz.balatonbor.example. 300 IN TXT "v=abiz1;k=hu-0109123456;h=balatonbor.hu.to.co;p=sk/vEbyDLk4PJiUb3QRe1DVsIeI5F1x/1bJNh/i0EEo="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://balatonbor.hu.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Balaton Bor Kft.",
-  "country": "hu",
+  "country": {
+    "code": "HU",
+    "name": "Hungary"
+  },
   "business_key": "hu-0109123456",
   "registration_number": "0109123456",
   "identity_host": "balatonbor.hu.to.co",
   "domains": [
     "balatonbor.example"
   ],
-  "public_key": "G+YGOXAEyK+v6oGgvl3WMXazqVhtcTnlAcaF0VXJCMI=",
+  "public_key": "sk/vEbyDLk4PJiUb3QRe1DVsIeI5F1x/1bJNh/i0EEo=",
   "description": "Winery near Lake Balaton.",
   "website": "https://balatonbor.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://balatonbor.hu.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "PRK6tg4TcgpqKOTLDU4tdir1Fy3OBd/7wjmEPAdP4RjFcKxLezJJ12AUAsfe/VQSk5FAyqLbpgGs7FsCPH4HDg=="
+  "signature": "ca34jWELR7xqpcu0gvj9zHvbSwRFgkobaIiOoUJP4Tf0ICHv1w3Q5wcCLevgLegJIrIMPXGVS7vM0KGc4QVMDA=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain balatonbor.example --dns-value 'v=abiz1;k=hu-0109123456;h=balatonbor.hu.to.co;p=G+YGOXAEyK+v6oGgvl3WMXazqVhtcTnlAcaF0VXJCMI='
+python scripts/validate.py record.json --domain balatonbor.example --dns-value 'v=abiz1;k=hu-0109123456;h=balatonbor.hu.to.co;p=sk/vEbyDLk4PJiUb3QRe1DVsIeI5F1x/1bJNh/i0EEo='
 ```
 
 ### Self-hosted or through a provider

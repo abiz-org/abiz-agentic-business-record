@@ -41,7 +41,7 @@ Klíče se porovnávají bez ohledu na velikost písmen, ale zveřejňujte kanon
 Na své doméně zveřejněte pod `_abiz` právě jeden záznam TXT ABIZ, v kompaktním tvaru bez mezer:
 
 ```dns
-_abiz.pekarnanovak.example. 300 IN TXT "v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=VKJZd2Cpbs7FmfKMlbOvh2lDfkkkQ1txfD/G5O70ASo="
+_abiz.pekarnanovak.example. 300 IN TXT "v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=fvU/Zl0+17wHa/UDkmobaAOgPtiM3kbaJU1BcOOtDtw="
 ```
 
 - `v=abiz1` musí být první. `h` a `p` jsou povinné; `k` je nepovinné.
@@ -57,16 +57,19 @@ Záznam poskytovaný na `https://pekarnanovak.cz.to.co` jako `application/json`:
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Pekárna Novák s.r.o.",
-  "country": "cz",
+  "business_name": "Pek\u00e1rna Nov\u00e1k s.r.o.",
+  "country": {
+    "code": "CZ",
+    "name": "Czechia"
+  },
   "business_key": "cz-12345678",
   "registration_number": "12345678",
   "identity_host": "pekarnanovak.cz.to.co",
   "domains": [
     "pekarnanovak.example"
   ],
-  "public_key": "VKJZd2Cpbs7FmfKMlbOvh2lDfkkkQ1txfD/G5O70ASo=",
-  "description": "Řemeslná pekárna v Brně.",
+  "public_key": "fvU/Zl0+17wHa/UDkmobaAOgPtiM3kbaJU1BcOOtDtw=",
+  "description": "\u0158emesln\u00e1 pek\u00e1rna v Brn\u011b.",
   "website": "https://pekarnanovak.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ Záznam poskytovaný na `https://pekarnanovak.cz.to.co` jako `application/json`:
       "public": true
     }
   ],
-  "signature": "HxSd7EUbC8V5IAtl3w5niFrfBkfhcB7yahS29Syi5Wndnnkfp+ClltXgG2MhJkaX2VyCu+DEwZAkuENI5nGsBw=="
+  "signature": "iXveLzvXxJD5It232Xj4x/0rcE3YGP8Va3U26498PEVoIBtJlVx+fqtx0JjbsXtrN9iBDmXu98kzB2FfpM2DBQ=="
 }
 ```
 
 Referenčním validátorem můžete záznam a hodnotu DNS ověřit lokálně:
 
 ```sh
-python scripts/validate.py record.json --domain pekarnanovak.example --dns-value 'v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=VKJZd2Cpbs7FmfKMlbOvh2lDfkkkQ1txfD/G5O70ASo='
+python scripts/validate.py record.json --domain pekarnanovak.example --dns-value 'v=abiz1;k=cz-12345678;h=pekarnanovak.cz.to.co;p=fvU/Zl0+17wHa/UDkmobaAOgPtiM3kbaJU1BcOOtDtw='
 ```
 
 ### Vlastní hosting, nebo poskytovatel

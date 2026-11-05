@@ -47,7 +47,7 @@ ps-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.nablussoap.example. 300 IN TXT "v=abiz1;k=ps-562123456;h=nablussoap.ps.to.co;p=jsr8QFYaY8c3SZMNEI4slUsL8he5j/h4DZ1HEa4ptBw="
+_abiz.nablussoap.example. 300 IN TXT "v=abiz1;k=ps-562123456;h=nablussoap.ps.to.co;p=+f6r8NxRC+weI4c4QryhGyhKUZ4iOe7t0o4lBx1zkF4="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.nablussoap.example. 300 IN TXT "v=abiz1;k=ps-562123456;h=nablussoap.ps.to.
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.nablussoap.example. 300 IN TXT "v=abiz1;h=nablussoap.ps.to.co;p=jsr8QFYaY8c3SZMNEI4slUsL8he5j/h4DZ1HEa4ptBw="
+_abiz.nablussoap.example. 300 IN TXT "v=abiz1;h=nablussoap.ps.to.co;p=+f6r8NxRC+weI4c4QryhGyhKUZ4iOe7t0o4lBx1zkF4="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://nablussoap.ps.to.co`:
@@ -63,23 +63,26 @@ _abiz.nablussoap.example. 300 IN TXT "v=abiz1;h=nablussoap.ps.to.co;p=jsr8QFYaY8
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "صابون نابلس",
-  "country": "ps",
+  "business_name": "\u0635\u0627\u0628\u0648\u0646 \u0646\u0627\u0628\u0644\u0633",
+  "country": {
+    "code": "PS",
+    "name": "Palestine"
+  },
   "business_key": "ps-562123456",
   "registration_number": "562123456",
   "identity_host": "nablussoap.ps.to.co",
   "domains": [
     "nablussoap.example"
   ],
-  "public_key": "jsr8QFYaY8c3SZMNEI4slUsL8he5j/h4DZ1HEa4ptBw=",
-  "signature": "GZxQZ8XRXxDnbIX2pq4AafX/tvMsMLhzc4QV+waET1Eadq+d8DG99DlXftw5+ZZ8mOQFKj89zkzwCTvEiE+LBA=="
+  "public_key": "+f6r8NxRC+weI4c4QryhGyhKUZ4iOe7t0o4lBx1zkF4=",
+  "signature": "fpd5HpmlbR2oMuB4sRcfd2l8nYCf+KbzKAh5+RGvF4qKXOLPpCRyqlwfBw3YkHpoPNqAGtrc4LNQb/1hfxfKDA=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain nablussoap.example --dns-value 'v=abiz1;k=ps-562123456;h=nablussoap.ps.to.co;p=jsr8QFYaY8c3SZMNEI4slUsL8he5j/h4DZ1HEa4ptBw='
+python scripts/validate.py record.json --domain nablussoap.example --dns-value 'v=abiz1;k=ps-562123456;h=nablussoap.ps.to.co;p=+f6r8NxRC+weI4c4QryhGyhKUZ4iOe7t0o4lBx1zkF4='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain nablussoap.example --dns-value '
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في فلسطين يستضيف to.co سجلها المضيف `nablussoap.ps.to.co`، فتكون قيمة DNS هي `v=abiz1;k=ps-562123456;h=nablussoap.ps.to.co;p=jsr8QFYaY8c3SZMNEI4slUsL8he5j/h4DZ1HEa4ptBw=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `nablussoap-nablus.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في فلسطين يستضيف to.co سجلها المضيف `nablussoap.ps.to.co`، فتكون قيمة DNS هي `v=abiz1;k=ps-562123456;h=nablussoap.ps.to.co;p=+f6r8NxRC+weI4c4QryhGyhKUZ4iOe7t0o4lBx1zkF4=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `nablussoap-nablus.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

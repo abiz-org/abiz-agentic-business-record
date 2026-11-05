@@ -1,13 +1,16 @@
 {
   "record_version": "abiz1",
   "business_name": "Fernhill Joinery Ltd",
-  "country": "gb",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "business_key": "gb-09876543",
   "registration_number": "09876543",
   "identity_host": "fernhilljoinery.uk.to.co",
   "domains": [
     "fernhilljoinery.example"
   ],
-  "public_key": "J/7SW1SEdi0MKqYShQB6UnE7EaLuGsPI3Cu38wTEinY=",
-  "signature": "gt0CjEs/GteYUL/MySse5l7GB35WzEJIXE/C0HdZhXAqZGxvKVrkuFn8+BvnO7IzYR6DPgD6A9JaEHjvkGaPCw=="
+  "public_key": "aDFa+WeIcwTIGzPLE0JNQnApKy6l3NfsBThaAwqPnyc=",
+  "signature": "weH1seRxFIkRF6a0ZjthmOfOO3BQC5Ix+YNDQxbnov5xkwLD3OkfenpAqAeKyWqpaksK1AOpOKy9Ga+rz+F7BA=="
 }

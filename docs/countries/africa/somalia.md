@@ -41,7 +41,7 @@ Somalia uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example;p=H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw="
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example;p=C3sycwuE3nTEkcRpGP78QpXT1bsARNW3nMMeH5VCgVI="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -49,7 +49,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example;p=H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw="
+_abiz.hodantrading.example. 300 IN TXT "v=abiz1;h=www.hodantrading.example;p=C3sycwuE3nTEkcRpGP78QpXT1bsARNW3nMMeH5VCgVI="
 ```
 
 The business record served as `application/json` at `https://www.hodantrading.example/?format=json`:
@@ -58,20 +58,23 @@ The business record served as `application/json` at `https://www.hodantrading.ex
 {
   "record_version": "abiz1",
   "business_name": "Hodan Trading",
-  "country": "so",
+  "country": {
+    "code": "SO",
+    "name": "Somalia"
+  },
   "identity_host": "www.hodantrading.example",
   "domains": [
     "hodantrading.example"
   ],
-  "public_key": "H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw=",
-  "signature": "71tC2/1G388BKTfGQUsu5hh2CZf48UUOc/YUFtjfPYHTgCjYr6OeW2yj4eT3R0guPliXtePGSEAIQ2P2WJO1DQ=="
+  "public_key": "C3sycwuE3nTEkcRpGP78QpXT1bsARNW3nMMeH5VCgVI=",
+  "signature": "bOb9WNaGA9fGjuEn6u2SmTTf4Q++iR6hemsIFOPqk/jixq2YyZSM0VVptPg9up/x7FHY9f3560LDwzZf9rnsBQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain hodantrading.example --dns-value 'v=abiz1;h=www.hodantrading.example;p=H3ZSsGy2jaQTy5f9ZtC9GUVTK/Jddialkz9lPL5j+Hw='
+python scripts/validate.py record.json --domain hodantrading.example --dns-value 'v=abiz1;h=www.hodantrading.example;p=C3sycwuE3nTEkcRpGP78QpXT1bsARNW3nMMeH5VCgVI='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.

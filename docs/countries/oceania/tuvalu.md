@@ -37,7 +37,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14="
+_abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=jxIZKLYMOfPkk8IjaH/f2cmVWYRMx1gjGesQ357kTMI="
 ```
 
 ### Example record (JSON)
@@ -48,12 +48,15 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Funafuti Marine Supplies Ltd",
-  "country": "tv",
+  "country": {
+    "code": "TV",
+    "name": "Tuvalu"
+  },
   "identity_host": "funafutimarinesupplies.tv.to.co",
   "domains": [
     "funafutimarinesupplies.example"
   ],
-  "public_key": "lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14=",
+  "public_key": "jxIZKLYMOfPkk8IjaH/f2cmVWYRMx1gjGesQ357kTMI=",
   "description": "Marine supplies and outboard repairs.",
   "website": "https://funafutimarinesupplies.example",
   "locations": [
@@ -126,7 +129,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "9e4Rrjx4Efn6/GUuqKJsqH/HmPaTdvXJ8iY6MX2wkj4cb9oVxGRVtrvxzH/O0VJg+syVm7uGwCr7igEDmnoMBg=="
+  "signature": "1Qo+xl88psIOYc2jH2wyMzq2Tqs5LJ1vZRt0T5AYsprHteTLchT8c97Ztg+Agoxa0q4oUgoVwsgeytHJRW+HAA=="
 }
 ```
 
@@ -139,7 +142,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain funafutimarinesupplies.example \
-  --dns-value 'v=abiz1;h=funafutimarinesupplies.tv.to.co;p=lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14='
+  --dns-value 'v=abiz1;h=funafutimarinesupplies.tv.to.co;p=jxIZKLYMOfPkk8IjaH/f2cmVWYRMx1gjGesQ357kTMI='
 ```
 
 ## 3. Using a provider and MCP
@@ -154,7 +157,7 @@ For example, a provider might host the record for Funafuti Marine Supplies at `f
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=lHUGPVfMoj01i/wZCHqpfnkhrpLcgeqach2Wzu1NT14="
+  _abiz.funafutimarinesupplies.example. 300 IN TXT "v=abiz1;h=funafutimarinesupplies.tv.to.co;p=jxIZKLYMOfPkk8IjaH/f2cmVWYRMx1gjGesQ357kTMI="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example;p=BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q="
+_abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example;p=yQLWnjjrrFfqCgo1I+pj+ZXlIlywtDAT36yflvPy2H0="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -48,13 +48,16 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 {
   "record_version": "abiz1",
   "business_name": "Taller de Bicicletas La Rueda",
-  "country": "cu",
+  "country": {
+    "code": "CU",
+    "name": "Cuba"
+  },
   "identity_host": "www.tallerlarueda.example",
   "domains": [
     "tallerlarueda.example"
   ],
-  "public_key": "BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q=",
-  "description": "Reparación y venta de bicicletas.",
+  "public_key": "yQLWnjjrrFfqCgo1I+pj+ZXlIlywtDAT36yflvPy2H0=",
+  "description": "Reparaci\u00f3n y venta de bicicletas.",
   "website": "https://tallerlarueda.example",
   "locations": [
     {
@@ -131,7 +134,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "Is8AhEYXFG/qjDjYqZ6zEfxUdzVitGy7yqqNaDH7z5PvXUUdEEXSEMyexI3HcT42YihLwaUiqYOJvhSLqrkHDA=="
+  "signature": "rOZp8GWEMXUfab8Y5dSPazK5ULF/Hvep90Ke7srQGJnY1/UE4OYxQpzOyt8vVafkMWyfVYs8ipIx9jhhvNsBCQ=="
 }
 ```
 
@@ -144,7 +147,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain tallerlarueda.example \
-  --dns-value 'v=abiz1;h=www.tallerlarueda.example;p=BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q='
+  --dns-value 'v=abiz1;h=www.tallerlarueda.example;p=yQLWnjjrrFfqCgo1I+pj+ZXlIlywtDAT36yflvPy2H0='
 ```
 
 ## 3. Proveedores y MCP
@@ -159,7 +162,7 @@ Por ejemplo, un proveedor puede alojar el registro en `www.tallerlarueda.example
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example;p=BNTQv3k4eTsOCYtMO7gh+XVarGvUDd8jYiaFnqb4p5Q="
+  _abiz.tallerlarueda.example. 300 IN TXT "v=abiz1;h=www.tallerlarueda.example;p=yQLWnjjrrFfqCgo1I+pj+ZXlIlywtDAT36yflvPy2H0="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

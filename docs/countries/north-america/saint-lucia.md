@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.pitonsviewkayaks.example. 300 IN TXT "v=abiz1;k=lc-12345;h=pitonsviewkayaks.lc.to.co;p=0jE/RhaO7JaKO40sZ0MvNvguvGuPsRTx3Y38bfwrAgk="
+_abiz.pitonsviewkayaks.example. 300 IN TXT "v=abiz1;k=lc-12345;h=pitonsviewkayaks.lc.to.co;p=xDx+lYXT7M7k4YKHG+bMa9Pbe9kJHe+Jx3fhDnYz4Aw="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -56,21 +56,24 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Pitons View Kayaks Ltd",
-  "country": "lc",
+  "country": {
+    "code": "LC",
+    "name": "Saint Lucia"
+  },
   "business_key": "lc-12345",
   "registration_number": "12345",
   "identity_host": "pitonsviewkayaks.lc.to.co",
   "domains": [
     "pitonsviewkayaks.example"
   ],
-  "public_key": "0jE/RhaO7JaKO40sZ0MvNvguvGuPsRTx3Y38bfwrAgk=",
+  "public_key": "xDx+lYXT7M7k4YKHG+bMa9Pbe9kJHe+Jx3fhDnYz4Aw=",
   "description": "Kayak hire and guided paddles below the Pitons.",
   "website": "https://pitonsviewkayaks.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Soufrière",
+        "locality": "Soufri\u00e8re",
         "country": {
           "code": "LC"
         }
@@ -146,7 +149,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "iqHmAjNSJDo6IOp7c4DYciVO3/2v1WltuGSh4ezCRQmyp1ixSIMFjRkE5sHW71kSRLnHeC+KvhZXVFGy972MAw=="
+  "signature": "zEr+VBcDp5MDeDFZtoiIesAUSCqs6BzKhQNidqx9yROjzp7iggZ/KU+lf/heA2Jw2re4blvrWfjmgDpwaChMCA=="
 }
 ```
 
@@ -159,7 +162,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain pitonsviewkayaks.example \
-  --dns-value 'v=abiz1;k=lc-12345;h=pitonsviewkayaks.lc.to.co;p=0jE/RhaO7JaKO40sZ0MvNvguvGuPsRTx3Y38bfwrAgk='
+  --dns-value 'v=abiz1;k=lc-12345;h=pitonsviewkayaks.lc.to.co;p=xDx+lYXT7M7k4YKHG+bMa9Pbe9kJHe+Jx3fhDnYz4Aw='
 ```
 
 ## 3. Using a provider and MCP
@@ -174,7 +177,7 @@ For example, a provider might host the record for Pitons View Kayaks at `pitonsv
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.pitonsviewkayaks.example. 300 IN TXT "v=abiz1;k=lc-12345;h=pitonsviewkayaks.lc.to.co;p=0jE/RhaO7JaKO40sZ0MvNvguvGuPsRTx3Y38bfwrAgk="
+  _abiz.pitonsviewkayaks.example. 300 IN TXT "v=abiz1;k=lc-12345;h=pitonsviewkayaks.lc.to.co;p=xDx+lYXT7M7k4YKHG+bMa9Pbe9kJHe+Jx3fhDnYz4Aw="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

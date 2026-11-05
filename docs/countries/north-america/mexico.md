@@ -42,7 +42,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY="
+_abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=xX17iKhISdZxLy2AgZEAu62GEr9ZLPBHWXoRGLOVQks="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -58,16 +58,19 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Ferretería El Faro, S.A. de C.V.",
-  "country": "mx",
+  "business_name": "Ferreter\u00eda El Faro, S.A. de C.V.",
+  "country": {
+    "code": "MX",
+    "name": "Mexico"
+  },
   "business_key": "mx-FEF150301AB1",
   "registration_number": "FEF150301AB1",
   "identity_host": "ferreteriaelfaro.mx.to.co",
   "domains": [
     "ferreteriaelfaro.example"
   ],
-  "public_key": "f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY=",
-  "description": "Ferretería y materiales para construcción.",
+  "public_key": "xX17iKhISdZxLy2AgZEAu62GEr9ZLPBHWXoRGLOVQks=",
+  "description": "Ferreter\u00eda y materiales para construcci\u00f3n.",
   "website": "https://ferreteriaelfaro.example",
   "locations": [
     {
@@ -148,7 +151,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "VeTPt8QYCLj0u7oZq8rx63wn56Ap9syKgVFbqtChbGLPYbV8fdYRMjO6HgpJd/7xPLz9OGU+K3pw/pShjwQQCw=="
+  "signature": "Txl4XmnKg8SfH8auKaqXxAJFs5qh0r5/7aWQN1yGqbvM3b91250jr3aSxGb0cC9juJsQreVN0uB8yDv/SDEmCg=="
 }
 ```
 
@@ -161,7 +164,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain ferreteriaelfaro.example \
-  --dns-value 'v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY='
+  --dns-value 'v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=xX17iKhISdZxLy2AgZEAu62GEr9ZLPBHWXoRGLOVQks='
 ```
 
 ## 3. Proveedores y MCP
@@ -176,7 +179,7 @@ Por ejemplo, un proveedor puede alojar el registro de Ferretería El Faro en `fe
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=f26QJTUNJwklbcMGAkWHWZQ+xmTJMZlgn5CiT6rj3iY="
+  _abiz.ferreteriaelfaro.example. 300 IN TXT "v=abiz1;k=mx-FEF150301AB1;h=ferreteriaelfaro.mx.to.co;p=xX17iKhISdZxLy2AgZEAu62GEr9ZLPBHWXoRGLOVQks="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

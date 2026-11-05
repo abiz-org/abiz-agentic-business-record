@@ -47,7 +47,7 @@ Myanmar uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.yangonlacquer.example. 300 IN TXT "v=abiz1;k=mm-123456789;h=www.yangonlacquer.example;p=fvElZcQxyaq6xN7bS6VJ39+FlUkfBy+WbHGk2DAc+R0="
+_abiz.yangonlacquer.example. 300 IN TXT "v=abiz1;k=mm-123456789;h=www.yangonlacquer.example;p=tqmHcHHF/oHUuvT0WNZ7unbNqYLU7WVQR31aQzKpipU="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.yangonlacquer.example. 300 IN TXT "v=abiz1;h=www.yangonlacquer.example;p=fvElZcQxyaq6xN7bS6VJ39+FlUkfBy+WbHGk2DAc+R0="
+_abiz.yangonlacquer.example. 300 IN TXT "v=abiz1;h=www.yangonlacquer.example;p=tqmHcHHF/oHUuvT0WNZ7unbNqYLU7WVQR31aQzKpipU="
 ```
 
 The business record served as `application/json` at `https://www.yangonlacquer.example/?format=json`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://www.yangonlacquer.e
 {
   "record_version": "abiz1",
   "business_name": "Yangon Lacquerware",
-  "country": "mm",
+  "country": {
+    "code": "MM",
+    "name": "Myanmar"
+  },
   "business_key": "mm-123456789",
   "registration_number": "123456789",
   "identity_host": "www.yangonlacquer.example",
   "domains": [
     "yangonlacquer.example"
   ],
-  "public_key": "fvElZcQxyaq6xN7bS6VJ39+FlUkfBy+WbHGk2DAc+R0=",
-  "signature": "hKpQ6fr3METyTWAerHjxKyjqU8siVsUma9tYy1inBXYm4RM2mxOrDV8Ea9G7PX72XgZQHF96PLPBtgD49jVoAw=="
+  "public_key": "tqmHcHHF/oHUuvT0WNZ7unbNqYLU7WVQR31aQzKpipU=",
+  "signature": "sSHpIWbDDFcQnhqEE3hsFnEVTGXB2OTONAoVbcJoyKSi4zk1p8kqnkCpwYCiQZGLVH5wPYyKQSj6c9CNBB7rBw=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain yangonlacquer.example --dns-value 'v=abiz1;k=mm-123456789;h=www.yangonlacquer.example;p=fvElZcQxyaq6xN7bS6VJ39+FlUkfBy+WbHGk2DAc+R0='
+python scripts/validate.py record.json --domain yangonlacquer.example --dns-value 'v=abiz1;k=mm-123456789;h=www.yangonlacquer.example;p=tqmHcHHF/oHUuvT0WNZ7unbNqYLU7WVQR31aQzKpipU='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.

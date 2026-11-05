@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.moselleconseil.example. 300 IN TXT "v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=FYW5a+Z8meiCqr3w/usJyWi4BNnoKCPpytCTywIh05c="
+_abiz.moselleconseil.example. 300 IN TXT "v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=nodbDJJZZ0HFiFodkTP8B3mmlT3xOgazrEgbHo0fhUA="
 ```
 
 - `v=abiz1` doit venir en premier. `h` et `p` sont obligatoires ; `k` est facultatif.
@@ -57,16 +57,19 @@ La fiche servie à l'adresse `https://moselleconseil.lu.to.co`, au format `appli
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Moselle Conseil S.à r.l.",
-  "country": "lu",
+  "business_name": "Moselle Conseil S.\u00e0 r.l.",
+  "country": {
+    "code": "LU",
+    "name": "Luxembourg"
+  },
   "business_key": "lu-B123456",
   "registration_number": "B123456",
   "identity_host": "moselleconseil.lu.to.co",
   "domains": [
     "moselleconseil.example"
   ],
-  "public_key": "FYW5a+Z8meiCqr3w/usJyWi4BNnoKCPpytCTywIh05c=",
-  "description": "Cabinet de conseil à Luxembourg.",
+  "public_key": "nodbDJJZZ0HFiFodkTP8B3mmlT3xOgazrEgbHo0fhUA=",
+  "description": "Cabinet de conseil \u00e0 Luxembourg.",
   "website": "https://moselleconseil.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ La fiche servie à l'adresse `https://moselleconseil.lu.to.co`, au format `appli
       "public": true
     }
   ],
-  "signature": "S5q2P+AZPKGNbu6mMNXPolb5Fi8F3M5Rab47er4iVr2mcrplwrFaY/xLOztRChz3KOQuoOPuu68u188ggN5xCA=="
+  "signature": "zP5UdRFlPNACFj0nCFHEa9Rwgo6EJBfq1sFPJwKOz+A+SuXGoJmJttrhwYZg4jPrARuQo24x0qIyjgWJ72GRDA=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain moselleconseil.example --dns-value 'v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=FYW5a+Z8meiCqr3w/usJyWi4BNnoKCPpytCTywIh05c='
+python scripts/validate.py record.json --domain moselleconseil.example --dns-value 'v=abiz1;k=lu-B123456;h=moselleconseil.lu.to.co;p=nodbDJJZZ0HFiFodkTP8B3mmlT3xOgazrEgbHo0fhUA='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur

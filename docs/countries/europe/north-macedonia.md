@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.ohridskibiser.example. 300 IN TXT "v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=eNKnaPzcT/sJOsJCyuLKxWrdAlaEpmN6xlCdPZGMKt8="
+_abiz.ohridskibiser.example. 300 IN TXT "v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=TOFiazlfRa5FweQ7DzEpI2gbLEgV3gP6mDm+cRqSCnA="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://ohridskibiser.mk.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Ohridski Biser DOOEL",
-  "country": "mk",
+  "country": {
+    "code": "MK",
+    "name": "North Macedonia"
+  },
   "business_key": "mk-1234567",
   "registration_number": "1234567",
   "identity_host": "ohridskibiser.mk.to.co",
   "domains": [
     "ohridskibiser.example"
   ],
-  "public_key": "eNKnaPzcT/sJOsJCyuLKxWrdAlaEpmN6xlCdPZGMKt8=",
+  "public_key": "TOFiazlfRa5FweQ7DzEpI2gbLEgV3gP6mDm+cRqSCnA=",
   "description": "Jewellery workshop in Ohrid.",
   "website": "https://ohridskibiser.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://ohridskibiser.mk.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "0hjpocG9Vpj9SJehTTulsBa2XbgAG6DQ7XVb2nfoO3ap0Zzes9xqEoDEOyAHv56LioDhN+3AVnZhSnf/BRGwAw=="
+  "signature": "sMYSVCztR2BA60Gs/dZ3i+aE3RP5Q3sEIIoYFoy3IV7xS+PssvrO6C3xproRjWt2YzFnEIoXtnwfDLh4MSgJBQ=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain ohridskibiser.example --dns-value 'v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=eNKnaPzcT/sJOsJCyuLKxWrdAlaEpmN6xlCdPZGMKt8='
+python scripts/validate.py record.json --domain ohridskibiser.example --dns-value 'v=abiz1;k=mk-1234567;h=ohridskibiser.mk.to.co;p=TOFiazlfRa5FweQ7DzEpI2gbLEgV3gP6mDm+cRqSCnA='
 ```
 
 ### Self-hosted or through a provider

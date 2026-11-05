@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1 — nested country and region (2026-11-05)
+
+Breaking amendment of the published ABIZ 1.1 schema. Producers MUST republish and re-sign.
+
+- Root `country` is `{ "code", "name" }`. `code` is an uppercase assigned ISO 3166-1 alpha-2 code and is authoritative. `name` is a required human-readable label and is never used in place of `code`. The previous string form (`"country": "gb"`) fails the schema.
+- Optional root `region` is `{ "code"?, "name"? }` with at least one member, used when the producer holds a subdivision (state, province, emirate, nation of the UK). `code` is an uppercase ISO 3166-2 value whose country part MUST equal `country.code`.
+- `business_key`'s country part still compares to `country.code` case-insensitively. Business-key canonical form is unchanged (lowercase country and subdivision).
+- Location `address.country` is unchanged (`{ "code", "name"? }`).
+
+Migration: `"country": "gb"` becomes `"country": { "code": "GB", "name": "United Kingdom" }`. A US record with Oregon on file also carries `"region": { "code": "US-OR", "name": "Oregon" }`.
+
 ## 1.1 — 2026-11-03
 
 ABIZ 1.1 is the published specification and the normative JSON Schema. ABIZ 1.0 remains the earlier published contract. The wire tag remains `v=abiz1`.

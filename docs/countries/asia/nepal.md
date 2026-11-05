@@ -47,7 +47,7 @@ Nepal uses no subdivision: do not add a region, province or city code. SPEC sect
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.kathmandupashmina.example. 300 IN TXT "v=abiz1;k=np-123456080081;h=kathmandupashmina.np.to.co;p=mQ8PVn/G+osH+aXat89uROz3KHVcXk009SjPrtoe9YI="
+_abiz.kathmandupashmina.example. 300 IN TXT "v=abiz1;k=np-123456080081;h=kathmandupashmina.np.to.co;p=VXTSeEUDv+LuW4GCUMw5576wNJMUgC2dQBe9nf1UNmU="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.kathmandupashmina.example. 300 IN TXT "v=abiz1;h=kathmandupashmina.np.to.co;p=mQ8PVn/G+osH+aXat89uROz3KHVcXk009SjPrtoe9YI="
+_abiz.kathmandupashmina.example. 300 IN TXT "v=abiz1;h=kathmandupashmina.np.to.co;p=VXTSeEUDv+LuW4GCUMw5576wNJMUgC2dQBe9nf1UNmU="
 ```
 
 The business record served as `application/json` at `https://kathmandupashmina.np.to.co`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://kathmandupashmina.n
 {
   "record_version": "abiz1",
   "business_name": "Kathmandu Pashmina",
-  "country": "np",
+  "country": {
+    "code": "NP",
+    "name": "Nepal"
+  },
   "business_key": "np-123456080081",
   "registration_number": "123456080081",
   "identity_host": "kathmandupashmina.np.to.co",
   "domains": [
     "kathmandupashmina.example"
   ],
-  "public_key": "mQ8PVn/G+osH+aXat89uROz3KHVcXk009SjPrtoe9YI=",
-  "signature": "lGjcHcZURKF2KdQLJnJtzZmVPF9L575WwO5KDkE3JOP6mMAvdogl1a7dDv03t+Gdkyr830OkjsjlCSg0sz/8DA=="
+  "public_key": "VXTSeEUDv+LuW4GCUMw5576wNJMUgC2dQBe9nf1UNmU=",
+  "signature": "9cjKgXHAB5RtB8xJeYxE/yCiSPaFdE7650hJaXreyuPh/IdZWVX6OZeV2tqKVh6unnyiQGVsJyrKPenKh5DAAw=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain kathmandupashmina.example --dns-value 'v=abiz1;k=np-123456080081;h=kathmandupashmina.np.to.co;p=mQ8PVn/G+osH+aXat89uROz3KHVcXk009SjPrtoe9YI='
+python scripts/validate.py record.json --domain kathmandupashmina.example --dns-value 'v=abiz1;k=np-123456080081;h=kathmandupashmina.np.to.co;p=VXTSeEUDv+LuW4GCUMw5576wNJMUgC2dQBe9nf1UNmU='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -88,7 +91,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Nepal with a record hosted by to.co might use the host `kathmandupashmina.np.to.co`, giving the DNS value `v=abiz1;k=np-123456080081;h=kathmandupashmina.np.to.co;p=mQ8PVn/G+osH+aXat89uROz3KHVcXk009SjPrtoe9YI=`. An unregistered business might use a town-based host such as `kathmandupashmina-kathmandu.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Nepal with a record hosted by to.co might use the host `kathmandupashmina.np.to.co`, giving the DNS value `v=abiz1;k=np-123456080081;h=kathmandupashmina.np.to.co;p=VXTSeEUDv+LuW4GCUMw5576wNJMUgC2dQBe9nf1UNmU=`. An unregistered business might use a town-based host such as `kathmandupashmina-kathmandu.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

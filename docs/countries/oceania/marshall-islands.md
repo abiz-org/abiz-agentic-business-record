@@ -37,7 +37,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA="
+_abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=Z9Gx0EvQWuewrboUfsJpL3ur11nMf2Z/SiLRAzctCi8="
 ```
 
 ### Example record (JSON)
@@ -48,12 +48,15 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Majuro Lagoon Charters Inc.",
-  "country": "mh",
+  "country": {
+    "code": "MH",
+    "name": "Marshall Islands"
+  },
   "identity_host": "majurolagooncharters.mh.to.co",
   "domains": [
     "majurolagooncharters.example"
   ],
-  "public_key": "CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA=",
+  "public_key": "Z9Gx0EvQWuewrboUfsJpL3ur11nMf2Z/SiLRAzctCi8=",
   "description": "Fishing and lagoon charters from Majuro.",
   "website": "https://majurolagooncharters.example",
   "locations": [
@@ -131,7 +134,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "h87hrz8VMhsJDkfANi0/lqiKYauBatFFqHDzLM5nf/dsZxZhTYmHIG25ENYNMy0epgkut2GE5l0ymU362cOIAQ=="
+  "signature": "HjcmG6nAAc9ZtOWqHJ0EwmWCg/fLWm7dMkkUmJuJbHW7jWM1nPx7ux3vML8XFmgTTSMcnB167jW+zKkxggupAQ=="
 }
 ```
 
@@ -144,7 +147,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain majurolagooncharters.example \
-  --dns-value 'v=abiz1;h=majurolagooncharters.mh.to.co;p=CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA='
+  --dns-value 'v=abiz1;h=majurolagooncharters.mh.to.co;p=Z9Gx0EvQWuewrboUfsJpL3ur11nMf2Z/SiLRAzctCi8='
 ```
 
 ## 3. Using a provider and MCP
@@ -159,7 +162,7 @@ For example, a provider might host the record for Majuro Lagoon Charters at `maj
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=CqjxJN9VwX+U6vkFQhiY0fIu4wx68kcVgFWC0VDtjiA="
+  _abiz.majurolagooncharters.example. 300 IN TXT "v=abiz1;h=majurolagooncharters.mh.to.co;p=Z9Gx0EvQWuewrboUfsJpL3ur11nMf2Z/SiLRAzctCi8="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

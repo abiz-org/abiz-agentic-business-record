@@ -45,7 +45,7 @@ kg-<registration-number>
 Опубликуйте ровно одну запись TXT по имени `_abiz` в вашем домене, в компактной форме без пробелов, с `v=abiz1` в начале:
 
 ```dns
-_abiz.alatootextile.example. 300 IN TXT "v=abiz1;k=kg-01234567891234;h=alatootextile.kg.to.co;p=NQEiYnINUNjGb1Kg8X2MVbtv3AgbTAWpDUJuiKHwoFY="
+_abiz.alatootextile.example. 300 IN TXT "v=abiz1;k=kg-01234567891234;h=alatootextile.kg.to.co;p=B6rxwAcuPyIUOE6fyIsLIMfZ4b1L1s3lus4ybouWKr0="
 ```
 
 Значение `p` выше — одноразовый пример ключа, созданный для этой страницы. Никогда не копируйте его: опубликуйте собственный ключ. Утверждение ABIZ 1.1 обязано содержать `p`. Все названия, номера и домены на этой странице вымышлены.
@@ -53,7 +53,7 @@ _abiz.alatootextile.example. 300 IN TXT "v=abiz1;k=kg-01234567891234;h=alatootex
 Без необязательного тега `k` такая запись тоже допустима:
 
 ```dns
-_abiz.alatootextile.example. 300 IN TXT "v=abiz1;h=alatootextile.kg.to.co;p=NQEiYnINUNjGb1Kg8X2MVbtv3AgbTAWpDUJuiKHwoFY="
+_abiz.alatootextile.example. 300 IN TXT "v=abiz1;h=alatootextile.kg.to.co;p=B6rxwAcuPyIUOE6fyIsLIMfZ4b1L1s3lus4ybouWKr0="
 ```
 
 Запись о бизнесе, которая отдаётся как `application/json` по адресу `https://alatootextile.kg.to.co`:
@@ -61,23 +61,26 @@ _abiz.alatootextile.example. 300 IN TXT "v=abiz1;h=alatootextile.kg.to.co;p=NQEi
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "ОсОО «Ала-Тоо Текстиль»",
-  "country": "kg",
+  "business_name": "\u041e\u0441\u041e\u041e \u00ab\u0410\u043b\u0430-\u0422\u043e\u043e \u0422\u0435\u043a\u0441\u0442\u0438\u043b\u044c\u00bb",
+  "country": {
+    "code": "KG",
+    "name": "Kyrgyzstan"
+  },
   "business_key": "kg-01234567891234",
   "registration_number": "01234567891234",
   "identity_host": "alatootextile.kg.to.co",
   "domains": [
     "alatootextile.example"
   ],
-  "public_key": "NQEiYnINUNjGb1Kg8X2MVbtv3AgbTAWpDUJuiKHwoFY=",
-  "signature": "3SHfoPaP38EgUktNldA83hsJe2qwDjl6D2OlB9bfmCRlNlR0LRw1Tuhy5tXAe22sCvSm5sXopL9Cyo/7lajNAA=="
+  "public_key": "B6rxwAcuPyIUOE6fyIsLIMfZ4b1L1s3lus4ybouWKr0=",
+  "signature": "x2bFWJIoXQvU72NqCaFVrgkARCzT8Ojw2fVvYNq7VlAL0XMKTj7IdF/R98NK37BkVAY3H8B49zczW3uirAfACQ=="
 }
 ```
 
 Чтобы проверить карточку перед публикацией, запустите эталонный валидатор из копии этого репозитория:
 
 ```sh
-python scripts/validate.py record.json --domain alatootextile.example --dns-value 'v=abiz1;k=kg-01234567891234;h=alatootextile.kg.to.co;p=NQEiYnINUNjGb1Kg8X2MVbtv3AgbTAWpDUJuiKHwoFY='
+python scripts/validate.py record.json --domain alatootextile.example --dns-value 'v=abiz1;k=kg-01234567891234;h=alatootextile.kg.to.co;p=B6rxwAcuPyIUOE6fyIsLIMfZ4b1L1s3lus4ybouWKr0='
 ```
 
 Карточку JSON можно разместить самостоятельно на любом HTTPS-сервере или у любого совместимого провайдера. ABIZ не требует конкретного провайдера.
@@ -86,7 +89,7 @@ python scripts/validate.py record.json --domain alatootextile.example --dns-valu
 
 Model Context Protocol (MCP) — открытый протокол, по которому ИИ-ассистенты стандартным способом вызывают инструменты и читают данные на внешних серверах. Карточка компании может содержать необязательное поле `mcp_server_url` — HTTPS-адрес MCP-сервера компании, например для бронирования или сведений о товарах. ABIZ не ручается за этот сервер: инструменты должны применять собственный контроль доступа (раздел 4.2.6 SPEC).
 
-Провайдер может разместить карточку и опубликовать DNS-указатель за вас. Например, зарегистрированная в Кыргызстане компания, чья карточка размещена на to.co, может использовать хост `alatootextile.kg.to.co`, и тогда значение DNS будет `v=abiz1;k=kg-01234567891234;h=alatootextile.kg.to.co;p=NQEiYnINUNjGb1Kg8X2MVbtv3AgbTAWpDUJuiKHwoFY=`. Незарегистрированный бизнес может использовать хост с названием города, например `alatootextile-bishkek.biz.to.co`. Любой совместимый провайдер или ваш собственный сервер работают так же.
+Провайдер может разместить карточку и опубликовать DNS-указатель за вас. Например, зарегистрированная в Кыргызстане компания, чья карточка размещена на to.co, может использовать хост `alatootextile.kg.to.co`, и тогда значение DNS будет `v=abiz1;k=kg-01234567891234;h=alatootextile.kg.to.co;p=B6rxwAcuPyIUOE6fyIsLIMfZ4b1L1s3lus4ybouWKr0=`. Незарегистрированный бизнес может использовать хост с названием города, например `alatootextile-bishkek.biz.to.co`. Любой совместимый провайдер или ваш собственный сервер работают так же.
 
 ## 4. Ключи и подписи (ABIZ 1.1)
 

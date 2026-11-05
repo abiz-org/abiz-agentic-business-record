@@ -47,7 +47,7 @@ Eritrea uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc="
+_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=JclAYKKAZ56YlJKdLWidVyAJCprSxfykFLkbvEkyFQ8="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc="
+_abiz.asmaratailoring.example. 300 IN TXT "v=abiz1;h=asmaratailoring.er.to.co;p=JclAYKKAZ56YlJKdLWidVyAJCprSxfykFLkbvEkyFQ8="
 ```
 
 The business record served as `application/json` at `https://asmaratailoring.er.to.co`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://asmaratailoring.er.
 {
   "record_version": "abiz1",
   "business_name": "Asmara Tailoring",
-  "country": "er",
+  "country": {
+    "code": "ER",
+    "name": "Eritrea"
+  },
   "business_key": "er-12345",
   "registration_number": "12345",
   "identity_host": "asmaratailoring.er.to.co",
   "domains": [
     "asmaratailoring.example"
   ],
-  "public_key": "65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc=",
-  "signature": "YouJfpJo1/hzKu3ieE3F9/2rQGhGzSaEU0qbgCRCWyoKI/Zxu6X6Y/LZvN1QY2IkyWxbC0jUmJUwG2OwfJ52Cw=="
+  "public_key": "JclAYKKAZ56YlJKdLWidVyAJCprSxfykFLkbvEkyFQ8=",
+  "signature": "gICR1fdqZ+IueyOmxXHT97NWDcBONwnSGC3vE7WqRwG05pUnb8hkuguSozhcwWzdx/5N4dUwkPUXtq8VgbZrDA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain asmaratailoring.example --dns-value 'v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc='
+python scripts/validate.py record.json --domain asmaratailoring.example --dns-value 'v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=JclAYKKAZ56YlJKdLWidVyAJCprSxfykFLkbvEkyFQ8='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -88,7 +91,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Eritrea with a record hosted by to.co might use the host `asmaratailoring.er.to.co`, giving the DNS value `v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=65MtWc0RfEJHnTeYNfgbCgWDUCVO9Qj5Utbsx8qvDGc=`. An unregistered business might use a town-based host such as `asmaratailoring-asmara.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Eritrea with a record hosted by to.co might use the host `asmaratailoring.er.to.co`, giving the DNS value `v=abiz1;k=er-12345;h=asmaratailoring.er.to.co;p=JclAYKKAZ56YlJKdLWidVyAJCprSxfykFLkbvEkyFQ8=`. An unregistered business might use a town-based host such as `asmaratailoring-asmara.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

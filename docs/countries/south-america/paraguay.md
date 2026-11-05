@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=sKQCTiH4afzDQn/MV5DNCGmMAkvsyO/1OMthVHg1Jdw="
+_abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=EaShmVqCPsm7g0KxFN7x4oQC+wD5G5gSwhvOdEbwtqs="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -55,22 +55,25 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Yerba Mate Guaraní S.A.",
-  "country": "py",
+  "business_name": "Yerba Mate Guaran\u00ed S.A.",
+  "country": {
+    "code": "PY",
+    "name": "Paraguay"
+  },
   "business_key": "py-12345",
   "registration_number": "12345",
   "identity_host": "yerbamateguarani.py.to.co",
   "domains": [
     "yerbamateguarani.example"
   ],
-  "public_key": "sKQCTiH4afzDQn/MV5DNCGmMAkvsyO/1OMthVHg1Jdw=",
+  "public_key": "EaShmVqCPsm7g0KxFN7x4oQC+wD5G5gSwhvOdEbwtqs=",
   "description": "Yerba mate y productos regionales.",
   "website": "https://yerbamateguarani.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Asunción",
+        "locality": "Asunci\u00f3n",
         "country": {
           "code": "PY"
         }
@@ -136,7 +139,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "mwEEpnGE2R2YhaHT/Y8qmf600jMSceuUE2w39u68cn8UQQwESosdJnp/CBsPZyDbTfJFvXXAvulcfRrBHC4MDQ=="
+  "signature": "vNqou/xUd6M7JEUvx1nR+uLL/q/ba3VpewmrRY+Tpkmxwpd9EppQxSs4I794mWKe81wmuECXizAqFOSYU66DBg=="
 }
 ```
 
@@ -149,7 +152,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain yerbamateguarani.example \
-  --dns-value 'v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=sKQCTiH4afzDQn/MV5DNCGmMAkvsyO/1OMthVHg1Jdw='
+  --dns-value 'v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=EaShmVqCPsm7g0KxFN7x4oQC+wD5G5gSwhvOdEbwtqs='
 ```
 
 ## 3. Proveedores y MCP
@@ -164,7 +167,7 @@ Por ejemplo, un proveedor puede alojar el registro de Yerba Mate Guaraní en `ye
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=sKQCTiH4afzDQn/MV5DNCGmMAkvsyO/1OMthVHg1Jdw="
+  _abiz.yerbamateguarani.example. 300 IN TXT "v=abiz1;k=py-12345;h=yerbamateguarani.py.to.co;p=EaShmVqCPsm7g0KxFN7x4oQC+wD5G5gSwhvOdEbwtqs="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

@@ -45,7 +45,7 @@ Sri Lanka uses no subdivision: do not add a region, province or city code. SPEC 
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.kandytea.example. 300 IN TXT "v=abiz1;k=lk-PV00123456;h=kandytea.lk.to.co;p=q/OQoMwQU3gMksQB7wzauyOucvPWQDhX1ld+bo63Pxk="
+_abiz.kandytea.example. 300 IN TXT "v=abiz1;k=lk-PV00123456;h=kandytea.lk.to.co;p=woVl3fRX1NhdGPcqhPpFLpiUhUAqxcmcH7+IseBhJdo="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.kandytea.example. 300 IN TXT "v=abiz1;h=kandytea.lk.to.co;p=q/OQoMwQU3gMksQB7wzauyOucvPWQDhX1ld+bo63Pxk="
+_abiz.kandytea.example. 300 IN TXT "v=abiz1;h=kandytea.lk.to.co;p=woVl3fRX1NhdGPcqhPpFLpiUhUAqxcmcH7+IseBhJdo="
 ```
 
 The business record served as `application/json` at `https://kandytea.lk.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://kandytea.lk.to.co`:
 {
   "record_version": "abiz1",
   "business_name": "Kandy Tea Traders",
-  "country": "lk",
+  "country": {
+    "code": "LK",
+    "name": "Sri Lanka"
+  },
   "business_key": "lk-PV00123456",
   "registration_number": "PV00123456",
   "identity_host": "kandytea.lk.to.co",
   "domains": [
     "kandytea.example"
   ],
-  "public_key": "q/OQoMwQU3gMksQB7wzauyOucvPWQDhX1ld+bo63Pxk=",
-  "signature": "77tCd0wP0a2yIqBi547b1zCUNQrq0OlZF6D6oHBZgCYpFudT2xzCaPkTkDOzgHG044pSzpjttAvCiZBh3h1kBQ=="
+  "public_key": "woVl3fRX1NhdGPcqhPpFLpiUhUAqxcmcH7+IseBhJdo=",
+  "signature": "kQKBfUYY6VsJDkCeBlMG/QhdA9kwe7oJX3qm6qO4goye8hGGKjEsd8gSZUkRqK1fc/ltr14GRCYYHetefTLqBA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain kandytea.example --dns-value 'v=abiz1;k=lk-PV00123456;h=kandytea.lk.to.co;p=q/OQoMwQU3gMksQB7wzauyOucvPWQDhX1ld+bo63Pxk='
+python scripts/validate.py record.json --domain kandytea.example --dns-value 'v=abiz1;k=lk-PV00123456;h=kandytea.lk.to.co;p=woVl3fRX1NhdGPcqhPpFLpiUhUAqxcmcH7+IseBhJdo='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Sri Lanka with a record hosted by to.co might use the host `kandytea.lk.to.co`, giving the DNS value `v=abiz1;k=lk-PV00123456;h=kandytea.lk.to.co;p=q/OQoMwQU3gMksQB7wzauyOucvPWQDhX1ld+bo63Pxk=`. An unregistered business might use a town-based host such as `kandytea-kandy.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Sri Lanka with a record hosted by to.co might use the host `kandytea.lk.to.co`, giving the DNS value `v=abiz1;k=lk-PV00123456;h=kandytea.lk.to.co;p=woVl3fRX1NhdGPcqhPpFLpiUhUAqxcmcH7+IseBhJdo=`. An unregistered business might use a town-based host such as `kandytea-kandy.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

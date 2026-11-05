@@ -45,7 +45,7 @@ Sierra Leone uses no subdivision: do not add a region, province or city code. SP
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.freetownprint.example. 300 IN TXT "v=abiz1;k=sl-SL123456;h=freetownprint.sl.to.co;p=aE2rO27QW3lKGEKorQEeaetJdO2BaD3gARygtsLui4o="
+_abiz.freetownprint.example. 300 IN TXT "v=abiz1;k=sl-SL123456;h=freetownprint.sl.to.co;p=nJWOoBPyh2FPJtXn0uQCmIFc3pe5OGVw1Db3KVWNNYQ="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.freetownprint.example. 300 IN TXT "v=abiz1;h=freetownprint.sl.to.co;p=aE2rO27QW3lKGEKorQEeaetJdO2BaD3gARygtsLui4o="
+_abiz.freetownprint.example. 300 IN TXT "v=abiz1;h=freetownprint.sl.to.co;p=nJWOoBPyh2FPJtXn0uQCmIFc3pe5OGVw1Db3KVWNNYQ="
 ```
 
 The business record served as `application/json` at `https://freetownprint.sl.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://freetownprint.sl.to
 {
   "record_version": "abiz1",
   "business_name": "Freetown Print Shop",
-  "country": "sl",
+  "country": {
+    "code": "SL",
+    "name": "Sierra Leone"
+  },
   "business_key": "sl-SL123456",
   "registration_number": "SL123456",
   "identity_host": "freetownprint.sl.to.co",
   "domains": [
     "freetownprint.example"
   ],
-  "public_key": "aE2rO27QW3lKGEKorQEeaetJdO2BaD3gARygtsLui4o=",
-  "signature": "n5oj1/FwtLC1o16AZa8Pcx95im1zlL8nwMpddPCDoTq5RVAtWVOhz8q7K1R76vMsEWmRnIwPRqApU3PsVgwvDg=="
+  "public_key": "nJWOoBPyh2FPJtXn0uQCmIFc3pe5OGVw1Db3KVWNNYQ=",
+  "signature": "JLzpZ7CZweyWozN6tiRJxqLGEiKNzpy7Sy67QANrxZA4NYA7N19xOyEGHxS5ex3rA/s3djq7PpUv0inoobpFAg=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain freetownprint.example --dns-value 'v=abiz1;k=sl-SL123456;h=freetownprint.sl.to.co;p=aE2rO27QW3lKGEKorQEeaetJdO2BaD3gARygtsLui4o='
+python scripts/validate.py record.json --domain freetownprint.example --dns-value 'v=abiz1;k=sl-SL123456;h=freetownprint.sl.to.co;p=nJWOoBPyh2FPJtXn0uQCmIFc3pe5OGVw1Db3KVWNNYQ='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Sierra Leone with a record hosted by to.co might use the host `freetownprint.sl.to.co`, giving the DNS value `v=abiz1;k=sl-SL123456;h=freetownprint.sl.to.co;p=aE2rO27QW3lKGEKorQEeaetJdO2BaD3gARygtsLui4o=`. An unregistered business might use a town-based host such as `freetownprint-freetown.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Sierra Leone with a record hosted by to.co might use the host `freetownprint.sl.to.co`, giving the DNS value `v=abiz1;k=sl-SL123456;h=freetownprint.sl.to.co;p=nJWOoBPyh2FPJtXn0uQCmIFc3pe5OGVw1Db3KVWNNYQ=`. An unregistered business might use a town-based host such as `freetownprint-freetown.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

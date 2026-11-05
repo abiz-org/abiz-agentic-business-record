@@ -45,7 +45,7 @@ th-<registration-number>
 เผยแพร่ระเบียน TXT เพียงรายการเดียวที่ชื่อ `_abiz` ใต้โดเมนของคุณ ในรูปแบบกะทัดรัดไม่มีช่องว่าง โดยมี `v=abiz1` อยู่ก่อน:
 
 ```dns
-_abiz.doikhamcoffee.example. 300 IN TXT "v=abiz1;k=th-0105565123456;h=doikhamcoffee.th.to.co;p=cwODo5gwp0fpMqSYTYfT+B9fj0rmIrjiq6d64tR4mhI="
+_abiz.doikhamcoffee.example. 300 IN TXT "v=abiz1;k=th-0105565123456;h=doikhamcoffee.th.to.co;p=NTE0vAI8DFeL4fhjHFgqS3nBWVxG1xjAkyYbUvQgATE="
 ```
 
 ค่า `p` ข้างต้นเป็นกุญแจตัวอย่างแบบใช้ครั้งเดียวที่สร้างขึ้นสำหรับหน้านี้ ห้ามคัดลอกไปใช้ ให้เผยแพร่กุญแจของคุณเองการประกาศ ABIZ 1.1 ต้องมี `p` ชื่อ หมายเลข และโดเมนทั้งหมดในหน้านี้เป็นข้อมูลสมมุติ
@@ -53,7 +53,7 @@ _abiz.doikhamcoffee.example. 300 IN TXT "v=abiz1;k=th-0105565123456;h=doikhamcof
 หากไม่ใส่แท็ก `k` ซึ่งไม่บังคับ ค่านี้ก็ใช้ได้เช่นกัน:
 
 ```dns
-_abiz.doikhamcoffee.example. 300 IN TXT "v=abiz1;h=doikhamcoffee.th.to.co;p=cwODo5gwp0fpMqSYTYfT+B9fj0rmIrjiq6d64tR4mhI="
+_abiz.doikhamcoffee.example. 300 IN TXT "v=abiz1;h=doikhamcoffee.th.to.co;p=NTE0vAI8DFeL4fhjHFgqS3nBWVxG1xjAkyYbUvQgATE="
 ```
 
 ระเบียนธุรกิจที่ให้บริการเป็น `application/json` ที่ `https://doikhamcoffee.th.to.co`:
@@ -61,23 +61,26 @@ _abiz.doikhamcoffee.example. 300 IN TXT "v=abiz1;h=doikhamcoffee.th.to.co;p=cwOD
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "บริษัท ดอยคำ คอฟฟี่ จำกัด",
-  "country": "th",
+  "business_name": "\u0e1a\u0e23\u0e34\u0e29\u0e31\u0e17 \u0e14\u0e2d\u0e22\u0e04\u0e33 \u0e04\u0e2d\u0e1f\u0e1f\u0e35\u0e48 \u0e08\u0e33\u0e01\u0e31\u0e14",
+  "country": {
+    "code": "TH",
+    "name": "Thailand"
+  },
   "business_key": "th-0105565123456",
   "registration_number": "0105565123456",
   "identity_host": "doikhamcoffee.th.to.co",
   "domains": [
     "doikhamcoffee.example"
   ],
-  "public_key": "cwODo5gwp0fpMqSYTYfT+B9fj0rmIrjiq6d64tR4mhI=",
-  "signature": "2IrgXW6Tt0wx2tZCBJpDep5ayEWrEG3pLaBk9xsNBoqGZ62B7MKBbnTdy6jaTv3BCB605b6s47ioj2MDFJIOBw=="
+  "public_key": "NTE0vAI8DFeL4fhjHFgqS3nBWVxG1xjAkyYbUvQgATE=",
+  "signature": "i5iGL8nLT3x69Up5Lm3eCNn+LdVBXlbEtR3Q5kB21thM8Pv8JPbDt2m1lfb6nHGY1lQcR/2qpDmp21IjAORgAg=="
 }
 ```
 
 หากต้องการตรวจระเบียนก่อนเผยแพร่ ให้รันตัวตรวจสอบอ้างอิงจากสำเนาของรีโพซิทอรีนี้:
 
 ```sh
-python scripts/validate.py record.json --domain doikhamcoffee.example --dns-value 'v=abiz1;k=th-0105565123456;h=doikhamcoffee.th.to.co;p=cwODo5gwp0fpMqSYTYfT+B9fj0rmIrjiq6d64tR4mhI='
+python scripts/validate.py record.json --domain doikhamcoffee.example --dns-value 'v=abiz1;k=th-0105565123456;h=doikhamcoffee.th.to.co;p=NTE0vAI8DFeL4fhjHFgqS3nBWVxG1xjAkyYbUvQgATE='
 ```
 
 คุณจะโฮสต์ระเบียน JSON เองบนเซิร์ฟเวอร์ HTTPS ใดก็ได้ หรือใช้ผู้ให้บริการที่รองรับรายใดก็ได้ ABIZ ไม่บังคับผู้ให้บริการรายใดรายหนึ่ง
@@ -86,7 +89,7 @@ python scripts/validate.py record.json --domain doikhamcoffee.example --dns-valu
 
 Model Context Protocol (MCP) เป็นโปรโตคอลเปิดที่ให้ผู้ช่วย AI เรียกใช้เครื่องมือและอ่านข้อมูลจากเซิร์ฟเวอร์ภายนอกด้วยวิธีมาตรฐาน ระเบียนธุรกิจอาจมีฟิลด์ `mcp_server_url` (ไม่บังคับ) ซึ่งเป็นที่อยู่ HTTPS ของเซิร์ฟเวอร์ MCP ของธุรกิจ เช่น สำหรับการจองหรือข้อมูลสินค้า ABIZ ไม่รับรองเซิร์ฟเวอร์นั้น เครื่องมือต้องใช้การควบคุมการเข้าถึงของตนเอง (SPEC หัวข้อ 4.2.6)
 
-ผู้ให้บริการสามารถโฮสต์ระเบียนและเผยแพร่ตัวชี้ DNS แทนคุณได้ ตัวอย่างเช่น บริษัทที่จดทะเบียนในประเทศไทยและโฮสต์ระเบียนกับ to.co อาจใช้โฮสต์ `doikhamcoffee.th.to.co` ซึ่งได้ค่า DNS เป็น `v=abiz1;k=th-0105565123456;h=doikhamcoffee.th.to.co;p=cwODo5gwp0fpMqSYTYfT+B9fj0rmIrjiq6d64tR4mhI=` ส่วนธุรกิจที่ไม่ได้จดทะเบียนอาจใช้โฮสต์ที่มีชื่อเมือง เช่น `doikhamcoffee-chiangmai.biz.to.co` ผู้ให้บริการที่รองรับรายอื่นหรือเซิร์ฟเวอร์ของคุณเองก็ทำงานแบบเดียวกัน
+ผู้ให้บริการสามารถโฮสต์ระเบียนและเผยแพร่ตัวชี้ DNS แทนคุณได้ ตัวอย่างเช่น บริษัทที่จดทะเบียนในประเทศไทยและโฮสต์ระเบียนกับ to.co อาจใช้โฮสต์ `doikhamcoffee.th.to.co` ซึ่งได้ค่า DNS เป็น `v=abiz1;k=th-0105565123456;h=doikhamcoffee.th.to.co;p=NTE0vAI8DFeL4fhjHFgqS3nBWVxG1xjAkyYbUvQgATE=` ส่วนธุรกิจที่ไม่ได้จดทะเบียนอาจใช้โฮสต์ที่มีชื่อเมือง เช่น `doikhamcoffee-chiangmai.biz.to.co` ผู้ให้บริการที่รองรับรายอื่นหรือเซิร์ฟเวอร์ของคุณเองก็ทำงานแบบเดียวกัน
 
 ## 4. คีย์และลายเซ็น (ABIZ 1.1)
 

@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.ulliriagro.example. 300 IN TXT "v=abiz1;k=al-L12345678A;h=ulliriagro.al.to.co;p=e9Sc/fFPOfun6/wnpz+JI0TVp8/ecPUM1h/QiCK8JpY="
+_abiz.ulliriagro.example. 300 IN TXT "v=abiz1;k=al-L12345678A;h=ulliriagro.al.to.co;p=3bkn4LMfVUSneY3p2AppPLZfVJb53fMCy6+GnLn9Fo0="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://ulliriagro.al.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Ulliri Agro sh.p.k.",
-  "country": "al",
+  "country": {
+    "code": "AL",
+    "name": "Albania"
+  },
   "business_key": "al-L12345678A",
   "registration_number": "L12345678A",
   "identity_host": "ulliriagro.al.to.co",
   "domains": [
     "ulliriagro.example"
   ],
-  "public_key": "e9Sc/fFPOfun6/wnpz+JI0TVp8/ecPUM1h/QiCK8JpY=",
+  "public_key": "3bkn4LMfVUSneY3p2AppPLZfVJb53fMCy6+GnLn9Fo0=",
   "description": "Olive oil producer near Tirana.",
   "website": "https://ulliriagro.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://ulliriagro.al.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "L9lLKbzG3rqJ8LUVd2G/byV1KfbqNzJqJ7vIU1bS+WKSz9fZkB7nPDZpOZREllgJmOAIzIiC3sb5KEbyyXJmBA=="
+  "signature": "mkrRsLWC32oxMDFmwBRFEsFqBbq5GUJWJL8QD5oDvCMV4IXlPGO3f8++N4R+v0DcHsiv8kHlADHyjlnCEl39DQ=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain ulliriagro.example --dns-value 'v=abiz1;k=al-L12345678A;h=ulliriagro.al.to.co;p=e9Sc/fFPOfun6/wnpz+JI0TVp8/ecPUM1h/QiCK8JpY='
+python scripts/validate.py record.json --domain ulliriagro.example --dns-value 'v=abiz1;k=al-L12345678A;h=ulliriagro.al.to.co;p=3bkn4LMfVUSneY3p2AppPLZfVJb53fMCy6+GnLn9Fo0='
 ```
 
 ### Self-hosted or through a provider

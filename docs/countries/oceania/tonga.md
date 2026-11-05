@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.vavausailing.example. 300 IN TXT "v=abiz1;k=to-12345;h=vavausailing.to.to.co;p=GxYG64L7+GEpZyiVv82xP1IASBvKdWzUFxeJPLaPq/s="
+_abiz.vavausailing.example. 300 IN TXT "v=abiz1;k=to-12345;h=vavausailing.to.to.co;p=91IXfx3bHEtAw/qt9cUmBqey19zIOQcgM+EPYApKUuQ="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -56,14 +56,17 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Vavau Sailing Ltd",
-  "country": "to",
+  "country": {
+    "code": "TO",
+    "name": "Tonga"
+  },
   "business_key": "to-12345",
   "registration_number": "12345",
   "identity_host": "vavausailing.to.to.co",
   "domains": [
     "vavausailing.example"
   ],
-  "public_key": "GxYG64L7+GEpZyiVv82xP1IASBvKdWzUFxeJPLaPq/s=",
+  "public_key": "91IXfx3bHEtAw/qt9cUmBqey19zIOQcgM+EPYApKUuQ=",
   "description": "Sailing charters and whale-watching trips in Vava'u.",
   "website": "https://vavausailing.example",
   "locations": [
@@ -141,7 +144,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "qu/SYg2dCmTOBxAcmPwkwU5xA9WtJskXEbWh3viyYY6/nPMIVs0YiMuhbKa9XqUufReNACTU0BxBiR2yAioGDQ=="
+  "signature": "miSQisBMtcSwonJnTOmT1E1A1Wp0I8/pEISmhW+bH7O8Lr2c4+GpUPxXCoLC5dibS7JLFWQuRpiqwcHltsFNDg=="
 }
 ```
 
@@ -154,7 +157,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain vavausailing.example \
-  --dns-value 'v=abiz1;k=to-12345;h=vavausailing.to.to.co;p=GxYG64L7+GEpZyiVv82xP1IASBvKdWzUFxeJPLaPq/s='
+  --dns-value 'v=abiz1;k=to-12345;h=vavausailing.to.to.co;p=91IXfx3bHEtAw/qt9cUmBqey19zIOQcgM+EPYApKUuQ='
 ```
 
 ## 3. Using a provider and MCP
@@ -169,7 +172,7 @@ For example, a provider might host the record for Vavau Sailing at `vavausailing
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.vavausailing.example. 300 IN TXT "v=abiz1;k=to-12345;h=vavausailing.to.to.co;p=GxYG64L7+GEpZyiVv82xP1IASBvKdWzUFxeJPLaPq/s="
+  _abiz.vavausailing.example. 300 IN TXT "v=abiz1;k=to-12345;h=vavausailing.to.to.co;p=91IXfx3bHEtAw/qt9cUmBqey19zIOQcgM+EPYApKUuQ="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

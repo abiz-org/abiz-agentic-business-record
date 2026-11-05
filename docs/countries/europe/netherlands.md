@@ -41,7 +41,7 @@ Sleutels worden zonder onderscheid tussen hoofd- en kleine letters vergeleken, m
 Publiceer precies één ABIZ-TXT-record onder `_abiz` op uw domein, in de compacte vorm zonder spaties:
 
 ```dns
-_abiz.fietsenmakerdevries.example. 300 IN TXT "v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=x+SPeLQciIniVjwkcXJeN99mfnW/vOhp3kcyrwnSVmc="
+_abiz.fietsenmakerdevries.example. 300 IN TXT "v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=AwO/A8DH7spuYeRrn3Lg9x5TsvCokvOLR14pGg+i4hI="
 ```
 
 - `v=abiz1` moet vooraan staan. `h` en `p` zijn verplicht; `k` is optioneel.
@@ -58,14 +58,17 @@ Het record dat op `https://fietsenmakerdevries.nl.to.co` als `application/json` 
 {
   "record_version": "abiz1",
   "business_name": "Fietsenmaker De Vries B.V.",
-  "country": "nl",
+  "country": {
+    "code": "NL",
+    "name": "Netherlands"
+  },
   "business_key": "nl-12345678",
   "registration_number": "12345678",
   "identity_host": "fietsenmakerdevries.nl.to.co",
   "domains": [
     "fietsenmakerdevries.example"
   ],
-  "public_key": "x+SPeLQciIniVjwkcXJeN99mfnW/vOhp3kcyrwnSVmc=",
+  "public_key": "AwO/A8DH7spuYeRrn3Lg9x5TsvCokvOLR14pGg+i4hI=",
   "description": "Fietsenmaker in Utrecht.",
   "website": "https://fietsenmakerdevries.example",
   "locations": [
@@ -80,14 +83,14 @@ Het record dat op `https://fietsenmakerdevries.nl.to.co` als `application/json` 
       "public": true
     }
   ],
-  "signature": "ceK909Yq+2fW0PDmoE7Yr5NCdlh8KzEm9xdrDtnO9SrNvgoXTQ4exuzaAm5dhd65y6njeXyQ7DBNRzMn0rO6Ag=="
+  "signature": "U0oJ/neUxb43rmLvdBMSsgdeFx35HaPqDyWdnADtMYvDxylfcs/1KjQAq0dTGWHpYWoSkabZzK25XqZpJkhxDw=="
 }
 ```
 
 Met de referentievalidator controleert u record en DNS-waarde lokaal:
 
 ```sh
-python scripts/validate.py record.json --domain fietsenmakerdevries.example --dns-value 'v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=x+SPeLQciIniVjwkcXJeN99mfnW/vOhp3kcyrwnSVmc='
+python scripts/validate.py record.json --domain fietsenmakerdevries.example --dns-value 'v=abiz1;k=nl-12345678;h=fietsenmakerdevries.nl.to.co;p=AwO/A8DH7spuYeRrn3Lg9x5TsvCokvOLR14pGg+i4hI='
 ```
 
 ### Zelf hosten of via een aanbieder

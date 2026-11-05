@@ -41,7 +41,7 @@ Le chiavi si confrontano senza distinguere maiuscole e minuscole, ma pubblicate 
 Pubblicate un solo record TXT ABIZ in `_abiz` sul vostro dominio, nella forma compatta senza spazi:
 
 ```dns
-_abiz.titanoceramiche.example. 300 IN TXT "v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=ZkadQfgoS5g6YKYkNavD+5MrKELf9qGUyBsuvfLZ+Tg="
+_abiz.titanoceramiche.example. 300 IN TXT "v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=o+bI5MIqE298rvnu6eaaA7IMMcCOx0Q8hdTXcqNbmxg="
 ```
 
 - `v=abiz1` deve venire per primo. `h` e `p` sono obbligatori; `k` è facoltativo.
@@ -58,14 +58,17 @@ La scheda servita all'indirizzo `https://titanoceramiche.sm.to.co` come `applica
 {
   "record_version": "abiz1",
   "business_name": "Titano Ceramiche S.r.l.",
-  "country": "sm",
+  "country": {
+    "code": "SM",
+    "name": "San Marino"
+  },
   "business_key": "sm-SM01234",
   "registration_number": "SM01234",
   "identity_host": "titanoceramiche.sm.to.co",
   "domains": [
     "titanoceramiche.example"
   ],
-  "public_key": "ZkadQfgoS5g6YKYkNavD+5MrKELf9qGUyBsuvfLZ+Tg=",
+  "public_key": "o+bI5MIqE298rvnu6eaaA7IMMcCOx0Q8hdTXcqNbmxg=",
   "description": "Laboratorio di ceramica a Borgo Maggiore.",
   "website": "https://titanoceramiche.example",
   "locations": [
@@ -80,14 +83,14 @@ La scheda servita all'indirizzo `https://titanoceramiche.sm.to.co` come `applica
       "public": true
     }
   ],
-  "signature": "EsejFz4qh+JrDQ4+RjEiWOe30e9Mz36Cn37lNnzo1g3XtKDH4S0l2VrhSF4h/5qUGmxQXHPHlYbudzAAtX9OCw=="
+  "signature": "APmOWFbZLxwDQkUYs8w1ovZxdWXnKmMdTVMA1Z18Bu/S704n5NZ9YCRXjR5a70G/9aKaOVRsCtXZlSqCHPonCg=="
 }
 ```
 
 Con il validatore di riferimento potete controllare in locale la scheda e il valore DNS:
 
 ```sh
-python scripts/validate.py record.json --domain titanoceramiche.example --dns-value 'v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=ZkadQfgoS5g6YKYkNavD+5MrKELf9qGUyBsuvfLZ+Tg='
+python scripts/validate.py record.json --domain titanoceramiche.example --dns-value 'v=abiz1;k=sm-SM01234;h=titanoceramiche.sm.to.co;p=o+bI5MIqE298rvnu6eaaA7IMMcCOx0Q8hdTXcqNbmxg='
 ```
 
 ### In proprio o tramite un fornitore

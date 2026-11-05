@@ -47,7 +47,7 @@ ma-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.atlasrugs.example. 300 IN TXT "v=abiz1;k=ma-001234567000089;h=atlasrugs.ma.to.co;p=3U7AfYcqTe8aKSoaaRg8mFDv4kHBjkhe2txSZzSbsSY="
+_abiz.atlasrugs.example. 300 IN TXT "v=abiz1;k=ma-001234567000089;h=atlasrugs.ma.to.co;p=Wd/gabrarcwtUOKfJACRu22+e0PkgjPA5q+HpeLfc84="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.atlasrugs.example. 300 IN TXT "v=abiz1;k=ma-001234567000089;h=atlasrugs.ma
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.atlasrugs.example. 300 IN TXT "v=abiz1;h=atlasrugs.ma.to.co;p=3U7AfYcqTe8aKSoaaRg8mFDv4kHBjkhe2txSZzSbsSY="
+_abiz.atlasrugs.example. 300 IN TXT "v=abiz1;h=atlasrugs.ma.to.co;p=Wd/gabrarcwtUOKfJACRu22+e0PkgjPA5q+HpeLfc84="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://atlasrugs.ma.to.co`:
@@ -63,23 +63,26 @@ _abiz.atlasrugs.example. 300 IN TXT "v=abiz1;h=atlasrugs.ma.to.co;p=3U7AfYcqTe8a
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "زرابي الأطلس",
-  "country": "ma",
+  "business_name": "\u0632\u0631\u0627\u0628\u064a \u0627\u0644\u0623\u0637\u0644\u0633",
+  "country": {
+    "code": "MA",
+    "name": "Morocco"
+  },
   "business_key": "ma-001234567000089",
   "registration_number": "001234567000089",
   "identity_host": "atlasrugs.ma.to.co",
   "domains": [
     "atlasrugs.example"
   ],
-  "public_key": "3U7AfYcqTe8aKSoaaRg8mFDv4kHBjkhe2txSZzSbsSY=",
-  "signature": "oGdAYQS890zZmXRUFRRqag+MpxPazwipKLEo6ZROAniNGc3uGXV9UrPTrmpCaQIPSZqZr0eUgSIe4jdJcDSgDQ=="
+  "public_key": "Wd/gabrarcwtUOKfJACRu22+e0PkgjPA5q+HpeLfc84=",
+  "signature": "w6i6yob/VBWJDUEA+C3BDgT4vDprTfz+rX1wtPzWgfACX2Rx1cMDkzS0uD7uz4HuBcYG8T3D77FHMEydm0W/Aw=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain atlasrugs.example --dns-value 'v=abiz1;k=ma-001234567000089;h=atlasrugs.ma.to.co;p=3U7AfYcqTe8aKSoaaRg8mFDv4kHBjkhe2txSZzSbsSY='
+python scripts/validate.py record.json --domain atlasrugs.example --dns-value 'v=abiz1;k=ma-001234567000089;h=atlasrugs.ma.to.co;p=Wd/gabrarcwtUOKfJACRu22+e0PkgjPA5q+HpeLfc84='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain atlasrugs.example --dns-value 'v
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في المغرب يستضيف to.co سجلها المضيف `atlasrugs.ma.to.co`، فتكون قيمة DNS هي `v=abiz1;k=ma-001234567000089;h=atlasrugs.ma.to.co;p=3U7AfYcqTe8aKSoaaRg8mFDv4kHBjkhe2txSZzSbsSY=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `atlasrugs-fes.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في المغرب يستضيف to.co سجلها المضيف `atlasrugs.ma.to.co`، فتكون قيمة DNS هي `v=abiz1;k=ma-001234567000089;h=atlasrugs.ma.to.co;p=Wd/gabrarcwtUOKfJACRu22+e0PkgjPA5q+HpeLfc84=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `atlasrugs-fes.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

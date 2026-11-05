@@ -45,7 +45,7 @@ Tanzania uses no subdivision: do not add a region, province or city code. SPEC s
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.zanzibarspice.example. 300 IN TXT "v=abiz1;k=tz-123456789;h=zanzibarspice.tz.to.co;p=cXeomiXZ0n4U6DLuFr01hPzc3f5qto5N9rrgFpjmdwk="
+_abiz.zanzibarspice.example. 300 IN TXT "v=abiz1;k=tz-123456789;h=zanzibarspice.tz.to.co;p=epqJUtJYmDrcFldWGPSb4O9FEN1oftFilraa5AekPYk="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.zanzibarspice.example. 300 IN TXT "v=abiz1;h=zanzibarspice.tz.to.co;p=cXeomiXZ0n4U6DLuFr01hPzc3f5qto5N9rrgFpjmdwk="
+_abiz.zanzibarspice.example. 300 IN TXT "v=abiz1;h=zanzibarspice.tz.to.co;p=epqJUtJYmDrcFldWGPSb4O9FEN1oftFilraa5AekPYk="
 ```
 
 The business record served as `application/json` at `https://zanzibarspice.tz.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://zanzibarspice.tz.to
 {
   "record_version": "abiz1",
   "business_name": "Zanzibar Spice Traders",
-  "country": "tz",
+  "country": {
+    "code": "TZ",
+    "name": "Tanzania"
+  },
   "business_key": "tz-123456789",
   "registration_number": "123456789",
   "identity_host": "zanzibarspice.tz.to.co",
   "domains": [
     "zanzibarspice.example"
   ],
-  "public_key": "cXeomiXZ0n4U6DLuFr01hPzc3f5qto5N9rrgFpjmdwk=",
-  "signature": "IUd3KCh0HPjyE17YEliXyUZYgwiCIFKFmyLMd2EOLf1B22gT0VSihgnb8f/ee6JmijHLlRRwps0s7NL+wADiAA=="
+  "public_key": "epqJUtJYmDrcFldWGPSb4O9FEN1oftFilraa5AekPYk=",
+  "signature": "V+rkaHtFZDPbT9ctI/9CJH0MXRmNhfkACdHehBCmbOgAQKgJRxA4gyYbDEpiM+nYX/w0rboTmhl3ASYiUlvKCQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain zanzibarspice.example --dns-value 'v=abiz1;k=tz-123456789;h=zanzibarspice.tz.to.co;p=cXeomiXZ0n4U6DLuFr01hPzc3f5qto5N9rrgFpjmdwk='
+python scripts/validate.py record.json --domain zanzibarspice.example --dns-value 'v=abiz1;k=tz-123456789;h=zanzibarspice.tz.to.co;p=epqJUtJYmDrcFldWGPSb4O9FEN1oftFilraa5AekPYk='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Tanzania with a record hosted by to.co might use the host `zanzibarspice.tz.to.co`, giving the DNS value `v=abiz1;k=tz-123456789;h=zanzibarspice.tz.to.co;p=cXeomiXZ0n4U6DLuFr01hPzc3f5qto5N9rrgFpjmdwk=`. An unregistered business might use a town-based host such as `zanzibarspice-stonetown.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Tanzania with a record hosted by to.co might use the host `zanzibarspice.tz.to.co`, giving the DNS value `v=abiz1;k=tz-123456789;h=zanzibarspice.tz.to.co;p=epqJUtJYmDrcFldWGPSb4O9FEN1oftFilraa5AekPYk=`. An unregistered business might use a town-based host such as `zanzibarspice-stonetown.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

@@ -47,7 +47,7 @@ Laos uses no subdivision: do not add a region, province or city code. SPEC secti
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI="
+_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=pNeS3DFLmLVd+UYi19MiZ07YG0k7L+hvqD0b4ai5wQ8="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI="
+_abiz.luangprabangweaving.example. 300 IN TXT "v=abiz1;h=luangprabangweaving.la.to.co;p=pNeS3DFLmLVd+UYi19MiZ07YG0k7L+hvqD0b4ai5wQ8="
 ```
 
 The business record served as `application/json` at `https://luangprabangweaving.la.to.co`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://luangprabangweaving
 {
   "record_version": "abiz1",
   "business_name": "Luang Prabang Weaving",
-  "country": "la",
+  "country": {
+    "code": "LA",
+    "name": "Laos"
+  },
   "business_key": "la-012345678",
   "registration_number": "012345678",
   "identity_host": "luangprabangweaving.la.to.co",
   "domains": [
     "luangprabangweaving.example"
   ],
-  "public_key": "Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI=",
-  "signature": "bfSS/LcdJ3ijFmLjwKA0p3DaRyQN5xzvuW2V2ptqknqxuU55nx9i57JgzVKIAgjMpYL2s5xeEcE98q5pgUngDQ=="
+  "public_key": "pNeS3DFLmLVd+UYi19MiZ07YG0k7L+hvqD0b4ai5wQ8=",
+  "signature": "pyrQSbeAhfviTjWq/eDyeDfjQZIii8GDh0JMJUm1uIz127eLTTw5dz1ew5BSYlcVeOs+ofWHFGpOOAtfINaNDQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain luangprabangweaving.example --dns-value 'v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI='
+python scripts/validate.py record.json --domain luangprabangweaving.example --dns-value 'v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=pNeS3DFLmLVd+UYi19MiZ07YG0k7L+hvqD0b4ai5wQ8='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -88,7 +91,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Laos with a record hosted by to.co might use the host `luangprabangweaving.la.to.co`, giving the DNS value `v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=Q+CS8QMIjmgJ0LJn6bK5gwlB60M393ZY8A12SNaQhlI=`. An unregistered business might use a town-based host such as `luangprabangweaving-luangprabang.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Laos with a record hosted by to.co might use the host `luangprabangweaving.la.to.co`, giving the DNS value `v=abiz1;k=la-012345678;h=luangprabangweaving.la.to.co;p=pNeS3DFLmLVd+UYi19MiZ07YG0k7L+hvqD0b4ai5wQ8=`. An unregistered business might use a town-based host such as `luangprabangweaving-luangprabang.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

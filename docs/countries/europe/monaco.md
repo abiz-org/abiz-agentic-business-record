@@ -41,7 +41,7 @@ Les clés se comparent sans tenir compte de la casse, mais publiez la forme cano
 Publiez un seul enregistrement TXT ABIZ sous `_abiz` sur votre domaine, sous forme compacte, sans espaces :
 
 ```dns
-_abiz.rivierayachting.example. 300 IN TXT "v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=ALvkwEs8/MU73gYkmjN9N6MUQAVMZiV1JuIU3kLoMfg="
+_abiz.rivierayachting.example. 300 IN TXT "v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=ibFjl2diO+m/7F/tbTwj2pCReubFJTWlJEgzQQ/5a4o="
 ```
 
 - `v=abiz1` doit venir en premier. `h` et `p` sont obligatoires ; `k` est facultatif.
@@ -58,15 +58,18 @@ La fiche servie à l'adresse `https://rivierayachting.mc.to.co`, au format `appl
 {
   "record_version": "abiz1",
   "business_name": "Riviera Yachting SARL",
-  "country": "mc",
+  "country": {
+    "code": "MC",
+    "name": "Monaco"
+  },
   "business_key": "mc-12S12345",
   "registration_number": "12S12345",
   "identity_host": "rivierayachting.mc.to.co",
   "domains": [
     "rivierayachting.example"
   ],
-  "public_key": "ALvkwEs8/MU73gYkmjN9N6MUQAVMZiV1JuIU3kLoMfg=",
-  "description": "Services nautiques à Monaco.",
+  "public_key": "ibFjl2diO+m/7F/tbTwj2pCReubFJTWlJEgzQQ/5a4o=",
+  "description": "Services nautiques \u00e0 Monaco.",
   "website": "https://rivierayachting.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ La fiche servie à l'adresse `https://rivierayachting.mc.to.co`, au format `appl
       "public": true
     }
   ],
-  "signature": "wjYRrbI8rzFxg8xKo0r+mqt0wKOGwXa1qCzJJPWcPYK886F4i9D1cqiyOabsiNHz1GFlIraxgeils191x2WpBQ=="
+  "signature": "c0krHRfnkiP20gKXNCqM3S025+yw9wK2roGthd+N2NZqKKBRt7riiCSLzsLrR16RGLVMbrePqxuUwtyabvjQAA=="
 }
 ```
 
 Le validateur de référence vérifie localement la fiche et la valeur DNS :
 
 ```sh
-python scripts/validate.py record.json --domain rivierayachting.example --dns-value 'v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=ALvkwEs8/MU73gYkmjN9N6MUQAVMZiV1JuIU3kLoMfg='
+python scripts/validate.py record.json --domain rivierayachting.example --dns-value 'v=abiz1;k=mc-12S12345;h=rivierayachting.mc.to.co;p=ibFjl2diO+m/7F/tbTwj2pCReubFJTWlJEgzQQ/5a4o='
 ```
 
 ### Hébergement par vous-même ou par un fournisseur

@@ -47,7 +47,7 @@ dz-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.alnourbakery.example. 300 IN TXT "v=abiz1;k=dz-16000123456B19;h=alnourbakery.dz.to.co;p=Vw27HDtJCTFFmxRlbulMx6Z82SFNTmF+ZvMQ6BkZv/0="
+_abiz.alnourbakery.example. 300 IN TXT "v=abiz1;k=dz-16000123456B19;h=alnourbakery.dz.to.co;p=+kou4alSGegBsA24SPlpp30+rOKTaO7XWHOQbb0COTU="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.alnourbakery.example. 300 IN TXT "v=abiz1;k=dz-16000123456B19;h=alnourbake
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.alnourbakery.example. 300 IN TXT "v=abiz1;h=alnourbakery.dz.to.co;p=Vw27HDtJCTFFmxRlbulMx6Z82SFNTmF+ZvMQ6BkZv/0="
+_abiz.alnourbakery.example. 300 IN TXT "v=abiz1;h=alnourbakery.dz.to.co;p=+kou4alSGegBsA24SPlpp30+rOKTaO7XWHOQbb0COTU="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://alnourbakery.dz.to.co`:
@@ -63,23 +63,26 @@ _abiz.alnourbakery.example. 300 IN TXT "v=abiz1;h=alnourbakery.dz.to.co;p=Vw27HD
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "مخبزة النور",
-  "country": "dz",
+  "business_name": "\u0645\u062e\u0628\u0632\u0629 \u0627\u0644\u0646\u0648\u0631",
+  "country": {
+    "code": "DZ",
+    "name": "Algeria"
+  },
   "business_key": "dz-16000123456B19",
   "registration_number": "16000123456B19",
   "identity_host": "alnourbakery.dz.to.co",
   "domains": [
     "alnourbakery.example"
   ],
-  "public_key": "Vw27HDtJCTFFmxRlbulMx6Z82SFNTmF+ZvMQ6BkZv/0=",
-  "signature": "93z9e4H4a++iUWaspea/I0piJK4NfspbIlJ7yDxSEZ3JN6w5EXYPbQhfDVryzkeSkBVORjYg0x2EbaAcfwzsBQ=="
+  "public_key": "+kou4alSGegBsA24SPlpp30+rOKTaO7XWHOQbb0COTU=",
+  "signature": "y58nUhlZPc4k5BGQ5t6k/3vTeTg16aI3Cc0y7e22DgH2L1jhs9Gd0tG17PTjqt3aICQChBpahM4Wrb0jAjX9Cg=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain alnourbakery.example --dns-value 'v=abiz1;k=dz-16000123456B19;h=alnourbakery.dz.to.co;p=Vw27HDtJCTFFmxRlbulMx6Z82SFNTmF+ZvMQ6BkZv/0='
+python scripts/validate.py record.json --domain alnourbakery.example --dns-value 'v=abiz1;k=dz-16000123456B19;h=alnourbakery.dz.to.co;p=+kou4alSGegBsA24SPlpp30+rOKTaO7XWHOQbb0COTU='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain alnourbakery.example --dns-value
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في الجزائر يستضيف to.co سجلها المضيف `alnourbakery.dz.to.co`، فتكون قيمة DNS هي `v=abiz1;k=dz-16000123456B19;h=alnourbakery.dz.to.co;p=Vw27HDtJCTFFmxRlbulMx6Z82SFNTmF+ZvMQ6BkZv/0=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `alnourbakery-oran.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في الجزائر يستضيف to.co سجلها المضيف `alnourbakery.dz.to.co`، فتكون قيمة DNS هي `v=abiz1;k=dz-16000123456B19;h=alnourbakery.dz.to.co;p=+kou4alSGegBsA24SPlpp30+rOKTaO7XWHOQbb0COTU=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `alnourbakery-oran.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

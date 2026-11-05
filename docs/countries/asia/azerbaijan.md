@@ -45,7 +45,7 @@ Azerbaijan uses no subdivision: do not add a region, province or city code. SPEC
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.caspianteahouse.example. 300 IN TXT "v=abiz1;k=az-1234567891;h=caspianteahouse.az.to.co;p=+kS07OsCD24tB/QeL0ksr55ri1tBppIM4Rni8q55yJc="
+_abiz.caspianteahouse.example. 300 IN TXT "v=abiz1;k=az-1234567891;h=caspianteahouse.az.to.co;p=ABYetfbMqUytAPDmL3t/PbF6rXXTFRcjDzUL1gKpqq4="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.caspianteahouse.example. 300 IN TXT "v=abiz1;h=caspianteahouse.az.to.co;p=+kS07OsCD24tB/QeL0ksr55ri1tBppIM4Rni8q55yJc="
+_abiz.caspianteahouse.example. 300 IN TXT "v=abiz1;h=caspianteahouse.az.to.co;p=ABYetfbMqUytAPDmL3t/PbF6rXXTFRcjDzUL1gKpqq4="
 ```
 
 The business record served as `application/json` at `https://caspianteahouse.az.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://caspianteahouse.az.
 {
   "record_version": "abiz1",
   "business_name": "Caspian Tea House",
-  "country": "az",
+  "country": {
+    "code": "AZ",
+    "name": "Azerbaijan"
+  },
   "business_key": "az-1234567891",
   "registration_number": "1234567891",
   "identity_host": "caspianteahouse.az.to.co",
   "domains": [
     "caspianteahouse.example"
   ],
-  "public_key": "+kS07OsCD24tB/QeL0ksr55ri1tBppIM4Rni8q55yJc=",
-  "signature": "TZhDQMiSKfJc72me+7xaGm/ZUtxectyh2is1eTk926LFeSZgsBsH4Fq6vr1ZN+o/Zt7KLfMQg7hhuZZ3v3rwAg=="
+  "public_key": "ABYetfbMqUytAPDmL3t/PbF6rXXTFRcjDzUL1gKpqq4=",
+  "signature": "LHw62i3KId/3JVduXxWaME0wZ2KCokAGirh8OT8nLlErL0eAONHrdsL9+zvPEsi4D2wkXFZmd5sK6YP1ZcZhCg=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain caspianteahouse.example --dns-value 'v=abiz1;k=az-1234567891;h=caspianteahouse.az.to.co;p=+kS07OsCD24tB/QeL0ksr55ri1tBppIM4Rni8q55yJc='
+python scripts/validate.py record.json --domain caspianteahouse.example --dns-value 'v=abiz1;k=az-1234567891;h=caspianteahouse.az.to.co;p=ABYetfbMqUytAPDmL3t/PbF6rXXTFRcjDzUL1gKpqq4='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Azerbaijan with a record hosted by to.co might use the host `caspianteahouse.az.to.co`, giving the DNS value `v=abiz1;k=az-1234567891;h=caspianteahouse.az.to.co;p=+kS07OsCD24tB/QeL0ksr55ri1tBppIM4Rni8q55yJc=`. An unregistered business might use a town-based host such as `caspianteahouse-baku.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Azerbaijan with a record hosted by to.co might use the host `caspianteahouse.az.to.co`, giving the DNS value `v=abiz1;k=az-1234567891;h=caspianteahouse.az.to.co;p=ABYetfbMqUytAPDmL3t/PbF6rXXTFRcjDzUL1gKpqq4=`. An unregistered business might use a town-based host such as `caspianteahouse-baku.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

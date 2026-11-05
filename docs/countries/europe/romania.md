@@ -41,7 +41,7 @@ Cheile se compară fără a ține cont de majuscule, dar publicați forma canoni
 Publicați exact o înregistrare TXT ABIZ la `_abiz` pe domeniul dumneavoastră, în forma compactă, fără spații:
 
 ```dns
-_abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1PIOsOH4bQV0C/z0iFwUDukhcEzn54AeST6ZddZ7rKY="
+_abiz.carpatimobila.example. 300 IN TXT "v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=RjR4nRrBJcm6LnyB3QWy+YTZ7tbplquHhziV7xPySqw="
 ```
 
 - `v=abiz1` trebuie să fie primul. `h` și `p` sunt obligatorii; `k` este opțional.
@@ -57,16 +57,19 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Carpați Mobila SRL",
-  "country": "ro",
+  "business_name": "Carpa\u021bi Mobila SRL",
+  "country": {
+    "code": "RO",
+    "name": "Romania"
+  },
   "business_key": "ro-12345678",
   "registration_number": "12345678",
   "identity_host": "carpatimobila.ro.to.co",
   "domains": [
     "carpatimobila.example"
   ],
-  "public_key": "1PIOsOH4bQV0C/z0iFwUDukhcEzn54AeST6ZddZ7rKY=",
-  "description": "Atelier de mobilă din Cluj-Napoca.",
+  "public_key": "RjR4nRrBJcm6LnyB3QWy+YTZ7tbplquHhziV7xPySqw=",
+  "description": "Atelier de mobil\u0103 din Cluj-Napoca.",
   "website": "https://carpatimobila.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ Valoarea `p` de mai sus este o cheie de exemplu, de unică folosință. Nu o cop
       "public": true
     }
   ],
-  "signature": "pmL+Dpye2wCHWFD61QI8Qfu/tWcnPesgn5RTtyvov+Wv0XDUNm+FrV/6NXagqX7o/+zmfyYgh1dP+rDFOFuzCA=="
+  "signature": "eQNb02kSSb6q4R1CACp3oDBj3P50DXdZdYWAjfmGI9FU1f4LXrGJ1QyNEDdWLjUv41jzJ2kcM4Wx5TWbpw3/CQ=="
 }
 ```
 
 Cu validatorul de referință puteți verifica local înregistrarea și valoarea DNS:
 
 ```sh
-python scripts/validate.py record.json --domain carpatimobila.example --dns-value 'v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=1PIOsOH4bQV0C/z0iFwUDukhcEzn54AeST6ZddZ7rKY='
+python scripts/validate.py record.json --domain carpatimobila.example --dns-value 'v=abiz1;k=ro-12345678;h=carpatimobila.ro.to.co;p=RjR4nRrBJcm6LnyB3QWy+YTZ7tbplquHhziV7xPySqw='
 ```
 
 ### Găzduire proprie sau printr-un furnizor

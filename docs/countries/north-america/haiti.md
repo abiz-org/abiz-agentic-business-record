@@ -39,7 +39,7 @@ Si vous ajoutez `business_key` et `registration_number` à la fiche, ajoutez les
 Publiez un seul enregistrement TXT commençant par `v=abiz1` à `_abiz.` suivi de votre domaine. Utilisez la forme compacte, sans espaces (section 3.1.1), avec un TTL de 300 secondes :
 
 ```dns
-_abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0="
+_abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=gEr7JM+mc/5LpqpJ/M5dDdTEelp8GD3mc4TJBnHi6HM="
 ```
 
 Une entreprise sans numéro d’immatriculation, ou qui préfère ne pas le publier, omet simplement `k` :
@@ -56,15 +56,18 @@ Cet exemple est fictif. Il passe le validateur de référence.
 {
   "record_version": "abiz1",
   "business_name": "Boulangerie Soleil S.A.",
-  "country": "ht",
+  "country": {
+    "code": "HT",
+    "name": "Haiti"
+  },
   "business_key": "ht-12345",
   "registration_number": "12345",
   "identity_host": "boulangeriesoleil.ht.to.co",
   "domains": [
     "boulangeriesoleil.example"
   ],
-  "public_key": "e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0=",
-  "description": "Pain, pâtés et pain patate.",
+  "public_key": "gEr7JM+mc/5LpqpJ/M5dDdTEelp8GD3mc4TJBnHi6HM=",
+  "description": "Pain, p\u00e2t\u00e9s et pain patate.",
   "website": "https://boulangeriesoleil.example",
   "locations": [
     {
@@ -141,7 +144,7 @@ Cet exemple est fictif. Il passe le validateur de référence.
       "public": true
     }
   ],
-  "signature": "EkfItcQaoWdfchPq/qYd+6SwC/POKBzZPbDGhQ1mKjb05T+4nzEaz2EZnlRuzyGF+vKMAJcsZ5viPL4ol9UCCA=="
+  "signature": "EUmLxf8yK+Lkfpxu23ip72nCRSkRQ5wbSaBte1H3PQg5ya8mIcxKXv6QI2TtA/mjBTf/BAYK2PCrOnT8yBo+Aw=="
 }
 ```
 
@@ -154,7 +157,7 @@ Avant de publier, vérifiez la fiche et la valeur DNS avec le validateur de réf
 ```sh
 python scripts/validate.py record.json \
   --domain boulangeriesoleil.example \
-  --dns-value 'v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0='
+  --dns-value 'v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=gEr7JM+mc/5LpqpJ/M5dDdTEelp8GD3mc4TJBnHi6HM='
 ```
 
 ## 3. Fournisseurs et MCP
@@ -169,7 +172,7 @@ Par exemple, un fournisseur peut héberger la fiche de la Boulangerie Soleil à 
 - **Exemple** (clé d’exemple jetable; sa clé privée a été détruite). Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`.
 
   ```dns
-  _abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=e3ffdmvEqh32AcAHhbQjyZ8EthXuwHP8Nxh14VbMfr0="
+  _abiz.boulangeriesoleil.example. 300 IN TXT "v=abiz1;k=ht-12345;h=boulangeriesoleil.ht.to.co;p=gEr7JM+mc/5LpqpJ/M5dDdTEelp8GD3mc4TJBnHi6HM="
   ```
 
 - **La clé privée appartient à l’entreprise.** Elle ne doit jamais figurer dans le DNS, dans la fiche ni dans un dépôt public. Un fournisseur peut la générer et la conserver pour vous (mode hébergé), mais il doit vous permettre de l’exporter à tout moment, par exemple au format PKCS#8, et supprimer sa copie à votre demande (section 3.3.4).

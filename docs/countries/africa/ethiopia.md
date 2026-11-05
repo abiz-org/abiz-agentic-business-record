@@ -47,7 +47,7 @@ Ethiopia uses no subdivision: do not add a region, province or city code. SPEC s
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.entotocoffee.example. 300 IN TXT "v=abiz1;k=et-0012345678;h=entotocoffee.et.to.co;p=Hcvtc+0rGnpF2yHWDg2s5miKq5Xs6EYltzbKcyF+4rk="
+_abiz.entotocoffee.example. 300 IN TXT "v=abiz1;k=et-0012345678;h=entotocoffee.et.to.co;p=S3Xfh6esSs+k6wwwR2fGyYZ68Tvhe742l5D/mLznmjg="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.entotocoffee.example. 300 IN TXT "v=abiz1;h=entotocoffee.et.to.co;p=Hcvtc+0rGnpF2yHWDg2s5miKq5Xs6EYltzbKcyF+4rk="
+_abiz.entotocoffee.example. 300 IN TXT "v=abiz1;h=entotocoffee.et.to.co;p=S3Xfh6esSs+k6wwwR2fGyYZ68Tvhe742l5D/mLznmjg="
 ```
 
 The business record served as `application/json` at `https://entotocoffee.et.to.co`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://entotocoffee.et.to.
 {
   "record_version": "abiz1",
   "business_name": "Entoto Coffee Roasters",
-  "country": "et",
+  "country": {
+    "code": "ET",
+    "name": "Ethiopia"
+  },
   "business_key": "et-0012345678",
   "registration_number": "0012345678",
   "identity_host": "entotocoffee.et.to.co",
   "domains": [
     "entotocoffee.example"
   ],
-  "public_key": "Hcvtc+0rGnpF2yHWDg2s5miKq5Xs6EYltzbKcyF+4rk=",
-  "signature": "t2GtBb5aDwNGKF6mEmbkuITP+O/ZpenXUGM2bFi7E02gxBbViMuDOrUKRLT7PC7UZtKEjYR3qhfTSPhsjrijDA=="
+  "public_key": "S3Xfh6esSs+k6wwwR2fGyYZ68Tvhe742l5D/mLznmjg=",
+  "signature": "/x4XcKeyb3f+6XU9E+JJIhUjONFGLzc94R4K+Dpe0RXPh3MC6LNI69vjEQtj32p82YgL44xLRS55919fO4MkBw=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain entotocoffee.example --dns-value 'v=abiz1;k=et-0012345678;h=entotocoffee.et.to.co;p=Hcvtc+0rGnpF2yHWDg2s5miKq5Xs6EYltzbKcyF+4rk='
+python scripts/validate.py record.json --domain entotocoffee.example --dns-value 'v=abiz1;k=et-0012345678;h=entotocoffee.et.to.co;p=S3Xfh6esSs+k6wwwR2fGyYZ68Tvhe742l5D/mLznmjg='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -88,7 +91,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Ethiopia with a record hosted by to.co might use the host `entotocoffee.et.to.co`, giving the DNS value `v=abiz1;k=et-0012345678;h=entotocoffee.et.to.co;p=Hcvtc+0rGnpF2yHWDg2s5miKq5Xs6EYltzbKcyF+4rk=`. An unregistered business might use a town-based host such as `entotocoffee-addisababa.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Ethiopia with a record hosted by to.co might use the host `entotocoffee.et.to.co`, giving the DNS value `v=abiz1;k=et-0012345678;h=entotocoffee.et.to.co;p=S3Xfh6esSs+k6wwwR2fGyYZ68Tvhe742l5D/mLznmjg=`. An unregistered business might use a town-based host such as `entotocoffee-addisababa.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

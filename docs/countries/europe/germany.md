@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=pW935lccyPaOHhZlPmEkKyLV7TU98Hc4q8m/8oe9tqI="
+_abiz.baeckereimueller.example. 300 IN TXT "v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=LytieOkhguyNw6LXwYjChbZPjTY0Y2eofPNzCNDpe+0="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` und `p` sind Pflicht, `k` ist optional.
@@ -57,16 +57,19 @@ Der Eintrag, der unter `https://baeckereimueller.de.to.co` als `application/json
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Bäckerei Müller GmbH",
-  "country": "de",
+  "business_name": "B\u00e4ckerei M\u00fcller GmbH",
+  "country": {
+    "code": "DE",
+    "name": "Germany"
+  },
   "business_key": "de-K1101RHRB12345",
   "registration_number": "K1101RHRB12345",
   "identity_host": "baeckereimueller.de.to.co",
   "domains": [
     "baeckereimueller.example"
   ],
-  "public_key": "pW935lccyPaOHhZlPmEkKyLV7TU98Hc4q8m/8oe9tqI=",
-  "description": "Handwerksbäckerei in Hamburg.",
+  "public_key": "LytieOkhguyNw6LXwYjChbZPjTY0Y2eofPNzCNDpe+0=",
+  "description": "Handwerksb\u00e4ckerei in Hamburg.",
   "website": "https://baeckereimueller.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ Der Eintrag, der unter `https://baeckereimueller.de.to.co` als `application/json
       "public": true
     }
   ],
-  "signature": "XiSQHvu1s9j7zZtTAdyy5/B7uyXPYhUExaFIqF/5b5R8lSQGsUUVekfnbZHS+55gmwCu13MF1SKIWHUxqB0QAg=="
+  "signature": "K4ReqRDn3yRiVo60OAshjJFqUhbDoYHun/hGH5xIeC5a81dEIibZoUxRJyOOfllzxXAM/upylGtN9lUt0Hm0CQ=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain baeckereimueller.example --dns-value 'v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=pW935lccyPaOHhZlPmEkKyLV7TU98Hc4q8m/8oe9tqI='
+python scripts/validate.py record.json --domain baeckereimueller.example --dns-value 'v=abiz1;k=de-K1101RHRB12345;h=baeckereimueller.de.to.co;p=LytieOkhguyNw6LXwYjChbZPjTY0Y2eofPNzCNDpe+0='
 ```
 
 ### Selbst hosten oder über einen Anbieter

@@ -47,7 +47,7 @@ eg-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.nileprint.example. 300 IN TXT "v=abiz1;k=eg-123456;h=nileprint.eg.to.co;p=vwx0RhlglipY7nWXH1Berl9xli4+xRoMK5mHln/gt54="
+_abiz.nileprint.example. 300 IN TXT "v=abiz1;k=eg-123456;h=nileprint.eg.to.co;p=Jjwz/WkIYLz6QSyxWgEEFnbX1zkHOAZERd8uLeu7Np0="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.nileprint.example. 300 IN TXT "v=abiz1;k=eg-123456;h=nileprint.eg.to.co;p=
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.nileprint.example. 300 IN TXT "v=abiz1;h=nileprint.eg.to.co;p=vwx0RhlglipY7nWXH1Berl9xli4+xRoMK5mHln/gt54="
+_abiz.nileprint.example. 300 IN TXT "v=abiz1;h=nileprint.eg.to.co;p=Jjwz/WkIYLz6QSyxWgEEFnbX1zkHOAZERd8uLeu7Np0="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://nileprint.eg.to.co`:
@@ -63,23 +63,26 @@ _abiz.nileprint.example. 300 IN TXT "v=abiz1;h=nileprint.eg.to.co;p=vwx0RhlglipY
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "مطبعة النيل",
-  "country": "eg",
+  "business_name": "\u0645\u0637\u0628\u0639\u0629 \u0627\u0644\u0646\u064a\u0644",
+  "country": {
+    "code": "EG",
+    "name": "Egypt"
+  },
   "business_key": "eg-123456",
   "registration_number": "123456",
   "identity_host": "nileprint.eg.to.co",
   "domains": [
     "nileprint.example"
   ],
-  "public_key": "vwx0RhlglipY7nWXH1Berl9xli4+xRoMK5mHln/gt54=",
-  "signature": "DS5nri9DY2pGiE3MR/zTlgPVcevft+Ki7ZkQsFRO5K3VPcEdBa6cSz7p0+SM0B8KI0PpHV5AxawnoPhmbHsDDA=="
+  "public_key": "Jjwz/WkIYLz6QSyxWgEEFnbX1zkHOAZERd8uLeu7Np0=",
+  "signature": "A8POrcUhModH0p96nZrs11QCAw2TedxqCtsO1h3plA7C7LusAvSWP3wWOKT/45I8X32xTEpet50xvbmmim5ZBg=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain nileprint.example --dns-value 'v=abiz1;k=eg-123456;h=nileprint.eg.to.co;p=vwx0RhlglipY7nWXH1Berl9xli4+xRoMK5mHln/gt54='
+python scripts/validate.py record.json --domain nileprint.example --dns-value 'v=abiz1;k=eg-123456;h=nileprint.eg.to.co;p=Jjwz/WkIYLz6QSyxWgEEFnbX1zkHOAZERd8uLeu7Np0='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain nileprint.example --dns-value 'v
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في مصر يستضيف to.co سجلها المضيف `nileprint.eg.to.co`، فتكون قيمة DNS هي `v=abiz1;k=eg-123456;h=nileprint.eg.to.co;p=vwx0RhlglipY7nWXH1Berl9xli4+xRoMK5mHln/gt54=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `nileprint-cairo.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في مصر يستضيف to.co سجلها المضيف `nileprint.eg.to.co`، فتكون قيمة DNS هي `v=abiz1;k=eg-123456;h=nileprint.eg.to.co;p=Jjwz/WkIYLz6QSyxWgEEFnbX1zkHOAZERd8uLeu7Np0=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `nileprint-cairo.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

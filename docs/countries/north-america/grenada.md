@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js="
+_abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=jjLL5ZbztTxhzkcdei3gXS+4QshCZnXe/v0H8CHKxro="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -56,14 +56,17 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Nutmeg Spice Traders Ltd",
-  "country": "gd",
+  "country": {
+    "code": "GD",
+    "name": "Grenada"
+  },
   "business_key": "gd-12345",
   "registration_number": "12345",
   "identity_host": "nutmegspicetraders.gd.to.co",
   "domains": [
     "nutmegspicetraders.example"
   ],
-  "public_key": "d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js=",
+  "public_key": "jjLL5ZbztTxhzkcdei3gXS+4QshCZnXe/v0H8CHKxro=",
   "description": "Nutmeg, mace and local spice blends.",
   "website": "https://nutmegspicetraders.example",
   "locations": [
@@ -141,7 +144,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "bAnSVffkkDz/miuE872qZrePF0utQ/J8mnJk3IcOC1KQy3T7w512PR5q6cFrrZw50VMUXkWLsdR3NMVCrUZMCQ=="
+  "signature": "jurhs8hmkBc2iQfR9HP73V8d3RIDwQN0CLf0oUv0qZYs2yMZ94bKogPAbxjh4VSrHrYQpml1X0XKNWg0+/fRDQ=="
 }
 ```
 
@@ -154,7 +157,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain nutmegspicetraders.example \
-  --dns-value 'v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js='
+  --dns-value 'v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=jjLL5ZbztTxhzkcdei3gXS+4QshCZnXe/v0H8CHKxro='
 ```
 
 ## 3. Using a provider and MCP
@@ -169,7 +172,7 @@ For example, a provider might host the record for Nutmeg Spice Traders at `nutme
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=d/MGdKCE9B5GniBwAJKGQr3uI8e1IEeOJBNs16Pq5Js="
+  _abiz.nutmegspicetraders.example. 300 IN TXT "v=abiz1;k=gd-12345;h=nutmegspicetraders.gd.to.co;p=jjLL5ZbztTxhzkcdei3gXS+4QshCZnXe/v0H8CHKxro="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

@@ -45,7 +45,7 @@ A Guiné-Bissau não usa subdivisão: não acrescente código de região, proví
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw="
+_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=A35vIsa5qX0/DthTV+xcCZ0uAMnmOCALnG133kIuMKs="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,7 +53,7 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw="
+_abiz.cajudogeba.example. 300 IN TXT "v=abiz1;h=cajudogeba.gw.to.co;p=A35vIsa5qX0/DthTV+xcCZ0uAMnmOCALnG133kIuMKs="
 ```
 
 O registo da empresa servido como `application/json` em `https://cajudogeba.gw.to.co`:
@@ -62,22 +62,25 @@ O registo da empresa servido como `application/json` em `https://cajudogeba.gw.t
 {
   "record_version": "abiz1",
   "business_name": "Caju do Geba",
-  "country": "gw",
+  "country": {
+    "code": "GW",
+    "name": "Guinea-Bissau"
+  },
   "business_key": "gw-GWBIS2023B123",
   "registration_number": "GWBIS2023B123",
   "identity_host": "cajudogeba.gw.to.co",
   "domains": [
     "cajudogeba.example"
   ],
-  "public_key": "0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw=",
-  "signature": "GpRYaPm7VmmuEMmNYPDaqntbp3/qrLlt8FY8bJF8t96XwWsjIPRtYpPwpvWHOvTrg0wz9DLHQu4Xvu4UclLTAA=="
+  "public_key": "A35vIsa5qX0/DthTV+xcCZ0uAMnmOCALnG133kIuMKs=",
+  "signature": "o9D+8y07fLxGRuTxV/4xxgYsUeOYXb/k3EwTcfDnyv6rqBVgoPzK728QxewnVPeE9kT8z8edckKlUQkmRmUMBA=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain cajudogeba.example --dns-value 'v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw='
+python scripts/validate.py record.json --domain cajudogeba.example --dns-value 'v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=A35vIsa5qX0/DthTV+xcCZ0uAMnmOCALnG133kIuMKs='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
@@ -86,7 +89,7 @@ Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou reco
 
 O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada na Guiné-Bissau com a ficha alojada no to.co poderia usar o anfitrião `cajudogeba.gw.to.co`, o que dá o valor DNS `v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=0HuCxpD6bIypqtqhTcQTCwXoUOxzzVn85rYzvBhHyvw=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `cajudogeba-bissau.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada na Guiné-Bissau com a ficha alojada no to.co poderia usar o anfitrião `cajudogeba.gw.to.co`, o que dá o valor DNS `v=abiz1;k=gw-GWBIS2023B123;h=cajudogeba.gw.to.co;p=A35vIsa5qX0/DthTV+xcCZ0uAMnmOCALnG133kIuMKs=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `cajudogeba-bissau.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 

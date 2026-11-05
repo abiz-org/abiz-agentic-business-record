@@ -45,7 +45,7 @@ Guinea Ecuatorial no usa subdivisión: no añada códigos de provincia, región 
 Publique un único registro TXT en `_abiz` bajo su dominio, en forma compacta, sin espacios y con `v=abiz1` en primer lugar:
 
 ```dns
-_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E="
+_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=2tkRMIgXtXps8H9l/pCyiCsI8rFwQQ9igCsM3tfpK8c="
 ```
 
 El valor `p` anterior es una clave de ejemplo desechable, generada para esta página. No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`. Todos los nombres, números y dominios de esta página son ficticios.
@@ -53,7 +53,7 @@ El valor `p` anterior es una clave de ejemplo desechable, generada para esta pá
 Sin las etiquetas opcionales `k` y `p`, esto también es válido:
 
 ```dns
-_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E="
+_abiz.carpinteriabioko.example. 300 IN TXT "v=abiz1;h=carpinteriabioko.gq.to.co;p=2tkRMIgXtXps8H9l/pCyiCsI8rFwQQ9igCsM3tfpK8c="
 ```
 
 El registro de la empresa servido como `application/json` en `https://carpinteriabioko.gq.to.co`:
@@ -61,23 +61,26 @@ El registro de la empresa servido como `application/json` en `https://carpinteri
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Carpintería Bioko",
-  "country": "gq",
+  "business_name": "Carpinter\u00eda Bioko",
+  "country": {
+    "code": "GQ",
+    "name": "Equatorial Guinea"
+  },
   "business_key": "gq-GQMAL2023B123",
   "registration_number": "GQMAL2023B123",
   "identity_host": "carpinteriabioko.gq.to.co",
   "domains": [
     "carpinteriabioko.example"
   ],
-  "public_key": "h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E=",
-  "signature": "ClqvogD2sf2vP9r7LM3gViz72DDK+6N/mbdvoRRmtlaRC/aThP0TiE2A/rsJWouz0gMQvFbspBe/IEJe1GK3BQ=="
+  "public_key": "2tkRMIgXtXps8H9l/pCyiCsI8rFwQQ9igCsM3tfpK8c=",
+  "signature": "/3mZARhwtJ1ME9F2Q27Sl/YoC1nVrcMujHmoMIsVw5m4N8EB7rUE/f7+5RxYAW+petlXTvFEfupfvXGvQaahCQ=="
 }
 ```
 
 Para comprobar una ficha antes de publicarla, ejecute el validador de referencia desde una copia de este repositorio:
 
 ```sh
-python scripts/validate.py record.json --domain carpinteriabioko.example --dns-value 'v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E='
+python scripts/validate.py record.json --domain carpinteriabioko.example --dns-value 'v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=2tkRMIgXtXps8H9l/pCyiCsI8rFwQQ9igCsM3tfpK8c='
 ```
 
 Puede alojar la ficha JSON usted mismo, en cualquier servidor HTTPS, o usar cualquier proveedor compatible. ABIZ no exige un proveedor concreto.
@@ -86,7 +89,7 @@ Puede alojar la ficha JSON usted mismo, en cualquier servidor HTTPS, o usar cual
 
 El Model Context Protocol (MCP) es un protocolo abierto que permite a los asistentes de IA llamar a herramientas y leer datos de servidores externos de forma estándar. Una ficha puede incluir el campo opcional `mcp_server_url`, la dirección HTTPS de un servidor MCP de la empresa, por ejemplo para reservas o información de productos. ABIZ no avala ese servidor: las herramientas deben aplicar sus propios controles de acceso (sección 4.2.6 de la SPEC).
 
-Un proveedor puede alojar la ficha y publicar el puntero DNS por usted. Por ejemplo, una sociedad inscrita en Guinea Ecuatorial con la ficha alojada en to.co podría usar el host `carpinteriabioko.gq.to.co`, lo que da el valor DNS `v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=h7+5j5IoZHQl6ayOcSYb1BySREBCD8toiUKR4b5yO3E=`. Una empresa no inscrita podría usar un host basado en su localidad, como `carpinteriabioko-malabo.biz.to.co`. Cualquier proveedor compatible, o su propio servidor, funciona igual.
+Un proveedor puede alojar la ficha y publicar el puntero DNS por usted. Por ejemplo, una sociedad inscrita en Guinea Ecuatorial con la ficha alojada en to.co podría usar el host `carpinteriabioko.gq.to.co`, lo que da el valor DNS `v=abiz1;k=gq-GQMAL2023B123;h=carpinteriabioko.gq.to.co;p=2tkRMIgXtXps8H9l/pCyiCsI8rFwQQ9igCsM3tfpK8c=`. Una empresa no inscrita podría usar un host basado en su localidad, como `carpinteriabioko-malabo.biz.to.co`. Cualquier proveedor compatible, o su propio servidor, funciona igual.
 
 ## 4. Claves y firmas (ABIZ 1.1)
 

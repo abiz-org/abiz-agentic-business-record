@@ -1,14 +1,17 @@
 {
   "record_version": "abiz1",
   "business_name": "Harbour Bike Repair LLC",
-  "country": "us",
+  "country": {
+    "code": "US",
+    "name": "United States"
+  },
   "business_key": "us-or-123456",
   "registration_number": "123456",
   "identity_host": "harbour-bike-repair.or.us.to.co",
   "domains": [
     "harbourbikes.example"
   ],
-  "public_key": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=",
+  "public_key": "oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo=",
   "description": "Bicycle repair and maintenance in Portland.",
   "website": "https://harbourbikes.example",
   "services": [
@@ -94,5 +97,9 @@
     }
   ],
   "last_updated": "2026-11-03T09:00:00Z",
-  "signature": "tcf4loWK5IQq4wt9MFXswxUBHXHfPhkHf4puoHC1VeliwTLNHWQd75kf5CnCFvEui546QU/t7QWIRHEoX7etAA=="
+  "region": {
+    "code": "US-OR",
+    "name": "Oregon"
+  },
+  "signature": "uOes11KfqTG67o+wMRuA05f3JYOaHjyT4OG7EE0w5vhPN3na1N14cEDpzddPszaDCgqO02idxAzrn78csltVCA=="
 }

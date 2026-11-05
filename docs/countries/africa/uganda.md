@@ -45,7 +45,7 @@ Uganda uses no subdivision: do not add a region, province or city code. SPEC sec
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=jpsM4DiYDwkL8fzqZj9m7FCCUHBPjqtDQZV5Qa2OnEA="
+_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=hS0QeCEjocjkrHFexlN2TT5+E8lvPdkrChIxRLLCk7o="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;h=jinjarafting.ug.to.co;p=jpsM4DiYDwkL8fzqZj9m7FCCUHBPjqtDQZV5Qa2OnEA="
+_abiz.jinjarafting.example. 300 IN TXT "v=abiz1;h=jinjarafting.ug.to.co;p=hS0QeCEjocjkrHFexlN2TT5+E8lvPdkrChIxRLLCk7o="
 ```
 
 The business record served as `application/json` at `https://jinjarafting.ug.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://jinjarafting.ug.to.
 {
   "record_version": "abiz1",
   "business_name": "Jinja Rafting Supplies",
-  "country": "ug",
+  "country": {
+    "code": "UG",
+    "name": "Uganda"
+  },
   "business_key": "ug-80020001234567",
   "registration_number": "80020001234567",
   "identity_host": "jinjarafting.ug.to.co",
   "domains": [
     "jinjarafting.example"
   ],
-  "public_key": "jpsM4DiYDwkL8fzqZj9m7FCCUHBPjqtDQZV5Qa2OnEA=",
-  "signature": "9TKpeUSdw24+ulyyhV6GybFHWO5W2Uowwco4XDrXV3nzSvSYj6SbZ8G8fKidjRktqqV3GPfWh0AYEhQQGUzpBg=="
+  "public_key": "hS0QeCEjocjkrHFexlN2TT5+E8lvPdkrChIxRLLCk7o=",
+  "signature": "yhWKVKsVHmi4iUDJzLTmdZMGeJdRdcgBFOCydYyg+GoW4ptJedmYa9sbq/Gkv5Qz6yYbbDDQtzoQUQXtZRTcAA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain jinjarafting.example --dns-value 'v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=jpsM4DiYDwkL8fzqZj9m7FCCUHBPjqtDQZV5Qa2OnEA='
+python scripts/validate.py record.json --domain jinjarafting.example --dns-value 'v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=hS0QeCEjocjkrHFexlN2TT5+E8lvPdkrChIxRLLCk7o='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Uganda with a record hosted by to.co might use the host `jinjarafting.ug.to.co`, giving the DNS value `v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=jpsM4DiYDwkL8fzqZj9m7FCCUHBPjqtDQZV5Qa2OnEA=`. An unregistered business might use a town-based host such as `jinjarafting-jinja.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Uganda with a record hosted by to.co might use the host `jinjarafting.ug.to.co`, giving the DNS value `v=abiz1;k=ug-80020001234567;h=jinjarafting.ug.to.co;p=hS0QeCEjocjkrHFexlN2TT5+E8lvPdkrChIxRLLCk7o=`. An unregistered business might use a town-based host such as `jinjarafting-jinja.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

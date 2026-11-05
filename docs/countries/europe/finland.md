@@ -41,7 +41,7 @@ Avaimia verrataan kirjainkoosta riippumatta, mutta julkaiskaa kanoninen muoto: m
 Julkaiskaa verkkotunnukseenne nimen `_abiz` alle täsmälleen yksi ABIZ TXT -tietue tiiviissä muodossa ilman välilyöntejä:
 
 ```dns
-_abiz.koivudesign.example. 300 IN TXT "v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=LgZsmQI559TbbeVhaW9QGnjQrmFZ2S6pHnwj9OKqw00="
+_abiz.koivudesign.example. 300 IN TXT "v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=Cn1gj3ysne5Dcj7SHxMhFQPx2QEkssrgulMs0OPwrwQ="
 ```
 
 - `v=abiz1` on oltava ensimmäisenä. `h` ja `p` ovat pakollisia; `k` on vapaaehtoinen.
@@ -58,14 +58,17 @@ Tietue, joka tarjoillaan osoitteessa `https://koivudesign.fi.to.co` muodossa `ap
 {
   "record_version": "abiz1",
   "business_name": "Koivu Design Oy",
-  "country": "fi",
+  "country": {
+    "code": "FI",
+    "name": "Finland"
+  },
   "business_key": "fi-12345678",
   "registration_number": "12345678",
   "identity_host": "koivudesign.fi.to.co",
   "domains": [
     "koivudesign.example"
   ],
-  "public_key": "LgZsmQI559TbbeVhaW9QGnjQrmFZ2S6pHnwj9OKqw00=",
+  "public_key": "Cn1gj3ysne5Dcj7SHxMhFQPx2QEkssrgulMs0OPwrwQ=",
   "description": "Muotoilutoimisto Tampereella.",
   "website": "https://koivudesign.example",
   "locations": [
@@ -80,14 +83,14 @@ Tietue, joka tarjoillaan osoitteessa `https://koivudesign.fi.to.co` muodossa `ap
       "public": true
     }
   ],
-  "signature": "O9R955c2CY7CNN1oEkkszgPwsaIHlDdKkvSjmStPG8kHHabff64xix8eh6lNz1723cJ2r8TN9jp2q7yVjdATCg=="
+  "signature": "IVoT3QsiAG2aLK3vVyqRhz8NcjqI+g2Op+1tXn898cgx1v/lv1miVsFhBivR1wu3kb5refSdi1gwtJUpN/SoDA=="
 }
 ```
 
 Viitevalidaattorilla voitte tarkistaa tietueen ja DNS-arvon paikallisesti:
 
 ```sh
-python scripts/validate.py record.json --domain koivudesign.example --dns-value 'v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=LgZsmQI559TbbeVhaW9QGnjQrmFZ2S6pHnwj9OKqw00='
+python scripts/validate.py record.json --domain koivudesign.example --dns-value 'v=abiz1;k=fi-12345678;h=koivudesign.fi.to.co;p=Cn1gj3ysne5Dcj7SHxMhFQPx2QEkssrgulMs0OPwrwQ='
 ```
 
 ### Itse tai palveluntarjoajan kautta

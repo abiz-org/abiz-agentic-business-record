@@ -41,7 +41,7 @@ Nycklar jämförs utan hänsyn till versaler och gemener, men publicera den kano
 Publicera exakt en ABIZ TXT-post under `_abiz` på er domän, i kompakt form utan mellanslag:
 
 ```dns
-_abiz.norrlandsnickeri.example. 300 IN TXT "v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=hhlbPtkBmO71FdQEmQUI8BZ1x+p/aA/3YsrKoxhp9Y0="
+_abiz.norrlandsnickeri.example. 300 IN TXT "v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=PsPbuSYlhOCb1GPKScuFP6hpeOjVP6oP7X+jfi/wbLY="
 ```
 
 - `v=abiz1` måste stå först. `h` och `p` är obligatoriska; `k` är frivilligt.
@@ -58,21 +58,24 @@ Posten som levereras på `https://norrlandsnickeri.se.to.co` som `application/js
 {
   "record_version": "abiz1",
   "business_name": "Norrland Snickeri AB",
-  "country": "se",
+  "country": {
+    "code": "SE",
+    "name": "Sweden"
+  },
   "business_key": "se-5561234567",
   "registration_number": "5561234567",
   "identity_host": "norrlandsnickeri.se.to.co",
   "domains": [
     "norrlandsnickeri.example"
   ],
-  "public_key": "hhlbPtkBmO71FdQEmQUI8BZ1x+p/aA/3YsrKoxhp9Y0=",
-  "description": "Snickeri i Umeå.",
+  "public_key": "PsPbuSYlhOCb1GPKScuFP6hpeOjVP6oP7X+jfi/wbLY=",
+  "description": "Snickeri i Ume\u00e5.",
   "website": "https://norrlandsnickeri.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Umeå",
+        "locality": "Ume\u00e5",
         "country": {
           "code": "SE"
         }
@@ -80,14 +83,14 @@ Posten som levereras på `https://norrlandsnickeri.se.to.co` som `application/js
       "public": true
     }
   ],
-  "signature": "HbDGT1JfYKW0HkQAET8DAGhZfbho06nxVskrmIdvvMnTxVddw3pH2ssMuQErj0obcrit0Jt7LU8PThZVyfEDCg=="
+  "signature": "0eahiy9kPzqH80VRm2fY8oKmltGxnMFQo5c1VvraRNDMsIjQEgWKJc1AfMpJwsujdKD7W3LLmwiq+qwe8lmjCw=="
 }
 ```
 
 Med referensvalideraren kan ni kontrollera posten och DNS-värdet lokalt:
 
 ```sh
-python scripts/validate.py record.json --domain norrlandsnickeri.example --dns-value 'v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=hhlbPtkBmO71FdQEmQUI8BZ1x+p/aA/3YsrKoxhp9Y0='
+python scripts/validate.py record.json --domain norrlandsnickeri.example --dns-value 'v=abiz1;k=se-5561234567;h=norrlandsnickeri.se.to.co;p=PsPbuSYlhOCb1GPKScuFP6hpeOjVP6oP7X+jfi/wbLY='
 ```
 
 ### Egen drift eller via leverantör

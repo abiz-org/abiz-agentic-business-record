@@ -45,7 +45,7 @@ Armenia uses no subdivision: do not add a region, province or city code. SPEC se
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.yerevanapricot.example. 300 IN TXT "v=abiz1;k=am-273110123456;h=yerevanapricot.am.to.co;p=0Ba1KJ7JLL6Dbts3xpum5tmhS+X68Wv2zAnnyGatZKg="
+_abiz.yerevanapricot.example. 300 IN TXT "v=abiz1;k=am-273110123456;h=yerevanapricot.am.to.co;p=HPvrCo3nnzpPsiNImjHlZnBf9yp/G8MnCzY8SGIOgCc="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.yerevanapricot.example. 300 IN TXT "v=abiz1;h=yerevanapricot.am.to.co;p=0Ba1KJ7JLL6Dbts3xpum5tmhS+X68Wv2zAnnyGatZKg="
+_abiz.yerevanapricot.example. 300 IN TXT "v=abiz1;h=yerevanapricot.am.to.co;p=HPvrCo3nnzpPsiNImjHlZnBf9yp/G8MnCzY8SGIOgCc="
 ```
 
 The business record served as `application/json` at `https://yerevanapricot.am.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://yerevanapricot.am.t
 {
   "record_version": "abiz1",
   "business_name": "Yerevan Apricot Bakery",
-  "country": "am",
+  "country": {
+    "code": "AM",
+    "name": "Armenia"
+  },
   "business_key": "am-273110123456",
   "registration_number": "273110123456",
   "identity_host": "yerevanapricot.am.to.co",
   "domains": [
     "yerevanapricot.example"
   ],
-  "public_key": "0Ba1KJ7JLL6Dbts3xpum5tmhS+X68Wv2zAnnyGatZKg=",
-  "signature": "gHVFpCGVbrXML8FZ01UsQJ54dD1LtodtxbWJFBvBSYXA14jDRobaHCfC5DmbJBEX55mk6ptqTPIxIsz417C0CA=="
+  "public_key": "HPvrCo3nnzpPsiNImjHlZnBf9yp/G8MnCzY8SGIOgCc=",
+  "signature": "8BQPOzitsJbL1Bdq+7hpdBxIANSDh9lj/vTFTnVotDrBwikiFq688O9uSzlDDkJjL/ILV99b8Hsb3zNSb/5LCQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain yerevanapricot.example --dns-value 'v=abiz1;k=am-273110123456;h=yerevanapricot.am.to.co;p=0Ba1KJ7JLL6Dbts3xpum5tmhS+X68Wv2zAnnyGatZKg='
+python scripts/validate.py record.json --domain yerevanapricot.example --dns-value 'v=abiz1;k=am-273110123456;h=yerevanapricot.am.to.co;p=HPvrCo3nnzpPsiNImjHlZnBf9yp/G8MnCzY8SGIOgCc='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Armenia with a record hosted by to.co might use the host `yerevanapricot.am.to.co`, giving the DNS value `v=abiz1;k=am-273110123456;h=yerevanapricot.am.to.co;p=0Ba1KJ7JLL6Dbts3xpum5tmhS+X68Wv2zAnnyGatZKg=`. An unregistered business might use a town-based host such as `yerevanapricot-yerevan.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Armenia with a record hosted by to.co might use the host `yerevanapricot.am.to.co`, giving the DNS value `v=abiz1;k=am-273110123456;h=yerevanapricot.am.to.co;p=HPvrCo3nnzpPsiNImjHlZnBf9yp/G8MnCzY8SGIOgCc=`. An unregistered business might use a town-based host such as `yerevanapricot-yerevan.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

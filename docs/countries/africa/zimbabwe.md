@@ -45,7 +45,7 @@ Zimbabwe uses no subdivision: do not add a region, province or city code. SPEC s
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.bulawayofurniture.example. 300 IN TXT "v=abiz1;k=zw-12342023;h=bulawayofurniture.zw.to.co;p=ZJM0DZJBvkrp2DOWVK/+CfftnNuoRTkLy8iJ2OW20qA="
+_abiz.bulawayofurniture.example. 300 IN TXT "v=abiz1;k=zw-12342023;h=bulawayofurniture.zw.to.co;p=5zw58ksUq1J8CjXZWXpkCsAGoWzTfngebncyxLuYCAI="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.bulawayofurniture.example. 300 IN TXT "v=abiz1;h=bulawayofurniture.zw.to.co;p=ZJM0DZJBvkrp2DOWVK/+CfftnNuoRTkLy8iJ2OW20qA="
+_abiz.bulawayofurniture.example. 300 IN TXT "v=abiz1;h=bulawayofurniture.zw.to.co;p=5zw58ksUq1J8CjXZWXpkCsAGoWzTfngebncyxLuYCAI="
 ```
 
 The business record served as `application/json` at `https://bulawayofurniture.zw.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://bulawayofurniture.z
 {
   "record_version": "abiz1",
   "business_name": "Bulawayo Furniture Makers",
-  "country": "zw",
+  "country": {
+    "code": "ZW",
+    "name": "Zimbabwe"
+  },
   "business_key": "zw-12342023",
   "registration_number": "12342023",
   "identity_host": "bulawayofurniture.zw.to.co",
   "domains": [
     "bulawayofurniture.example"
   ],
-  "public_key": "ZJM0DZJBvkrp2DOWVK/+CfftnNuoRTkLy8iJ2OW20qA=",
-  "signature": "NEf0JHkyRmbDNOGDrc23xtMe2DFiH0jQfCoEEBWw1AJHhpbU5BFYfX48R9DGAUYZGkEoOtG5lGravh3pKuxlAg=="
+  "public_key": "5zw58ksUq1J8CjXZWXpkCsAGoWzTfngebncyxLuYCAI=",
+  "signature": "PL7M8nCYxEcilNQaLjxbyrQxjP6EsND3NhJkSURQZi6UFaMX/E2sjMt95/tw0y5i6OtcWj+cXRA8qSlZBhk0DA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain bulawayofurniture.example --dns-value 'v=abiz1;k=zw-12342023;h=bulawayofurniture.zw.to.co;p=ZJM0DZJBvkrp2DOWVK/+CfftnNuoRTkLy8iJ2OW20qA='
+python scripts/validate.py record.json --domain bulawayofurniture.example --dns-value 'v=abiz1;k=zw-12342023;h=bulawayofurniture.zw.to.co;p=5zw58ksUq1J8CjXZWXpkCsAGoWzTfngebncyxLuYCAI='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Zimbabwe with a record hosted by to.co might use the host `bulawayofurniture.zw.to.co`, giving the DNS value `v=abiz1;k=zw-12342023;h=bulawayofurniture.zw.to.co;p=ZJM0DZJBvkrp2DOWVK/+CfftnNuoRTkLy8iJ2OW20qA=`. An unregistered business might use a town-based host such as `bulawayofurniture-bulawayo.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Zimbabwe with a record hosted by to.co might use the host `bulawayofurniture.zw.to.co`, giving the DNS value `v=abiz1;k=zw-12342023;h=bulawayofurniture.zw.to.co;p=5zw58ksUq1J8CjXZWXpkCsAGoWzTfngebncyxLuYCAI=`. An unregistered business might use a town-based host such as `bulawayofurniture-bulawayo.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

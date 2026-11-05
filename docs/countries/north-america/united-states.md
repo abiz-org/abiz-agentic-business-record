@@ -44,7 +44,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw="
+_abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=Idjfm8/s9cI49f+th4cJiI4WDgAm3tU9KBdnHnBS5H4="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -61,14 +61,17 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Pine Hollow Woodworks LLC",
-  "country": "us",
+  "country": {
+    "code": "US",
+    "name": "United States"
+  },
   "business_key": "us-de-7654321",
   "registration_number": "7654321",
   "identity_host": "pinehollowwoodworks.de.us.to.co",
   "domains": [
     "pinehollowwoodworks.example"
   ],
-  "public_key": "3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw=",
+  "public_key": "Idjfm8/s9cI49f+th4cJiI4WDgAm3tU9KBdnHnBS5H4=",
   "description": "Handmade furniture and custom cabinetry.",
   "website": "https://pinehollowwoodworks.example",
   "locations": [
@@ -150,7 +153,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "VRy4P2T9iorHSt9hqdwIsBWvWwgVK63yLkX9N/u2JnL50IXEW6XJnY8BlGQN0teEFwJV3nfsLcAao/rxy7MZDQ=="
+  "signature": "L3AsHVwY7/soN0rCCuElM/78cgc+nDddgjg9tYRQVylKu7dDerRenj9hdsdYKQ46PJNhVIa2ft31RoNeyGxDCQ=="
 }
 ```
 
@@ -163,7 +166,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain pinehollowwoodworks.example \
-  --dns-value 'v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw='
+  --dns-value 'v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=Idjfm8/s9cI49f+th4cJiI4WDgAm3tU9KBdnHnBS5H4='
 ```
 
 ## 3. Using a provider and MCP
@@ -180,7 +183,7 @@ To see how one provider describes this for US businesses, see [ABIZ records on t
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=3/NCib2ex0hJbiYn6Rea02YfNKiKmLeTUQDQqCcV0pw="
+  _abiz.pinehollowwoodworks.example. 300 IN TXT "v=abiz1;k=us-de-7654321;h=pinehollowwoodworks.de.us.to.co;p=Idjfm8/s9cI49f+th4cJiI4WDgAm3tU9KBdnHnBS5H4="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

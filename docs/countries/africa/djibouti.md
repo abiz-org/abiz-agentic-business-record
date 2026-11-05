@@ -45,7 +45,7 @@ Djibouti n’utilise pas de subdivision : n’ajoutez ni code de région, ni cod
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg="
+_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=OupRAeozwczWkDWGV+86fbRCxTPnfyuv2yaeVvpWx1A="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg="
+_abiz.transitdugolfe.example. 300 IN TXT "v=abiz1;h=transitdugolfe.dj.to.co;p=OupRAeozwczWkDWGV+86fbRCxTPnfyuv2yaeVvpWx1A="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://transitdugolfe.dj.to.co` :
@@ -62,22 +62,25 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://tra
 {
   "record_version": "abiz1",
   "business_name": "Transit du Golfe",
-  "country": "dj",
+  "country": {
+    "code": "DJ",
+    "name": "Djibouti"
+  },
   "business_key": "dj-RCS2023B1234",
   "registration_number": "RCS2023B1234",
   "identity_host": "transitdugolfe.dj.to.co",
   "domains": [
     "transitdugolfe.example"
   ],
-  "public_key": "Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg=",
-  "signature": "qhY09PW13GNRv9uKDadtiTPMcL0LQxDdzEnDF5jnSW2p4dG8arbjJkypitsNulMAHe5L3qMTfa4/fkv2aCd5CQ=="
+  "public_key": "OupRAeozwczWkDWGV+86fbRCxTPnfyuv2yaeVvpWx1A=",
+  "signature": "vubAWHpjiO8QQJS87uSktoANGRcdn3ejSjTrt4iMlBfYOp2XLxdJ6zrEGW5C6zgkfzt7IFHXYgl2LLb+7RlxBw=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain transitdugolfe.example --dns-value 'v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg='
+python scripts/validate.py record.json --domain transitdugolfe.example --dns-value 'v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=OupRAeozwczWkDWGV+86fbRCxTPnfyuv2yaeVvpWx1A='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée à Djibouti dont la fiche est hébergée par to.co pourrait utiliser l’hôte `transitdugolfe.dj.to.co`, ce qui donne la valeur DNS `v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=Ut9RjIQcd7zNQT1fjapVcpHFiHgostTt1KWKwTB6GGg=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `transitdugolfe-djibouti.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée à Djibouti dont la fiche est hébergée par to.co pourrait utiliser l’hôte `transitdugolfe.dj.to.co`, ce qui donne la valeur DNS `v=abiz1;k=dj-RCS2023B1234;h=transitdugolfe.dj.to.co;p=OupRAeozwczWkDWGV+86fbRCxTPnfyuv2yaeVvpWx1A=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `transitdugolfe-djibouti.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

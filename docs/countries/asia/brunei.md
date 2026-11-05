@@ -45,7 +45,7 @@ Brunei Darussalam tidak menggunakan kod subbahagian: jangan tambah kod negeri, d
 Terbitkan tepat satu rekod TXT bernama `_abiz` di bawah domain anda, dalam bentuk padat tanpa ruang, dengan `v=abiz1` di hadapan:
 
 ```dns
-_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240="
+_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=UKEDi8d8zQTlTZsaQ7Ple5KiexZrIbtR3ptJSWpsjM0="
 ```
 
 Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. Jangan sekali-kali menyalinnya: terbitkan kunci anda sendiri. Pengisytiharan ABIZ 1.1 mesti mengandungi `p`. Semua nama, nombor dan domain di halaman ini adalah rekaan.
@@ -53,7 +53,7 @@ Nilai `p` di atas ialah kunci contoh pakai buang yang dijana untuk halaman ini. 
 Tanpa tag pilihan `k`, rekod ini juga sah:
 
 ```dns
-_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240="
+_abiz.kopikampongayer.example. 300 IN TXT "v=abiz1;h=kopikampongayer.bn.to.co;p=UKEDi8d8zQTlTZsaQ7Ple5KiexZrIbtR3ptJSWpsjM0="
 ```
 
 Rekod perniagaan yang disediakan sebagai `application/json` di `https://kopikampongayer.bn.to.co`:
@@ -62,22 +62,25 @@ Rekod perniagaan yang disediakan sebagai `application/json` di `https://kopikamp
 {
   "record_version": "abiz1",
   "business_name": "Kedai Kopi Kampong Ayer",
-  "country": "bn",
+  "country": {
+    "code": "BN",
+    "name": "Brunei"
+  },
   "business_key": "bn-RC00012345",
   "registration_number": "RC00012345",
   "identity_host": "kopikampongayer.bn.to.co",
   "domains": [
     "kopikampongayer.example"
   ],
-  "public_key": "sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240=",
-  "signature": "DtVz+TPNp2HlJeACYDy3gitC2PBWnIhoDUBAN91H683OSKvm4LiMOCIhgL4nDgPFdYVWlS2PkqHELpmBAFgdBA=="
+  "public_key": "UKEDi8d8zQTlTZsaQ7Ple5KiexZrIbtR3ptJSWpsjM0=",
+  "signature": "NJGlLCLOEay0dw30hgL3QWdEq6IrWSwKatqqF78Hzg4A644RfcH4aDxBuC6gOiSjQS4TqAzqVP0gWW/XvJ3lBw=="
 }
 ```
 
 Untuk menyemak rekod sebelum diterbitkan, jalankan pengesah rujukan daripada salinan repositori ini:
 
 ```sh
-python scripts/validate.py record.json --domain kopikampongayer.example --dns-value 'v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240='
+python scripts/validate.py record.json --domain kopikampongayer.example --dns-value 'v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=UKEDi8d8zQTlTZsaQ7Ple5KiexZrIbtR3ptJSWpsjM0='
 ```
 
 Anda boleh menempatkan sendiri rekod JSON pada mana-mana pelayan HTTPS, atau menggunakan mana-mana penyedia yang serasi. ABIZ tidak mewajibkan penyedia tertentu.
@@ -86,7 +89,7 @@ Anda boleh menempatkan sendiri rekod JSON pada mana-mana pelayan HTTPS, atau men
 
 Model Context Protocol (MCP) ialah protokol terbuka yang membolehkan pembantu AI memanggil alat dan membaca data daripada pelayan luar dengan cara yang standard. Rekod perniagaan boleh mengandungi medan pilihan `mcp_server_url`, iaitu alamat HTTPS pelayan MCP perniagaan, contohnya untuk tempahan atau maklumat produk. ABIZ tidak menjamin pelayan itu; alat mesti menggunakan kawalan akses sendiri (SPEC bahagian 4.2.6).
 
-Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Brunei Darussalam yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `kopikampongayer.bn.to.co`, dengan nilai DNS `v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=sJZdvOixahHFykwTfY0QFVslpceY9Z/BLMyfO5X7240=`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `kopikampongayer-bandarseribegawan.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
+Penyedia boleh menempatkan rekod dan menerbitkan penunjuk DNS bagi pihak anda. Contohnya, syarikat berdaftar di Brunei Darussalam yang rekodnya ditempatkan oleh to.co boleh menggunakan hos `kopikampongayer.bn.to.co`, dengan nilai DNS `v=abiz1;k=bn-RC00012345;h=kopikampongayer.bn.to.co;p=UKEDi8d8zQTlTZsaQ7Ple5KiexZrIbtR3ptJSWpsjM0=`. Perniagaan yang tidak berdaftar boleh menggunakan hos berasaskan nama bandar seperti `kopikampongayer-bandarseribegawan.biz.to.co`. Mana-mana penyedia serasi, atau pelayan anda sendiri, berfungsi dengan cara yang sama.
 
 ## 4. Kunci dan tandatangan (ABIZ 1.1)
 

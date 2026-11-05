@@ -45,7 +45,7 @@ São Tomé e Príncipe não usa subdivisão: não acrescente código de região,
 Publique um único registo TXT em `_abiz` sob o seu domínio, na forma compacta, sem espaços e com `v=abiz1` em primeiro lugar:
 
 ```dns
-_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E="
+_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=Qwz5AnH64IFkGIRmQsqwnCYTbKIUmLTzrUl0uGWD88s="
 ```
 
 O valor `p` acima é uma chave de exemplo descartável, gerada para esta página. Nunca a copie: publique a sua própria chave. Uma asserção ABIZ 1.1 tem de incluir `p`. Todos os nomes, números e domínios desta página são fictícios.
@@ -53,7 +53,7 @@ O valor `p` acima é uma chave de exemplo descartável, gerada para esta página
 Sem as etiquetas opcionais `k` e `p`, isto também é válido:
 
 ```dns
-_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E="
+_abiz.chocolatesequador.example. 300 IN TXT "v=abiz1;h=chocolatesequador.st.to.co;p=Qwz5AnH64IFkGIRmQsqwnCYTbKIUmLTzrUl0uGWD88s="
 ```
 
 O registo da empresa servido como `application/json` em `https://chocolatesequador.st.to.co`:
@@ -62,22 +62,25 @@ O registo da empresa servido como `application/json` em `https://chocolatesequad
 {
   "record_version": "abiz1",
   "business_name": "Chocolates do Equador",
-  "country": "st",
+  "country": {
+    "code": "ST",
+    "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe"
+  },
   "business_key": "st-123456789",
   "registration_number": "123456789",
   "identity_host": "chocolatesequador.st.to.co",
   "domains": [
     "chocolatesequador.example"
   ],
-  "public_key": "K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E=",
-  "signature": "t2D0C+yQgRzaWFqCCA+JcUU1zYSXSbzKgwqwxI/Jr2q+tkLkLio5utMHvnU81kfIvf/kYcSiv1c3v35Hv0tlAQ=="
+  "public_key": "Qwz5AnH64IFkGIRmQsqwnCYTbKIUmLTzrUl0uGWD88s=",
+  "signature": "wUF7PnEMKysKqR2VdcMO6w+RzOdnf43bNIU9hz+xRDdk+/Ie3rRfl3uHpsy7vbzgesjXjoyucShvQ8zS+5aaAA=="
 }
 ```
 
 Para verificar uma ficha antes de a publicar, execute o validador de referência a partir de uma cópia deste repositório:
 
 ```sh
-python scripts/validate.py record.json --domain chocolatesequador.example --dns-value 'v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E='
+python scripts/validate.py record.json --domain chocolatesequador.example --dns-value 'v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=Qwz5AnH64IFkGIRmQsqwnCYTbKIUmLTzrUl0uGWD88s='
 ```
 
 Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou recorrer a qualquer fornecedor compatível. O ABIZ não exige um fornecedor específico.
@@ -86,7 +89,7 @@ Pode alojar a ficha JSON por conta própria, em qualquer servidor HTTPS, ou reco
 
 O Model Context Protocol (MCP) é um protocolo aberto que permite aos assistentes de IA chamar ferramentas e ler dados de servidores externos de forma normalizada. Uma ficha pode incluir o campo opcional `mcp_server_url`, o endereço HTTPS de um servidor MCP da empresa, por exemplo para reservas ou informação sobre produtos. O ABIZ não garante esse servidor: as ferramentas têm de aplicar os seus próprios controlos de acesso (secção 4.2.6 da SPEC).
 
-Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em São Tomé e Príncipe com a ficha alojada no to.co poderia usar o anfitrião `chocolatesequador.st.to.co`, o que dá o valor DNS `v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=K6Fj1Ap92mOpscDR30defeytMBLLfC2XYq5Uhs6KQ7E=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `chocolatesequador-saotome.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
+Um fornecedor pode alojar a ficha e publicar o ponteiro DNS por si. Por exemplo, uma sociedade registada em São Tomé e Príncipe com a ficha alojada no to.co poderia usar o anfitrião `chocolatesequador.st.to.co`, o que dá o valor DNS `v=abiz1;k=st-123456789;h=chocolatesequador.st.to.co;p=Qwz5AnH64IFkGIRmQsqwnCYTbKIUmLTzrUl0uGWD88s=`. Uma empresa não registada poderia usar um anfitrião baseado na localidade, como `chocolatesequador-saotome.biz.to.co`. Qualquer fornecedor compatível, ou o seu próprio servidor, funciona da mesma maneira.
 
 ## 4. Chaves e assinaturas (ABIZ 1.1)
 

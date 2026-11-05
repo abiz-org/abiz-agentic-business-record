@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.rheintaltreuhand.example. 300 IN TXT "v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=XSZO65X4GwFZb2rKeVznpwV4bfNRkS2Q4lJ4FykcKAQ="
+_abiz.rheintaltreuhand.example. 300 IN TXT "v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=DuFRKPJJTmMVtOwMeETxZpK8p13mD6dMOqihbJGQMX8="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` und `p` sind Pflicht, `k` ist optional.
@@ -58,15 +58,18 @@ Der Eintrag, der unter `https://rheintaltreuhand.li.to.co` als `application/json
 {
   "record_version": "abiz1",
   "business_name": "Rheintal Treuhand AG",
-  "country": "li",
+  "country": {
+    "code": "LI",
+    "name": "Liechtenstein"
+  },
   "business_key": "li-FL00021234567",
   "registration_number": "FL00021234567",
   "identity_host": "rheintaltreuhand.li.to.co",
   "domains": [
     "rheintaltreuhand.example"
   ],
-  "public_key": "XSZO65X4GwFZb2rKeVznpwV4bfNRkS2Q4lJ4FykcKAQ=",
-  "description": "Treuhandbüro in Vaduz.",
+  "public_key": "DuFRKPJJTmMVtOwMeETxZpK8p13mD6dMOqihbJGQMX8=",
+  "description": "Treuhandb\u00fcro in Vaduz.",
   "website": "https://rheintaltreuhand.example",
   "locations": [
     {
@@ -80,14 +83,14 @@ Der Eintrag, der unter `https://rheintaltreuhand.li.to.co` als `application/json
       "public": true
     }
   ],
-  "signature": "xkFgNdLPZNIRF+mXla9nPJuvN5chLwwDar3bHPoMKLedM9zggxKL5cKGPlt4mAIhW17GdF+oGAd+r6EW1mSdBQ=="
+  "signature": "h4FJGi4gSxziFDOmY6Fdi/r+cB+df6TSHAAC+6rvWeUpq36KZp/z7m9n46rshWC778rbhtB+Y5N93sOf8N20BQ=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain rheintaltreuhand.example --dns-value 'v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=XSZO65X4GwFZb2rKeVznpwV4bfNRkS2Q4lJ4FykcKAQ='
+python scripts/validate.py record.json --domain rheintaltreuhand.example --dns-value 'v=abiz1;k=li-FL00021234567;h=rheintaltreuhand.li.to.co;p=DuFRKPJJTmMVtOwMeETxZpK8p13mD6dMOqihbJGQMX8='
 ```
 
 ### Selbst hosten oder über einen Anbieter

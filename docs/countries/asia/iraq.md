@@ -47,7 +47,7 @@ iq-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.tigrisprint.example. 300 IN TXT "v=abiz1;k=iq-12345;h=tigrisprint.iq.to.co;p=15MAodpx/gABunLFT5d1YrczTNg7Leh3FuL6s5vyi7Y="
+_abiz.tigrisprint.example. 300 IN TXT "v=abiz1;k=iq-12345;h=tigrisprint.iq.to.co;p=8OHY5J39SSvpJB/tiPa4YNPT1mfPcYTD2esld+K9W5s="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.tigrisprint.example. 300 IN TXT "v=abiz1;k=iq-12345;h=tigrisprint.iq.to.co
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.tigrisprint.example. 300 IN TXT "v=abiz1;h=tigrisprint.iq.to.co;p=15MAodpx/gABunLFT5d1YrczTNg7Leh3FuL6s5vyi7Y="
+_abiz.tigrisprint.example. 300 IN TXT "v=abiz1;h=tigrisprint.iq.to.co;p=8OHY5J39SSvpJB/tiPa4YNPT1mfPcYTD2esld+K9W5s="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://tigrisprint.iq.to.co`:
@@ -63,23 +63,26 @@ _abiz.tigrisprint.example. 300 IN TXT "v=abiz1;h=tigrisprint.iq.to.co;p=15MAodpx
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "مطبعة دجلة",
-  "country": "iq",
+  "business_name": "\u0645\u0637\u0628\u0639\u0629 \u062f\u062c\u0644\u0629",
+  "country": {
+    "code": "IQ",
+    "name": "Iraq"
+  },
   "business_key": "iq-12345",
   "registration_number": "12345",
   "identity_host": "tigrisprint.iq.to.co",
   "domains": [
     "tigrisprint.example"
   ],
-  "public_key": "15MAodpx/gABunLFT5d1YrczTNg7Leh3FuL6s5vyi7Y=",
-  "signature": "SfVNTcShe+L45yz7vsmhATnA0n5gj+/Y1XOPtGiUPPluc3jvZVEef9XBzornGV7d8T0+iAj6SnXFidL4BctnCA=="
+  "public_key": "8OHY5J39SSvpJB/tiPa4YNPT1mfPcYTD2esld+K9W5s=",
+  "signature": "hPjnT2uLXgEGvcAGsHWCVI7xM4Q/vidfXY/mDBAb+fTKIoldWoBB8sa+XdnUD5esS1og54L1uIW4BGrtDIknAQ=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain tigrisprint.example --dns-value 'v=abiz1;k=iq-12345;h=tigrisprint.iq.to.co;p=15MAodpx/gABunLFT5d1YrczTNg7Leh3FuL6s5vyi7Y='
+python scripts/validate.py record.json --domain tigrisprint.example --dns-value 'v=abiz1;k=iq-12345;h=tigrisprint.iq.to.co;p=8OHY5J39SSvpJB/tiPa4YNPT1mfPcYTD2esld+K9W5s='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain tigrisprint.example --dns-value 
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في العراق يستضيف to.co سجلها المضيف `tigrisprint.iq.to.co`، فتكون قيمة DNS هي `v=abiz1;k=iq-12345;h=tigrisprint.iq.to.co;p=15MAodpx/gABunLFT5d1YrczTNg7Leh3FuL6s5vyi7Y=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `tigrisprint-baghdad.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في العراق يستضيف to.co سجلها المضيف `tigrisprint.iq.to.co`، فتكون قيمة DNS هي `v=abiz1;k=iq-12345;h=tigrisprint.iq.to.co;p=8OHY5J39SSvpJB/tiPa4YNPT1mfPcYTD2esld+K9W5s=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `tigrisprint-baghdad.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

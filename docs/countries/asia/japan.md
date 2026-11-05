@@ -43,7 +43,7 @@ jp-<registration-number>
 ドメインの`_abiz`に、TXTレコードを1件だけ、空白のない簡潔な形式で、`v=abiz1`を先頭にして公開します。
 
 ```dns
-_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE="
+_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=zNyRpwNgyWpUKi/iMZt5ugZPMVpPUiC1xoK8e//HDn0="
 ```
 
 上の`p`の値は、このページ用に生成した使い捨ての例示用鍵です。決してコピーしないでください。自分の鍵を公開してください。ABIZ 1.1のアサーションには`p`が必要です。このページの名称、番号、ドメインはすべて架空のものです。
@@ -51,7 +51,7 @@ _abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;k=jp-1234567890123;h=yamadas
 任意の`k`を省いた次の形も有効です。
 
 ```dns
-_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE="
+_abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;h=yamadaseisakusho.jp.to.co;p=zNyRpwNgyWpUKi/iMZt5ugZPMVpPUiC1xoK8e//HDn0="
 ```
 
 `https://yamadaseisakusho.jp.to.co`で`application/json`として提供する事業者レコード：
@@ -59,23 +59,26 @@ _abiz.yamadaseisakusho.example. 300 IN TXT "v=abiz1;h=yamadaseisakusho.jp.to.co;
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "株式会社山田製作所",
-  "country": "jp",
+  "business_name": "\u682a\u5f0f\u4f1a\u793e\u5c71\u7530\u88fd\u4f5c\u6240",
+  "country": {
+    "code": "JP",
+    "name": "Japan"
+  },
   "business_key": "jp-1234567890123",
   "registration_number": "1234567890123",
   "identity_host": "yamadaseisakusho.jp.to.co",
   "domains": [
     "yamadaseisakusho.example"
   ],
-  "public_key": "VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE=",
-  "signature": "ZAuaWYREub6XOo88Iqmqxyozitn4yZCeNY0mub467bCweNt8hX5UANfX33z1FJRVIRUA8vb5eKIRC0fhKC5yAw=="
+  "public_key": "zNyRpwNgyWpUKi/iMZt5ugZPMVpPUiC1xoK8e//HDn0=",
+  "signature": "RqiRgdWF2tQPPvzuQuJLMfYou72O5iVR/N+m3wOCNBr+IwGHG3aiVSZG5luPLLG4gnnyJcBeK1O1lMRkBww0Cg=="
 }
 ```
 
 公開前にレコードを確認するには、このリポジトリのコピーで参照用バリデーターを実行します。
 
 ```sh
-python scripts/validate.py record.json --domain yamadaseisakusho.example --dns-value 'v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE='
+python scripts/validate.py record.json --domain yamadaseisakusho.example --dns-value 'v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=zNyRpwNgyWpUKi/iMZt5ugZPMVpPUiC1xoK8e//HDn0='
 ```
 
 JSONレコードは任意のHTTPSサーバーで自分でホストしても、互換性のある任意のプロバイダーを使っても構いません。ABIZは特定のプロバイダーを必要としません。
@@ -84,7 +87,7 @@ JSONレコードは任意のHTTPSサーバーで自分でホストしても、�
 
 Model Context Protocol（MCP）は、AIアシスタントが外部サーバーのツールを呼び出したりデータを読んだりするための、標準化されたオープンなプロトコルです。事業者レコードには任意で`mcp_server_url`（事業者のMCPサーバーのHTTPS URL。予約や商品情報などに使います）を含められます。ABIZはそのサーバーを保証しません。ツール側で独自のアクセス制御を行う必要があります（SPEC 4.2.6節）。
 
-プロバイダーにレコードのホスティングとDNSポインタの公開を任せることもできます。たとえば、to.coでレコードをホストする日本の登記済み法人なら、ホスト`yamadaseisakusho.jp.to.co`を使い、DNSの値は`v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=VU6KejF2F+CJuIW2OcrK4opUygzruzVdY8gwysWAqSE=`になります。未登記の事業者なら、`yamadaseisakusho-osaka.biz.to.co`のような地名を含むホストを使うこともできます。互換性のある他のプロバイダーや自社サーバーでも同じように機能します。
+プロバイダーにレコードのホスティングとDNSポインタの公開を任せることもできます。たとえば、to.coでレコードをホストする日本の登記済み法人なら、ホスト`yamadaseisakusho.jp.to.co`を使い、DNSの値は`v=abiz1;k=jp-1234567890123;h=yamadaseisakusho.jp.to.co;p=zNyRpwNgyWpUKi/iMZt5ugZPMVpPUiC1xoK8e//HDn0=`になります。未登記の事業者なら、`yamadaseisakusho-osaka.biz.to.co`のような地名を含むホストを使うこともできます。互換性のある他のプロバイダーや自社サーバーでも同じように機能します。
 
 ## 4. 鍵と署名（ABIZ 1.1）
 

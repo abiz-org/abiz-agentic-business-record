@@ -43,7 +43,7 @@ Indonesia tidak memakai kode wilayah: jangan menambahkan kode provinsi atau kota
 Terbitkan tepat satu catatan TXT bernama `_abiz` di bawah domain Anda, dalam bentuk ringkas tanpa spasi, dengan `v=abiz1` di depan:
 
 ```dns
-_abiz.kopigayo.example. 300 IN TXT "v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w="
+_abiz.kopigayo.example. 300 IN TXT "v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=mI+zH0MM/xw/aOhoi36PaMyZ20xihXI9zTij3ZR1UYs="
 ```
 
 Nilai `p` di atas adalah kunci contoh sekali pakai yang dibuat untuk halaman ini. Jangan pernah menyalinnya: terbitkan kunci Anda sendiri. Pernyataan ABIZ 1.1 wajib memuat `p`. Semua nama, nomor, dan domain di halaman ini fiktif.
@@ -51,7 +51,7 @@ Nilai `p` di atas adalah kunci contoh sekali pakai yang dibuat untuk halaman ini
 Tanpa tag opsional `k`, catatan ini juga sah:
 
 ```dns
-_abiz.kopigayo.example. 300 IN TXT "v=abiz1;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w="
+_abiz.kopigayo.example. 300 IN TXT "v=abiz1;h=kopigayo.id.to.co;p=mI+zH0MM/xw/aOhoi36PaMyZ20xihXI9zTij3ZR1UYs="
 ```
 
 Catatan usaha yang disajikan sebagai `application/json` di `https://kopigayo.id.to.co`:
@@ -60,22 +60,25 @@ Catatan usaha yang disajikan sebagai `application/json` di `https://kopigayo.id.
 {
   "record_version": "abiz1",
   "business_name": "Kopi Gayo Nusantara",
-  "country": "id",
+  "country": {
+    "code": "ID",
+    "name": "Indonesia"
+  },
   "business_key": "id-1234567890123",
   "registration_number": "1234567890123",
   "identity_host": "kopigayo.id.to.co",
   "domains": [
     "kopigayo.example"
   ],
-  "public_key": "dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w=",
-  "signature": "M+wv42BVAy9MTfXecSj5ojwBgtniZuaQbof26lkKTZu418pt9mrzTp+/LK5y6lo2NmEtGP0j7uY+hXNxB5SlDQ=="
+  "public_key": "mI+zH0MM/xw/aOhoi36PaMyZ20xihXI9zTij3ZR1UYs=",
+  "signature": "rtUbvMLBJw+1ja8aL+MATaFuIAU8xU5K8wvOyIX+yYFl5Ol+mVT4gChtOn7TEPhTur8ZOwAMj7eyvsQyVetxDQ=="
 }
 ```
 
 Untuk memeriksa catatan sebelum diterbitkan, jalankan validator rujukan dari salinan repositori ini:
 
 ```sh
-python scripts/validate.py record.json --domain kopigayo.example --dns-value 'v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w='
+python scripts/validate.py record.json --domain kopigayo.example --dns-value 'v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=mI+zH0MM/xw/aOhoi36PaMyZ20xihXI9zTij3ZR1UYs='
 ```
 
 Anda dapat meng-host catatan JSON sendiri di server HTTPS mana pun, atau memakai penyedia mana pun yang kompatibel. ABIZ tidak mewajibkan penyedia tertentu.
@@ -84,7 +87,7 @@ Anda dapat meng-host catatan JSON sendiri di server HTTPS mana pun, atau memakai
 
 Model Context Protocol (MCP) adalah protokol terbuka yang memungkinkan asisten AI memanggil alat dan membaca data dari server luar dengan cara yang baku. Catatan usaha dapat memuat kolom opsional `mcp_server_url`, yaitu alamat HTTPS server MCP milik usaha, misalnya untuk pemesanan atau informasi produk. ABIZ tidak menjamin server itu; alat harus menerapkan kontrol aksesnya sendiri (SPEC bagian 4.2.6).
 
-Penyedia dapat meng-host catatan dan menerbitkan penunjuk DNS untuk Anda. Misalnya, perusahaan terdaftar di Indonesia yang catatannya di-host oleh to.co dapat memakai host `kopigayo.id.to.co`, sehingga nilai DNS-nya `v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=dtDHyDPR7tnZCIou3cFwQxGO47BW/2esmInQa/cx+8w=`. Usaha yang tidak terdaftar dapat memakai host berbasis nama kota seperti `kopigayo-bandung.biz.to.co`. Penyedia kompatibel lain, atau server Anda sendiri, bekerja dengan cara yang sama.
+Penyedia dapat meng-host catatan dan menerbitkan penunjuk DNS untuk Anda. Misalnya, perusahaan terdaftar di Indonesia yang catatannya di-host oleh to.co dapat memakai host `kopigayo.id.to.co`, sehingga nilai DNS-nya `v=abiz1;k=id-1234567890123;h=kopigayo.id.to.co;p=mI+zH0MM/xw/aOhoi36PaMyZ20xihXI9zTij3ZR1UYs=`. Usaha yang tidak terdaftar dapat memakai host berbasis nama kota seperti `kopigayo-bandung.biz.to.co`. Penyedia kompatibel lain, atau server Anda sendiri, bekerja dengan cara yang sama.
 
 ## 4. Kunci dan tanda tangan (ABIZ 1.1)
 

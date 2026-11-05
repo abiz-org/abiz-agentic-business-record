@@ -47,7 +47,7 @@ Iran uses no subdivision: do not add a region, province or city code. SPEC secti
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.isfahantile.example. 300 IN TXT "v=abiz1;k=ir-10101234567;h=www.isfahantile.example;p=2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4="
+_abiz.isfahantile.example. 300 IN TXT "v=abiz1;k=ir-10101234567;h=www.isfahantile.example;p=q28bzxNEznQJjnw2MSLsnDPH02R6JF1nh3ekHYMGxMo="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -55,7 +55,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.isfahantile.example. 300 IN TXT "v=abiz1;h=www.isfahantile.example;p=2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4="
+_abiz.isfahantile.example. 300 IN TXT "v=abiz1;h=www.isfahantile.example;p=q28bzxNEznQJjnw2MSLsnDPH02R6JF1nh3ekHYMGxMo="
 ```
 
 The business record served as `application/json` at `https://www.isfahantile.example/?format=json`:
@@ -64,22 +64,25 @@ The business record served as `application/json` at `https://www.isfahantile.exa
 {
   "record_version": "abiz1",
   "business_name": "Isfahan Tile Workshop",
-  "country": "ir",
+  "country": {
+    "code": "IR",
+    "name": "Iran"
+  },
   "business_key": "ir-10101234567",
   "registration_number": "10101234567",
   "identity_host": "www.isfahantile.example",
   "domains": [
     "isfahantile.example"
   ],
-  "public_key": "2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4=",
-  "signature": "u50LdIaMHRVm3OhI1n5KTZcKl6SvypkXGD8Z3wXTvbp7iIC9+VBB0gulccqmKFNdnLvNluvG7y6L/CaeaAYdDA=="
+  "public_key": "q28bzxNEznQJjnw2MSLsnDPH02R6JF1nh3ekHYMGxMo=",
+  "signature": "1AOFPjguIkiL094tP/drHPbWx62qUXxUsUGCq9KwIRD+Bg2cqk9M9zXPivORi1vd1Owl28NW0qy9gISKh86mCQ=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain isfahantile.example --dns-value 'v=abiz1;k=ir-10101234567;h=www.isfahantile.example;p=2KQdhmNQlLHgEiF19mXM6QcoTF8JLqC0nyMYL4z+ZL4='
+python scripts/validate.py record.json --domain isfahantile.example --dns-value 'v=abiz1;k=ir-10101234567;h=www.isfahantile.example;p=q28bzxNEznQJjnw2MSLsnDPH02R6JF1nh3ekHYMGxMo='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.

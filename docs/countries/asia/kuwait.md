@@ -47,7 +47,7 @@ kw-<registration-number>
 انشر سجل TXT واحدًا فقط عند `_abiz` تحت نطاقك، بالصيغة المضغوطة دون مسافات، على أن يأتي `v=abiz1` أولًا:
 
 ```dns
-_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk="
+_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=F6uqazyQBXv0X7Aiwu02o2mcfiTFrYTUOEgiAePRiq0="
 ```
 
 قيمة `p` أعلاه مفتاح مثال مؤقت أُنشئ لهذه الصفحة. لا تنسخه أبدًا: انشر مفتاحك الخاص. يجب أن يتضمن تأكيد ABIZ 1.1 القيمة `p`. جميع الأسماء والأرقام والنطاقات في هذه الصفحة وهمية.
@@ -55,7 +55,7 @@ _abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;k=kw-123456;h=gulfrestaurant.k
 ومن دون الوسم الاختياري `k`، تكون هذه القيمة صالحة أيضًا:
 
 ```dns
-_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk="
+_abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;h=gulfrestaurant.kw.to.co;p=F6uqazyQBXv0X7Aiwu02o2mcfiTFrYTUOEgiAePRiq0="
 ```
 
 سجل المنشأة الذي يُقدَّم بصيغة `application/json` على العنوان `https://gulfrestaurant.kw.to.co`:
@@ -63,23 +63,26 @@ _abiz.gulfrestaurant.example. 300 IN TXT "v=abiz1;h=gulfrestaurant.kw.to.co;p=TE
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "مطعم الخليج",
-  "country": "kw",
+  "business_name": "\u0645\u0637\u0639\u0645 \u0627\u0644\u062e\u0644\u064a\u062c",
+  "country": {
+    "code": "KW",
+    "name": "Kuwait"
+  },
   "business_key": "kw-123456",
   "registration_number": "123456",
   "identity_host": "gulfrestaurant.kw.to.co",
   "domains": [
     "gulfrestaurant.example"
   ],
-  "public_key": "TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk=",
-  "signature": "GNshtxnqks4QCEREqKI06zcp20vVxWkzvhcKtch0O1cTdJzpFVePvhi0ERsIhiSJhNvuY692aMSlzcjEKJ23BA=="
+  "public_key": "F6uqazyQBXv0X7Aiwu02o2mcfiTFrYTUOEgiAePRiq0=",
+  "signature": "lKIjXAiCNSxOge8XMMYaTjwOwIchGVDaDYixJdRjgCzmUe17ZWb9NOfddyChcapzzL33gkEY0L1WbSkRl+ZLBg=="
 }
 ```
 
 للتحقق من السجل قبل نشره، شغّل أداة التحقق المرجعية من نسخة من هذا المستودع:
 
 ```sh
-python scripts/validate.py record.json --domain gulfrestaurant.example --dns-value 'v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk='
+python scripts/validate.py record.json --domain gulfrestaurant.example --dns-value 'v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=F6uqazyQBXv0X7Aiwu02o2mcfiTFrYTUOEgiAePRiq0='
 ```
 
 يمكنك استضافة سجل JSON بنفسك على أي خادم HTTPS، أو الاستعانة بأي مزوّد متوافق. لا تشترط ABIZ مزوّدًا بعينه.
@@ -88,7 +91,7 @@ python scripts/validate.py record.json --domain gulfrestaurant.example --dns-val
 
 بروتوكول Model Context Protocol ‏(MCP) بروتوكول مفتوح يتيح لمساعدي الذكاء الاصطناعي استدعاء الأدوات وقراءة البيانات من خوادم خارجية بطريقة موحّدة. يمكن أن يتضمن سجل المنشأة الحقل الاختياري `mcp_server_url`، وهو عنوان HTTPS لخادم MCP خاص بالمنشأة، مثلًا للحجوزات أو لمعلومات المنتجات. لا تضمن ABIZ هذا الخادم، وعلى الأدوات أن تطبق ضوابط الوصول الخاصة بها (القسم 4.2.6 من المواصفة).
 
-يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في الكويت يستضيف to.co سجلها المضيف `gulfrestaurant.kw.to.co`، فتكون قيمة DNS هي `v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=TEzAy/Y1LtVqg/n1Db6cKFB4emtCwjTe7ygHM4J21qk=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `gulfrestaurant-kuwaitcity.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
+يمكن لمزوّد أن يستضيف السجل وينشر مؤشر DNS نيابةً عنك. فمثلًا، قد تستخدم شركة مسجلة في الكويت يستضيف to.co سجلها المضيف `gulfrestaurant.kw.to.co`، فتكون قيمة DNS هي `v=abiz1;k=kw-123456;h=gulfrestaurant.kw.to.co;p=F6uqazyQBXv0X7Aiwu02o2mcfiTFrYTUOEgiAePRiq0=`. وقد تستخدم منشأة غير مسجلة مضيفًا مبنيًا على اسم مدينتها مثل `gulfrestaurant-kuwaitcity.biz.to.co`. ويعمل أي مزوّد متوافق، أو خادمك الخاص، بالطريقة نفسها.
 
 ## 4. المفاتيح والتواقيع (ABIZ 1.1)
 

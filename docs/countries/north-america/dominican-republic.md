@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg="
+_abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=L4cgFj6wTL7TmKtxmc7oJ48WwXjC6HsGzngcIdPB6Xs="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -47,14 +47,17 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Panadería La Esquina, S.R.L.",
-  "country": "do",
+  "business_name": "Panader\u00eda La Esquina, S.R.L.",
+  "country": {
+    "code": "DO",
+    "name": "Dominican Republic"
+  },
   "identity_host": "panaderialaesquina.do.to.co",
   "domains": [
     "panaderialaesquina.example"
   ],
-  "public_key": "+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg=",
-  "description": "Pan criollo, bizcochos y café.",
+  "public_key": "L4cgFj6wTL7TmKtxmc7oJ48WwXjC6HsGzngcIdPB6Xs=",
+  "description": "Pan criollo, bizcochos y caf\u00e9.",
   "website": "https://panaderialaesquina.example",
   "locations": [
     {
@@ -136,7 +139,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "ollzonMIYoiRFhOse+xK9Gy1xXrtt5qGcaoTXaHocfvItfectJQOMpLRbNdjzoi+ybZp/0dj7F7K8vMciWKVCQ=="
+  "signature": "fJP9T5JWt+fCGs7TVtTAVPQ0SurjIkGmUQB3nQVt58fCw4bgBxpO9XHRoZ2bYQ7zJboZHndjrui1HtzaONxRDQ=="
 }
 ```
 
@@ -149,7 +152,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain panaderialaesquina.example \
-  --dns-value 'v=abiz1;h=panaderialaesquina.do.to.co;p=+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg='
+  --dns-value 'v=abiz1;h=panaderialaesquina.do.to.co;p=L4cgFj6wTL7TmKtxmc7oJ48WwXjC6HsGzngcIdPB6Xs='
 ```
 
 ## 3. Proveedores y MCP
@@ -164,7 +167,7 @@ Por ejemplo, un proveedor puede alojar el registro de Panadería La Esquina en `
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=+FlKILnZjUdBbQFfMFkUyrEPDrSMNluAplZJkjKj4Eg="
+  _abiz.panaderialaesquina.example. 300 IN TXT "v=abiz1;h=panaderialaesquina.do.to.co;p=L4cgFj6wTL7TmKtxmc7oJ48WwXjC6HsGzngcIdPB6Xs="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

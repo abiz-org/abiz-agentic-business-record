@@ -41,7 +41,7 @@ Schlüssel werden ohne Beachtung der Groß- und Kleinschreibung verglichen. Ver�
 Veröffentlichen Sie genau einen ABIZ-TXT-Eintrag unter `_abiz` auf Ihrer Domain, in der kompakten Form ohne Leerzeichen:
 
 ```dns
-_abiz.uhrenatelierkeller.example. 300 IN TXT "v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=5NEGT89sUhadAeardUi+JnqvqLgy8M4Q1qffKx4qeUA="
+_abiz.uhrenatelierkeller.example. 300 IN TXT "v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=JbOOCzWO20gCO17fhuDpDWwU+luyvR353gLGccGgPMM="
 ```
 
 - `v=abiz1` muss am Anfang stehen. `h` und `p` sind Pflicht, `k` ist optional.
@@ -58,21 +58,24 @@ Der Eintrag, der unter `https://uhrenatelierkeller.ch.to.co` als `application/js
 {
   "record_version": "abiz1",
   "business_name": "Uhrenatelier Keller AG",
-  "country": "ch",
+  "country": {
+    "code": "CH",
+    "name": "Switzerland"
+  },
   "business_key": "ch-CHE123456789",
   "registration_number": "CHE123456789",
   "identity_host": "uhrenatelierkeller.ch.to.co",
   "domains": [
     "uhrenatelierkeller.example"
   ],
-  "public_key": "5NEGT89sUhadAeardUi+JnqvqLgy8M4Q1qffKx4qeUA=",
-  "description": "Uhrenatelier in Zürich.",
+  "public_key": "JbOOCzWO20gCO17fhuDpDWwU+luyvR353gLGccGgPMM=",
+  "description": "Uhrenatelier in Z\u00fcrich.",
   "website": "https://uhrenatelierkeller.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Zürich",
+        "locality": "Z\u00fcrich",
         "country": {
           "code": "CH"
         }
@@ -80,14 +83,14 @@ Der Eintrag, der unter `https://uhrenatelierkeller.ch.to.co` als `application/js
       "public": true
     }
   ],
-  "signature": "gF0uF8DE2IALxhYQi2KDGzHj0FIbhXhHoyDL3C6g5YwN036RhJRGUfi+y7898+La5tz6/63bMj9XhG86GRDmBw=="
+  "signature": "KiQXEMAqFQZORmo9yqudXih4iVt/UiZ9W48TIfu4InuLXjYd2KOSNkhLPP0EGzW76Y+uEz6+dtCoYzL7V5zYDA=="
 }
 ```
 
 Mit dem Referenz-Validator können Sie Eintrag und DNS-Wert lokal prüfen:
 
 ```sh
-python scripts/validate.py record.json --domain uhrenatelierkeller.example --dns-value 'v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=5NEGT89sUhadAeardUi+JnqvqLgy8M4Q1qffKx4qeUA='
+python scripts/validate.py record.json --domain uhrenatelierkeller.example --dns-value 'v=abiz1;k=ch-CHE123456789;h=uhrenatelierkeller.ch.to.co;p=JbOOCzWO20gCO17fhuDpDWwU+luyvR353gLGccGgPMM='
 ```
 
 ### Selbst hosten oder über einen Anbieter

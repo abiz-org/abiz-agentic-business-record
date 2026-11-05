@@ -45,7 +45,7 @@ Le Bénin n’utilise pas de subdivision : n’ajoutez ni code de région, ni co
 Publiez un seul enregistrement TXT à `_abiz` sous votre domaine, sous forme compacte, sans espaces, avec `v=abiz1` en premier :
 
 ```dns
-_abiz.couturezinsou.example. 300 IN TXT "v=abiz1;k=bj-RBCOT23B12345;h=couturezinsou.bj.to.co;p=0WhlncDOAoUid7I3bV75fw/WUfwRWNJoindpH8wkhnI="
+_abiz.couturezinsou.example. 300 IN TXT "v=abiz1;k=bj-RBCOT23B12345;h=couturezinsou.bj.to.co;p=gtyn/pBpRvHbWzCCbsHllqJd72cYkHs00YGH/rh1D3w="
 ```
 
 La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette page. Ne la copiez jamais : publiez votre propre clé. Une assertion ABIZ 1.1 doit inclure `p`. Tous les noms, numéros et domaines de cette page sont fictifs.
@@ -53,7 +53,7 @@ La valeur `p` ci-dessus est une clé d’exemple jetable, générée pour cette 
 Sans la balise facultative `k`, ceci est également valide :
 
 ```dns
-_abiz.couturezinsou.example. 300 IN TXT "v=abiz1;h=couturezinsou.bj.to.co;p=0WhlncDOAoUid7I3bV75fw/WUfwRWNJoindpH8wkhnI="
+_abiz.couturezinsou.example. 300 IN TXT "v=abiz1;h=couturezinsou.bj.to.co;p=gtyn/pBpRvHbWzCCbsHllqJd72cYkHs00YGH/rh1D3w="
 ```
 
 La fiche d’entreprise servie en `application/json` à l’adresse `https://couturezinsou.bj.to.co` :
@@ -62,22 +62,25 @@ La fiche d’entreprise servie en `application/json` à l’adresse `https://cou
 {
   "record_version": "abiz1",
   "business_name": "Atelier Couture Zinsou",
-  "country": "bj",
+  "country": {
+    "code": "BJ",
+    "name": "Benin"
+  },
   "business_key": "bj-RBCOT23B12345",
   "registration_number": "RBCOT23B12345",
   "identity_host": "couturezinsou.bj.to.co",
   "domains": [
     "couturezinsou.example"
   ],
-  "public_key": "0WhlncDOAoUid7I3bV75fw/WUfwRWNJoindpH8wkhnI=",
-  "signature": "fW+Hnv590r1OEUTp2ur4n2rcn25CvYlwBuK9M6ZK16WY6jtt2pfvijDkN989xvTzKWOh0q7jU2DYjEN+pK8cCQ=="
+  "public_key": "gtyn/pBpRvHbWzCCbsHllqJd72cYkHs00YGH/rh1D3w=",
+  "signature": "73XDW/MDMCZ5qg0+t5ZohTMWx+jnEx2ZZ82S0aBfBgDa4Y5jhqjbUeNlirrUaIy57K78fFY9iFtN6SBSdw5zBg=="
 }
 ```
 
 Pour vérifier une fiche avant de la publier, lancez le validateur de référence depuis une copie de ce dépôt :
 
 ```sh
-python scripts/validate.py record.json --domain couturezinsou.example --dns-value 'v=abiz1;k=bj-RBCOT23B12345;h=couturezinsou.bj.to.co;p=0WhlncDOAoUid7I3bV75fw/WUfwRWNJoindpH8wkhnI='
+python scripts/validate.py record.json --domain couturezinsou.example --dns-value 'v=abiz1;k=bj-RBCOT23B12345;h=couturezinsou.bj.to.co;p=gtyn/pBpRvHbWzCCbsHllqJd72cYkHs00YGH/rh1D3w='
 ```
 
 Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTTPS, ou passer par tout fournisseur compatible. ABIZ n’impose aucun fournisseur.
@@ -86,7 +89,7 @@ Vous pouvez héberger la fiche JSON vous-même, sur n’importe quel serveur HTT
 
 Le Model Context Protocol (MCP) est un protocole ouvert qui permet aux assistants d’IA d’appeler des outils et de lire des données sur des serveurs externes de manière standard. Une fiche peut contenir un champ facultatif `mcp_server_url`, l’adresse HTTPS d’un serveur MCP de l’entreprise, par exemple pour des réservations ou des informations sur les produits. ABIZ ne garantit pas ce serveur : les outils doivent appliquer leurs propres contrôles d’accès (section 4.2.6 de la SPEC).
 
-Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Bénin dont la fiche est hébergée par to.co pourrait utiliser l’hôte `couturezinsou.bj.to.co`, ce qui donne la valeur DNS `v=abiz1;k=bj-RBCOT23B12345;h=couturezinsou.bj.to.co;p=0WhlncDOAoUid7I3bV75fw/WUfwRWNJoindpH8wkhnI=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `couturezinsou-cotonou.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
+Un fournisseur peut héberger la fiche et publier le pointeur DNS pour vous. Par exemple, une société immatriculée au Bénin dont la fiche est hébergée par to.co pourrait utiliser l’hôte `couturezinsou.bj.to.co`, ce qui donne la valeur DNS `v=abiz1;k=bj-RBCOT23B12345;h=couturezinsou.bj.to.co;p=gtyn/pBpRvHbWzCCbsHllqJd72cYkHs00YGH/rh1D3w=`. Une entreprise non immatriculée pourrait utiliser un hôte fondé sur sa ville, comme `couturezinsou-cotonou.biz.to.co`. Tout fournisseur compatible, ou votre propre serveur, fonctionne de la même façon.
 
 ## 4. Clés et signatures (ABIZ 1.1)
 

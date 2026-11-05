@@ -45,7 +45,7 @@ Malawi uses no subdivision: do not add a region, province or city code. SPEC sec
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.lakeshorejoinery.example. 300 IN TXT "v=abiz1;k=mw-COYABC1234;h=lakeshorejoinery.mw.to.co;p=EW3qVKb9+gzEt8y2lPP/NoHXpnY5ZGVinAMOxPE1j9c="
+_abiz.lakeshorejoinery.example. 300 IN TXT "v=abiz1;k=mw-COYABC1234;h=lakeshorejoinery.mw.to.co;p=4U0XKPKu5d7GiBTCB+uma2A+QJ6aVFeikSoDxm6Stro="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.lakeshorejoinery.example. 300 IN TXT "v=abiz1;h=lakeshorejoinery.mw.to.co;p=EW3qVKb9+gzEt8y2lPP/NoHXpnY5ZGVinAMOxPE1j9c="
+_abiz.lakeshorejoinery.example. 300 IN TXT "v=abiz1;h=lakeshorejoinery.mw.to.co;p=4U0XKPKu5d7GiBTCB+uma2A+QJ6aVFeikSoDxm6Stro="
 ```
 
 The business record served as `application/json` at `https://lakeshorejoinery.mw.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://lakeshorejoinery.mw
 {
   "record_version": "abiz1",
   "business_name": "Lake Shore Joinery",
-  "country": "mw",
+  "country": {
+    "code": "MW",
+    "name": "Malawi"
+  },
   "business_key": "mw-COYABC1234",
   "registration_number": "COYABC1234",
   "identity_host": "lakeshorejoinery.mw.to.co",
   "domains": [
     "lakeshorejoinery.example"
   ],
-  "public_key": "EW3qVKb9+gzEt8y2lPP/NoHXpnY5ZGVinAMOxPE1j9c=",
-  "signature": "2aG+Cn4Vrntl8XHQ2ES220gKDUR5qPgz3LHAiI5Q3aB6LFYMqf4+PGeU3jcnE6d7oWOzDQf/tge9wSQBkuWDDQ=="
+  "public_key": "4U0XKPKu5d7GiBTCB+uma2A+QJ6aVFeikSoDxm6Stro=",
+  "signature": "Wj2O5U0u7MwSyJgmNhRlFceu568rtKUy1+Ne35CU/PsJqs/oRFb1KLo7hCdWlwm2SzTMEtG00wdMfALt/cVSAg=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain lakeshorejoinery.example --dns-value 'v=abiz1;k=mw-COYABC1234;h=lakeshorejoinery.mw.to.co;p=EW3qVKb9+gzEt8y2lPP/NoHXpnY5ZGVinAMOxPE1j9c='
+python scripts/validate.py record.json --domain lakeshorejoinery.example --dns-value 'v=abiz1;k=mw-COYABC1234;h=lakeshorejoinery.mw.to.co;p=4U0XKPKu5d7GiBTCB+uma2A+QJ6aVFeikSoDxm6Stro='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Malawi with a record hosted by to.co might use the host `lakeshorejoinery.mw.to.co`, giving the DNS value `v=abiz1;k=mw-COYABC1234;h=lakeshorejoinery.mw.to.co;p=EW3qVKb9+gzEt8y2lPP/NoHXpnY5ZGVinAMOxPE1j9c=`. An unregistered business might use a town-based host such as `lakeshorejoinery-mangochi.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Malawi with a record hosted by to.co might use the host `lakeshorejoinery.mw.to.co`, giving the DNS value `v=abiz1;k=mw-COYABC1234;h=lakeshorejoinery.mw.to.co;p=4U0XKPKu5d7GiBTCB+uma2A+QJ6aVFeikSoDxm6Stro=`. An unregistered business might use a town-based host such as `lakeshorejoinery-mangochi.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

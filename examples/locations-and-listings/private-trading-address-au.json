@@ -1,12 +1,15 @@
 {
   "record_version": "abiz1",
   "business_name": "Wattle Lane Ceramics",
-  "country": "au",
+  "country": {
+    "code": "AU",
+    "name": "Australia"
+  },
   "identity_host": "wattlelaneceramics.biz.to.co",
   "domains": [
     "wattlelane.example"
   ],
-  "public_key": "a4mbt1ap1UxmiNWqsXmJPQeDAtFlRl1ZEpEjp0mjrb8=",
+  "public_key": "rSugh0YUe/mNBkBMOiDO1LIg7xXmwebRmWc5S6PJVgk=",
   "description": "Handmade stoneware from a home studio. Visits by appointment; the studio address is given when you book.",
   "email": "studio@wattlelane.example",
   "locations": [
@@ -42,5 +45,9 @@
       "public": false
     }
   ],
-  "signature": "QujRBng/esgk6kMhsbq7w0TTPeANI37xI9LJX6Mj9S+8cm4+t7q6boStyh+7ly7zGkwDTYkJ+XE2Z3TW0c0kAw=="
+  "region": {
+    "code": "AU-VIC",
+    "name": "Victoria"
+  },
+  "signature": "rDL/JAYByhYwN/zerqpO0ya0+e7pMxlM3hgO8o3gZO6+7GKptjLCvMaAzj6PmK7W9WdQxJTAmlehoQ0kAQUNCw=="
 }

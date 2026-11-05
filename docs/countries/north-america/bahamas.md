@@ -39,7 +39,7 @@ If you include `business_key` and `registration_number` in the record, include b
 Publish exactly one TXT record starting with `v=abiz1` at `_abiz.` followed by your domain. Use the compact form with no spaces (section 3.1.1) and a TTL of 300 seconds:
 
 ```dns
-_abiz.conchshelltours.example. 300 IN TXT "v=abiz1;k=bs-123456B;h=conchshelltours.bs.to.co;p=u7u2BBeTQeaiz3H2R+3UenT/5lfFCBD6HnYG+gBbH7Y="
+_abiz.conchshelltours.example. 300 IN TXT "v=abiz1;k=bs-123456B;h=conchshelltours.bs.to.co;p=UM7KmV3HH1DsnjSB5G/T3CDCZj1deR4oLwDdDM3FOO0="
 ```
 
 A business with no registration number, or one that prefers not to publish it, simply leaves out `k`:
@@ -56,14 +56,17 @@ This example is fictional. It passes the reference validator.
 {
   "record_version": "abiz1",
   "business_name": "Conch Shell Tours Ltd",
-  "country": "bs",
+  "country": {
+    "code": "BS",
+    "name": "Bahamas"
+  },
   "business_key": "bs-123456B",
   "registration_number": "123456B",
   "identity_host": "conchshelltours.bs.to.co",
   "domains": [
     "conchshelltours.example"
   ],
-  "public_key": "u7u2BBeTQeaiz3H2R+3UenT/5lfFCBD6HnYG+gBbH7Y=",
+  "public_key": "UM7KmV3HH1DsnjSB5G/T3CDCZj1deR4oLwDdDM3FOO0=",
   "description": "Island-hopping and snorkelling tours.",
   "website": "https://conchshelltours.example",
   "locations": [
@@ -146,7 +149,7 @@ This example is fictional. It passes the reference validator.
       "public": true
     }
   ],
-  "signature": "IAaFk2NYvc6vCcGZGcEhPLIx82aNQSbuvcLG6b7gXmG8GzouldEidglq2NKnycV/CWlVMR9auwJYhfD/8uUzBQ=="
+  "signature": "XP0wZIRSVkzs8sC2ytVfR/IXeYTawe1i/nZ8lwG/Pz/b3+xC872qFR4+cV39hbIIW0J+xQqvMrnNednr9ejhAA=="
 }
 ```
 
@@ -159,7 +162,7 @@ Before you publish, check the record and the DNS value with the reference valida
 ```sh
 python scripts/validate.py record.json \
   --domain conchshelltours.example \
-  --dns-value 'v=abiz1;k=bs-123456B;h=conchshelltours.bs.to.co;p=u7u2BBeTQeaiz3H2R+3UenT/5lfFCBD6HnYG+gBbH7Y='
+  --dns-value 'v=abiz1;k=bs-123456B;h=conchshelltours.bs.to.co;p=UM7KmV3HH1DsnjSB5G/T3CDCZj1deR4oLwDdDM3FOO0='
 ```
 
 ## 3. Using a provider and MCP
@@ -174,7 +177,7 @@ For example, a provider might host the record for Conch Shell Tours at `conchshe
 - **Example** (the key below is a throwaway example key; its private key was discarded). Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`.
 
   ```dns
-  _abiz.conchshelltours.example. 300 IN TXT "v=abiz1;k=bs-123456B;h=conchshelltours.bs.to.co;p=u7u2BBeTQeaiz3H2R+3UenT/5lfFCBD6HnYG+gBbH7Y="
+  _abiz.conchshelltours.example. 300 IN TXT "v=abiz1;k=bs-123456B;h=conchshelltours.bs.to.co;p=UM7KmV3HH1DsnjSB5G/T3CDCZj1deR4oLwDdDM3FOO0="
   ```
 
 - **The private key belongs to the business.** It must never appear in DNS, in the record or in a public repository. A provider may generate and hold it for you (hosted mode), but it must let you export it at any time, for example as PKCS#8, and delete its copy on request (section 3.3.4).

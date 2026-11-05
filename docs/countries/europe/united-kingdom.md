@@ -24,7 +24,7 @@ All field names in the JSON record use snake_case, such as `business_name` and `
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY="
+_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=5IdAWhnMsqqxUj1uzCVLpa3CCJy3Cd0GzFmybzj2Fbs="
 ```
 
 | Tag | Required | What it holds |
@@ -143,7 +143,7 @@ https://hartleysbakery.example/.well-known/abiz.json
 {
   "v": "abiz1",
   "h": "www.hartleysbakery.example",
-  "p": "GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY="
+  "p": "5IdAWhnMsqqxUj1uzCVLpa3CCJy3Cd0GzFmybzj2Fbs="
 }
 ```
 
@@ -160,7 +160,7 @@ The file shows that you control the website at your domain, which is weaker than
 Each example below has been checked with the reference validator, which verifies the record's `signature` and checks that `public_key` equals the `p` in the DNS value:
 
 ```sh
-python scripts/validate.py record.json --domain hartleysbakery.example --dns-value 'v=abiz1;h=www.hartleysbakery.example;p=GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY='
+python scripts/validate.py record.json --domain hartleysbakery.example --dns-value 'v=abiz1;h=www.hartleysbakery.example;p=5IdAWhnMsqqxUj1uzCVLpa3CCJy3Cd0GzFmybzj2Fbs='
 ```
 
 or, for a well-known file saved locally as `abiz.json`:
@@ -182,7 +182,7 @@ Hartley’s Bakery is run by two partners. An ordinary partnership is not on the
 DNS:
 
 ```dns
-_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY="
+_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;h=www.hartleysbakery.example;p=5IdAWhnMsqqxUj1uzCVLpa3CCJy3Cd0GzFmybzj2Fbs="
 ```
 
 JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accept: application/json`):
@@ -190,13 +190,16 @@ JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accep
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Hartley’s Bakery",
-  "country": "gb",
+  "business_name": "Hartley\u2019s Bakery",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "identity_host": "www.hartleysbakery.example",
   "domains": [
     "hartleysbakery.example"
   ],
-  "public_key": "GJzBUtjwTVMA/4WFm7g16lcazzXINuv4eO23EV7sjlY=",
+  "public_key": "5IdAWhnMsqqxUj1uzCVLpa3CCJy3Cd0GzFmybzj2Fbs=",
   "description": "Sourdough, rye and seasonal bakes, made by hand every morning in Bristol. Order a loaf for collection, or ask us about a celebration cake.",
   "website": "https://www.hartleysbakery.example",
   "email": "hello@hartleysbakery.example",
@@ -223,7 +226,7 @@ JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accep
     {
       "location_id": "bristol-shop",
       "kind": "trading",
-      "name": "Hartley’s Bakery, Bristol",
+      "name": "Hartley\u2019s Bakery, Bristol",
       "address": {
         "street_lines": [
           "1 Example Street"
@@ -392,7 +395,7 @@ JSON served at `https://www.hartleysbakery.example/?format=json` (and for `Accep
       "url": "https://www.hartleysbakery.example/order"
     }
   ],
-  "signature": "ELgFQM1z9/4xgBhnGFRshOMTBT1LKWFGmonffndCAGfwxGxlSeZu2uJSSqRBr0KCeK5e8PF3JFSxnaIArMrVAA=="
+  "signature": "Gq8226jDx3hL8h6386Jzh9vmCtaLogYKM4KLnsiiWqloaU1xnoQG9AkQ2gxsuvJ9H3NOvQ4oh4GnUgEW162yCQ=="
 }
 ```
 
@@ -413,7 +416,7 @@ The partners incorporate Hartley’s Bakery Ltd at Companies House, which issues
 DNS:
 
 ```dns
-_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery.uk.to.co;p=F7MfjdYBDDn8lUetBGyYZ6Z4Ak4AxKrucFOV6YXaEPE="
+_abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery.uk.to.co;p=ykA5MazMqN/Y6Ssp0z691eXUUJLqylOmhkGXgQSuPZ4="
 ```
 
 JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: application/json`):
@@ -421,15 +424,18 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Hartley’s Bakery Ltd",
-  "country": "gb",
+  "business_name": "Hartley\u2019s Bakery Ltd",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "business_key": "gb-01234567",
   "registration_number": "01234567",
   "identity_host": "hartleysbakery.uk.to.co",
   "domains": [
     "hartleysbakery.example"
   ],
-  "public_key": "F7MfjdYBDDn8lUetBGyYZ6Z4Ak4AxKrucFOV6YXaEPE=",
+  "public_key": "ykA5MazMqN/Y6Ssp0z691eXUUJLqylOmhkGXgQSuPZ4=",
   "description": "Sourdough, rye and seasonal bakes, made by hand every morning in Bristol. Order a loaf for collection, or ask us about a celebration cake.",
   "website": "https://www.hartleysbakery.example",
   "email": "hello@hartleysbakery.example",
@@ -449,7 +455,7 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
       "url": "https://www.hartleysbakery.example/cakes"
     },
     {
-      "name": "Wholesale bread for cafés",
+      "name": "Wholesale bread for caf\u00e9s",
       "description": "Daily deliveries within Bristol.",
       "url": "https://www.hartleysbakery.example/wholesale"
     },
@@ -482,7 +488,7 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
     {
       "location_id": "bristol-shop",
       "kind": "trading",
-      "name": "Hartley’s Bakery, Bristol",
+      "name": "Hartley\u2019s Bakery, Bristol",
       "address": {
         "street_lines": [
           "1 Example Street"
@@ -660,7 +666,7 @@ JSON served at `https://hartleysbakery.uk.to.co/?format=json` (and for `Accept: 
       "food_hygiene_rating_url": "https://www.hartleysbakery.example/hygiene"
     }
   },
-  "signature": "zfsMX8hnrqoa9I78xYwJxMYeUynchhOXC+blqYIWfTj5FpJf9DTH6hOwjf0U8E53CACDEI8j7Ti9jl5HV/9wBg=="
+  "signature": "G7227o+rFV4na1/pnZIGOQt0smboyR+6D6qEpy9fofaK5QN1VqNtJr4CXDB3h0qkV/HFTLCmzsY1h5kBHg/3BQ=="
 }
 ```
 
@@ -788,15 +794,18 @@ Severnside Leisure Group plc (company `09876543`, invented) has:
 **The plc and its trading name: one record, two domains.** The same TXT record goes on both domains, and the record lists both:
 
 ```dns
-_abiz.severnsideleisure.example. 300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsideleisure.example;p=Qz3VDqaDeVVG8lS1hK6aFp3q43kC8+guAhUAUg+h3+w="
-_abiz.severnsidehire.example.    300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsideleisure.example;p=Qz3VDqaDeVVG8lS1hK6aFp3q43kC8+guAhUAUg+h3+w="
+_abiz.severnsideleisure.example. 300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsideleisure.example;p=ejD3AUjZFkkFH9SOJi5z4HEF1ZBsBeD5RlY9VsgbWro="
+_abiz.severnsidehire.example.    300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsideleisure.example;p=ejD3AUjZFkkFH9SOJi5z4HEF1ZBsBeD5RlY9VsgbWro="
 ```
 
 ```json
 {
   "record_version": "abiz1",
   "business_name": "Severnside Leisure Group plc",
-  "country": "gb",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "business_key": "gb-09876543",
   "registration_number": "09876543",
   "identity_host": "www.severnsideleisure.example",
@@ -804,7 +813,7 @@ _abiz.severnsidehire.example.    300 IN TXT "v=abiz1;k=gb-09876543;h=www.severns
     "severnsideleisure.example",
     "severnsidehire.example"
   ],
-  "public_key": "Qz3VDqaDeVVG8lS1hK6aFp3q43kC8+guAhUAUg+h3+w=",
+  "public_key": "ejD3AUjZFkkFH9SOJi5z4HEF1ZBsBeD5RlY9VsgbWro=",
   "description": "Leisure group in the South West of England. Also trades as Severnside Hire.",
   "website": "https://www.severnsideleisure.example",
   "links": [
@@ -837,28 +846,31 @@ _abiz.severnsidehire.example.    300 IN TXT "v=abiz1;k=gb-09876543;h=www.severns
       ]
     }
   },
-  "signature": "v0COZj9fvGsUapca8zHvclpjyV1PQ7wmLGM+HRnqQ6P1J75PZx6IniW9k++oXMc8nvr9N5znPKbFasZ2cdT3Dg=="
+  "signature": "JTez+AY+PRZCnu2Dw7vCugqxSLqQaOXWnDVX4gd/ai1HKwqV1pYCG3YueB0jtIHYnBuj/4tgHp9CWKLaIevUDg=="
 }
 ```
 
 **The division: its own record, on a path of the parent's website.** The division is the same legal entity, so it uses the plc's number.
 
 ```dns
-_abiz.severnsideevents.example. 300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsideleisure.example/events;p=joN8hf8xOeLEizQ3Da/YPzYaaGJimSbt0Tl6Y9Brh2M="
+_abiz.severnsideevents.example. 300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsideleisure.example/events;p=ddF7BkAWNjSJXHgV53meRM9xsVAAvsX/zyQX8qP8EGo="
 ```
 
 ```json
 {
   "record_version": "abiz1",
   "business_name": "Severnside Events",
-  "country": "gb",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "business_key": "gb-09876543",
   "registration_number": "09876543",
   "identity_host": "www.severnsideleisure.example/events",
   "domains": [
     "severnsideevents.example"
   ],
-  "public_key": "joN8hf8xOeLEizQ3Da/YPzYaaGJimSbt0Tl6Y9Brh2M=",
+  "public_key": "ddF7BkAWNjSJXHgV53meRM9xsVAAvsX/zyQX8qP8EGo=",
   "description": "Corporate and private events in Bristol. Severnside Events is a division of Severnside Leisure Group plc.",
   "website": "https://www.severnsideevents.example",
   "links": [
@@ -873,28 +885,31 @@ _abiz.severnsideevents.example. 300 IN TXT "v=abiz1;k=gb-09876543;h=www.severnsi
       "relationship": "division"
     }
   },
-  "signature": "hQW/bESnHUuRPFTk9BXdFh90/4epugoZdsky4Ki+pjwRpg+PS6RCNL5NtDeLpnAy5iFDh5CK3eZfExEktVjnCQ=="
+  "signature": "WITtM7QNdwy4cg3hsgdqKAnNW2cfTTZb2tSZ131Onk8RcxHNoS+HLSroK+ugKhpK5vL7u5mY3CDDFj5btKC/Cw=="
 }
 ```
 
 **The subsidiary: its own record and its own company number.**
 
 ```dns
-_abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsidecycles.example;p=+IlIJUKqnyTNgifodVr3S0umTKSWU9rRNe+xp/wEWlo="
+_abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsidecycles.example;p=1D2p53dPLQ8A0Z9SMpIIWcHml5OVpBe/qTd130MGQrM="
 ```
 
 ```json
 {
   "record_version": "abiz1",
   "business_name": "Severnside Cycles Ltd",
-  "country": "gb",
+  "country": {
+    "code": "GB",
+    "name": "United Kingdom"
+  },
   "business_key": "gb-SC123456",
   "registration_number": "SC123456",
   "identity_host": "www.severnsidecycles.example",
   "domains": [
     "severnsidecycles.example"
   ],
-  "public_key": "+IlIJUKqnyTNgifodVr3S0umTKSWU9rRNe+xp/wEWlo=",
+  "public_key": "1D2p53dPLQ8A0Z9SMpIIWcHml5OVpBe/qTd130MGQrM=",
   "description": "Cycle hire and repairs in Edinburgh. A subsidiary of Severnside Leisure Group plc.",
   "website": "https://www.severnsidecycles.example",
   "locations": [
@@ -929,7 +944,7 @@ _abiz.severnsidecycles.example. 300 IN TXT "v=abiz1;k=gb-SC123456;h=www.severnsi
       "relationship": "subsidiary"
     }
   },
-  "signature": "h9q5BYLXpH6WsAqQ0GUUfFg03GAkg6QV3/wr5PqX94ZRt4JdJJ+UF80QBo7xPdP2BYU6A9blzzShdhHHdvhOCg=="
+  "signature": "N6my7JSg5sOTqi6N0sxL6WZ5vjUEPsJ5zGIxXSRF0A2VxcSIQy4303QpQdktzfVo35GuCjJcySn3j5s/xwnZDQ=="
 }
 ```
 

@@ -39,7 +39,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.textilesillimani.example. 300 IN TXT "v=abiz1;k=bo-123456;h=textilesillimani.bo.to.co;p=ZtQIzsE89bKQ6mFjpZ+kZpViTBImEcVObQTgENDd5oo="
+_abiz.textilesillimani.example. 300 IN TXT "v=abiz1;k=bo-123456;h=textilesillimani.bo.to.co;p=Ds3fgnRjlKoTACaf5ArTVCgXzQ9NECd6HuJ1+PInS1Q="
 ```
 
 Un negocio sin número de registro, o que prefiera no publicarlo, simplemente omite `k`:
@@ -56,14 +56,17 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 {
   "record_version": "abiz1",
   "business_name": "Textiles Illimani S.R.L.",
-  "country": "bo",
+  "country": {
+    "code": "BO",
+    "name": "Bolivia"
+  },
   "business_key": "bo-123456",
   "registration_number": "123456",
   "identity_host": "textilesillimani.bo.to.co",
   "domains": [
     "textilesillimani.example"
   ],
-  "public_key": "ZtQIzsE89bKQ6mFjpZ+kZpViTBImEcVObQTgENDd5oo=",
+  "public_key": "Ds3fgnRjlKoTACaf5ArTVCgXzQ9NECd6HuJ1+PInS1Q=",
   "description": "Tejidos de alpaca hechos a mano.",
   "website": "https://textilesillimani.example",
   "locations": [
@@ -141,7 +144,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "hRUqOBldSaYRKH4DcaK3OAvVZAXrhfi8PpbD4qxJ5QMiRnypF+u8hMKg9RnHWGd+2dTh+TpzUDGQ466RrIktAQ=="
+  "signature": "4UwYA1ugk70fyn0u7pQhSQ08g2xhGQ8kBsUcOaEwEQtLwCU1NRPmzL6qphdosPdgui9oHmJlJV6mp47LQunDAw=="
 }
 ```
 
@@ -154,7 +157,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain textilesillimani.example \
-  --dns-value 'v=abiz1;k=bo-123456;h=textilesillimani.bo.to.co;p=ZtQIzsE89bKQ6mFjpZ+kZpViTBImEcVObQTgENDd5oo='
+  --dns-value 'v=abiz1;k=bo-123456;h=textilesillimani.bo.to.co;p=Ds3fgnRjlKoTACaf5ArTVCgXzQ9NECd6HuJ1+PInS1Q='
 ```
 
 ## 3. Proveedores y MCP
@@ -169,7 +172,7 @@ Por ejemplo, un proveedor puede alojar el registro de Textiles Illimani en `text
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.textilesillimani.example. 300 IN TXT "v=abiz1;k=bo-123456;h=textilesillimani.bo.to.co;p=ZtQIzsE89bKQ6mFjpZ+kZpViTBImEcVObQTgENDd5oo="
+  _abiz.textilesillimani.example. 300 IN TXT "v=abiz1;k=bo-123456;h=textilesillimani.bo.to.co;p=Ds3fgnRjlKoTACaf5ArTVCgXzQ9NECd6HuJ1+PInS1Q="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

@@ -41,7 +41,7 @@ Keys are compared case-insensitively, but publish the canonical form: lowercase 
 Publish exactly one ABIZ TXT record at `_abiz` on your domain. Use the compact form, with no spaces:
 
 ```dns
-_abiz.burrencrafts.example. 300 IN TXT "v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=ihDQTMdOxZF7VwJIoxjRXzws0bjAKIVlBlKOwuQBOlI="
+_abiz.burrencrafts.example. 300 IN TXT "v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=Kx+zKFSP8qfO+D1ipfF2NU8sK4lMBztu/CC3Jr+qBy8="
 ```
 
 - `v=abiz1` must come first. `h` and `p` are required; `k` is optional.
@@ -58,14 +58,17 @@ The record served at `https://burrencrafts.ie.to.co`, as `application/json`:
 {
   "record_version": "abiz1",
   "business_name": "Burren Crafts Limited",
-  "country": "ie",
+  "country": {
+    "code": "IE",
+    "name": "Ireland"
+  },
   "business_key": "ie-123456",
   "registration_number": "123456",
   "identity_host": "burrencrafts.ie.to.co",
   "domains": [
     "burrencrafts.example"
   ],
-  "public_key": "ihDQTMdOxZF7VwJIoxjRXzws0bjAKIVlBlKOwuQBOlI=",
+  "public_key": "Kx+zKFSP8qfO+D1ipfF2NU8sK4lMBztu/CC3Jr+qBy8=",
   "description": "Handmade crafts from County Clare and Galway.",
   "website": "https://burrencrafts.example",
   "locations": [
@@ -80,14 +83,14 @@ The record served at `https://burrencrafts.ie.to.co`, as `application/json`:
       "public": true
     }
   ],
-  "signature": "juUSYPQWF9MbkmeJvaHOu1XNfvORF/qIKGq8cdC+AIDDOH5QoyXmq0Ywu+sGgKjRAUoazZBZoCiXLsO54TXyDA=="
+  "signature": "p2ekB1UwWUzH83O4SpHGKP7KwCw3iV5KEZOoD9iZFEkdqykxHYdeCJxcF34Z63Y79pyrnOX6AkhHFlOhwNiyAQ=="
 }
 ```
 
 You can check a record and its DNS value locally with the reference validator:
 
 ```sh
-python scripts/validate.py record.json --domain burrencrafts.example --dns-value 'v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=ihDQTMdOxZF7VwJIoxjRXzws0bjAKIVlBlKOwuQBOlI='
+python scripts/validate.py record.json --domain burrencrafts.example --dns-value 'v=abiz1;k=ie-123456;h=burrencrafts.ie.to.co;p=Kx+zKFSP8qfO+D1ipfF2NU8sK4lMBztu/CC3Jr+qBy8='
 ```
 
 ### Self-hosted or through a provider

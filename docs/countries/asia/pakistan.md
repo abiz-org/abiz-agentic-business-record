@@ -45,7 +45,7 @@ Pakistan uses no subdivision: do not add a region, province or city code. SPEC s
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.lahoreleather.example. 300 IN TXT "v=abiz1;k=pk-0123456;h=lahoreleather.pk.to.co;p=wiE9MarxVAUxqrfJ/4ExQNc4guXhKhEPWVtGYpgW3kM="
+_abiz.lahoreleather.example. 300 IN TXT "v=abiz1;k=pk-0123456;h=lahoreleather.pk.to.co;p=Y+g2r8UmATj08bMWNQ+zuT7Ln2JvhJEea6t6vH0qeQY="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.lahoreleather.example. 300 IN TXT "v=abiz1;h=lahoreleather.pk.to.co;p=wiE9MarxVAUxqrfJ/4ExQNc4guXhKhEPWVtGYpgW3kM="
+_abiz.lahoreleather.example. 300 IN TXT "v=abiz1;h=lahoreleather.pk.to.co;p=Y+g2r8UmATj08bMWNQ+zuT7Ln2JvhJEea6t6vH0qeQY="
 ```
 
 The business record served as `application/json` at `https://lahoreleather.pk.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://lahoreleather.pk.to
 {
   "record_version": "abiz1",
   "business_name": "Lahore Leather Crafts",
-  "country": "pk",
+  "country": {
+    "code": "PK",
+    "name": "Pakistan"
+  },
   "business_key": "pk-0123456",
   "registration_number": "0123456",
   "identity_host": "lahoreleather.pk.to.co",
   "domains": [
     "lahoreleather.example"
   ],
-  "public_key": "wiE9MarxVAUxqrfJ/4ExQNc4guXhKhEPWVtGYpgW3kM=",
-  "signature": "iWxZCJBGE8XgihuyrkSLLZ1s20lDj/dMDnscbbM4M+D2+4yLMmCW5+72HiCdK/jzJ0ocsq/1OM9eSznNvUvcCw=="
+  "public_key": "Y+g2r8UmATj08bMWNQ+zuT7Ln2JvhJEea6t6vH0qeQY=",
+  "signature": "AUudt9vkSMkXKsWM2FhZotiuoDHkWkaQryIhMRpCxkTCsU+jjbxie5gox1bPJYp7UQoWkwaMYydPhjNZk0RuBA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain lahoreleather.example --dns-value 'v=abiz1;k=pk-0123456;h=lahoreleather.pk.to.co;p=wiE9MarxVAUxqrfJ/4ExQNc4guXhKhEPWVtGYpgW3kM='
+python scripts/validate.py record.json --domain lahoreleather.example --dns-value 'v=abiz1;k=pk-0123456;h=lahoreleather.pk.to.co;p=Y+g2r8UmATj08bMWNQ+zuT7Ln2JvhJEea6t6vH0qeQY='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in Pakistan with a record hosted by to.co might use the host `lahoreleather.pk.to.co`, giving the DNS value `v=abiz1;k=pk-0123456;h=lahoreleather.pk.to.co;p=wiE9MarxVAUxqrfJ/4ExQNc4guXhKhEPWVtGYpgW3kM=`. An unregistered business might use a town-based host such as `lahoreleather-lahore.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in Pakistan with a record hosted by to.co might use the host `lahoreleather.pk.to.co`, giving the DNS value `v=abiz1;k=pk-0123456;h=lahoreleather.pk.to.co;p=Y+g2r8UmATj08bMWNQ+zuT7Ln2JvhJEea6t6vH0qeQY=`. An unregistered business might use a town-based host such as `lahoreleather-lahore.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 

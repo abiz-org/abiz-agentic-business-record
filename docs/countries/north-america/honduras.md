@@ -37,7 +37,7 @@ Si incluye `business_key` y `registration_number` en el registro, incluya los do
 Publique un único registro TXT que empiece por `v=abiz1` en `_abiz.` seguido de su dominio. Use la forma compacta, sin espacios (sección 3.1.1), y un TTL de 300 segundos:
 
 ```dns
-_abiz.cafecopan.example. 300 IN TXT "v=abiz1;h=cafecopan.hn.to.co;p=0hvQlYQDijJGg08AzJxYvDOevcAuMRThkcgxIjlGkbA="
+_abiz.cafecopan.example. 300 IN TXT "v=abiz1;h=cafecopan.hn.to.co;p=uNFHzGwau7WPl6v9/lyQMPaUrQO7NkmFwohm22AxC3k="
 ```
 
 ### Ejemplo de registro (JSON)
@@ -47,20 +47,23 @@ Este ejemplo es ficticio. Supera el validador de referencia.
 ```json
 {
   "record_version": "abiz1",
-  "business_name": "Café Copán, S. de R.L.",
-  "country": "hn",
+  "business_name": "Caf\u00e9 Cop\u00e1n, S. de R.L.",
+  "country": {
+    "code": "HN",
+    "name": "Honduras"
+  },
   "identity_host": "cafecopan.hn.to.co",
   "domains": [
     "cafecopan.example"
   ],
-  "public_key": "0hvQlYQDijJGg08AzJxYvDOevcAuMRThkcgxIjlGkbA=",
-  "description": "Café de especialidad del occidente de Honduras.",
+  "public_key": "uNFHzGwau7WPl6v9/lyQMPaUrQO7NkmFwohm22AxC3k=",
+  "description": "Caf\u00e9 de especialidad del occidente de Honduras.",
   "website": "https://cafecopan.example",
   "locations": [
     {
       "kind": "trading",
       "address": {
-        "locality": "Copán Ruinas",
+        "locality": "Cop\u00e1n Ruinas",
         "country": {
           "code": "HN"
         }
@@ -131,7 +134,7 @@ Este ejemplo es ficticio. Supera el validador de referencia.
       "public": true
     }
   ],
-  "signature": "ojC4Ou5on/3JpKz+ozUH93t/PfnrUh08PIH4PgSNCHKHLkZIkJDMXUCQ/RSsIWs9xJM+unSwQ/7enKf+50B3AA=="
+  "signature": "BVyeRQRZ/qQ0ezuEfWO2Tka3qEocMw10esqNDI0QKeBTrgdj+SCKMVLn5XsIrYzX0gRHFb+rKIH+5gxTlhYbCg=="
 }
 ```
 
@@ -144,7 +147,7 @@ Antes de publicar, compruebe el registro y el valor DNS con el validador de refe
 ```sh
 python scripts/validate.py record.json \
   --domain cafecopan.example \
-  --dns-value 'v=abiz1;h=cafecopan.hn.to.co;p=0hvQlYQDijJGg08AzJxYvDOevcAuMRThkcgxIjlGkbA='
+  --dns-value 'v=abiz1;h=cafecopan.hn.to.co;p=uNFHzGwau7WPl6v9/lyQMPaUrQO7NkmFwohm22AxC3k='
 ```
 
 ## 3. Proveedores y MCP
@@ -159,7 +162,7 @@ Por ejemplo, un proveedor puede alojar el registro de Café Copán en `cafecopan
 - **Ejemplo** (la clave es un ejemplo desechable; su clave privada se ha descartado). No la copie nunca: publique su propia clave. Una aserción ABIZ 1.1 debe incluir `p`.
 
   ```dns
-  _abiz.cafecopan.example. 300 IN TXT "v=abiz1;h=cafecopan.hn.to.co;p=0hvQlYQDijJGg08AzJxYvDOevcAuMRThkcgxIjlGkbA="
+  _abiz.cafecopan.example. 300 IN TXT "v=abiz1;h=cafecopan.hn.to.co;p=uNFHzGwau7WPl6v9/lyQMPaUrQO7NkmFwohm22AxC3k="
   ```
 
 - **La clave privada pertenece al negocio.** Nunca debe aparecer en el DNS, en el registro ni en un repositorio público. Un proveedor puede generarla y custodiarla por usted (modo alojado), pero debe permitirle exportarla en cualquier momento, por ejemplo en formato PKCS#8, y borrar su copia si se lo pide (sección 3.3.4).

@@ -45,7 +45,7 @@ the Philippines uses no subdivision: do not add a region, province or city code.
 Publish exactly one TXT record at `_abiz` under your domain, in the compact form with no spaces and `v=abiz1` first:
 
 ```dns
-_abiz.cebumango.example. 300 IN TXT "v=abiz1;k=ph-CS201912345;h=cebumango.ph.to.co;p=loutKkZpaacMXoXjgSqMsomi24pfe4Z2IlFccK+kL28="
+_abiz.cebumango.example. 300 IN TXT "v=abiz1;k=ph-CS201912345;h=cebumango.ph.to.co;p=gX+Mf3oyXuc5N8DItW3oST9UGErxP9P6k8Nqqx1pGTw="
 ```
 
 The `p` value above is a throwaway example key generated for this page. Never copy it: publish your own key. An ABIZ 1.1 assertion must include `p`. All names, numbers and domains on this page are fictional.
@@ -53,7 +53,7 @@ The `p` value above is a throwaway example key generated for this page. Never co
 Without the optional `k` tag, this is also valid:
 
 ```dns
-_abiz.cebumango.example. 300 IN TXT "v=abiz1;h=cebumango.ph.to.co;p=loutKkZpaacMXoXjgSqMsomi24pfe4Z2IlFccK+kL28="
+_abiz.cebumango.example. 300 IN TXT "v=abiz1;h=cebumango.ph.to.co;p=gX+Mf3oyXuc5N8DItW3oST9UGErxP9P6k8Nqqx1pGTw="
 ```
 
 The business record served as `application/json` at `https://cebumango.ph.to.co`:
@@ -62,22 +62,25 @@ The business record served as `application/json` at `https://cebumango.ph.to.co`
 {
   "record_version": "abiz1",
   "business_name": "Cebu Dried Mango Co",
-  "country": "ph",
+  "country": {
+    "code": "PH",
+    "name": "Philippines"
+  },
   "business_key": "ph-CS201912345",
   "registration_number": "CS201912345",
   "identity_host": "cebumango.ph.to.co",
   "domains": [
     "cebumango.example"
   ],
-  "public_key": "loutKkZpaacMXoXjgSqMsomi24pfe4Z2IlFccK+kL28=",
-  "signature": "Vmq5lgaiUULEQa28qkvHSKcZKOzOJNqyQDLxO20NydkavzydwzSXRVCY0fqStVOzlqVUPprL2j3CpxVKSgRSBQ=="
+  "public_key": "gX+Mf3oyXuc5N8DItW3oST9UGErxP9P6k8Nqqx1pGTw=",
+  "signature": "TX+0ETabi//2km4qR+YgmrgYfcOmiIPwx9adtKHszuazMjIJQoe7dOhDlTJs9sxY3KUcLnaNRCOR/x5mWh1IDA=="
 }
 ```
 
 To check a record before you publish it, run the reference validator from a copy of this repository:
 
 ```sh
-python scripts/validate.py record.json --domain cebumango.example --dns-value 'v=abiz1;k=ph-CS201912345;h=cebumango.ph.to.co;p=loutKkZpaacMXoXjgSqMsomi24pfe4Z2IlFccK+kL28='
+python scripts/validate.py record.json --domain cebumango.example --dns-value 'v=abiz1;k=ph-CS201912345;h=cebumango.ph.to.co;p=gX+Mf3oyXuc5N8DItW3oST9UGErxP9P6k8Nqqx1pGTw='
 ```
 
 You can host the JSON record yourself on any HTTPS server, or use any compatible provider. ABIZ does not require a particular provider.
@@ -86,7 +89,7 @@ You can host the JSON record yourself on any HTTPS server, or use any compatible
 
 The Model Context Protocol (MCP) is an open protocol that lets AI assistants call tools and read data from outside servers in a standard way. A business record may include an optional `mcp_server_url`, the HTTPS address of an MCP server for the business, for example for bookings or product information. ABIZ does not vouch for that server; tools must apply their own access controls (SPEC section 4.2.6).
 
-A provider can host the record and publish the DNS pointer for you. For example, a registered business in the Philippines with a record hosted by to.co might use the host `cebumango.ph.to.co`, giving the DNS value `v=abiz1;k=ph-CS201912345;h=cebumango.ph.to.co;p=loutKkZpaacMXoXjgSqMsomi24pfe4Z2IlFccK+kL28=`. An unregistered business might use a town-based host such as `cebumango-cebu.biz.to.co`. Any compatible provider, or your own server, works in the same way.
+A provider can host the record and publish the DNS pointer for you. For example, a registered business in the Philippines with a record hosted by to.co might use the host `cebumango.ph.to.co`, giving the DNS value `v=abiz1;k=ph-CS201912345;h=cebumango.ph.to.co;p=gX+Mf3oyXuc5N8DItW3oST9UGErxP9P6k8Nqqx1pGTw=`. An unregistered business might use a town-based host such as `cebumango-cebu.biz.to.co`. Any compatible provider, or your own server, works in the same way.
 
 ## 4. Keys and signatures (ABIZ 1.1)
 
