@@ -6,6 +6,7 @@
 **Managing organisation:** To.Co Technologies Limited, United Kingdom  
 **Planned official site:** `abizrecord.org`  
 **Public source:** https://github.com/abiz-org/abiz-agentic-business-record  
+**Licence:** this specification is licensed under [CC BY 4.0](LICENSE-docs); the normative schemas under the [Apache License 2.0](LICENSE). See [`LICENSING.md`](LICENSING.md).  
 **Normative schemas:** the published ABIZ 1.1 business record is [`schemas/abiz-business-record-v1.1.schema.json`](schemas/abiz-business-record-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.1.schema.json`). This is the latest normative schema. An ABIZ 1.0 business record validates against [`schemas/abiz-business-record-v1.schema.json`](schemas/abiz-business-record-v1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-business-record-v1.schema.json`). The well-known file is [`schemas/abiz-well-known-v1.1.schema.json`](schemas/abiz-well-known-v1.1.schema.json) (`$id` `https://abizrecord.org/schema/abiz-well-known-v1.1.schema.json`). `record_version` and the DNS tag `v` are `abiz1` in both revisions and do not select the schema.
 
 This is the **ABIZ 1.1 published specification**. Publication does not imply IANA registration or endorsement. Implementers MUST NOT present domain control as proof of a registered business's legal identity, and MUST NOT claim guaranteed AI discovery, ranking or recommendation.

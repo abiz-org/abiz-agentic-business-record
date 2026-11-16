@@ -139,6 +139,10 @@ python scripts/validate.py examples/registered-us.json \
 
 A business record cannot carry retired keys. The schema reserves their shape only as the nested definition `$defs/retired_key`.
 
-## Standards governance
+## Licence and contributing
 
-Anyone may implement the specification without membership or a per-use standards fee. Proposed changes should be discussed publicly. The `_abiz` IANA request is not confirmed. The managing organisation is To.Co Technologies Limited (UK).
+The specification and documentation are licensed under CC BY 4.0, the schemas and reference validator under the Apache License 2.0, and the examples under CC0 1.0. `data/iso3166.json` is third-party data under its own terms. [`LICENSING.md`](LICENSING.md) has the details.
+
+Anyone may implement the specification without membership or a per-use standards fee. To propose a change, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+The `_abiz` IANA request is not confirmed. The managing organisation is To.Co Technologies Limited (UK).

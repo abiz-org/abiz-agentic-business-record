@@ -1,0 +1,26 @@
+ABIZ — Agentic Business Record
+Copyright 2026 To.Co Technologies Limited and the ABIZ contributors.
+
+This repository is licensed in parts. See LICENSING.md for which licence
+applies to which path.
+
+Third-party material
+--------------------
+
+data/iso3166.json
+
+  Country codes (ISO 3166-1 alpha-2) and selected subdivision codes
+  (ISO 3166-2), extracted from the Debian iso-codes data
+  (https://salsa.debian.org/iso-codes-team/iso-codes) as redistributed by
+  pycountry 26.2.16 (https://pypi.org/project/pycountry/26.2.16/).
+
+  iso-codes and pycountry are distributed under the GNU Lesser General
+  Public License, version 2.1
+  (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html).
+
+  Changes made: only the codes were extracted, and they were lowercased.
+  The extraction script is scripts/build_iso3166.py. The SHA-256 of the
+  two source files is recorded in data/iso3166.json.
+
+  This material is not covered by the Apache License 2.0, CC BY 4.0 or
+  CC0 1.0 grants that apply to the rest of this repository.

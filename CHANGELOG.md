@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1 — licences and contribution terms (2026-11-16)
+
+No change to the specification, the schemas or what conforms.
+
+- Licences added: CC BY 4.0 for the specification and documentation (`LICENSE-docs`), Apache License 2.0 for the schemas, validator and tests (`LICENSE`), CC0 1.0 for the examples (`examples/LICENSE`). `LICENSING.md` says which applies where.
+- `NOTICE` records the source and LGPL-2.1 terms of `data/iso3166.json`, which is not relicensed.
+- `CONTRIBUTING.md`, `DCO` and a pull request template added. Commits need a `Signed-off-by` line.
+- SPEC: the DNS and well-known examples use the example files' key (sections 3.1.1, 3.2, 3.4.2 and 8).
+
 ## 1.1 — snake_case location `kind` (2026-11-05)
 
 Still published ABIZ 1.1. The wire tag remains `v=abiz1`. Registered tokens use snake_case, like `temporarily_closed` and `google_business_profile`.
