@@ -7,7 +7,7 @@ ABIZ is an open specification. Anyone may propose a change, report a problem or 
 - **A question or a problem with the text.** Open an issue. Quote the section number.
 - **An implementation report.** If you have built a producer or consumer, open an issue saying what you implemented and what was unclear. Independent implementations are the most useful contribution the project can receive.
 - **A change.** Open a pull request. For anything beyond a typo, open an issue first so the change can be discussed before you write it.
-- **A security problem.** Do not open a public issue. Use GitHub's "Report a vulnerability" button on the Security tab of this repository.
+- **A security problem.** Do not open a public issue. Use GitHub's "Report a vulnerability" button on the Security tab of this repository. See [`SECURITY.md`](SECURITY.md).
 
 ## What kind of change is it?
 
@@ -59,8 +59,8 @@ This adds a line such as `Signed-off-by: Your Name <you@example.com>`. Use a nam
 
 ## How decisions are made
 
-To.Co Technologies Limited is the managing organisation and currently decides what is merged. Changes are discussed in public issues and pull requests in this repository. Maintainers give reasons when they decline a change. As independent implementers join, the project intends to add maintainers from outside the managing organisation.
+To.Co Technologies Limited is the managing organisation and currently decides what is merged. Changes are discussed in public issues and pull requests in this repository, reach `main` only through a pull request whose tests pass, and are published only as tagged versions. [`GOVERNANCE.md`](GOVERNANCE.md) sets out the rules.
 
 ## Conduct
 
-Be civil and stay on the subject. Maintainers may hide or remove contributions that are abusive, off-topic or promotional.
+Be civil and stay on the subject. See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
