@@ -66,7 +66,7 @@ Rules that go with the grammar:
 - At most one trailing `;` is allowed. An empty tag (`;;`), a tag without `=`, and a tag with an empty name or value are invalid.
 - A repeated recognised tag makes the assertion invalid. Unknown tags are ignored, including repeated ones.
 
-Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk=`. Some consumers reject any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
+Producers SHOULD publish the compact form with no optional whitespace, for example `v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo=`. Some consumers reject any whitespace, so the compact form is the one every consumer accepts. Consumers that claim ABIZ 1.1 MUST accept the full syntax above.
 
 ### 3.2 Tags
 
@@ -82,7 +82,7 @@ Producers SHOULD publish the compact form with no optional whitespace, for examp
 **Example — registered business (US):**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co;p=oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo="
 ```
 
 **Example — unregistered business (US):**
@@ -98,7 +98,7 @@ These hostnames are examples of to.co's country-based registered-company hostnam
 **Example — the same registered business, without `k`:**
 
 ```dns
-_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
+_abiz.harbourbikes.example. 300 IN TXT "v=abiz1;h=harbour-bike-repair.or.us.to.co;p=oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo="
 ```
 
 `k` is optional; `h` and `p` are not. See `examples/dns-ed25519-p.txt` and section 3.3. An assertion such as `v=abiz1;h=harbour-bike-repair.or.us.to.co` is invalid because it has no `p`.
@@ -254,7 +254,7 @@ Example, matching the registered DNS example in section 3.2 (`examples/well-know
   "v": "abiz1",
   "k": "us-or-123456",
   "h": "harbour-bike-repair.or.us.to.co",
-  "p": "6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
+  "p": "oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo="
 }
 ```
 
@@ -913,7 +913,7 @@ _abiz.hartleysbakery.example. 300 IN TXT "v=abiz1;k=gb-01234567;h=hartleysbakery
 A business unit or division (a branch, a brand, a department, an events arm) MAY have its own business record. Its record host MAY then be a path on the parent's host (published ABIZ 1.1):
 
 ```dns
-_abiz.events.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=6C4z0vRESsebqJiCfZmx9GkE2YSrIRV0cLgVgz24cwk="
+_abiz.events.harbourbikes.example. 300 IN TXT "v=abiz1;k=us-or-123456;h=harbour-bike-repair.or.us.to.co/events;p=oQ0t/PFgN9pH0QSNUHrY5FLj5igISyzD1z6AXr5NtZo="
 ```
 
 Rules for a path-based record host:
